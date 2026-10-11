@@ -93,6 +93,20 @@ const LESSONS = [
     page: "linear-algebra/12_graphs-networks-incidence-matrices.html",
     slides: "linear-algebra/12_graphs-networks-incidence-matrices-slides.html",
     plots: {}
+  },
+  {
+    slug: "la-13-orthogonal-vectors-and-subspaces",
+    title: "Linear Algebra · Lesson 13 · Orthogonal Vectors and Subspaces",
+    page: "linear-algebra/13_orthogonal-vectors-and-subspaces.html",
+    slides: "linear-algebra/13_orthogonal-vectors-and-subspaces-slides.html",
+    plots: {}
+  },
+  {
+    slug: "la-14-projections-onto-subspaces",
+    title: "Linear Algebra · Lesson 14 · Projections onto Subspaces",
+    page: "linear-algebra/14_projections-onto-subspaces.html",
+    slides: "linear-algebra/14_projections-onto-subspaces-slides.html",
+    plots: {}
   }
 ];
 

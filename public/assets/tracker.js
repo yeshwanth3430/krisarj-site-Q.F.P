@@ -28,7 +28,9 @@
     { key: "la-05-1", subject: "la", topic: 5, topicName: "Independence, rank & the four subspaces", title: "Independence, Basis and Dimension", url: "linear-algebra/09_independence-basis-and-dimension.html" },
     { key: "la-05-2", subject: "la", topic: 5, topicName: "Independence, rank & the four subspaces", title: "The Four Fundamental Subspaces", url: "linear-algebra/10_the-four-fundamental-subspaces.html" },
     { key: "la-06-1", subject: "la", topic: 6, topicName: "Graphs & networks", title: "Matrix Spaces; Rank 1; Small World Graphs", url: "linear-algebra/11_matrix-spaces-rank-1-small-world-graphs.html" },
-    { key: "la-06-2", subject: "la", topic: 6, topicName: "Graphs & networks", title: "Graphs, Networks, Incidence Matrices", url: "linear-algebra/12_graphs-networks-incidence-matrices.html" }
+    { key: "la-06-2", subject: "la", topic: 6, topicName: "Graphs & networks", title: "Graphs, Networks, Incidence Matrices", url: "linear-algebra/12_graphs-networks-incidence-matrices.html" },
+    { key: "la-07-1", subject: "la", topic: 7, topicName: "Orthogonality & projections", title: "Orthogonal Vectors and Subspaces", url: "linear-algebra/13_orthogonal-vectors-and-subspaces.html" },
+    { key: "la-07-2", subject: "la", topic: 7, topicName: "Orthogonality & projections", title: "Projections onto Subspaces", url: "linear-algebra/14_projections-onto-subspaces.html" }
   ];
   var DONE_AFTER_MS = 2 * 60 * 1000;   // auto-complete: reached the end of the notes and spent 2+ minutes
 

@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projections onto Subspaces · Topic 7 · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra Topic 7, Lesson 14: projections onto lines and subspaces, explained step by step as the best possible hedge: the hedge ratio is a projection (beta), the leftover risk is orthogonal, and an unreachable target is replaced by the closest reachable one.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=7">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../assets/notebook.js?v=3"></script>
+</head>
+<body data-lesson="la-07-2">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <a href="topic-07.html">Topic 7</a> / <b>Projections onto Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lesson 14</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Topic 7 · Lesson 14 (MIT 18.06, Lecture 15)</p>
+  <h1>Projections onto Subspaces</h1>
+  <p class="subtitle">When you can't hit a target or hedge a risk exactly, get as close as possible. The closest point is found by dropping a perpendicular. That projection is the best possible hedge, the hedge ratio it gives is beta, and what's left over is the risk no hedge can touch.</p>
+  <div class="downloads no-print">
+    <span class="label">Take it with you</span>
+    <a class="dl" href="../downloads/la-14-projections-onto-subspaces-slides.pdf" download>⬇ Slides (PDF, LinkedIn carousel)</a>
+    <a class="dl" href="../downloads/la-14-projections-onto-subspaces-notes.pdf" download>⬇ Notes report (PDF)</a>
+    <a class="dl share" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Flearn.krisarj.com%2Flinear-algebra%2F14_projections-onto-subspaces" target="_blank" rel="noopener">Share on LinkedIn</a>
+  </div>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#index">Index</a></li>
+        <li><a href="#prereq">Prerequisites</a></li>
+        <li><a href="#t1">Conditions and important concepts</a></li>
+        <li><a href="#t2">Procedure</a></li>
+        <li><a href="#t3">2 × 2 example</a></li>
+        <li><a href="#t4">3 × 3 example: the hedge ratio is beta</a></li>
+        <li><a href="#t5">Bigger example: the closest reachable target</a></li>
+        <li><a href="#t6">Connection: why projections matter</a></li>
+        <li><a href="#t7">Final memory table</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> Index</h2>
+    <p>What this lesson covers, in order. Click a topic to jump to it.</p>
+    <ol class="index-list">
+      <li><a href="#t1">Conditions and important concepts</a><span>12 short definitions: projection onto a line and a subspace, the error, the projection matrix, the normal equations.</span></li>
+      <li><a href="#t2">Procedure</a><span>Project onto a line; project onto a subspace.</span></li>
+      <li><a href="#t3">2 × 2 example</a><span>Hedge a fund with Nifty in two scenarios; P and P² = P.</span></li>
+      <li><a href="#t4">3 × 3 example: the hedge ratio is beta</a><span>Midcap = 1.25 × Nifty + a market-neutral leftover. With a hedge-ratio slider.</span></li>
+      <li><a href="#t5">Bigger example: the closest reachable target</a><span>The target (10, 105, 4) is impossible; the normal equations find the nearest one.</span></li>
+      <li><a href="#t6">Connection: why projections matter</a><span>Best hedge, least squares, and the four subspaces.</span></li>
+      <li><a href="#t7">Final memory table</a><span>Every formula on one screen.</span></li>
+    </ol>
+    <p class="methods"><span class="label">Methods in this lesson</span> <a href="#m-line">Projection onto a line</a> <a href="#m-pline">Projection matrix aaᵀ/aᵀa</a> <a href="#m-props">Pᵀ = P, P² = P</a> <a href="#m-normal">Normal equations AᵀAx̂ = Aᵀb</a> <a href="#m-psub">P = A(AᵀA)⁻¹Aᵀ</a> <a href="#m-hedge">Best hedge = projection</a></p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="prereq"><span class="part-n">Part 2</span> Prerequisites</h2>
+    <p>Click any link to review it, then come back.</p>
+    <ul>
+      <li><a href="13_orthogonal-vectors-and-subspaces.html#t1">Orthogonality, length, AᵀA</a> (Lesson 13).</li>
+      <li><a href="10_the-four-fundamental-subspaces.html#t4">The plane of reachable targets and the hidden link</a> (Lesson 10).</li>
+      <li><a href="03_multiplication-and-inverse-matrices.html#t6">The 2 × 2 inverse</a> (Lesson 3).</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="explain"><span class="part-n">Part 3</span> Explanation</h2>
+
+    <div class="box finance"><span class="label">The numbers used in the examples</span>
+      <p>Demeaned scenario returns (bad, normal, good year) from Lesson 13: Nifty $a = (-20, 0, 20)$, midcap $b = (-26, 2, 24)$. Fund matrix with Nifty and bonds and three rules (budget, return, exposure): columns $(1, 12, 1)$ and $(1, 7, 0)$.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Conditions and important concepts</h3>
+
+    <h4>1. The question</h4>
+    $$ \boxed{\text{Given } b \text{ and a line (or plane) of things you can reach, which reachable point is closest to } b?} $$
+    <p>Picture it: drop a perpendicular from $b$ onto the line. Where it lands is the closest point $p$, the <b>projection</b>. The gap $e = b - p$ is the <b>error</b>.</p>
+
+    <h4>2. Projection onto a line</h4>
+    <div class="box method" id="m-line"><span class="label">Method · Projection onto the line through a</span>
+      <p>$p$ is on the line, so $p = \hat x\,a$ for some number $\hat x$. The error must be perpendicular to $a$:</p>
+      $$ a^T(b - \hat x\,a) = 0 \;\Rightarrow\; \hat x\, a^Ta = a^Tb \;\Rightarrow\; \boxed{\hat x = \frac{a^Tb}{a^Ta}} \qquad p = \hat x\,a $$
+    </div>
+
+    <h4>3. The error is perpendicular</h4>
+    <p>$e = b - p$ satisfies $a^Te = 0$. That is <b>why</b> $p$ is closest: any other point $\hat x' a$ on the line gives $b - \hat x' a = e + (\hat x - \hat x')a$, and by Pythagoras its length is $\|e\|^2 + (\text{something})^2 \ge \|e\|^2$.</p>
+
+    <h4>4. What scaling does</h4>
+    <p>Doubling $b$ doubles $p$. Doubling $a$ leaves $p$ unchanged (it's the same line): $\hat x$ halves while $a$ doubles.</p>
+
+    <h4>5. The projection matrix (line)</h4>
+    <div class="box method" id="m-pline"><span class="label">Method · Projection matrix onto a line</span>
+      $$ p = a\,\frac{a^Tb}{a^Ta} = \underbrace{\frac{aa^T}{a^Ta}}_{P}\,b \qquad P = \frac{aa^T}{a^Ta} $$
+      <p>$aa^T$ is a matrix (a column times a row), not a number. $P$ has rank 1: its column space is the line through $a$.</p>
+    </div>
+
+    <h4>6. Two properties of every projection</h4>
+    <div class="box method" id="m-props"><span class="label">Rule · Pᵀ = P and P² = P</span>
+      <p>$P$ is symmetric. And projecting twice changes nothing: once $b$ is on the line, its projection is itself, so $P^2 = P$.</p>
+    </div>
+
+    <h4>7. Why project?</h4>
+    <p>$Ax = b$ often has no solution: $b$ isn't in $C(A)$ (Lesson 8). So replace $b$ by the closest vector that <b>is</b> in $C(A)$, its projection $p$, and solve $A\hat x = p$ instead.</p>
+
+    <h4>8. Projection onto a subspace: the normal equations</h4>
+    <div class="box method" id="m-normal"><span class="label">Method · The normal equations</span>
+      <p>Let the columns of $A$ span the subspace. Then $p = A\hat x$, and the error $e = b - A\hat x$ must be perpendicular to every column of $A$:</p>
+      $$ A^T(b - A\hat x) = 0 \;\Rightarrow\; \boxed{A^TA\,\hat x = A^Tb} $$
+    </div>
+    <p>With one column, $A^TA = a^Ta$ is a number, and this is concept 2 again.</p>
+
+    <h4>9. The formulas</h4>
+    <div class="box method" id="m-psub"><span class="label">Method · Projection onto C(A)</span>
+      $$ \hat x = (A^TA)^{-1}A^Tb \qquad p = A\hat x \qquad P = A(A^TA)^{-1}A^T $$
+      <p>$A^TA$ is invertible because the columns are independent (Lesson 13). Don't "simplify" $(A^TA)^{-1}$ into $A^{-1}(A^T)^{-1}$: $A$ is usually not square.</p>
+    </div>
+
+    <h4>10. Where the error lives</h4>
+    <p>$A^Te = 0$ says $e$ is in the <b>left null space</b> $N(A^T)$, which is perpendicular to $C(A)$ (Lesson 13). So $b$ splits into two perpendicular pieces:</p>
+    $$ b = \underbrace{p}_{\in\, C(A)} + \underbrace{e}_{\in\, N(A^T)} $$
+
+    <h4>11. I − P</h4>
+    <p>$I - P$ is also a projection (MIT problem 15.2: $(I - P)^2 = I - 2P + P^2 = I - P$). It projects onto the left null space and gives the error: $(I - P)b = e$.</p>
+
+    <h4>12. In markets: the best hedge</h4>
+    <div class="box method" id="m-hedge"><span class="label">Model · The best hedge is a projection</span>
+      <p>To hedge returns $b$ with an instrument whose returns are $a$, choose the hedge ratio $h$ that makes the leftover risk $\|b - ha\|^2$ as small as possible. The answer is the projection: $h = \dfrac{a^Tb}{a^Ta}$, which for demeaned returns is <b>beta</b> (covariance ÷ variance). The leftover $e$ is uncorrelated with the hedge: the <b>unhedgeable</b> part.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Procedure</h3>
+    <h4>A. Onto a line through a</h4>
+    <table>
+      <tr><th>Step</th><th>What to do</th></tr>
+      <tr><td>1</td><td>Compute $a^Tb$ and $a^Ta$.</td></tr>
+      <tr><td>2</td><td>$\hat x = a^Tb / a^Ta$; $p = \hat x\,a$.</td></tr>
+      <tr><td>3</td><td>$e = b - p$. Check $a^Te = 0$.</td></tr>
+      <tr><td>4</td><td>(Optional) $P = aa^T / a^Ta$; check $Pb = p$.</td></tr>
+    </table>
+    <h4>B. Onto the column space of A</h4>
+    <table>
+      <tr><th>Step</th><th>What to do</th></tr>
+      <tr><td>1</td><td>Compute $A^TA$ and $A^Tb$.</td></tr>
+      <tr><td>2</td><td>Solve $A^TA\,\hat x = A^Tb$.</td></tr>
+      <tr><td>3</td><td>$p = A\hat x$; $e = b - p$.</td></tr>
+      <tr><td>4</td><td>Check $A^Te = 0$ (the error is perpendicular to every column).</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. 2 × 2 example</h3>
+    <p>Two scenarios (bad year, good year). Nifty returns $a = (-10, 20)$; a large-cap fund returns $b = (-11, 25)$. Best hedge ratio?</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">Dot products</span> $a^Tb = (-10)(-11) + (20)(25) = 110 + 500 = 610$. $\;a^Ta = 100 + 400 = 500$.</p>
+        <p class="k"><span class="kl">Ratio</span> $\hat x = 610 / 500 = 1.22$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Projection</span> $p = 1.22 \times (-10, 20) = (-12.2, 24.4)$.</p>
+        <p class="k"><span class="kl">Error</span> $e = (-11 + 12.2,\ 25 - 24.4) = (1.2, 0.6)$.</p>
+        <p class="k"><span class="kl">Check</span> $a^Te = (-10)(1.2) + (20)(0.6) = -12 + 12 = 0$ ✓.</p>
+      </li>
+    </ol>
+    <p><b>Projection matrix:</b></p>
+    $$ P = \frac{aa^T}{a^Ta} = \frac{1}{500}\begin{bmatrix} 100 & -200 \\ -200 & 400 \end{bmatrix} = \begin{bmatrix} 0.2 & -0.4 \\ -0.4 & 0.8 \end{bmatrix} $$
+    <p>Check $Pb$: $(0.2(-11) - 0.4(25),\ -0.4(-11) + 0.8(25)) = (-2.2 - 10,\ 4.4 + 20) = (-12.2, 24.4) = p$ ✓. Check $P^2$: top-left $0.04 + 0.16 = 0.2$, top-right $-0.08 - 0.32 = -0.4$, bottom-right $0.16 + 0.64 = 0.8$: $P^2 = P$ ✓.</p>
+    <p><b>Meaning:</b> short ₹1.22 of Nifty for every ₹1 of the fund. The leftover $(1.2, 0.6)$ is risk Nifty can't cancel.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. 3 × 3 example: the hedge ratio is beta</h3>
+    <p>Three scenarios, demeaned returns: Nifty $a = (-20, 0, 20)$, midcap $b = (-26, 2, 24)$.</p>
+    <ol class="step-list kid-step">
+      <li>
+        <p class="k"><span class="kl">Dot products</span> $a^Tb = 520 + 0 + 480 = 1000$. $\;a^Ta = 400 + 0 + 400 = 800$.</p>
+        <p class="k"><span class="kl">Beta</span> $\hat x = 1000 / 800 = \boxed{1.25}$.</p>
+      </li>
+      <li>
+        <p class="k"><span class="kl">Projection</span> $p = 1.25 \times (-20, 0, 20) = (-25, 0, 25)$: the part of midcap that the market explains.</p>
+        <p class="k"><span class="kl">Error</span> $e = (-26 + 25,\ 2 - 0,\ 24 - 25) = (-1, 2, -1)$: the part it doesn't.</p>
+        <p class="k"><span class="kl">Check</span> $a^Te = 20 + 0 - 20 = 0$ ✓: the leftover is uncorrelated with Nifty.</p>
+      </li>
+    </ol>
+    $$ \boxed{\text{midcap} = 1.25 \times \text{Nifty} + (-1, 2, -1)} $$
+    <p>And $(-1, 2, -1) = -0.2 \times (5, -10, 5)$: the leftover is Lesson 13's market-neutral strategy, scaled. <b>Hedge:</b> for every ₹1 of midcap, short ₹1.25 of Nifty. What remains can't be hedged with Nifty, and it's small: $\|e\|^2 = 1 + 4 + 1 = 6$ against $\|b\|^2 = 1256$.</p>
+    <p><b>The projection matrix</b> onto the Nifty line:</p>
+    $$ P = \frac{aa^T}{800} = \frac{1}{800}\begin{bmatrix} 400 & 0 & -400 \\ 0 & 0 & 0 \\ -400 & 0 & 400 \end{bmatrix} = \begin{bmatrix} 0.5 & 0 & -0.5 \\ 0 & 0 & 0 \\ -0.5 & 0 & 0.5 \end{bmatrix} \qquad Pb = \begin{bmatrix} -13 - 12 \\ 0 \\ 13 + 12 \end{bmatrix} = \begin{bmatrix} -25 \\ 0 \\ 25 \end{bmatrix} \;✓ $$
+    <h4>Try it: find the best hedge ratio yourself</h4>
+    <div id="hedge" class="lab-controls"></div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Bigger example: the closest reachable target</h3>
+    <p>With Nifty and bonds, reachable targets must satisfy $R = 7B + 5E$ (Lesson 10). A client asks for $b = (10, 105, 4)$: ₹10 lakh, ₹105 thousand, exposure 4. Test: $70 - 105 + 20 = -15 \ne 0$. Impossible. What's the <b>closest</b> reachable target?</p>
+    $$ A = \begin{bmatrix} 1 & 1 \\ 12 & 7 \\ 1 & 0 \end{bmatrix} \qquad b = \begin{bmatrix} 10 \\ 105 \\ 4 \end{bmatrix} $$
+    <p><b>Step 1, $A^TA$ and $A^Tb$</b> (each entry a dot product of columns):</p>
+    $$ A^TA = \begin{bmatrix} 1 + 144 + 1 & 1 + 84 + 0 \\ 1 + 84 + 0 & 1 + 49 + 0 \end{bmatrix} = \begin{bmatrix} 146 & 85 \\ 85 & 50 \end{bmatrix} \qquad A^Tb = \begin{bmatrix} 10 + 1260 + 4 \\ 10 + 735 + 0 \end{bmatrix} = \begin{bmatrix} 1274 \\ 745 \end{bmatrix} $$
+    <p><b>Step 2, solve $A^TA\hat x = A^Tb$.</b> Determinant $146 \times 50 - 85 \times 85 = 7300 - 7225 = 75$:</p>
+    $$ \hat x = \frac{1}{75}\begin{bmatrix} 50 & -85 \\ -85 & 146 \end{bmatrix}\begin{bmatrix} 1274 \\ 745 \end{bmatrix} = \frac{1}{75}\begin{bmatrix} 63700 - 63325 \\ -108290 + 108770 \end{bmatrix} = \frac{1}{75}\begin{bmatrix} 375 \\ 480 \end{bmatrix} = \begin{bmatrix} 5 \\ 6.4 \end{bmatrix} $$
+    <p><b>Step 3, the closest target and the error:</b></p>
+    $$ p = A\hat x = \begin{bmatrix} 5 + 6.4 \\ 60 + 44.8 \\ 5 + 0 \end{bmatrix} = \begin{bmatrix} 11.4 \\ 104.8 \\ 5 \end{bmatrix} \qquad e = b - p = \begin{bmatrix} -1.4 \\ 0.2 \\ -1 \end{bmatrix} $$
+    <p><b>Step 4, checks.</b> $A^Te$: column 1 $-1.4 + 2.4 - 1 = 0$ ✓, column 2 $-1.4 + 1.4 + 0 = 0$ ✓. And $p$ is reachable: $7(11.4) + 5(5) = 79.8 + 25 = 104.8$ ✓.</p>
+    <p><b>Meaning.</b> The best you can do with Nifty and bonds is ₹5 lakh Nifty + ₹6.4 lakh bonds, giving (₹11.4L, ₹104.8K, exposure 5). The error $(-1.4, 0.2, -1) = -0.2 \times (7, -1, 5)$ points along the hidden link: it lives in the left null space, exactly as concept 10 says.</p>
+    <details class="more"><summary>For the curious: a shortcut, and a caution about units</summary>
+      <p>Because the plane's normal is $n = (7, -1, 5)$, you can also project by removing the normal component: $p = b - \frac{n^Tb}{n^Tn}n = b - \frac{-15}{75}n = b + 0.2(7, -1, 5)$. Same answer. And $P = I - \frac{nn^T}{n^Tn}$.</p>
+      <p>Caution: "closest" here treats ₹1 lakh of budget, ₹1 thousand of return and 1 unit of exposure as equally important. In practice you'd weight the rules (weighted least squares, coming up) by how much each miss matters.</p>
+    </details>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Connection: why projections matter</h3>
+    <table>
+      <tr><th>Setting</th><th>$b$</th><th>Subspace</th><th>Projection $p$</th><th>Error $e$</th></tr>
+      <tr><td>Hedging with one instrument</td><td>a fund's returns</td><td>line of the hedge</td><td>hedged part (beta × hedge)</td><td>unhedgeable risk</td></tr>
+      <tr><td>Hedging with several</td><td>an exposure / payoff</td><td>$C(A)$ of the hedges</td><td>best replicating hedge</td><td>residual risk, in $N(A^T)$</td></tr>
+      <tr><td>Unreachable target</td><td>client's target</td><td>reachable targets $C(A)$</td><td>closest reachable target</td><td>along the hidden link</td></tr>
+      <tr><td>Fitting data (Lesson 15)</td><td>observed points</td><td>all lines $C + Dt$</td><td>best-fit line</td><td>residuals</td></tr>
+    </table>
+    <p>The same picture every time: $b = p + e$ with $p \in C(A)$, $e \in N(A^T)$, $p \perp e$. Next lesson uses it for <b>least squares</b>: fitting a line to market data, like estimating beta and alpha from returns.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Final memory table</h3>
+    <table>
+      <tr><th></th><th>Onto a line (through $a$)</th><th>Onto a subspace ($C(A)$)</th></tr>
+      <tr><td><b>Coefficient</b></td><td>$\hat x = a^Tb / a^Ta$</td><td>$A^TA\hat x = A^Tb$</td></tr>
+      <tr><td><b>Projection</b></td><td>$p = \hat x\,a$</td><td>$p = A\hat x$</td></tr>
+      <tr><td><b>Matrix</b></td><td>$P = aa^T / a^Ta$ (rank 1)</td><td>$P = A(A^TA)^{-1}A^T$</td></tr>
+      <tr><td><b>Error</b></td><td>$e = b - p$, $a^Te = 0$</td><td>$e = b - p$, $A^Te = 0$, $e \in N(A^T)$</td></tr>
+      <tr><td><b>Properties</b></td><td colspan="2">$P^T = P$, $P^2 = P$; $I - P$ projects onto the perpendicular complement</td></tr>
+      <tr><td><b>Markets</b></td><td>hedge ratio = beta</td><td>best hedge; closest reachable target</td></tr>
+    </table>
+    <details class="check"><summary>Check yourself (MIT problem 15.1): $A$ = the 4 × 4 identity with its last column removed. Project $b = (1, 2, 3, 4)$ onto $C(A)$.</summary>
+      <p>$C(A)$ is all vectors with last entry 0. So $P = \text{diag}(1, 1, 1, 0)$ (4 × 4) and $p = Pb = (1, 2, 3, 0)$. The error $(0, 0, 0, 4)$ is in the left null space, and $I - P = \text{diag}(0, 0, 0, 1)$ projects onto it.</p>
+    </details>
+    <details class="check"><summary>Check yourself (MIT recitation): the projection matrix onto the plane $x + y - z = 0$.</summary>
+      <p>Basis $(1, -1, 0)$, $(1, 0, 1)$; $A^TA = \left[\begin{smallmatrix} 2 & 1 \\ 1 & 2 \end{smallmatrix}\right]$, inverse $\frac13\left[\begin{smallmatrix} 2 & -1 \\ -1 & 2 \end{smallmatrix}\right]$, so $P = \frac13\left[\begin{smallmatrix} 2 & -1 & 1 \\ -1 & 2 & 1 \\ 1 & 1 & 2 \end{smallmatrix}\right]$. Check: $P(1, 1, -1) = 0$ (the normal goes to zero). Shortcut: $P = I - \frac{nn^T}{n^Tn}$ with $n = (1, 1, -1)$.</p>
+    </details>
+
+  </div>
+  </section>
+
+    <section class="tab-panel" data-panel="examples" hidden>
+    <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#ex1">Hedging: the best hedge with missing instruments</a></li>
+        <li><a href="#ex2">Lot sizes: the closest buildable payoff</a></li>
+        <li><a href="#ex3">Projection lab</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex1">Example 1: Hedging, the best hedge with missing instruments</h3>
+    <p>A desk has exposure $b = (10, 3, 2)$ to (market, currency, rates), but only Nifty futures $(1, 0, 0)$ and IT futures $(1, 1, 0)$ are available. Rates can't be hedged (Lesson 10). What's the best partial hedge?</p>
+    $$ A = \begin{bmatrix} 1 & 1 \\ 0 & 1 \\ 0 & 0 \end{bmatrix} \qquad A^TA = \begin{bmatrix} 1 & 1 \\ 1 & 2 \end{bmatrix} \qquad A^Tb = \begin{bmatrix} 10 \\ 10 + 3 \end{bmatrix} = \begin{bmatrix} 10 \\ 13 \end{bmatrix} $$
+    <p>Determinant $2 - 1 = 1$: $\hat x = \left[\begin{smallmatrix} 2 & -1 \\ -1 & 1 \end{smallmatrix}\right]\left[\begin{smallmatrix} 10 \\ 13 \end{smallmatrix}\right] = (20 - 13,\ -10 + 13) = (7, 3)$. So $p = 7(1, 0, 0) + 3(1, 1, 0) = (10, 3, 0)$ and $e = (0, 0, 2)$.</p>
+    <p>Check $A^Te = (0, 0) $ ✓. <b>Meaning:</b> 7 Nifty fut and 3 IT fut cancel all market and currency risk; the 2 units of rate risk are left untouched, and they are exactly the left-null-space direction $(0, 0, 1)$.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex2">Example 2: Lot sizes, the closest buildable payoff</h3>
+    <p>A client wants payoff $b = (-100, 50, 300)$ points at 19,800 / 20,000 / 20,200, using only futures $(-200, 0, 200)$ and the 20,000 call $(0, 0, 200)$.</p>
+    $$ A^TA = \begin{bmatrix} 80000 & 40000 \\ 40000 & 40000 \end{bmatrix} \qquad A^Tb = \begin{bmatrix} 20000 + 0 + 60000 \\ 0 + 0 + 60000 \end{bmatrix} = \begin{bmatrix} 80000 \\ 60000 \end{bmatrix} $$
+    <p>Divide by 10,000: $\left[\begin{smallmatrix} 8 & 4 \\ 4 & 4 \end{smallmatrix}\right]\hat x = \left[\begin{smallmatrix} 8 \\ 6 \end{smallmatrix}\right]$. Determinant $32 - 16 = 16$: $\hat x = \frac{1}{16}\left[\begin{smallmatrix} 4 & -4 \\ -4 & 8 \end{smallmatrix}\right]\left[\begin{smallmatrix} 8 \\ 6 \end{smallmatrix}\right] = \frac{1}{16}(8, 16) = (0.5, 1)$.</p>
+    <p>$p = 0.5(-200, 0, 200) + 1(0, 0, 200) = (-100, 0, 300)$, $e = (0, 50, 0)$. Check $A^Te = (0, 0)$ ✓. And here $P = A(A^TA)^{-1}A^T = \left[\begin{smallmatrix} 1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 1 \end{smallmatrix}\right]$: it keeps the 19,800 and 20,200 payoffs and wipes out the 20,000 one.</p>
+    <p><b>Meaning:</b> half a lot of futures plus one call matches the client everywhere except the 50 points at 20,000, which no mix of these products can pay.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex3">Example 3: Projection lab</h3>
+    <p>Enter the instruments as columns of $A$ (up to 4 rows × 3 columns) and the target $b$. The lab solves the normal equations, gives $\hat x$, $p$, $e$, checks $A^Te = 0$, and shows $P$.</p>
+    <div id="projlab" class="syslab"></div>
+
+    </div>
+    </section>
+
+  <nav class="pager">
+    <a href="13_orthogonal-vectors-and-subspaces.html">← Lesson 13: Orthogonal Vectors and Subspaces</a>
+    <span class="off">Next: Lesson 15 (coming soon)</span>
+  </nav>
+  </div>
+</main>
+<script>
+// Interactive pieces: Notes topic 4 (hedge-ratio slider) and the Examples tab (projection lab).
+window.addEventListener("load", function () {
+  function km(el) { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: "$", right: "$", display: false }], throwOnError: false }); }
+  function t(v) { var r = Math.round(v * 1e4) / 1e4; if (Math.abs(r) < 1e-9) r = 0; return String(r); }
+  function vec(v) { return "(" + v.map(t).join(", ") + ")"; }
+  function mat(M) { return "\\begin{bmatrix}" + M.map(function (r) { return r.map(t).join(" & "); }).join(" \\\\ ") + "\\end{bmatrix}"; }
+  function num(el) { var x = parseFloat(el.value); return isFinite(x) ? x : 0; }
+  function dot(a, b) { return a.reduce(function (s, x, i) { return s + x * b[i]; }, 0); }
+
+  // ---- Notes, topic 4: hedge-ratio slider with the risk curve ----
+  (function () {
+    var root = document.getElementById("hedge"); if (!root) return;
+    var a = [-20, 0, 20], b = [-26, 2, 24];
+    root.innerHTML = '<div class="lab-row"><label>Hedge ratio $h$ (₹ of Nifty shorted per ₹1 of midcap) <input type="range" class="hg" min="0" max="2.5" step="0.05" value="0.5" style="width:16em"></label> <b class="hg-v"></b></div>' +
+      '<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center"><svg class="hg-svg" viewBox="0 0 320 190" width="320" height="190" aria-hidden="true"></svg><div class="hg-out mixer-out"></div></div>';
+    km(root.querySelector(".lab-row"));
+    var inp = root.querySelector(".hg"), out = root.querySelector(".hg-out"), svg = root.querySelector(".hg-svg"), lab = root.querySelector(".hg-v");
+    var risk = function (h) { var e = b.map(function (v, i) { return v - h * a[i]; }); return dot(e, e); };
+    var best = dot(a, b) / dot(a, a), rmax = risk(0) * 1.05;
+    function X(h) { return 30 + h / 2.5 * 275; } function Y(r) { return 170 - r / rmax * 150; }
+    function update() {
+      var h = +inp.value, e = b.map(function (v, i) { return v - h * a[i]; }), r = dot(e, e), ae = dot(a, e);
+      lab.textContent = h.toFixed(2);
+      var css = getComputedStyle(document.documentElement), acc = css.getPropertyValue("--accent").trim(), ink = css.getPropertyValue("--ink-soft").trim(), grn = css.getPropertyValue("--ex-b").trim(), org = css.getPropertyValue("--int-b").trim();
+      var d = ""; for (var k = 0; k <= 50; k++) { var hh = 2.5 * k / 50; d += (k ? " L " : "M ") + X(hh).toFixed(1) + " " + Y(risk(hh)).toFixed(1); }
+      svg.innerHTML = '<line x1="30" y1="170" x2="310" y2="170" stroke="' + ink + '" stroke-opacity=".5"/><line x1="30" y1="20" x2="30" y2="170" stroke="' + ink + '" stroke-opacity=".5"/>' +
+        '<text x="305" y="185" text-anchor="end" fill="' + ink + '" font-size="11" font-family="Inter,sans-serif">hedge ratio h</text><text x="34" y="16" fill="' + ink + '" font-size="11" font-family="Inter,sans-serif">leftover risk ‖e‖²</text>' +
+        '<path d="' + d + '" fill="none" stroke="' + acc + '" stroke-width="2.5"/>' +
+        '<line x1="' + X(best) + '" y1="20" x2="' + X(best) + '" y2="170" stroke="' + grn + '" stroke-dasharray="4 4"/><text x="' + (X(best) + 4) + '" y="34" fill="' + grn + '" font-size="11" font-family="Inter,sans-serif">β = ' + t(best) + "</text>" +
+        '<circle cx="' + X(h) + '" cy="' + Y(r) + '" r="6" fill="' + org + '"/>';
+      var hTxt = t(h);
+      out.innerHTML = "<p>Leftover $e = b - h\\,a = " + vec(e) + "$</p><p>Risk $\\|e\\|^2 = " + t(r) + "$. Check $a^Te = " + t(ae) + "$.</p>" +
+        (Math.abs(h - best) < 0.026 ? '<p class="answer">Minimum: $h = \\beta = 1.25$, and $a^Te = 0$. The leftover is perpendicular to Nifty.</p>' : '<p>' + (h < best ? "Under-hedged: still positively tied to Nifty ($a^Te &gt; 0$)." : "Over-hedged: now negatively tied to Nifty ($a^Te &lt; 0$).") + " Slide toward $1.25$.</p>");
+      km(out);
+    }
+    inp.addEventListener("input", update); update();
+  })();
+
+  // ---- Examples tab: projection lab ----
+  (function () {
+    var root = document.getElementById("projlab"); if (!root) return;
+    var presets = [
+      { label: "Closest reachable target (Nifty, bonds)", A: [[1, 1], [12, 7], [1, 0]], b: [10, 105, 4] },
+      { label: "Midcap hedged with Nifty (1 column)", A: [[-20], [0], [20]], b: [-26, 2, 24] },
+      { label: "Desk exposure: Nifty fut + IT fut", A: [[1, 1], [0, 1], [0, 0]], b: [10, 3, 2] },
+      { label: "Payoff: futures + 20,000 call", A: [[-200, 0], [0, 0], [200, 200]], b: [-100, 50, 300] },
+      { label: "MIT 15.1 (4 × 3)", A: [[1, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 0]], b: [1, 2, 3, 4] }
+    ];
+    root.innerHTML = '<div class="lab-controls"><div class="lab-row"><label>Example <select class="pl-pick">' + presets.map(function (p, i) { return '<option value="' + i + '">' + p.label + "</option>"; }).join("") + '</select></label></div><div class="pl-grid"></div></div><div class="pl-out"></div>';
+    var pick = root.querySelector(".pl-pick"), grid = root.querySelector(".pl-grid"), out = root.querySelector(".pl-out");
+    function load() {
+      var P = presets[+pick.value], n = P.A[0].length;
+      var h = '<table class="lab-table sl-table"><tr>' + P.A[0].map(function (_, j) { return "<th>col " + (j + 1) + "</th>"; }).join("") + "<th>b</th></tr>";
+      P.A.forEach(function (row, i) { h += "<tr>" + row.map(function (v, j) { return '<td><input type="number" step="any" data-i="' + i + '" data-j="' + j + '" value="' + v + '"></td>'; }).join("") + '<td><input type="number" step="any" data-i="' + i + '" data-j="b" value="' + P.b[i] + '"></td></tr>'; });
+      grid.innerHTML = h + "</table>"; update();
+    }
+    function solve(M, v) { // Gaussian elimination with partial pivoting for a small square system
+      var n = M.length, A = M.map(function (r, i) { return r.concat([v[i]]); });
+      for (var c = 0; c < n; c++) {
+        var p = c; for (var i = c + 1; i < n; i++) if (Math.abs(A[i][c]) > Math.abs(A[p][c])) p = i;
+        if (Math.abs(A[p][c]) < 1e-12) return null;
+        var tmp = A[p]; A[p] = A[c]; A[c] = tmp;
+        for (var i2 = c + 1; i2 < n; i2++) { var l = A[i2][c] / A[c][c]; for (var k = c; k <= n; k++) A[i2][k] -= l * A[c][k]; }
+      }
+      var x = new Array(n); for (var r = n - 1; r >= 0; r--) { var s = A[r][n]; for (var k2 = r + 1; k2 < n; k2++) s -= A[r][k2] * x[k2]; x[r] = s / A[r][r]; }
+      return x;
+    }
+    function inverse(M) { var n = M.length; return M.map(function (_, j) { var ej = M.map(function (_, i) { return i === j ? 1 : 0; }); return solve(M, ej); }).reduce(function (acc, col, j) { col.forEach(function (v, i) { (acc[i] = acc[i] || [])[j] = v; }); return acc; }, []); }
+    function update() {
+      var A = [], b = [];
+      grid.querySelectorAll("input").forEach(function (el) { var i = +el.dataset.i, j = el.dataset.j; if (j === "b") b[i] = num(el); else (A[i] = A[i] || [])[+j] = num(el); });
+      var m = A.length, n = A[0].length, cols = A[0].map(function (_, j) { return A.map(function (r) { return r[j]; }); });
+      var AtA = cols.map(function (ci) { return cols.map(function (cj) { return dot(ci, cj); }); }), Atb = cols.map(function (c) { return dot(c, b); });
+      var h = "<p>$A^TA = " + mat(AtA) + "$, $\\;A^Tb = " + mat(Atb.map(function (v) { return [v]; })) + "$</p>";
+      var x = solve(AtA, Atb);
+      if (!x) { out.innerHTML = h + '<p class="lab-warn">$A^TA$ is singular: the columns are dependent. Remove a redundant column.</p>'; km(out); return; }
+      var p = A.map(function (r) { return dot(r, x); }), e = b.map(function (v, i) { return v - p[i]; }), Ate = cols.map(function (c) { return dot(c, e); });
+      var inv = inverse(AtA), Pm = A.map(function (ri) { return A.map(function (rj) { return ri.reduce(function (s, aik, k) { return s + aik * inv[k].reduce(function (s2, v, l) { return s2 + v * rj[l]; }, 0); }, 0); }); });
+      h += "<p>Solve $A^TA\\hat x = A^Tb$: $\\hat x = " + vec(x) + "$.</p><p>$p = A\\hat x = " + vec(p) + "$, $\\;e = b - p = " + vec(e) + "$.</p>";
+      h += "<p>Check $A^Te = " + vec(Ate) + "$ " + (Ate.every(function (v) { return Math.abs(v) < 1e-7; }) ? "✓ (perpendicular to every column)" : "") + ". Leftover size $\\|e\\|^2 = " + t(dot(e, e)) + "$.</p>";
+      h += "<p>$P = A(A^TA)^{-1}A^T = " + mat(Pm) + "$</p>";
+      h += dot(e, e) < 1e-9 ? '<p class="answer">$e = 0$: $b$ was already reachable, so the projection is $b$ itself.</p>' : '<p class="answer">Best approximation found: the closest point to $b$ that the columns can reach.</p>';
+      out.innerHTML = h; km(out);
+    }
+    pick.addEventListener("change", load); grid.addEventListener("input", update); load();
+  })();
+});
+</script>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The Linear Algebra notes follow MIT OpenCourseWare 18.06, Linear Algebra (Prof. Gilbert Strang), used under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">CC BY-NC-SA 4.0</a>; these pages are shared under the same licence. Not affiliated with or endorsed by MIT.</div>
+  <div><b>Educational only, not investment advice.</b> Market examples use illustrative Nifty numbers; lot sizes and prices change, so check the exchange before using any figure.</div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

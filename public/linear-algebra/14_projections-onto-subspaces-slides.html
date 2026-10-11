@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projections onto Subspaces · Slides</title>
+<meta name="description" content="Linear Algebra Lesson 14 as a slide carousel: projections onto lines and subspaces, the normal equations, the hedge ratio as beta and the closest reachable target.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<style>
+  /* One slide = one 1080 × 1350 page (LinkedIn's portrait carousel size). Always light. */
+  @page { size: 1080px 1350px; margin: 0; }
+  html, body { margin: 0; background: #e9e5dc; }
+  body { font: 34px/1.5 var(--serif); color: var(--ink); }
+  .slide {
+    position: relative; overflow: hidden; box-sizing: border-box;
+    width: 1080px; height: 1350px; margin: 0 auto 24px; padding: 96px 84px 130px;
+    background: var(--paper); display: flex; flex-direction: column;
+    font-size: 38px; line-height: 1.45;   /* set here, so print styles for the notes don't shrink it */
+    break-after: page; page-break-after: always;
+  }
+  .slide::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 14px; background: var(--accent); }
+  .kicker { font: 600 22px/1.3 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .slide h1 { font: 700 82px/1.06 var(--sans); letter-spacing: -.02em; margin: 22px 0 30px; }
+  .slide h2 { font: 700 60px/1.12 var(--sans); letter-spacing: -.015em; margin: 14px 0 34px; padding: 0; border: 0; }
+  .slide p { margin: 0 0 26px; }
+  .slide ul, .slide ol { margin: 0 0 26px; padding-left: 40px; }
+  .slide li { margin: 0 0 14px; }
+  .lead { font-size: 44px; line-height: 1.38; }
+  .soft { color: var(--ink-soft); }
+  .slide table { display: table; width: 100%; font-size: 32px; margin: 10px 0 28px; }
+  .slide th { font-size: 24px; }
+  .slide th, .slide td { padding: 12px 16px; }
+  .slide .box { font-size: 34px; margin: 10px 0 26px; padding: 18px 24px; }
+  .slide .box > .label { font-size: 18px; }
+  .slide figure.fig { width: 100%; max-width: 660px; align-self: center; margin: 6px 0 0; padding: 18px; }
+  .slide .figs { width: 100%; }
+  .slide .figs figure.fig { max-width: none; }
+  .slide figure.fig figcaption { font-size: 26px; }
+  .slide .fig .tick { font-size: 12px; }
+  .slide .figs { gap: 22px; }
+  .slide img.plot { display: block; align-self: center; max-width: 100%; max-height: 440px; width: auto; border: 1px solid var(--rule); border-radius: 12px; background: #fff; }
+  .slide .katex { font-size: 1.04em; }
+  .answer { font-size: 1em; }
+  .foot {
+    position: absolute; left: 84px; right: 84px; bottom: 48px;
+    display: flex; justify-content: space-between; gap: 20px;
+    padding-top: 18px; border-top: 2px solid var(--rule);
+    font: 500 21px/1 var(--sans); color: var(--ink-soft);
+  }
+  .cover { justify-content: center; }
+  .cover h1 { font-size: 104px; }
+  .cover .lead { font-size: 44px; }
+  .chip { display: inline-block; font: 600 24px/1 var(--sans); color: var(--accent); border: 2px solid var(--accent); border-radius: 999px; padding: 12px 20px; margin: 0 10px 12px 0; }
+  .center { text-align: center; }
+  .grow { flex: 1; }
+  @media print { html, body { background: none; } .slide { margin: 0; } }
+  @media screen and (max-width: 1100px) { .slide { zoom: .5; } }
+</style>
+</head>
+<body>
+
+<section class="slide cover">
+  <div class="kicker">Linear Algebra · Lesson 14</div>
+  <h1>Projections onto Subspaces</h1>
+  <p class="lead">Can't hedge it exactly? Get as close as possible. The <b>best possible hedge</b> is a projection.</p>
+  <div><span class="chip">AᵀAx̂ = Aᵀb</span><span class="chip">hedge ratio = β</span><span class="chip">MIT 18.06, Lecture 15</span></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Onto a line</div>
+  <h2>Drop a perpendicular</h2>
+  <p>The error $e = b - \hat x a$ must be perpendicular to $a$:</p>
+  $$ a^T(b - \hat x a) = 0 \;\Rightarrow\; \hat x = \frac{a^Tb}{a^Ta} $$
+  <p>$p = \hat x a$ is the closest point on the line; $P = aa^T/a^Ta$, with $P^2 = P$.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">In markets</div>
+  <h2>The hedge ratio is beta</h2>
+  <p>Nifty $a = (-20, 0, 20)$, midcap $b = (-26, 2, 24)$:</p>
+  $$ \hat x = \frac{520 + 0 + 480}{400 + 0 + 400} = \frac{1000}{800} = 1.25 $$
+  <p>midcap $= 1.25 \times$ Nifty $+ (-1, 2, -1)$. Leftover ⊥ Nifty: $20 + 0 - 20 = 0$.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Minimum risk</div>
+  <h2>Why it's the best</h2>
+  <p>Leftover risk $\|b - h a\|^2$ is a parabola in $h$. Its bottom is exactly where the leftover is perpendicular to the hedge: $h = \beta = 1.25$.</p>
+  <div class="box finance"><span class="label">Hedge</span><p>Short ₹1.25 Nifty per ₹1 midcap. The leftover $\|e\|^2 = 6$ (vs 1256) can't be hedged with Nifty.</p></div>
+</section>
+
+<section class="slide">
+  <div class="kicker">Onto a subspace</div>
+  <h2>The normal equations</h2>
+  $$ A^T(b - A\hat x) = 0 \;\Rightarrow\; A^TA\,\hat x = A^Tb $$
+  $$ p = A\hat x \qquad P = A(A^TA)^{-1}A^T $$
+  <p>The error lands in the left null space: $b = p + e$, $p \in C(A)$, $e \in N(A^T)$.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">The closest target</div>
+  <h2>(10, 105, 4) is impossible</h2>
+  <p>Nifty + bonds: $A^TA = \left[\begin{smallmatrix} 146 & 85 \\ 85 & 50 \end{smallmatrix}\right]$, $A^Tb = (1274, 745)$.</p>
+  <p>$\hat x = (5, 6.4)$ → closest reachable target $(11.4, 104.8, 5)$.</p>
+  <p>Error $(-1.4, 0.2, -1) = -0.2 \times (7, -1, 5)$: along the hidden link.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Hedging</div>
+  <h2>Unhedgeable risk = the error</h2>
+  <p>Exposure $(10, 3, 2)$ with only Nifty and IT futures: $\hat x = (7, 3)$, hedged part $(10, 3, 0)$, leftover $(0, 0, 2)$: the rate risk nothing can touch.</p>
+  <p>Payoff $(-100, 50, 300)$ with futures + call: $(0.5, 1)$, leftover $(0, 50, 0)$.</p>
+</section>
+
+<section class="slide">
+  <div class="kicker">Recap</div>
+  <h2>Key takeaways</h2>
+  <ol class="lead" style="font-size:36px">
+    <li>Line: $\hat x = a^Tb / a^Ta$, $P = aa^T/a^Ta$.</li>
+    <li>Subspace: $A^TA\hat x = A^Tb$.</li>
+    <li>$P^T = P$, $P^2 = P$.</li>
+    <li>Error ⊥ subspace, in $N(A^T)$.</li>
+    <li>Best hedge = projection; ratio = β.</li>
+  </ol>
+</section>
+
+<section class="slide cover">
+  <div class="kicker">Quant from First Principles</div>
+  <h1 style="font-size:76px">The full interactive lesson is free</h1>
+  <p class="lead">A hedge-ratio slider with the risk curve, a projection lab, and worked hedging and options examples:</p>
+  <p class="lead"><b>learn.krisarj.com</b></p>
+  <p class="soft" style="font-size:24px;margin-top:40px">Based on MIT OpenCourseWare 18.06 Linear Algebra (Prof. Gilbert Strang), used under CC BY-NC-SA 4.0; these slides are shared under the same licence. Not affiliated with or endorsed by MIT. Educational only, not investment advice.</p>
+</section>
+
+<script>
+// Footer with page numbers on every slide.
+(function () {
+  var slides = document.querySelectorAll(".slide");
+  slides.forEach(function (s, i) {
+    var f = document.createElement("div");
+    f.className = "foot";
+    f.innerHTML = "<span>Quant from First Principles · learn.krisarj.com</span><span>" + (i + 1) + " / " + slides.length + "</span>";
+    s.appendChild(f);
+  });
+})();
+window.addEventListener("load", function () {
+  if (window.renderMathInElement) renderMathInElement(document.body, {
+    delimiters: [{ left: "$$", right: "$$", display: true }, { left: "$", right: "$", display: false }],
+    throwOnError: false
+  });
+});
+</script>
+</body>
+</html>

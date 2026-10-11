@@ -17,8 +17,8 @@
           ["Independence, rank & the four subspaces", "is the market complete?", "live", "linear-algebra/topic-05.html"],
           ["Graphs & networks", "price loops and arbitrage", "live", "linear-algebra/topic-06.html"] ] },
         { name: "Geometry & fitting", topics: [
-          ["Orthogonality & projections", "the best possible hedge", "next"],
-          ["Least squares & Gram–Schmidt", "beta and clean factors", "soon"],
+          ["Orthogonality & projections", "the best possible hedge", "live", "linear-algebra/topic-07.html"],
+          ["Least squares & Gram–Schmidt", "beta and clean factors", "next"],
           ["Determinants & Cramer's rule", "redundant products, exact lots", "soon"] ] },
         { name: "Eigenvalues & beyond", topics: [
           ["Eigenvalues, diagonalization & powers", "where risk sits, compounding", "soon"],

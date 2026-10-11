@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orthogonal Vectors and Subspaces · Topic 7 · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra Topic 7, Lesson 13: orthogonal vectors and subspaces, explained step by step for markets: market-neutral means orthogonal, correlation is the cosine of an angle, the four subspaces come in perpendicular pairs, and Fredholm's alternative as an arbitrage certificate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=7">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<script src="../assets/notebook.js?v=3"></script>
+</head>
+<body data-lesson="la-07-1">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <a href="topic-07.html">Topic 7</a> / <b>Orthogonal Vectors and Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lecture sections">
+    <span class="tabs-title">Lesson 13</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Topic 7 · Lesson 13 (MIT 18.06, Lecture 14)</p>
+  <h1>Orthogonal Vectors and Subspaces</h1>
+  <p class="subtitle">Orthogonal means perpendicular, and in markets it means "has nothing to do with". A market-neutral trade is orthogonal to the market; uncorrelated returns are orthogonal vectors. And the four subspaces of every matrix come in two perpendicular pairs.</p>
+  <div class="downloads no-print">
+    <span class="label">Take it with you</span>
+    <a class="dl" href="../downloads/la-13-orthogonal-vectors-and-subspaces-slides.pdf" download>⬇ Slides (PDF, LinkedIn carousel)</a>
+    <a class="dl" href="../downloads/la-13-orthogonal-vectors-and-subspaces-notes.pdf" download>⬇ Notes report (PDF)</a>
+    <a class="dl share" href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Flearn.krisarj.com%2Flinear-algebra%2F13_orthogonal-vectors-and-subspaces" target="_blank" rel="noopener">Share on LinkedIn</a>
+  </div>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#index">Index</a></li>
+        <li><a href="#prereq">Prerequisites</a></li>
+        <li><a href="#t1">Conditions and important concepts</a></li>
+        <li><a href="#t2">Procedure</a></li>
+        <li><a href="#t3">2 × 2 example</a></li>
+        <li><a href="#t4">3 × 3 example</a></li>
+        <li><a href="#t5">Bigger example: returns as vectors</a></li>
+        <li><a href="#t6">Connection: the big picture</a></li>
+        <li><a href="#t7">Final memory table</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> Index</h2>
+    <p>What this lesson covers, in order. Click a topic to jump to it.</p>
+    <ol class="index-list">
+      <li><a href="#t1">Conditions and important concepts</a><span>12 short definitions: dot product, length, orthogonal subspaces, complements, AᵀA, Fredholm's alternative.</span></li>
+      <li><a href="#t2">Procedure</a><span>Test orthogonality; find an orthogonal complement.</span></li>
+      <li><a href="#t3">2 × 2 example</a><span>Nifty and its twin: two perpendicular pairs.</span></li>
+      <li><a href="#t4">3 × 3 example</a><span>Nifty, bonds, balanced: the do-nothing trade is perpendicular to every rule.</span></li>
+      <li><a href="#t5">Bigger example: returns as vectors</a><span>Correlation is a cosine; a market-neutral strategy is orthogonal to the market. With a correlation explorer.</span></li>
+      <li><a href="#t6">Connection: the big picture</a><span>The fundamental theorem, part 2, and the road to projections.</span></li>
+      <li><a href="#t7">Final memory table</a><span>Everything on one screen.</span></li>
+    </ol>
+    <p class="methods"><span class="label">Methods in this lesson</span> <a href="#m-dot">Orthogonality test xᵀy = 0</a> <a href="#m-len">Length ‖x‖</a> <a href="#m-perp">Orthogonal subspaces</a> <a href="#m-comp">Orthogonal complements</a> <a href="#m-corr">Correlation as cosine</a> <a href="#m-ata">N(AᵀA) = N(A)</a> <a href="#m-fred">Fredholm's alternative</a></p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="prereq"><span class="part-n">Part 2</span> Prerequisites</h2>
+    <p>Click any link to review it, then come back.</p>
+    <ul>
+      <li><a href="10_the-four-fundamental-subspaces.html#t1">The four subspaces</a> and <a href="10_the-four-fundamental-subspaces.html#m-test">the hidden link</a> (Lesson 10).</li>
+      <li><a href="05_transposes-permutations-vector-spaces.html#t2">The dot product xᵀy</a> and <a href="05_transposes-permutations-vector-spaces.html#t3">RᵀR and covariance</a> (Lesson 5).</li>
+      <li><a href="12_graphs-networks-incidence-matrices.html#t1">Loops and arbitrage</a> (Lesson 12).</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="explain"><span class="part-n">Part 3</span> Explanation</h2>
+
+    <div class="box finance"><span class="label">The numbers used in the examples</span>
+      <p><b>Fund matrix</b> (rows: budget, return, exposure): Nifty $(1, 12, 1)$, Nifty ETF $(1, 12, 1)$, bonds $(1, 7, 0)$, balanced $(1, 9.5, 0.5)$.</p>
+      <p><b>Scenario returns</b> (bad, normal, good year), as in Lesson 5: Nifty $(-10, 10, 30)$, average 10; midcap $(-16, 12, 34)$, average 10; a market-neutral strategy $(8, -7, 8)$, average 3. <b>Demeaned</b> (each minus its own average): Nifty $(-20, 0, 20)$, midcap $(-26, 2, 24)$, strategy $(5, -10, 5)$.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Conditions and important concepts</h3>
+
+    <h4>1. Orthogonal vectors</h4>
+    <div class="box method" id="m-dot"><span class="label">Rule · The orthogonality test</span>
+      <p>Two vectors are <b>orthogonal</b> (perpendicular, at 90°) exactly when their dot product is zero:</p>
+      $$ x \perp y \iff x^Ty = x_1y_1 + x_2y_2 + \cdots + x_ny_n = 0 $$
+    </div>
+    <p>Example: the zero-cost trade $(1, -1)$ and the budget row $(1, 1)$: $1 \cdot 1 + (-1) \cdot 1 = 0$. Perpendicular.</p>
+
+    <h4>2. Length</h4>
+    <div class="box method" id="m-len"><span class="label">Definition · Length (norm)</span>
+      $$ \|x\|^2 = x^Tx = x_1^2 + \cdots + x_n^2 \qquad \|x\| = \sqrt{x^Tx} $$
+    </div>
+    <p>Nifty's demeaned returns $(-20, 0, 20)$: $\|x\|^2 = 400 + 0 + 400 = 800$. For a demeaned return vector, $\|x\|^2 / 3$ is the variance, so length measures <b>risk</b>.</p>
+
+    <h4>3. Why the test works: Pythagoras</h4>
+    <p>$x$ and $y$ are perpendicular exactly when they form a right triangle with $x + y$:</p>
+    $$ \|x\|^2 + \|y\|^2 = \|x + y\|^2 = (x + y)^T(x + y) = \|x\|^2 + \|y\|^2 + 2x^Ty $$
+    <p>The two sides agree exactly when $2x^Ty = 0$, i.e. $x^Ty = 0$.</p>
+
+    <h4>4. The zero vector</h4>
+    <p>$0^Ty = 0$ for every $y$, so the zero vector is orthogonal to everything.</p>
+
+    <h4>5. Orthogonal subspaces</h4>
+    <div class="box method" id="m-perp"><span class="label">Definition · Orthogonal subspaces</span>
+      <p>Subspace $S$ is orthogonal to subspace $T$ when <b>every</b> vector in $S$ is orthogonal to <b>every</b> vector in $T$.</p>
+    </div>
+    <p>A wall and the floor are <b>not</b> orthogonal subspaces: the line where they meet lies in both, and a non-zero vector is never perpendicular to itself. Two lines through the origin at right angles are orthogonal subspaces.</p>
+
+    <h4>6. Row space ⊥ null space</h4>
+    <p>$Ax = 0$ says: row 1 · $x = 0$, row 2 · $x = 0$, …, every row of $A$ is perpendicular to $x$. Then every <b>combination</b> of rows is too. So:</p>
+    $$ \boxed{C(A^T) \perp N(A)} \qquad \text{In money terms: a do-nothing trade is perpendicular to every rule.} $$
+
+    <h4>7. Column space ⊥ left null space</h4>
+    <p>The same argument for $A^T$: $A^Ty = 0$ makes $y$ perpendicular to every column of $A$, and so to every combination of columns.</p>
+    $$ \boxed{C(A) \perp N(A^T)} \qquad \text{In money terms: every reachable target is perpendicular to the hidden link.} $$
+
+    <h4>8. Orthogonal complements</h4>
+    <div class="box method" id="m-comp"><span class="label">Rule · Orthogonal complements (Fundamental Theorem, part 2)</span>
+      <p>Not only are they perpendicular, their dimensions add up to the whole space: $r + (n - r) = n$ and $r + (m - r) = m$. So $N(A)$ contains <b>every</b> vector perpendicular to the row space, and $N(A^T)$ contains <b>every</b> vector perpendicular to the column space. Each is the <b>orthogonal complement</b> of the other.</p>
+    </div>
+
+    <h4>9. Hedged = orthogonal</h4>
+    <p>A position's market exposure is (exposure row) · (position). So a position is <b>market-neutral</b> exactly when it is orthogonal to the exposure row. Lesson 5's zero-cost, market-neutral trade $(-6, 1, 5)$ is orthogonal to both the budget row $(1, 1, 1)$ and the exposure row $(1, 0, 1.2)$: $-6 + 1 + 5 = 0$ and $-6 + 0 + 6 = 0$.</p>
+
+    <h4>10. Correlation is a cosine</h4>
+    <div class="box method" id="m-corr"><span class="label">Rule · Correlation = cosine of the angle</span>
+      <p>For demeaned return vectors $x$ and $y$: $\displaystyle \cos\theta = \frac{x^Ty}{\|x\|\,\|y\|}$ is exactly their <b>correlation</b>. Orthogonal ($x^Ty = 0$) means <b>uncorrelated</b>.</p>
+    </div>
+
+    <h4>11. AᵀA: when is it invertible?</h4>
+    <div class="box method" id="m-ata"><span class="label">Rule · N(AᵀA) = N(A)</span>
+      <p>$A^TA$ is square ($n \times n$) and symmetric. It has the same null space and the same rank as $A$, so <b>$A^TA$ is invertible exactly when the columns of $A$ are independent</b>. (Proof: if $A^TAx = 0$ then $x^TA^TAx = \|Ax\|^2 = 0$, so $Ax = 0$.) Lesson 14 needs this.</p>
+    </div>
+
+    <h4>12. Fredholm's alternative: a certificate of "no solution"</h4>
+    <div class="box method" id="m-fred"><span class="label">Rule · Fredholm's alternative</span>
+      <p>Exactly one of these is true: (a) $Ax = b$ has a solution, or (b) some $y$ has $A^Ty = 0$ and $y^Tb = 1$. Multiplying the equations by $y$ and adding gives $0 = 1$: proof that no solution exists.</p>
+    </div>
+    <p>In markets: Lesson 12's loop $y = (1, 1, -1)$ with spread quotes $(100, 150, 240)$ gives $A^Ty = 0$ and $y^Te = 10$. Scale it to $\tfrac{1}{10}y$ and $y^Te = 1$: a certificate that the quotes can't come from real prices, i.e. an <b>arbitrage</b>.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Procedure</h3>
+    <h4>A. Are two vectors (or subspaces) orthogonal?</h4>
+    <table>
+      <tr><th>Step</th><th>What to do</th></tr>
+      <tr><td>1</td><td>Two vectors: compute $x^Ty$. Zero ⇒ orthogonal.</td></tr>
+      <tr><td>2</td><td>Two subspaces: take a basis of each and check every pair of basis vectors. All zero ⇒ orthogonal.</td></tr>
+    </table>
+    <h4>B. The orthogonal complement of a subspace</h4>
+    <table>
+      <tr><th>Step</th><th>What to do</th></tr>
+      <tr><td>1</td><td>Put a basis of the subspace as the <b>rows</b> of a matrix $B$.</td></tr>
+      <tr><td>2</td><td>The complement is $N(B)$: solve $Bx = 0$ with the recipe from Lesson 7.</td></tr>
+      <tr><td>3</td><td>Check: dimensions add up to $n$.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. 2 × 2 example</h3>
+    <p>Nifty and its twin with budget and return: $A = \left[\begin{smallmatrix} 1 & 1 \\ 12 & 12 \end{smallmatrix}\right]$, rank 1 (Lesson 10).</p>
+    <table>
+      <tr><th>Pair</th><th>Bases</th><th>Dot product</th><th>Dimensions</th></tr>
+      <tr><td>Row space ⊥ null space (in $\mathbb{R}^2$)</td><td>$(1, 1)$ and $(-1, 1)$</td><td>$1(-1) + 1(1) = 0$ ✓</td><td>$1 + 1 = 2 = n$</td></tr>
+      <tr><td>Column space ⊥ left null space (in $\mathbb{R}^2$)</td><td>$(1, 12)$ and $(-12, 1)$</td><td>$1(-12) + 12(1) = 0$ ✓</td><td>$1 + 1 = 2 = m$</td></tr>
+    </table>
+    <p><b>Meaning.</b> The row space measures "total Nifty held"; the do-nothing trade (swap one twin for the other) is perpendicular to it, so it doesn't change that measurement. The reachable targets $(B, 12B)$ are perpendicular to the hidden link $(-12, 1)$: return $= 12 \times$ budget.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. 3 × 3 example</h3>
+    <p>Nifty, bonds, balanced: $A = \left[\begin{smallmatrix} 1 & 1 & 1 \\ 12 & 7 & 9.5 \\ 1 & 0 & 0.5 \end{smallmatrix}\right]$, rank 2. From Lesson 10: row space basis $(1, 0, 0.5)$, $(0, 1, 0.5)$; null space $(-0.5, -0.5, 1)$; column space $(1, 12, 1)$, $(1, 7, 0)$; left null space $(7, -1, 5)$.</p>
+    <h4>Row space ⊥ null space</h4>
+    <ul>
+      <li>$(1, 0, 0.5) \cdot (-0.5, -0.5, 1) = -0.5 + 0 + 0.5 = 0$ ✓</li>
+      <li>$(0, 1, 0.5) \cdot (-0.5, -0.5, 1) = 0 - 0.5 + 0.5 = 0$ ✓</li>
+      <li>Also each original rule: budget $(1, 1, 1) \cdot (-0.5, -0.5, 1) = 0$, return $(12, 7, 9.5) \cdot (-0.5, -0.5, 1) = -6 - 3.5 + 9.5 = 0$, exposure $(1, 0, 0.5) \cdot (-0.5, -0.5, 1) = 0$ ✓.</li>
+      <li>Dimensions: $2 + 1 = 3 = n$. The null space is the <b>whole</b> line perpendicular to the plane of rules.</li>
+    </ul>
+    <h4>Column space ⊥ left null space</h4>
+    <ul>
+      <li>Nifty $(1, 12, 1) \cdot (7, -1, 5) = 7 - 12 + 5 = 0$ ✓</li>
+      <li>Bonds $(1, 7, 0) \cdot (7, -1, 5) = 7 - 7 + 0 = 0$ ✓</li>
+      <li>Dimensions: $2 + 1 = 3 = m$. The plane of reachable targets $R = 7B + 5E$ is exactly "everything perpendicular to $(7, -1, 5)$".</li>
+    </ul>
+    <p>A target $b$ is reachable $\iff$ $b \perp (7, -1, 5)$. $(10, 105, 7)$: $70 - 105 + 35 = 0$ ✓. $(10, 105, 5)$: $70 - 105 + 25 = -10$ ✗. Lesson 14 asks: when $b$ isn't perpendicular, what's the <b>closest</b> reachable target?</p>
+    <details class="check"><summary>Check yourself (MIT lecture): for $A = \left[\begin{smallmatrix} 1 & 2 & 5 \\ 2 & 4 & 10 \end{smallmatrix}\right]$, describe the row space and the null space.</summary>
+      <p>Row 2 = 2 × row 1, so the row space is the line through $(1, 2, 5)$ (dimension 1). The null space is the plane $x + 2y + 5z = 0$ (dimension 2), with basis $(-2, 1, 0)$ and $(-5, 0, 1)$. Check: $(1, 2, 5) \cdot (-2, 1, 0) = 0$ and $(1, 2, 5) \cdot (-5, 0, 1) = 0$ ✓. A line and a plane, perpendicular, $1 + 2 = 3$.</p>
+    </details>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Bigger example: returns as vectors</h3>
+    <p>Treat each asset's demeaned scenario returns as a vector in $\mathbb{R}^3$:</p>
+    $$ \text{Nifty } a = \begin{bmatrix} -20 \\ 0 \\ 20 \end{bmatrix} \qquad \text{midcap } m = \begin{bmatrix} -26 \\ 2 \\ 24 \end{bmatrix} \qquad \text{strategy } s = \begin{bmatrix} 5 \\ -10 \\ 5 \end{bmatrix} $$
+    <h4>Step 1: the strategy is orthogonal to the market</h4>
+    $$ a^Ts = (-20)(5) + (0)(-10) + (20)(5) = -100 + 0 + 100 = \boxed{0} $$
+    <p>Orthogonal, so <b>uncorrelated</b> with Nifty: a market-neutral strategy. It makes money in normal years and loses in extremes, with no tilt to the market's direction.</p>
+    <h4>Step 2: midcap is almost parallel to Nifty</h4>
+    $$ a^Tm = 520 + 0 + 480 = 1000 \qquad \|a\|^2 = 800 \qquad \|m\|^2 = 676 + 4 + 576 = 1256 $$
+    $$ \cos\theta = \frac{1000}{\sqrt{800}\,\sqrt{1256}} = \frac{1000}{28.28 \times 35.44} \approx 0.998 $$
+    <p>Correlation 0.998: the angle between them is only about 4°.</p>
+    <h4>Step 3: AᵀA, the "overlap table"</h4>
+    <p>With Nifty and bonds as the columns of the 3-rule fund matrix, $A^TA = \left[\begin{smallmatrix} 1 + 144 + 1 & 1 + 84 + 0 \\ 85 & 1 + 49 + 0 \end{smallmatrix}\right] = \left[\begin{smallmatrix} 146 & 85 \\ 85 & 50 \end{smallmatrix}\right]$, with $146 \times 50 - 85^2 = 7300 - 7225 = 75 \ne 0$: invertible (independent columns). With Nifty and its twin, $A^TA = \left[\begin{smallmatrix} 146 & 146 \\ 146 & 146 \end{smallmatrix}\right]$, with $146^2 - 146^2 = 0$: singular, because the columns are dependent.</p>
+    <h4>Try it: correlation as an angle</h4>
+    <div id="corr" class="lab-controls"></div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Connection: the big picture</h3>
+    $$ \underbrace{\mathbb{R}^n}_{\text{trades}} = \underbrace{C(A^T)}_{\dim r} \perp \underbrace{N(A)}_{\dim n - r} \qquad\qquad \underbrace{\mathbb{R}^m}_{\text{targets}} = \underbrace{C(A)}_{\dim r} \perp \underbrace{N(A^T)}_{\dim m - r} $$
+    <p>Lesson 10 counted the dimensions (part 1 of the Fundamental Theorem). This lesson adds the angles (part 2): each pair splits its space into two perpendicular pieces.</p>
+    <table>
+      <tr><th>Earlier idea</th><th>Seen as orthogonality</th></tr>
+      <tr><td>Do-nothing trade (Lesson 6)</td><td>perpendicular to every rule</td></tr>
+      <tr><td>Hidden link / reachable targets (Lesson 10)</td><td>reachable $\iff$ perpendicular to the hidden link</td></tr>
+      <tr><td>Arbitrage loop (Lesson 12)</td><td>Fredholm's certificate: $A^Ty = 0$, $y^Tb \ne 0$</td></tr>
+      <tr><td>Covariance $R^TR$ (Lesson 5)</td><td>a table of dot products; zero entries = uncorrelated</td></tr>
+    </table>
+    <div class="box finance"><span class="label">Where this goes next</span>
+      <p>When a target isn't reachable (or a risk can't be hedged exactly), drop a perpendicular from it onto the reachable plane. The foot of that perpendicular is the <b>best possible</b> target or hedge, and the leftover piece is orthogonal to everything you can trade. That's Lesson 14: projections.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Final memory table</h3>
+    <table>
+      <tr><th>Concept</th><th>Key fact</th><th>In markets</th></tr>
+      <tr><td><b>Orthogonal</b></td><td>$x^Ty = 0$</td><td>market-neutral; uncorrelated returns</td></tr>
+      <tr><td><b>Length</b></td><td>$\|x\|^2 = x^Tx$</td><td>risk of a demeaned return vector</td></tr>
+      <tr><td><b>Cosine</b></td><td>$x^Ty / (\|x\|\|y\|)$</td><td>correlation</td></tr>
+      <tr><td><b>Row space ⊥ null space</b></td><td>$r + (n - r) = n$</td><td>do-nothing trades ⊥ every rule</td></tr>
+      <tr><td><b>Column space ⊥ left null space</b></td><td>$r + (m - r) = m$</td><td>reachable targets ⊥ hidden link</td></tr>
+      <tr><td><b>$A^TA$</b></td><td>invertible $\iff$ independent columns</td><td>overlap / covariance table</td></tr>
+      <tr><td><b>Fredholm</b></td><td>$Ax = b$, or $A^Ty = 0$ with $y^Tb = 1$</td><td>an arbitrage certificate</td></tr>
+    </table>
+    <details class="check"><summary>Check yourself (MIT problem 16.1): multiply $x_1 - x_2 = 1$, $x_2 - x_3 = 1$, $x_1 - x_3 = 1$ by numbers so they add up to $0 = 1$.</summary>
+      <p>$y = (1, 1, -1)$: $(x_1 - x_2) + (x_2 - x_3) - (x_1 - x_3) = 0$ on the left, $1 + 1 - 1 = 1$ on the right. So $0 = 1$: no solution. It's a spread loop: two one-step spreads of 1 each can't equal a direct spread of 1.</p>
+    </details>
+
+  </div>
+  </section>
+
+    <section class="tab-panel" data-panel="examples" hidden>
+    <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#ex1">Hedging: market-neutral books</a></li>
+        <li><a href="#ex2">Lot sizes: the scenario nothing pays in</a></li>
+        <li><a href="#ex3">Orthogonality lab</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex1">Example 1: Hedging, market-neutral books</h3>
+    <p>Hedges: Nifty fut, IT fut, Bank Nifty fut. Each has market exposure 1, so the <b>market row</b> is $(1, 1, 1)$. A book of lots $x$ is market-neutral exactly when $x \perp (1, 1, 1)$.</p>
+    <ul>
+      <li>$(2, -1, -1)$: $2 - 1 - 1 = 0$ ✓ market-neutral (but currency exposure $0 \cdot 2 + 1(-1) + 0(-1) = -1$).</li>
+      <li>$(1, 1, -2)$: $1 + 1 - 2 = 0$ ✓ market-neutral.</li>
+      <li>$(3, -1, 0)$: $3 - 1 + 0 = 2$ ✗ net long 2 units of market.</li>
+    </ul>
+    <p>All market-neutral books form the plane $N([\,1 \;\; 1 \;\; 1\,])$, the orthogonal complement of the market row: dimension $3 - 1 = 2$, with basis $(-1, 1, 0)$, $(-1, 0, 1)$.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex2">Example 2: Lot sizes, the scenario nothing pays in</h3>
+    <p>Futures $(-200, 0, 200)$ and the 20,000 call $(0, 0, 200)$ (points per lot at 19,800 / 20,000 / 20,200). Lesson 10 found the left null space $(0, 1, 0)$:</p>
+    <ul>
+      <li>$(0, 1, 0) \cdot (-200, 0, 200) = 0$ ✓ and $(0, 1, 0) \cdot (0, 0, 200) = 0$ ✓: perpendicular to both products.</li>
+      <li>So every buildable payoff is perpendicular to $(0, 1, 0)$: it pays 0 at 20,000.</li>
+      <li><b>Fredholm certificate</b> for the payoff $(0, 100, 0)$: $y = (0, \tfrac{1}{100}, 0)$ has $A^Ty = 0$ and $y^Tb = 1$. Proof that no mix of these two products can build it.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="ex3">Example 3: Orthogonality lab</h3>
+    <p>Enter a matrix (up to 4 × 4). The lab finds bases of all four subspaces and shows every dot product between the pairs: all zeros, every time.</p>
+    <div id="orthlab" class="syslab"></div>
+
+    </div>
+    </section>
+
+  <nav class="pager">
+    <a href="12_graphs-networks-incidence-matrices.html">← Lesson 12: Graphs, Networks, Incidence Matrices</a>
+    <a href="14_projections-onto-subspaces.html">Next: Lesson 14: Projections onto Subspaces →</a>
+  </nav>
+  </div>
+</main>
+<script>
+// Interactive pieces: Notes topic 5 (correlation explorer) and the Examples tab (orthogonality lab).
+window.addEventListener("load", function () {
+  function km(el) { if (window.renderMathInElement) renderMathInElement(el, { delimiters: [{ left: "$", right: "$", display: false }], throwOnError: false }); }
+  function t(v) { var r = Math.round(v * 1e4) / 1e4; if (Math.abs(r) < 1e-9) r = 0; return String(r); }
+  function vec(v) { return "(" + v.map(t).join(", ") + ")"; }
+  function num(el) { var x = parseFloat(el.value); return isFinite(x) ? x : 0; }
+  function dot(a, b) { return a.reduce(function (s, x, i) { return s + x * b[i]; }, 0); }
+
+  // ---- Notes, topic 5: correlation as an angle ----
+  (function () {
+    var root = document.getElementById("corr"); if (!root) return;
+    var init = { a: [-10, 10, 30], b: [8, -7, 8] };
+    root.innerHTML = '<div class="lab-row"><b>Asset A returns (%):</b> ' + [0, 1, 2].map(function (j) { return '<label>' + ["bad", "normal", "good"][j] + ' <input type="number" step="any" class="cr" data-k="a' + j + '" value="' + init.a[j] + '" style="width:4.5em"></label>'; }).join("") + "</div>" +
+      '<div class="lab-row"><b>Asset B returns (%):</b> ' + [0, 1, 2].map(function (j) { return '<label>' + ["bad", "normal", "good"][j] + ' <input type="number" step="any" class="cr" data-k="b' + j + '" value="' + init.b[j] + '" style="width:4.5em"></label>'; }).join("") + "</div>" +
+      '<div class="lab-row"><label>Preset <select class="cr-p"><option value="">choose…</option><option value="0">Nifty vs strategy (orthogonal)</option><option value="1">Nifty vs midcap</option><option value="2">Nifty vs bonds</option></select></label></div>' +
+      '<div class="cr-out mixer-out" style="display:flex;gap:18px;flex-wrap:wrap;align-items:center"><svg class="cr-svg" viewBox="-118 -118 236 236" width="210" height="210" aria-hidden="true"></svg><div class="cr-txt"></div></div>';
+    var P = [[[-10, 10, 30], [8, -7, 8]], [[-10, 10, 30], [-16, 12, 34]], [[-10, 10, 30], [4, 7, 10]]];
+    var svg = root.querySelector(".cr-svg"), txt = root.querySelector(".cr-txt");
+    root.querySelector(".cr-p").addEventListener("change", function (e) { if (e.target.value === "") return; var p = P[+e.target.value]; for (var j = 0; j < 3; j++) { root.querySelector('[data-k="a' + j + '"]').value = p[0][j]; root.querySelector('[data-k="b' + j + '"]').value = p[1][j]; } update(); });
+    function update() {
+      var g = {}; root.querySelectorAll(".cr").forEach(function (el) { g[el.dataset.k] = num(el); });
+      var a = [g.a0, g.a1, g.a2], b = [g.b0, g.b1, g.b2];
+      var ma = (a[0] + a[1] + a[2]) / 3, mb = (b[0] + b[1] + b[2]) / 3;
+      var x = a.map(function (v) { return v - ma; }), y = b.map(function (v) { return v - mb; });
+      var d = dot(x, y), lx = Math.sqrt(dot(x, x)), ly = Math.sqrt(dot(y, y));
+      var c = (lx > 1e-9 && ly > 1e-9) ? d / (lx * ly) : 0, ang = Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI;
+      var h = "<p>Demeaned: $x = " + vec(x) + "$, $y = " + vec(y) + "$.</p><p>$x^Ty = " + x.map(function (v, i) { return "(" + t(v) + ")(" + t(y[i]) + ")"; }).join(" + ") + " = " + t(d) + "$</p>";
+      h += "<p>$\\|x\\| = " + t(lx) + "$, $\\|y\\| = " + t(ly) + "$, so correlation $= \\cos\\theta = " + t(c) + "$, angle $\\approx " + t(Math.round(ang * 10) / 10) + "^\\circ$.</p>";
+      h += Math.abs(d) < 1e-9 ? '<p class="answer">Orthogonal: uncorrelated.</p>' : (c > 0.9 ? '<p class="answer">Nearly parallel: strongly correlated.</p>' : c < -0.9 ? '<p class="answer">Nearly opposite: strongly negatively correlated (a natural hedge).</p>' : "");
+      txt.innerHTML = h; km(txt);
+      var r = (ang) * Math.PI / 180, css = getComputedStyle(document.documentElement), acc = css.getPropertyValue("--accent").trim(), oth = css.getPropertyValue("--int-b").trim(), ink = css.getPropertyValue("--ink-soft").trim();
+      svg.innerHTML = '<circle r="95" fill="none" stroke="' + ink + '" stroke-opacity=".25"/>' +
+        '<line x1="0" y1="0" x2="95" y2="0" stroke="' + acc + '" stroke-width="4" stroke-linecap="round"/>' +
+        '<line x1="0" y1="0" x2="' + (95 * Math.cos(r)) + '" y2="' + (-95 * Math.sin(r)) + '" stroke="' + oth + '" stroke-width="4" stroke-linecap="round"/>' +
+        '<path d="M 30 0 A 30 30 0 0 0 ' + (30 * Math.cos(r)) + " " + (-30 * Math.sin(r)) + '" fill="none" stroke="' + ink + '" stroke-width="1.5"/>' +
+        '<text x="70" y="16" fill="' + acc + '" font-size="12" font-family="Inter,sans-serif">A</text><text x="' + (105 * Math.cos(r) + 4) + '" y="' + (-105 * Math.sin(r) + 4) + '" fill="' + oth + '" font-size="12" font-family="Inter,sans-serif">B</text>' +
+        '<text x="' + (44 * Math.cos(r / 2)) + '" y="' + (-44 * Math.sin(r / 2) + 4) + '" fill="' + ink + '" font-size="11" font-family="Inter,sans-serif">' + Math.round(ang) + "°</text>";
+    }
+    root.addEventListener("input", update); update();
+  })();
+
+  // ---- Examples tab: orthogonality lab ----
+  (function () {
+    var root = document.getElementById("orthlab"); if (!root) return;
+    function rref(A0) {
+      var M = A0.map(function (r) { return r.slice(); }), m = M.length, n = M[0].length, piv = [], row = 0;
+      for (var c = 0; c < n && row < m; c++) {
+        var p = -1; for (var i = row; i < m; i++) if (Math.abs(M[i][c]) > 1e-9) { p = i; break; }
+        if (p < 0) continue;
+        var tmp = M[p]; M[p] = M[row]; M[row] = tmp;
+        var pv = M[row][c]; for (var k = 0; k < n; k++) M[row][k] /= pv;
+        for (var i2 = 0; i2 < m; i2++) { if (i2 === row) continue; var l = M[i2][c]; if (Math.abs(l) < 1e-12) continue; for (var k2 = 0; k2 < n; k2++) M[i2][k2] -= l * M[row][k2]; }
+        piv.push([row, c]); row++;
+      }
+      var pc = piv.map(function (q) { return q[1]; }), nul = [];
+      for (var f = 0; f < n; f++) { if (pc.indexOf(f) >= 0) continue; var x = new Array(n).fill(0); x[f] = 1; piv.forEach(function (q) { x[q[1]] = -M[q[0]][f]; }); nul.push(x); }
+      return { R: M, r: piv.length, pc: pc, nul: nul };
+    }
+    var presets = [
+      { label: "Nifty, bonds, balanced (3 × 3)", A: [[1, 1, 1], [12, 7, 9.5], [1, 0, 0.5]] },
+      { label: "Nifty and twin (2 × 2)", A: [[1, 1], [12, 12]] },
+      { label: "MIT example (2 × 3)", A: [[1, 2, 5], [2, 4, 10]] },
+      { label: "Spread triangle (3 × 3)", A: [[-1, 1, 0], [0, -1, 1], [-1, 0, 1]] }
+    ];
+    root.innerHTML = '<div class="lab-controls"><div class="lab-row"><label>Example <select class="ol-pick">' + presets.map(function (p, i) { return '<option value="' + i + '">' + p.label + "</option>"; }).join("") + '</select></label></div><div class="ol-grid"></div></div><div class="ol-out"></div>';
+    var pick = root.querySelector(".ol-pick"), grid = root.querySelector(".ol-grid"), out = root.querySelector(".ol-out");
+    function load() { var A = presets[+pick.value].A; grid.innerHTML = '<table class="lab-table sl-table">' + A.map(function (row, i) { return "<tr>" + row.map(function (v, j) { return '<td><input type="number" step="any" data-i="' + i + '" data-j="' + j + '" value="' + v + '"></td>'; }).join("") + "</tr>"; }).join("") + "</table>"; update(); }
+    function current() { var A = []; grid.querySelectorAll("input").forEach(function (el) { (A[+el.dataset.i] = A[+el.dataset.i] || [])[+el.dataset.j] = num(el); }); return A; }
+    function pairs(B1, B2, n1, n2) {
+      if (!B1.length || !B2.length) return "<p>One side is just $\\{0\\}$: nothing to check (0 is orthogonal to everything).</p>";
+      var h = "<table><tr><th></th>" + B2.map(function (v) { return "<th>$" + vec(v) + "$</th>"; }).join("") + "</tr>";
+      B1.forEach(function (u) { h += "<tr><th>$" + vec(u) + "$</th>" + B2.map(function (v) { var d = dot(u, v); return "<td>$" + t(d) + "$ " + (Math.abs(d) < 1e-9 ? "✓" : "✗") + "</td>"; }).join("") + "</tr>"; });
+      return h + "</table>";
+    }
+    function update() {
+      var A = current(), m = A.length, n = A[0].length, AT = A[0].map(function (_, j) { return A.map(function (r) { return r[j]; }); });
+      var F1 = rref(A), F2 = rref(AT);
+      var row = F1.R.slice(0, F1.r), nul = F1.nul, col = F1.pc.map(function (j) { return A.map(function (r) { return r[j]; }); }), left = F2.nul;
+      var h = "<p>Rank $r = " + F1.r + "$, $m = " + m + "$, $n = " + n + "$.</p>";
+      h += "<h4>Row space ⊥ null space (in $\\mathbb{R}^" + n + "$): dims $" + F1.r + " + " + (n - F1.r) + " = " + n + "$</h4>" + pairs(row, nul);
+      h += "<h4>Column space ⊥ left null space (in $\\mathbb{R}^" + m + "$): dims $" + F1.r + " + " + (m - F1.r) + " = " + m + "$</h4>" + pairs(col, left);
+      out.innerHTML = h; km(out);
+    }
+    pick.addEventListener("change", load); grid.addEventListener("input", update); load();
+  })();
+});
+</script>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The Linear Algebra notes follow MIT OpenCourseWare 18.06, Linear Algebra (Prof. Gilbert Strang), used under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">CC BY-NC-SA 4.0</a>; these pages are shared under the same licence. Not affiliated with or endorsed by MIT.</div>
+  <div><b>Educational only, not investment advice.</b> Market examples use illustrative Nifty numbers; lot sizes and prices change, so check the exchange before using any figure.</div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

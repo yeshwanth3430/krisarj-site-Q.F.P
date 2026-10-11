@@ -11,7 +11,7 @@ const { chromium } = require(path.join(__dirname, "../downloads/node_modules/pla
   const b = await chromium.launch({ executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"] });
   const p = await b.newPage({ viewport: { width: 1300, height: 900 } });
   const errs = []; p.on("pageerror", e => errs.push(e.message)); p.on("console", m => { if (m.type() === "error") errs.push(m.text()); });
-  await p.goto(url, { waitUntil: "networkidle" }); await p.waitForTimeout(2500);
+  await p.goto(url, { waitUntil: "networkidle", timeout: 180000 }); await p.waitForTimeout(2500);
   if (setup === "spacetest") {
     const n = await p.$$eval(".st-pick option", o => o.length);
     for (let i = 0; i < n; i++) { await p.selectOption(".st-pick", String(i)); await p.waitForTimeout(250); console.log(i + ": " + (await p.$eval(".st-out", e => e.innerText.replace(/\s+/g, " ").slice(-110)))); }
