@@ -135,7 +135,9 @@
       ] }
   ];
   // which subject builds on which (arrows in the main map)
-  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["mvc", "fin"], ["de", "fin"], ["st", "fin"], ["dsp", "fin"], ["la", "opt"], ["mvc", "opt"], ["opt", "fin"]];
+  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["la", "opt"], ["mvc", "opt"],
+    // Maths for Finance follows MIT 18.642, whose syllabus requires 18.06, 18.03 and probability; statistics, stochastic processes (and optimisation) only help
+    ["la", "fin"], ["pr", "fin"], ["de", "fin"], ["st", "fin", "help"], ["dsp", "fin", "help"], ["opt", "fin", "help"]];
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function count(s) { var all = 0, live = 0; s.groups.forEach(function (g) { g.topics.forEach(function (t) { all++; if (t[2] === "live") live++; }); }); return { all: all, live: live }; }
@@ -156,7 +158,7 @@
       }).join("") + '</div>';
     }).join("");
     return '<div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div>' +
-      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>builds on</span><span class="rmm-hint">Click Linear Algebra to open its lessons</span></div>';
+      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>required</span><span><i class="lg-help"></i>helpful</span><span class="rmm-hint">Click Linear Algebra to open its lessons</span></div>';
   }
 
   function subjectHTML(s) {
@@ -206,7 +208,7 @@
         d = "M" + sx + " " + sy + " C " + sx + " " + my + ", " + ex + " " + my + ", " + ex + " " + ey;
       }
       var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      p.setAttribute("d", d); p.setAttribute("class", "e" + (e[0] === "la" ? " e-now" : "")); p.setAttribute("data-from", e[0]); p.setAttribute("data-to", e[1]); p.setAttribute("marker-end", "url(#rmm-ar)");
+      p.setAttribute("d", d); p.setAttribute("class", "e" + (e[0] === "la" ? " e-now" : "") + (e[2] === "help" ? " e-help" : "")); p.setAttribute("data-from", e[0]); p.setAttribute("data-to", e[1]); p.setAttribute("marker-end", "url(#rmm-ar)");
       p.style.animationDelay = (i * 0.08) + "s";
       svg.appendChild(p);
     });
@@ -244,7 +246,7 @@
     var byId = {}; SUBJECTS.forEach(function (s) { byId[s.id] = s; });
     function show(node) {
       var id = node.getAttribute("data-id"), s = byId[id];
-      var pre = EDGES.filter(function (e) { return e[1] === id; }).map(function (e) { return byId[e[0]]; }).sort(function (a, b) { return a.n < b.n ? -1 : 1; });
+      var pre = EDGES.filter(function (e) { return e[1] === id && e[2] !== "help"; }).map(function (e) { return byId[e[0]]; }).sort(function (a, b) { return a.n < b.n ? -1 : 1; });
       tip.innerHTML = '<span class="rmm-tip-k">' + (pre.length ? "Prerequisites" : "Starting point") + "</span>" +
         (pre.length ? '<span class="rmm-tip-list">' + pre.map(function (p) { return '<span class="rmm-tip-chip"><b>' + p.n + "</b>" + esc(p.name) + "</span>"; }).join("") + "</span>"
                     : '<span class="rmm-tip-none">No prerequisites: start here</span>');
@@ -261,7 +263,7 @@
         n.classList.toggle("rmm-me", nid === id);
         n.classList.toggle("rmm-pre", pre.some(function (p) { return p.id === nid; }));
       });
-      box.querySelectorAll("path.e").forEach(function (p) { p.classList.toggle("e-hot", p.getAttribute("data-to") === id); });
+      box.querySelectorAll("path.e").forEach(function (p) { p.classList.toggle("e-hot", p.getAttribute("data-to") === id && !p.classList.contains("e-help")); });
     }
     function hide() {
       tip.classList.remove("on"); box.classList.remove("rmm-focus");
