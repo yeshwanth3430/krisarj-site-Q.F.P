@@ -28,7 +28,7 @@
           ["Explaining your reasoning", "thinking out loud in an interview", "soon"],
           ["Behavioural interviews", "stories that show how you work", "soon"] ] }
       ] },
-    { id: "qf", n: "03", name: "Mathematics & Quantitative Finance", short: "Maths & Quant Finance", tag: "Probability, statistics and pricing", col: "--def-b",
+    { id: "qf", n: "03", name: "Mathematics & Quantitative Finance", short: "Maths & Quant Finance", tag: "Probability, statistics and pricing", col: "--def-b", opens: "roadmap",
       about: "The probability and statistics behind every interview puzzle and every strategy, with the linear algebra and calculus from Mathematics for Finance and the basics of pricing.",
       groups: [
         { name: "Probability", topics: [
@@ -220,7 +220,12 @@
     // the track nodes
     TRACKS.forEach(function (s, i) {
       var n = nodes[i], k = count(s);
-      var a = el("g", { "class": "hft-node", "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0" }, svg);
+      var a = el("g", { "class": "hft-node" + (s.opens ? " hft-link" : ""), "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0", role: s.opens ? "link" : "img" }, svg);
+      if (s.opens) {   // this track opens another tab's roadmap (e.g. Mathematics for Finance)
+        var go = function () { var tb = document.querySelector('.tabs [data-tab="' + s.opens + '"]'); if (tb) { tb.click(); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+        a.addEventListener("click", go);
+        a.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
+      }
       var g = el("g", { transform: "translate(" + n.x + " " + n.y + ")" }, a);
       var pop = el("g", { "class": "hft-pop" }, g);
       el("rect", { x: -38, y: -38, width: 76, height: 76, rx: 18, "class": "hft-node-ring" }, pop);
@@ -233,8 +238,8 @@
       else if (Math.abs(n.c) > 0.92) { lx = 0; ly = -72; anchor = "middle"; }                          // far left and right: label above, so it never clips
       else { lx = n.c > 0 ? 50 : -50; ly = -4; anchor = n.c > 0 ? "start" : "end"; }
       var l1 = el("text", { x: lx, y: ly, "text-anchor": anchor, "class": "hft-name" }, g); l1.textContent = narrow ? s.short : s.short;
-      var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" }, g); l2.textContent = s.groups.length + " branches · " + k.all + " topics";
-      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag;
+      var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? "open the maths roadmap →" : s.groups.length + " branches · " + k.all + " topics";
+      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (s.opens ? " (click to open the Mathematics for Finance roadmap)" : "");
       a.addEventListener("mouseenter", function () { peek(s); }); a.addEventListener("focus", function () { peek(s); });
       a.addEventListener("mouseleave", function () { peek(null); }); a.addEventListener("blur", function () { peek(null); });
     });
