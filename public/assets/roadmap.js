@@ -87,7 +87,29 @@
         { name: "Towards PDEs", topics: [
           ["The heat equation", "the shape behind Black–Scholes", "soon"] ] }
       ] },
-    { id: "fin", n: "06", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 2, row: 1,
+    { id: "st", n: "06", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 0,
+      about: "Estimation, confidence intervals, hypothesis tests, regression and Bayesian thinking: deciding what the data really says.",
+      groups: [
+        { name: "Inference", topics: [
+          ["Estimation & likelihood", "best guesses from data", "soon"],
+          ["Confidence intervals", "how sure you can be", "soon"],
+          ["Hypothesis testing", "is the edge real?", "soon"] ] },
+        { name: "Models", topics: [
+          ["Regression", "fitting returns to factors", "soon"],
+          ["Bayesian statistics", "updating beliefs with evidence", "soon"],
+          ["Principal component analysis", "the main directions in data", "soon"] ] }
+      ] },
+    { id: "dsp", n: "07", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 1,
+      about: "Poisson processes, Markov chains, random walks and martingales: the models behind order arrivals, regimes and fair prices.",
+      groups: [
+        { name: "Arrivals", topics: [
+          ["Poisson processes", "orders arriving at random", "soon"],
+          ["Renewal processes", "time between events", "soon"] ] },
+        { name: "States & walks", topics: [
+          ["Markov chains", "regimes and transitions", "soon"],
+          ["Random walks & martingales", "fair games and prices", "soon"] ] }
+      ] },
+    { id: "fin", n: "08", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 3, row: 1,
       about: "Stochastic processes, Itô calculus, Black–Scholes, portfolio theory and time series: the payoff of every stage before.",
       groups: [
         { name: "Randomness in time", topics: [
@@ -103,7 +125,7 @@
       ] }
   ];
   // which subject builds on which (arrows in the main map)
-  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["mvc", "fin"], ["pr", "fin"], ["de", "fin"], ["la", "pr"]];
+  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["mvc", "fin"], ["de", "fin"], ["st", "fin"], ["dsp", "fin"]];
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function count(s) { var all = 0, live = 0; s.groups.forEach(function (g) { g.topics.forEach(function (t) { all++; if (t[2] === "live") live++; }); }); return { all: all, live: live }; }
@@ -111,7 +133,7 @@
   var TOPIC_TXT = { live: "Live", next: "Next up", soon: "Planned" };
 
   function mapHTML() {
-    var cols = [0, 1, 2].map(function (c) {
+    var cols = [0, 1, 2, 3].map(function (c) {
       var items = SUBJECTS.filter(function (s) { return s.col === c; }).sort(function (a, b) { return a.row - b.row; });
       return '<div class="rmm-col">' + items.map(function (s) {
         var k = count(s), pct = Math.round(100 * k.live / k.all);
@@ -147,7 +169,7 @@
 
   function build(root) {
     root.innerHTML =
-      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Six subjects. The map shows the order and what each subject builds on.</p></div>' +
+      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Eight subjects. The map shows the order and what each subject builds on.</p></div>' +
       mapHTML();
   }
 
@@ -161,7 +183,11 @@
     var list = stacked ? SUBJECTS.slice(1).map(function (t, i) { return [SUBJECTS[i].id, t.id]; }) : EDGES;
     list.forEach(function (e, i) {
       var a = box.querySelector('[data-id="' + e[0] + '"]').getBoundingClientRect(), c = box.querySelector('[data-id="' + e[1] + '"]').getBoundingClientRect(), d;
-      if (!stacked) {
+      var sameCol = !stacked && Math.abs(a.left - c.left) < 4;   // e.g. Statistics → Discrete Stochastic Processes, stacked in one column
+      if (sameCol) {
+        var vx = a.left + a.width * 0.5 - b.left, vy1 = a.bottom - b.top, vy2 = c.top - b.top - 4;
+        d = "M" + vx + " " + vy1 + " L " + vx + " " + vy2;
+      } else if (!stacked) {
         var x1 = a.right - b.left, y1 = a.top + a.height / 2 - b.top, x2 = c.left - b.left - 4, y2 = c.top + c.height / 2 - b.top, m = (x1 + x2) / 2;
         d = "M" + x1 + " " + y1 + " C " + m + " " + y1 + ", " + m + " " + y2 + ", " + x2 + " " + y2;
       } else {
