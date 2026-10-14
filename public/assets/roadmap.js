@@ -5,7 +5,7 @@
 
   // status: "live" (published, linked), "next" (being written), "soon" (planned)
   var SUBJECTS = [
-    { id: "la", n: "01", name: "Linear Algebra", tag: "Portfolios as vectors, hedges as equations", state: "now", col: 0, row: 0,
+    { id: "la", n: "01", name: "Linear Algebra", tag: "Portfolios as vectors, hedges as equations", state: "now", col: 0, row: 0, url: "linear-algebra/index.html",
       about: "Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues and the SVD. The language every portfolio, hedge and factor model is written in.",
       groups: [
         { name: "Solving equations", topics: [
@@ -115,15 +115,16 @@
       var items = SUBJECTS.filter(function (s) { return s.col === c; }).sort(function (a, b) { return a.row - b.row; });
       return '<div class="rmm-col">' + items.map(function (s) {
         var k = count(s), pct = Math.round(100 * k.live / k.all);
-        return '<a class="rmm-node rmm-' + s.state + '" href="#rm-' + s.id + '" data-id="' + s.id + '">' +
+        var tag = s.url ? "a" : "div";   // only subjects that have started open a page
+        return '<' + tag + ' class="rmm-node rmm-' + s.state + (s.url ? "" : " rmm-static") + '"' + (s.url ? ' href="' + s.url + '"' : "") + ' data-id="' + s.id + '">' +
           '<span class="rmm-n">' + s.n + '</span>' +
           '<span class="rmm-body"><span class="rmm-name">' + esc(s.name) + '</span><span class="rmm-tag">' + esc(s.tag) + '</span>' +
           '<span class="rmm-bar"><i style="--w:' + pct + '%"></i></span>' +
-          '<span class="rmm-meta">' + STATE_TXT[s.state] + ' · ' + k.live + ' / ' + k.all + ' topics live</span></span></a>';
+          '<span class="rmm-meta">' + STATE_TXT[s.state] + ' · ' + k.live + ' / ' + k.all + ' topics live</span></span></' + tag + '>';
       }).join("") + '</div>';
     }).join("");
     return '<div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div>' +
-      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>builds on</span><span class="rmm-hint">Click a subject to jump to its roadmap</span></div>';
+      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>builds on</span><span class="rmm-hint">Click Linear Algebra to open its lessons</span></div>';
   }
 
   function subjectHTML(s) {
@@ -146,10 +147,8 @@
 
   function build(root) {
     root.innerHTML =
-      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Six subjects. The map shows the order and what each subject builds on; every subject then has its own roadmap of topics below.</p></div>' +
-      mapHTML() +
-      '<nav class="rm-chips" aria-label="Subject roadmaps">' + SUBJECTS.map(function (s) { return '<a href="#rm-' + s.id + '" data-id="' + s.id + '"><b>' + s.n + '</b> ' + esc(s.name) + '</a>'; }).join("") + '</nav>' +
-      SUBJECTS.map(subjectHTML).join("");
+      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Six subjects. The map shows the order and what each subject builds on.</p></div>' +
+      mapHTML();
   }
 
   // ---- draw the map's arrows between node edges (works for column and stacked layouts) ----
