@@ -206,7 +206,7 @@
         d = "M" + sx + " " + sy + " C " + sx + " " + my + ", " + ex + " " + my + ", " + ex + " " + ey;
       }
       var p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      p.setAttribute("d", d); p.setAttribute("class", "e" + (e[0] === "la" ? " e-now" : "")); p.setAttribute("marker-end", "url(#rmm-ar)");
+      p.setAttribute("d", d); p.setAttribute("class", "e" + (e[0] === "la" ? " e-now" : "")); p.setAttribute("data-from", e[0]); p.setAttribute("data-to", e[1]); p.setAttribute("marker-end", "url(#rmm-ar)");
       p.style.animationDelay = (i * 0.08) + "s";
       svg.appendChild(p);
     });
@@ -237,11 +237,48 @@
     onScroll();
   }
 
+
+  // ---- hover a subject: a small card below it lists its prerequisites; their nodes and arrows light up ----
+  function prereqs(box) {
+    var tip = document.createElement("div"); tip.className = "rmm-tip"; tip.setAttribute("role", "tooltip"); box.appendChild(tip);
+    var byId = {}; SUBJECTS.forEach(function (s) { byId[s.id] = s; });
+    function show(node) {
+      var id = node.getAttribute("data-id"), s = byId[id];
+      var pre = EDGES.filter(function (e) { return e[1] === id; }).map(function (e) { return byId[e[0]]; }).sort(function (a, b) { return a.n < b.n ? -1 : 1; });
+      tip.innerHTML = '<span class="rmm-tip-k">' + (pre.length ? "Prerequisites" : "Starting point") + "</span>" +
+        (pre.length ? '<span class="rmm-tip-list">' + pre.map(function (p) { return '<span class="rmm-tip-chip"><b>' + p.n + "</b>" + esc(p.name) + "</span>"; }).join("") + "</span>"
+                    : '<span class="rmm-tip-none">No prerequisites: start here</span>');
+      var b = box.getBoundingClientRect(), r = node.getBoundingClientRect();
+      tip.style.visibility = "hidden"; tip.classList.add("on");
+      var w = tip.offsetWidth, x = r.left - b.left + r.width / 2 - w / 2;
+      x = Math.max(4, Math.min(b.width - w - 4, x));
+      tip.style.left = x + "px"; tip.style.top = (r.bottom - b.top + 10) + "px";
+      tip.style.setProperty("--ax", (r.left - b.left + r.width / 2 - x) + "px");
+      tip.style.visibility = "";
+      box.classList.add("rmm-focus");
+      box.querySelectorAll(".rmm-node").forEach(function (n) {
+        var nid = n.getAttribute("data-id");
+        n.classList.toggle("rmm-me", nid === id);
+        n.classList.toggle("rmm-pre", pre.some(function (p) { return p.id === nid; }));
+      });
+      box.querySelectorAll("path.e").forEach(function (p) { p.classList.toggle("e-hot", p.getAttribute("data-to") === id); });
+    }
+    function hide() {
+      tip.classList.remove("on"); box.classList.remove("rmm-focus");
+      box.querySelectorAll(".rmm-node").forEach(function (n) { n.classList.remove("rmm-me", "rmm-pre"); });
+      box.querySelectorAll("path.e").forEach(function (p) { p.classList.remove("e-hot"); });
+    }
+    box.querySelectorAll(".rmm-node").forEach(function (n) {
+      n.addEventListener("mouseenter", function () { show(n); });
+      n.addEventListener("mouseleave", hide);
+    });
+  }
   function mount() {
     var root = document.getElementById("roadmap-root"); if (!root) return;
     build(root);
     effects(root);
     var box = document.getElementById("rmm");
+    prereqs(box);
     if (window.ResizeObserver) new ResizeObserver(drawEdges).observe(box); else window.addEventListener("resize", drawEdges);
     document.querySelectorAll('[data-tab="roadmap"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(drawEdges, 30); }); });
     // smooth scroll for in-roadmap links (map nodes + chips)
