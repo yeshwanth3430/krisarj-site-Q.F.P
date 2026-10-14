@@ -87,7 +87,17 @@
         { name: "Towards PDEs", topics: [
           ["The heat equation", "the shape behind Black–Scholes", "soon"] ] }
       ] },
-    { id: "st", n: "06", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 0,
+    { id: "opt", n: "06", name: "Optimization", tag: "Finding the best choice", state: "later", col: 2, row: 0,
+      about: "Gradients, convexity, constraints and Lagrange multipliers, and the algorithms that find the best portfolio or the best-fitting model.",
+      groups: [
+        { name: "Foundations", topics: [
+          ["Convexity", "when a minimum is the minimum", "soon"],
+          ["Gradient descent", "walking downhill", "soon"] ] },
+        { name: "Constraints", topics: [
+          ["Lagrange multipliers & KKT", "the best mix under a budget", "soon"],
+          ["Linear & quadratic programming", "portfolio optimisation", "soon"] ] }
+      ] },
+    { id: "st", n: "07", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 1,
       about: "Estimation, confidence intervals, hypothesis tests, regression and Bayesian thinking: deciding what the data really says.",
       groups: [
         { name: "Inference", topics: [
@@ -99,7 +109,7 @@
           ["Bayesian statistics", "updating beliefs with evidence", "soon"],
           ["Principal component analysis", "the main directions in data", "soon"] ] }
       ] },
-    { id: "dsp", n: "07", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 1,
+    { id: "dsp", n: "08", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 2,
       about: "Poisson processes, Markov chains, random walks and martingales: the models behind order arrivals, regimes and fair prices.",
       groups: [
         { name: "Arrivals", topics: [
@@ -109,7 +119,7 @@
           ["Markov chains", "regimes and transitions", "soon"],
           ["Random walks & martingales", "fair games and prices", "soon"] ] }
       ] },
-    { id: "fin", n: "08", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 3, row: 1,
+    { id: "fin", n: "09", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 3, row: 1,
       about: "Stochastic processes, Itô calculus, Black–Scholes, portfolio theory and time series: the payoff of every stage before.",
       groups: [
         { name: "Randomness in time", topics: [
@@ -125,7 +135,7 @@
       ] }
   ];
   // which subject builds on which (arrows in the main map)
-  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["mvc", "fin"], ["de", "fin"], ["st", "fin"], ["dsp", "fin"]];
+  var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["mvc", "fin"], ["de", "fin"], ["st", "fin"], ["dsp", "fin"], ["la", "opt"], ["mvc", "opt"], ["opt", "fin"]];
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function count(s) { var all = 0, live = 0; s.groups.forEach(function (g) { g.topics.forEach(function (t) { all++; if (t[2] === "live") live++; }); }); return { all: all, live: live }; }
@@ -169,7 +179,7 @@
 
   function build(root) {
     root.innerHTML =
-      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Eight subjects. The map shows the order and what each subject builds on.</p></div>' +
+      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Nine subjects. The map shows the order and what each subject builds on.</p></div>' +
       mapHTML();
   }
 
