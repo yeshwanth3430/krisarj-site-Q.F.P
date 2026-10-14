@@ -209,3 +209,46 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
 .erj-peek.pulse { animation: erj-peekin .35s ease; }
 @keyframes erj-peekin { from { transform: translateY(6px); opacity: .4; } }
 @media (prefers-reduced-motion: reduce) { .erj-lane, .erj-ring, .erj-runner-halo, .erj-flag path { animation: none; } .erj-runner { display: none; } .erj-pop { transform: none; opacity: 1; animation: none !important; } }
+
+/* ---------- HFT preparation: circuit board ---------- */
+.hft-ticker { overflow: hidden; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper-2); margin: 18px 0 6px; mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+.hft-tape { display: flex; gap: 34px; width: max-content; padding: 10px 0; animation: hft-tape 38s linear infinite; }
+.hft-ticker:hover .hft-tape { animation-play-state: paused; }
+@keyframes hft-tape { to { transform: translateX(-50%); } }
+.hft-tk { font: 600 12px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft); white-space: nowrap; display: inline-flex; align-items: center; gap: 8px; }
+.hft-tk i { width: 8px; height: 8px; border-radius: 2px; background: var(--c); box-shadow: 0 0 8px var(--c); }
+.hft-tk b { color: var(--c); font-weight: 700; }
+.hft { position: relative; margin: 18px 0 0; border-radius: 22px; overflow: hidden; border: 1px solid var(--rule);
+  background: radial-gradient(ellipse at center, color-mix(in srgb, var(--accent) 10%, var(--paper)) 0%, var(--paper) 70%); }
+.hft-svg { display: block; width: 100%; height: auto; }
+.hft-gridline { fill: none; stroke: color-mix(in srgb, var(--ink-soft) 14%, transparent); stroke-width: 1; }
+.hft-trace-bed { fill: none; stroke: var(--paper-2); stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+.hft-trace { fill: none; stroke: var(--c); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; opacity: .65; transition: stroke-dashoffset 1.8s cubic-bezier(.6, .1, .2, 1), opacity .2s, stroke-width .2s; }
+.hft-trace.hot { opacity: 1; stroke-width: 4.5; filter: url(#hft-glow); }
+.hft-via { fill: var(--paper); stroke: var(--c); stroke-width: 2; }
+.hft-pin { fill: var(--c); }
+.hft-packet { fill: var(--c); filter: url(#hft-glow); opacity: 0; }
+.hft.in .hft-packet { opacity: 1; transition: opacity .4s 1.6s; }
+.hft-core-halo { fill: none; stroke: var(--accent); stroke-width: 2; opacity: .35; animation: hft-breathe 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes hft-breathe { 50% { opacity: .05; transform: scale(1.05); } }
+.hft-core-body { fill: var(--paper-2); stroke: var(--accent); stroke-width: 2.5; }
+.hft-core-pin { fill: var(--accent); opacity: .7; }
+.hft-core-t1 { font: 800 30px/1 var(--mono); fill: var(--accent); letter-spacing: .08em; }
+.hft-core-t2 { font: 700 13px/1 var(--mono); fill: var(--ink); letter-spacing: .32em; }
+.hft-core-t3 { font: 500 10.5px/1 var(--sans); fill: var(--ink-soft); }
+.hft-node { cursor: pointer; outline: none; text-decoration: none !important; }
+.hft-node text { text-decoration: none; }
+.hft-pop { transform-box: fill-box; transform-origin: center; transform: scale(0) rotate(-45deg); opacity: 0; }
+.hft.in .hft-pop { animation: hft-in .6s cubic-bezier(.3, 1.6, .5, 1) forwards; animation-delay: calc(.25s + var(--i) * .12s); }
+@keyframes hft-in { to { transform: scale(1) rotate(0); opacity: 1; } }
+.hft-node-ring { fill: none; stroke: var(--c); stroke-width: 1.5; stroke-dasharray: 6 5; opacity: .6; animation: erj-spin 22s linear infinite; transform-box: fill-box; transform-origin: center; }
+.hft-node-body { fill: var(--paper); stroke: var(--c); stroke-width: 2.5; transition: fill .2s; }
+.hft-ico { fill: none; stroke: var(--c); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.hft-n { font: 700 10px/1 var(--mono); fill: var(--c); }
+.hft-node:hover .hft-pop, .hft-node:focus .hft-pop, .hft-node.hot .hft-pop { filter: url(#hft-glow); }
+.hft-node:hover .hft-node-body, .hft-node.hot .hft-node-body { fill: color-mix(in srgb, var(--c) 16%, var(--paper)); }
+.hft-name { font: 700 14.5px/1 var(--sans); fill: var(--ink); }
+.hft-meta { font: 600 11px/1 var(--mono); fill: var(--ink-soft); }
+.hft-peek { border-left: 4px solid var(--c, var(--accent)); }
+.hft-peek .erj-peek-k { color: var(--c, var(--accent)); }
+@media (prefers-reduced-motion: reduce) { .hft-tape, .hft-core-halo, .hft-node-ring { animation: none; } .hft-packet { display: none; } .hft-pop { transform: none; opacity: 1; animation: none !important; } }
