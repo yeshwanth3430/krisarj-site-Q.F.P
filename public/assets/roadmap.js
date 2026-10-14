@@ -87,7 +87,17 @@
         { name: "Towards PDEs", topics: [
           ["The heat equation", "the shape behind Black–Scholes", "soon"] ] }
       ] },
-    { id: "opt", n: "06", name: "Optimization", tag: "Finding the best choice", state: "later", col: 2, row: 0,
+    { id: "ra", n: "06", name: "Real Analysis", tag: "Calculus, proved properly", state: "later", col: 2, row: 0,
+      about: "Sequences, limits, continuity and integration done rigorously: the proofs that make stochastic calculus and probability theory sound.",
+      groups: [
+        { name: "Foundations", topics: [
+          ["Sequences & limits", "what convergence really means", "soon"],
+          ["Continuity & differentiability", "when calculus works", "soon"] ] },
+        { name: "Integration", topics: [
+          ["The Riemann integral", "areas, rigorously", "soon"],
+          ["Series of functions", "when limits can be swapped", "soon"] ] }
+      ] },
+    { id: "opt", n: "07", name: "Optimization", tag: "Finding the best choice", state: "later", col: 2, row: 1,
       about: "Gradients, convexity, constraints and Lagrange multipliers, and the algorithms that find the best portfolio or the best-fitting model.",
       groups: [
         { name: "Foundations", topics: [
@@ -97,7 +107,7 @@
           ["Lagrange multipliers & KKT", "the best mix under a budget", "soon"],
           ["Linear & quadratic programming", "portfolio optimisation", "soon"] ] }
       ] },
-    { id: "st", n: "07", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 1,
+    { id: "st", n: "08", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 2,
       about: "Estimation, confidence intervals, hypothesis tests, regression and Bayesian thinking: deciding what the data really says.",
       groups: [
         { name: "Inference", topics: [
@@ -109,7 +119,7 @@
           ["Bayesian statistics", "updating beliefs with evidence", "soon"],
           ["Principal component analysis", "the main directions in data", "soon"] ] }
       ] },
-    { id: "dsp", n: "08", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 2,
+    { id: "dsp", n: "09", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 3,
       about: "Poisson processes, Markov chains, random walks and martingales: the models behind order arrivals, regimes and fair prices.",
       groups: [
         { name: "Arrivals", topics: [
@@ -119,7 +129,32 @@
           ["Markov chains", "regimes and transitions", "soon"],
           ["Random walks & martingales", "fair games and prices", "soon"] ] }
       ] },
-    { id: "fin", n: "09", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 3, row: 1,
+    { id: "ca", n: "10", name: "Complex Analysis", tag: "Calculus with complex numbers", state: "later", col: 2, row: 4,
+      about: "Complex functions, contour integrals and residues: the tools behind Fourier methods for pricing options quickly.",
+      groups: [
+        { name: "Complex functions", topics: [
+          ["Analytic functions", "derivatives in the complex plane", "soon"],
+          ["Contour integrals & residues", "integrals that evaluate themselves", "soon"] ] },
+        { name: "Transforms", topics: [
+          ["Fourier & Laplace transforms", "fast option pricing", "soon"] ] }
+      ] },
+    { id: "ts", n: "11", name: "Time-Series Analysis", tag: "Data that unfolds over time", state: "later", col: 3, row: 0,
+      about: "Stationarity, ARMA models, volatility models and forecasting: modelling returns, spreads and volatility as they evolve.",
+      groups: [
+        { name: "Models", topics: [
+          ["Stationarity & autocorrelation", "does the past predict the future?", "soon"],
+          ["ARMA models", "memory in returns", "soon"],
+          ["Volatility models (GARCH)", "risk that clusters", "soon"] ] }
+      ] },
+    { id: "sc", n: "12", name: "Stochastic Calculus", tag: "Calculus for random paths", state: "later", col: 3, row: 1,
+      about: "Brownian motion, Itô's lemma and stochastic differential equations: the language of Black–Scholes and continuous-time models.",
+      groups: [
+        { name: "Continuous randomness", topics: [
+          ["Brownian motion", "the continuous random walk", "soon"],
+          ["Itô's lemma", "the chain rule for random paths", "soon"],
+          ["Stochastic differential equations", "from GBM to Black–Scholes", "soon"] ] }
+      ] },
+    { id: "fin", n: "13", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 4, row: 0,
       about: "Stochastic processes, Itô calculus, Black–Scholes, portfolio theory and time series: the payoff of every stage before.",
       groups: [
         { name: "Randomness in time", topics: [
@@ -135,9 +170,11 @@
       ] }
   ];
   // which subject builds on which (arrows in the main map)
+  // arrows: [from, to] = "required" (MIT's stated prerequisites); a third entry "help" = helpful, not required
   var EDGES = [["la", "mvc"], ["svc", "mvc"], ["svc", "pr"], ["la", "de"], ["svc", "de"], ["la", "pr"], ["pr", "st"], ["la", "st"], ["st", "dsp"], ["pr", "dsp"], ["la", "opt"], ["mvc", "opt"],
-    // Maths for Finance follows MIT 18.642, whose syllabus requires 18.06, 18.03 and probability; statistics, stochastic processes (and optimisation) only help
-    ["la", "fin"], ["pr", "fin"], ["de", "fin"], ["st", "fin", "help"], ["dsp", "fin", "help"], ["opt", "fin", "help"]];
+    ["mvc", "ra"], ["mvc", "ca"], ["de", "ca"], ["st", "ts"], ["dsp", "sc"], ["mvc", "sc"], ["ra", "sc", "help"],
+    // Maths for Finance follows MIT 18.642, whose syllabus requires 18.06, 18.03 and probability; the rest only help
+    ["la", "fin"], ["pr", "fin"], ["de", "fin"], ["st", "fin", "help"], ["dsp", "fin", "help"], ["opt", "fin", "help"], ["ts", "fin", "help"], ["sc", "fin", "help"], ["ca", "fin", "help"]];
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
   function count(s) { var all = 0, live = 0; s.groups.forEach(function (g) { g.topics.forEach(function (t) { all++; if (t[2] === "live") live++; }); }); return { all: all, live: live }; }
@@ -145,7 +182,7 @@
   var TOPIC_TXT = { live: "Live", next: "Next up", soon: "Planned" };
 
   function mapHTML() {
-    var cols = [0, 1, 2, 3].map(function (c) {
+    var cols = [0, 1, 2, 3, 4].map(function (c) {
       var items = SUBJECTS.filter(function (s) { return s.col === c; }).sort(function (a, b) { return a.row - b.row; });
       return '<div class="rmm-col">' + items.map(function (s) {
         var k = count(s), pct = Math.round(100 * k.live / k.all);
@@ -157,7 +194,7 @@
           '<span class="rmm-meta">' + STATE_TXT[s.state] + ' · ' + k.live + ' / ' + k.all + ' topics live</span></span></' + tag + '>';
       }).join("") + '</div>';
     }).join("");
-    return '<div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div>' +
+    return '<div class="rmm-scroll"><div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div></div>' +
       '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>required</span><span><i class="lg-help"></i>helpful</span><span class="rmm-hint">Click Linear Algebra to open its lessons</span></div>';
   }
 
@@ -181,7 +218,7 @@
 
   function build(root) {
     root.innerHTML =
-      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Nine subjects. The map shows the order and what each subject builds on.</p></div>' +
+      '<div class="rm-intro rv"><h2 id="rm-map" style="margin-top:8px">The big picture</h2><p>Thirteen subjects. The map shows the order and what each subject builds on.</p></div>' +
       mapHTML();
   }
 
@@ -242,7 +279,7 @@
 
   // ---- hover a subject: a small card below it lists its prerequisites; their nodes and arrows light up ----
   function prereqs(box) {
-    var tip = document.createElement("div"); tip.className = "rmm-tip"; tip.setAttribute("role", "tooltip"); box.appendChild(tip);
+    var tip = document.createElement("div"); tip.className = "rmm-tip"; tip.setAttribute("role", "tooltip"); document.body.appendChild(tip);
     var byId = {}; SUBJECTS.forEach(function (s) { byId[s.id] = s; });
     function show(node) {
       var id = node.getAttribute("data-id"), s = byId[id];
@@ -250,12 +287,14 @@
       tip.innerHTML = '<span class="rmm-tip-k">' + (pre.length ? "Prerequisites" : "Starting point") + "</span>" +
         (pre.length ? '<span class="rmm-tip-list">' + pre.map(function (p) { return '<span class="rmm-tip-chip"><b>' + p.n + "</b>" + esc(p.name) + "</span>"; }).join("") + "</span>"
                     : '<span class="rmm-tip-none">No prerequisites: start here</span>');
-      var b = box.getBoundingClientRect(), r = node.getBoundingClientRect();
+      var r = node.getBoundingClientRect(), vw = document.documentElement.clientWidth;
       tip.style.visibility = "hidden"; tip.classList.add("on");
-      var w = tip.offsetWidth, x = r.left - b.left + r.width / 2 - w / 2;
-      x = Math.max(4, Math.min(b.width - w - 4, x));
-      tip.style.left = x + "px"; tip.style.top = (r.bottom - b.top + 10) + "px";
-      tip.style.setProperty("--ax", (r.left - b.left + r.width / 2 - x) + "px");
+      var w = tip.offsetWidth, h = tip.offsetHeight, x = r.left + r.width / 2 - w / 2;
+      x = Math.max(8, Math.min(vw - w - 8, x));
+      var below = r.bottom + 10 + h < window.innerHeight;   // flip above the node near the bottom of the screen
+      tip.classList.toggle("up", !below);
+      tip.style.left = x + "px"; tip.style.top = (below ? r.bottom + 10 : r.top - h - 10) + "px";
+      tip.style.setProperty("--ax", (r.left + r.width / 2 - x) + "px");
       tip.style.visibility = "";
       box.classList.add("rmm-focus");
       box.querySelectorAll(".rmm-node").forEach(function (n) {
@@ -274,6 +313,8 @@
       n.addEventListener("mouseenter", function () { show(n); });
       n.addEventListener("mouseleave", hide);
     });
+    window.addEventListener("scroll", hide, { passive: true });
+    box.parentNode.addEventListener("scroll", hide, { passive: true });
   }
   function mount() {
     var root = document.getElementById("roadmap-root"); if (!root) return;
