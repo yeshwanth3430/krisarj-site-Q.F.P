@@ -119,7 +119,7 @@
           ["Bayesian statistics", "updating beliefs with evidence", "soon"],
           ["Principal component analysis", "the main directions in data", "soon"] ] }
       ] },
-    { id: "dsp", n: "09", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 2, row: 3,
+    { id: "dsp", n: "11", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 3, row: 1,
       about: "Poisson processes, Markov chains, random walks and martingales: the models behind order arrivals, regimes and fair prices.",
       groups: [
         { name: "Arrivals", topics: [
@@ -129,7 +129,7 @@
           ["Markov chains", "regimes and transitions", "soon"],
           ["Random walks & martingales", "fair games and prices", "soon"] ] }
       ] },
-    { id: "ca", n: "10", name: "Complex Analysis", tag: "Calculus with complex numbers", state: "later", col: 2, row: 4,
+    { id: "ca", n: "09", name: "Complex Analysis", tag: "Calculus with complex numbers", state: "later", col: 2, row: 3,
       about: "Complex functions, contour integrals and residues: the tools behind Fourier methods for pricing options quickly.",
       groups: [
         { name: "Complex functions", topics: [
@@ -138,7 +138,7 @@
         { name: "Transforms", topics: [
           ["Fourier & Laplace transforms", "fast option pricing", "soon"] ] }
       ] },
-    { id: "ts", n: "11", name: "Time-Series Analysis", tag: "Data that unfolds over time", state: "later", col: 3, row: 0,
+    { id: "ts", n: "10", name: "Time-Series Analysis", tag: "Data that unfolds over time", state: "later", col: 3, row: 0,
       about: "Stationarity, ARMA models, volatility models and forecasting: modelling returns, spreads and volatility as they evolve.",
       groups: [
         { name: "Models", topics: [
@@ -146,7 +146,7 @@
           ["ARMA models", "memory in returns", "soon"],
           ["Volatility models (GARCH)", "risk that clusters", "soon"] ] }
       ] },
-    { id: "sc", n: "12", name: "Stochastic Calculus", tag: "Calculus for random paths", state: "later", col: 3, row: 1,
+    { id: "sc", n: "12", name: "Stochastic Calculus", tag: "Calculus for random paths", state: "later", col: 3, row: 2,
       about: "Brownian motion, Itô's lemma and stochastic differential equations: the language of Black–Scholes and continuous-time models.",
       groups: [
         { name: "Continuous randomness", topics: [
@@ -191,7 +191,7 @@
           '<span class="rmm-n">' + s.n + '</span>' +
           '<span class="rmm-body"><span class="rmm-name">' + esc(s.name) + '</span><span class="rmm-tag">' + esc(s.tag) + '</span>' +
           '<span class="rmm-bar"><i style="--w:' + pct + '%"></i></span>' +
-          '<span class="rmm-meta">' + STATE_TXT[s.state] + ' · ' + k.live + ' / ' + k.all + ' topics live</span></span></' + tag + '>';
+          '<span class="rmm-meta">' + (s.state === "now" ? "In progress · " : "") + k.live + ' / ' + k.all + ' topics live</span></span></' + tag + '>';
       }).join("") + '</div>';
     }).join("");
     return '<div class="rmm-scroll"><div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div></div>' +
