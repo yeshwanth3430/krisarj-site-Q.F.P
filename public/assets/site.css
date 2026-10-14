@@ -259,3 +259,9 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
 .hft-meta-link { fill: var(--c); font-weight: 700; }
 .hft-node.hft-link .hft-node-ring { opacity: 1; stroke-width: 2; }
 .back-link { margin: 0 0 6px; font: 600 14px/1.4 var(--sans); } .back-link a { text-decoration: none; }
+.res-head { margin-top: 40px; }
+.res-note { color: var(--ink-soft); font-family: var(--sans); font-size: 14px; margin: 0 0 12px; }
+.res-table { width: 100%; }
+.res-table .res-n { font: 700 13px/1 var(--mono); color: var(--accent); width: 44px; }
+.res-table a { text-decoration: none; }
+.res-table a:hover { text-decoration: underline; }
