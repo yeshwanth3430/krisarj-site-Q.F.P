@@ -1,4 +1,4 @@
-// HFT Preparation tab: a circuit-board map (eight tracks wired into a core) + one branching roadmap per track.
+// Quant Trading Prep tab: a circuit-board map, eight tracks wired into one core. (Per-track resources come later.)
 // Data lives here; the page only needs <div id="hft-root"></div>.
 (function () {
   "use strict";
@@ -137,21 +137,7 @@
   }
 
   function build(root) {
-    var all = TRACKS.reduce(function (a, s) { return a + count(s).all; }, 0);
-    var branches = TRACKS.reduce(function (a, s) { return a + s.groups.length; }, 0);
-    var tick = TRACKS.map(function (s) { return '<span class="hft-tk" style="--c:var(' + s.col + ')"><i></i>' + esc(s.short.toUpperCase()) + ' <b>' + s.groups.length + "×" + count(s).all + '</b></span>'; }).join("");
-    root.innerHTML =
-      '<div class="hft-ticker" aria-hidden="true"><div class="hft-tape">' + tick + tick + "</div></div>" +
-      '<div class="rm-intro rv"><h2 id="hft-map" style="margin-top:8px">HFT preparation</h2>' +
-      '<p>Eight tracks, all wired into one goal: being ready for a high-frequency trading role. Speed with numbers and words, the maths and markets behind every strategy, and the engineering that turns ideas into microseconds.</p></div>' +
-      '<div class="erj-stats hft-stats">' +
-        [[TRACKS.length, "tracks"], [branches, "branches"], [all, "topics"], [1, "core goal"]].map(function (x) {
-          return '<div class="erj-stat"><b data-to="' + x[0] + '">0</b><span>' + x[1] + "</span></div>";
-        }).join("") + "</div>" +
-      '<div class="hft" id="hftb"><svg class="hft-svg" aria-label="HFT preparation: eight tracks wired into a core"></svg></div>' +
-      '<div class="erj-peek hft-peek" id="hft-peek"><span class="erj-peek-k">Hover or tap a track</span><b>Preview a track here</b><span class="erj-peek-txt">Click a track to jump to its roadmap.</span></div>' +
-      '<nav class="rm-chips" aria-label="HFT preparation tracks">' + TRACKS.map(function (s) { return '<a href="#hft-' + s.id + '" data-id="' + s.id + '"><b>' + s.n + '</b> ' + esc(s.short) + '</a>'; }).join("") + '</nav>' +
-      TRACKS.map(trackHTML).join("");
+    root.innerHTML = '<div class="hft hft-solo" id="hftb"><svg class="hft-svg" aria-label="Quant trading preparation: eight tracks wired into one goal"></svg></div>';
   }
 
   function el(tag, attrs, parent) { var e = document.createElementNS(SVGNS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
@@ -227,15 +213,14 @@
       el("rect", { x: off - 2, y: CH / 2, width: 4, height: 7, "class": "hft-core-pin" }, core);
       if (!narrow) { el("rect", { x: -CW / 2 - 7, y: offy - 2, width: 7, height: 4, "class": "hft-core-pin" }, core); el("rect", { x: CW / 2, y: offy - 2, width: 7, height: 4, "class": "hft-core-pin" }, core); }
     }
-    var t1 = el("text", { y: narrow ? -6 : -10, "text-anchor": "middle", "class": "hft-core-t1" }, core); t1.textContent = "HFT";
-    var t2 = el("text", { y: narrow ? 16 : 18, "text-anchor": "middle", "class": "hft-core-t2" }, core); t2.textContent = "READY";
+    var t1 = el("text", { y: narrow ? -6 : -10, "text-anchor": "middle", "class": "hft-core-t1" }, core); t1.textContent = "QUANT";
+    var t2 = el("text", { y: narrow ? 16 : 18, "text-anchor": "middle", "class": "hft-core-t2" }, core); t2.textContent = "TRADER";
     if (!narrow) { var t3 = el("text", { y: 44, "text-anchor": "middle", "class": "hft-core-t3" }, core); t3.textContent = "8 tracks → 1 goal"; }
 
     // the track nodes
     TRACKS.forEach(function (s, i) {
       var n = nodes[i], k = count(s);
-      var a = el("a", { href: "#hft-" + s.id, "class": "hft-node", "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0" }, svg);
-      a.setAttributeNS(XLINK, "xlink:href", "#hft-" + s.id);
+      var a = el("g", { "class": "hft-node", "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0" }, svg);
       var g = el("g", { transform: "translate(" + n.x + " " + n.y + ")" }, a);
       var pop = el("g", { "class": "hft-pop" }, g);
       el("rect", { x: -38, y: -38, width: 76, height: 76, rx: 18, "class": "hft-node-ring" }, pop);
@@ -251,82 +236,28 @@
       var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" }, g); l2.textContent = s.groups.length + " branches · " + k.all + " topics";
       var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag;
       a.addEventListener("mouseenter", function () { peek(s); }); a.addEventListener("focus", function () { peek(s); });
+      a.addEventListener("mouseleave", function () { peek(null); }); a.addEventListener("blur", function () { peek(null); });
     });
   }
   function peek(s) {
-    var pk = document.getElementById("hft-peek"); if (!pk) return; var k = count(s);
-    pk.style.setProperty("--c", "var(" + s.col + ")");
-    pk.innerHTML = '<span class="erj-peek-k">Track ' + s.n + " · " + s.groups.length + " branches · " + k.all + " topics</span><b>" + esc(s.name) + '</b><span class="erj-peek-txt">' + esc(s.tag) + '</span><span class="erj-peek-br">' +
-      s.groups.map(function (g) { return "<i>" + esc(g.name) + "</i>"; }).join("") + "</span>";
-    pk.classList.remove("pulse"); void pk.offsetWidth; pk.classList.add("pulse");
-    document.querySelectorAll(".hft-node").forEach(function (a) { a.classList.toggle("hot", a.getAttribute("data-id") === s.id); });
-    document.querySelectorAll(".hft-trace").forEach(function (p) { p.classList.toggle("hot", p.getAttribute("data-id") === s.id); });
-  }
-  function countUp(root) {
-    root.querySelectorAll(".erj-stat b").forEach(function (b) {
-      var to = +b.dataset.to, t0 = null;
-      function step(ts) { if (!t0) t0 = ts; var f = Math.min(1, (ts - t0) / 1100); b.textContent = Math.round(to * (1 - Math.pow(1 - f, 3))); if (f < 1) requestAnimationFrame(step); }
-      requestAnimationFrame(step);
-    });
-  }
-
-  // ---- scroll effects: reveal, trunk fill, active chip ----
-  function effects(root) {
-    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var rv = root.querySelectorAll(".rv, .rms-ring");
-    if (reduce || !("IntersectionObserver" in window)) rv.forEach(function (e) { e.classList.add("in"); });
-    else {
-      var io = new IntersectionObserver(function (es) { es.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }); }, { rootMargin: "0px 0px -8% 0px" });
-      rv.forEach(function (e) { io.observe(e); });
-    }
-    var chips = root.querySelectorAll(".rm-chips a"), secs = root.querySelectorAll(".rms"), ticking = false;
-    function onScroll() {
-      ticking = false;
-      var panel = root.closest(".tab-panel"); if (panel && panel.hidden) return;
-      var vh = window.innerHeight, active = null;
-      secs.forEach(function (s) {
-        var r = s.getBoundingClientRect(), tree = s.querySelector(".rms-tree").getBoundingClientRect();
-        var f = Math.max(0, Math.min(1, (vh * 0.65 - tree.top) / Math.max(1, tree.height)));
-        s.querySelector(".rms-trunk i").style.height = (f * 100) + "%";
-        if (r.top < vh * 0.4 && r.bottom > vh * 0.4) active = s.dataset.id;
-      });
-      chips.forEach(function (c) { c.classList.toggle("on", c.dataset.id === active); });
-    }
-    window.addEventListener("scroll", function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
-    document.querySelectorAll('[data-tab="hft"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(onScroll, 30); }); });
-    onScroll();
+    document.querySelectorAll(".hft-node").forEach(function (a) { a.classList.toggle("hot", !!s && a.getAttribute("data-id") === s.id); });
+    document.querySelectorAll(".hft-trace").forEach(function (p) { p.classList.toggle("hot", !!s && p.getAttribute("data-id") === s.id); });
   }
 
   function mount() {
     var root = document.getElementById("hft-root"); if (!root) return;
     build(root);
-    effects(root);
     var box = document.getElementById("hftb"), started = false;
     function reveal() {
       if (started || !box.offsetWidth) return;
       var r = box.getBoundingClientRect(); if (r.top > window.innerHeight || r.bottom < 0) return;
       started = true; draw();
       requestAnimationFrame(function () { box.classList.add("in"); box.querySelectorAll(".hft-trace").forEach(function (p) { p.style.strokeDashoffset = 0; }); });
-      countUp(root);
     }
     if (window.ResizeObserver) new ResizeObserver(function () { if (started) draw(); else reveal(); }).observe(box); else window.addEventListener("resize", function () { if (started) draw(); });
     window.addEventListener("scroll", reveal, { passive: true });
     document.querySelectorAll('[data-tab="hft"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(reveal, 40); }); });
     setTimeout(reveal, 60);
-    root.addEventListener("click", function (ev) {
-      var a = ev.target.closest('a[href^="#hft-"]'); if (!a) return;
-      var href = a.getAttribute("href") || a.getAttributeNS(XLINK, "href");
-      var t = document.getElementById(href.slice(1)); if (!t) return;
-      ev.preventDefault(); history.replaceState(null, "", href);
-      t.scrollIntoView({ behavior: "smooth", block: "start" });
-      t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash");
-    });
-    var h = location.hash;
-    if (/^#hft-/.test(h)) {
-      var tb = document.querySelector('.tabs [data-tab="hft"]'); if (tb) tb.click();
-      history.replaceState(null, "", h);
-      setTimeout(function () { var t = document.getElementById(h.slice(1)); if (t) t.scrollIntoView({ block: "start" }); }, 80);
-    }
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
 })();

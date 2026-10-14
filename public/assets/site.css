@@ -252,3 +252,5 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
 .hft-peek { border-left: 4px solid var(--c, var(--accent)); }
 .hft-peek .erj-peek-k { color: var(--c, var(--accent)); }
 @media (prefers-reduced-motion: reduce) { .hft-tape, .hft-core-halo, .hft-node-ring { animation: none; } .hft-packet { display: none; } .hft-pop { transform: none; opacity: 1; animation: none !important; } }
+.hft-solo { margin-top: 8px; }
+.hft-node { cursor: default; }
