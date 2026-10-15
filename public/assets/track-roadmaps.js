@@ -5,15 +5,17 @@
 
   var TRACKS = {
     cpp: {
+      type: "tickers",
+      tickers: [{ sym: "CPP", name: "C++", col: "#a5adf7" }, { sym: "DSA", name: "Data Structures & Algorithms", col: "#5fbf87" }],
       title: "C++ & Data Structures and Algorithms",
       intro: "Six books, read in this order: the language first, then algorithms, then speed.",
       steps: [
-        { book: "A Tour of C++", author: "Bjarne Stroustrup", purpose: "Learn C++ fundamentals", lane: "C++", col: "--mth-b" },
-        { book: "C++ Primer", author: "Lippman, Lajoie & Moo", purpose: "Deepen language knowledge", lane: "C++", col: "--mth-b" },
-        { book: "Grokking Algorithms", author: "Aditya Bhargava", purpose: "Build DSA intuition", lane: "DSA", col: "--ex-b" },
-        { book: "The Algorithm Design Manual", author: "Steven Skiena", purpose: "Develop deeper algorithmic problem-solving", lane: "DSA", col: "--ex-b" },
-        { book: "C++ High Performance", author: "Björn Andrist & Viktor Sehr", purpose: "Learn performance optimization", lane: "Performance", col: "--int-b" },
-        { book: "Effective Modern C++", author: "Scott Meyers", purpose: "Master modern C++ practices", lane: "Modern C++", col: "--thm-b" }
+        { key: "a-tour-of-cpp", tk: "CPP", gain: 10, book: "A Tour of C++", author: "Bjarne Stroustrup", purpose: "Learn C++ fundamentals", lane: "C++", col: "--mth-b" },
+        { key: "cpp-primer", tk: "CPP", gain: 18, book: "C++ Primer", author: "Lippman, Lajoie & Moo", purpose: "Deepen language knowledge", lane: "C++", col: "--mth-b" },
+        { key: "grokking-algorithms", tk: "DSA", gain: 12, book: "Grokking Algorithms", author: "Aditya Bhargava", purpose: "Build DSA intuition", lane: "DSA", col: "--ex-b" },
+        { key: "the-algorithm-design-manual", tk: "DSA", gain: 22, book: "The Algorithm Design Manual", author: "Steven Skiena", purpose: "Develop deeper algorithmic problem-solving", lane: "DSA", col: "--ex-b" },
+        { key: "cpp-high-performance", tk: "CPP", gain: 14, book: "C++ High Performance", author: "Björn Andrist & Viktor Sehr", purpose: "Learn performance optimization", lane: "Performance", col: "--int-b" },
+        { key: "effective-modern-cpp", tk: "CPP", gain: 12, book: "Effective Modern C++", author: "Scott Meyers", purpose: "Master modern C++ practices", lane: "Modern C++", col: "--thm-b" }
       ]
     },
     mkt: {
@@ -310,11 +312,88 @@
     if (window.ResizeObserver) new ResizeObserver(relayout).observe(svg.parentNode); else window.addEventListener("resize", relayout);
     document.querySelectorAll('[data-tab="' + id + '"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(relayout, 40); }); });
   }
+
+  // ---- "tickers" tracks: two instruments on one live chart. Each book is a candle on its own line, in reading order. ----
+  function buildTickers(root, T, id) {
+    var KEY = "qfp-read-" + id, read = {};
+    try { read = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { read = {}; }
+    var steps = T.steps, syms = T.tickers.map(function (t) { return t.sym; });
+    // price path per ticker: starts at 100, a book on that ticker adds its gain, other books leave it flat
+    var path = {}; T.tickers.forEach(function (t) { var v = 100, arr = [v]; steps.forEach(function (s) { if (s.tk === t.sym) v += s.gain; arr.push(v); }); path[t.sym] = arr; });
+    var tick = steps.map(function (s, i) { return '<span style="--c:' + T.tickers[syms.indexOf(s.tk)].col + '"><b>' + s.tk + "</b> " + esc(s.book.toUpperCase()) + " <i>▲ +" + s.gain + "</i></span>"; }).join("");
+    root.innerHTML =
+      '<p class="back-link"><a href="#hft" class="to-hft">← Back to Quant Trading Prep</a></p>' +
+      '<h2 class="trk-title">' + esc(T.title) + "</h2>" +
+      '<p class="trk-intro">Two tickers, one chart: <b style="color:' + T.tickers[0].col + '">CPP</b> and <b style="color:' + T.tickers[1].col + '">DSA</b>. Six books in reading order; each is a candle on its own line and your knowledge price climbs as you read. Hover a candle for the book, click it to mark it read.</p>' +
+      '<div class="tk">' +
+        '<div class="dp-bar tk-bar"><i></i><i></i><i></i><span class="dp-ttl">CPP·DSA <b>·</b> 1D</span>' +
+          T.tickers.map(function (t) { return '<span class="tk-q" style="--c:' + t.col + '"><b>' + t.sym + '</b> <span class="tk-px" data-s="' + t.sym + '">100.0</span> <em class="tk-ch" data-s="' + t.sym + '">+0.0%</em></span>'; }).join("") +
+          '<span class="tk-read">READ <b>0/' + steps.length + "</b></span></div>" +
+        '<div class="tk-chart"><svg class="tk-svg" aria-label="Two-ticker chart of the C++ and DSA reading path"></svg></div>' +
+        '<div class="dp-peek tk-peek"><span class="dp-pk-k">Hover a candle · click to mark it read</span><b>' + steps.length + " books · " + steps.filter(function (s) { return s.tk === "CPP"; }).length + " on CPP · " + steps.filter(function (s) { return s.tk === "DSA"; }).length + ' on DSA</b></div>' +
+        '<div class="tk-tape" aria-hidden="true"><div class="tk-tape-in">' + tick + tick + "</div></div>" +
+      "</div>";
+    var box = root.querySelector(".tk"), svg = box.querySelector(".tk-svg"), peekEl = box.querySelector(".tk-peek"), drawn = false;
+    function el(tag, a, parent) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(read)); } catch (e) {} }
+    function header() {
+      // the header quote follows what you have read: the last read book on each line sets its price
+      T.tickers.forEach(function (t) {
+        var v = 100; steps.forEach(function (s) { if (s.tk === t.sym && read[s.key]) v += s.gain; });
+        box.querySelector('.tk-px[data-s="' + t.sym + '"]').textContent = v.toFixed(1);
+        box.querySelector('.tk-ch[data-s="' + t.sym + '"]').textContent = "+" + (v - 100).toFixed(1) + "%";
+      });
+      box.querySelector(".tk-read b").textContent = steps.filter(function (s) { return read[s.key]; }).length + "/" + steps.length;
+    }
+    function render() {
+      var W = svg.parentNode.offsetWidth; if (!W) return;
+      var narrow = W < 640, H = narrow ? 300 : 360, L = narrow ? 34 : 46, R = narrow ? 14 : 70, top = 26, bot = H - 54;
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", W); svg.setAttribute("height", H);
+      var max = 0; syms.forEach(function (k) { max = Math.max(max, path[k][path[k].length - 1]); });
+      var lo = 96, hi = Math.ceil((max + 6) / 10) * 10;
+      var X = function (i) { return L + i * (W - L - R) / steps.length; }, Y = function (v) { return bot - (v - lo) / (hi - lo) * (bot - top); };
+      var defs = el("defs", {}, svg);
+      T.tickers.forEach(function (t, k) { var lg = el("linearGradient", { id: "tkg" + k + id, x1: 0, y1: 0, x2: 0, y2: 1 }, defs); el("stop", { offset: 0, "stop-color": t.col, "stop-opacity": 0.28 }, lg); el("stop", { offset: 1, "stop-color": t.col, "stop-opacity": 0 }, lg); });
+      for (var v = lo + 4; v <= hi; v += 10) { el("line", { x1: L, x2: W - R, y1: Y(v), y2: Y(v), "class": "dp-grid" }, svg); var gt = el("text", { x: L - 8, y: Y(v) + 4, "text-anchor": "end", "class": "tk-ax" }, svg); gt.textContent = v; }
+      // lines + area for each ticker (step-after, like a price that jumps when a book is read)
+      T.tickers.forEach(function (t, k) {
+        var a = path[t.sym], d = "M " + X(0) + " " + Y(a[0]);
+        for (var i = 1; i <= steps.length; i++) d += " L " + X(i) + " " + Y(a[i - 1]) + " L " + X(i) + " " + Y(a[i]);
+        el("path", { d: d + " L " + X(steps.length) + " " + bot + " L " + X(0) + " " + bot + " Z", fill: "url(#tkg" + k + id + ")" }, svg);
+        var ln = el("path", { d: d, "class": "tk-line" + (drawn ? "" : " draw"), stroke: t.col }, svg);
+        if (!narrow) { var lt = el("text", { x: X(steps.length) + 8, y: Y(a[steps.length]) + 4, "class": "tk-end", fill: t.col }, svg); lt.textContent = t.sym + " " + a[steps.length].toFixed(0); }
+      });
+      // candles: one per book, on its own ticker's line
+      steps.forEach(function (s, i) {
+        var t = T.tickers[syms.indexOf(s.tk)], a = path[s.tk], o = a[i], c = a[i + 1], x = X(i + 0.5), w = Math.min(34, (W - L - R) / steps.length * 0.42), r = !!read[s.key];
+        var g = el("g", { "class": "tk-c" + (r ? " read" : ""), "data-k": s.key, tabindex: 0, style: "--c:" + t.col + ";--i:" + i }, svg);
+        el("rect", { x: X(i), y: top - 10, width: X(i + 1) - X(i), height: bot - top + 10, "class": "tk-hit" }, g);
+        el("line", { x1: x, x2: x, y1: Y(c) - 8, y2: Y(o) + 6, "class": "tk-wick" }, g);
+        el("rect", { x: x - w / 2, y: Y(c), width: w, height: Math.max(3, Y(o) - Y(c)), rx: 3, "class": "tk-body" }, g);
+        var n = el("text", { x: x, y: Y(c) - 14, "text-anchor": "middle", "class": "tk-n" }, g); n.textContent = (r ? "✓ " : "") + "0" + (i + 1);
+        var lb = el("text", { x: x, y: bot + 18, "text-anchor": "middle", "class": "tk-lb" }, g); lb.textContent = s.tk;
+        if (!narrow) { var lb2 = el("text", { x: x, y: bot + 34, "text-anchor": "middle", "class": "tk-lb2" }, g); lb2.textContent = s.book.length > 22 ? s.book.slice(0, 20) + "…" : s.book; }
+        g.addEventListener("mouseenter", function () { peek(s, i, t); box.classList.add("focus"); g.classList.add("hot"); });
+        g.addEventListener("mouseleave", function () { box.classList.remove("focus"); g.classList.remove("hot"); });
+        g.addEventListener("click", function () { if (read[s.key]) delete read[s.key]; else read[s.key] = 1; save(); header(); render(); peek(s, i, t); });
+        g.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); g.dispatchEvent(new Event("click")); } });
+      });
+      drawn = true;
+    }
+    function peek(s, i, t) {
+      peekEl.innerHTML = '<span class="dp-pk-k"><b style="color:' + t.col + '">' + s.tk + "</b> · candle 0" + (i + 1) + " · " + esc(s.lane) + " · ▲ +" + s.gain + "</span><b>" + esc(s.book) + '</b><span class="dp-pk-a">' + esc(s.author) + '</span><span class="dp-pk-t">' + esc(s.purpose) + '</span><span class="dp-pk-s">' + (read[s.key] ? "✓ marked read · click to undo" : "click the candle to mark it read") + "</span>";
+    }
+    header();
+    if (window.ResizeObserver) new ResizeObserver(render).observe(svg.parentNode); else window.addEventListener("resize", render);
+    document.querySelectorAll('[data-tab="' + id + '"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(render, 40); }); });
+  }
   function mount() {
     Object.keys(TRACKS).forEach(function (id) {
       var root = document.getElementById(id + "-root"); if (!root) return;
       if (TRACKS[id].type === "stack") { buildStack(root, TRACKS[id], id); return; }
       if (TRACKS[id].type === "depth") { buildDepth(root, TRACKS[id], id); return; }
+      if (TRACKS[id].type === "tickers") { buildTickers(root, TRACKS[id], id); return; }
       build(root, TRACKS[id], id);
       var redraw = function () { root.querySelectorAll(".trk").forEach(draw); };
       root.querySelectorAll(".trk").forEach(function (box) { if (window.ResizeObserver) new ResizeObserver(function () { draw(box); }).observe(box); });

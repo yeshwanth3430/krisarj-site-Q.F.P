@@ -446,3 +446,35 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
 .dp-reset:hover { color: var(--ink); border-color: var(--soft); }
 .dp-g { color: #2e9e5b; } .dp-r { color: #d0564b; }
 @media (max-width: 640px) { .dp-sides { grid-template-columns: 1fr; } .dp-sides .dp-r-side { text-align: left; } .dp-qb { margin-left: 0; } }
+
+/* ---------- C++ & DSA: two tickers on one chart ---------- */
+.tk { --bg: #0a0e15; --bg2: #111826; --line: #1f2a3c; --ink: #e7ecf3; --soft: #8a96a8; --gold: #f2c14e;
+  margin: 6px 0 0; border-radius: 18px; overflow: hidden; color: var(--ink); font-family: var(--sans);
+  background: radial-gradient(900px 300px at 70% -20%, #1d1f3a 0%, transparent 60%), var(--bg); border: 1px solid #253247; box-shadow: 0 30px 80px -40px #a5adf788, inset 0 1px 0 #ffffff10; }
+.tk-q { font: 600 12px/1 var(--mono); color: var(--soft); padding: 6px 10px; border-radius: 8px; background: #06090f; border: 1px solid var(--line); }
+.tk-q:first-of-type { margin-left: auto; }
+.tk-bar .tk-q:nth-of-type(1) { margin-left: auto; }
+.tk-q b { color: var(--c); } .tk-q .tk-px { color: var(--ink); font-size: 13.5px; } .tk-q em { font-style: normal; color: #5fbf87; }
+.tk-read { font: 700 12px/1 var(--mono); padding: 6px 12px; border-radius: 8px; border: 1px solid var(--gold); background: #2a2210; color: var(--ink); } .tk-read b { color: var(--gold); }
+.tk-chart { padding: 10px 12px 0; }
+.tk-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tk-ax { font: 500 10px/1 var(--mono); fill: var(--soft); }
+.tk-line { fill: none; stroke-width: 2.5; stroke-linejoin: round; filter: drop-shadow(0 0 6px currentColor); }
+.tk-line.draw { stroke-dasharray: 2000; stroke-dashoffset: 2000; animation: tk-draw 1.6s ease forwards; }
+@keyframes tk-draw { to { stroke-dashoffset: 0; } }
+.tk-end { font: 700 11px/1 var(--mono); }
+.tk-c { cursor: pointer; outline: none; }
+.tk-hit { fill: transparent; transition: fill .2s; }
+.tk-c:hover .tk-hit, .tk-c:focus .tk-hit, .tk-c.hot .tk-hit { fill: #ffffff08; }
+.tk-wick { stroke: var(--c); stroke-width: 1.5; opacity: .8; }
+.tk-body { fill: var(--bg); stroke: var(--c); stroke-width: 2; transition: fill .2s; }
+.tk-c.read .tk-body { fill: var(--c); filter: drop-shadow(0 0 8px var(--c)); }
+.tk-c.hot .tk-body { filter: drop-shadow(0 0 10px var(--c)); }
+.tk-n { font: 700 11px/1 var(--mono); fill: var(--c); }
+.tk-lb { font: 700 10px/1 var(--mono); letter-spacing: .12em; fill: var(--c); }
+.tk-lb2 { font: 500 10.5px/1 var(--sans); fill: var(--soft); }
+.tk.focus .tk-c:not(.hot) { opacity: .5; }
+.tk-tape { overflow: hidden; margin-top: 12px; border-top: 1px solid var(--line); background: #06090f; mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent); }
+.tk-tape-in { display: flex; gap: 36px; width: max-content; padding: 10px 0; animation: hft-tape 40s linear infinite; }
+.tk-tape span { font: 600 11.5px/1 var(--mono); color: var(--soft); white-space: nowrap; } .tk-tape b { color: var(--c); } .tk-tape i { color: #5fbf87; font-style: normal; }
+@media (prefers-reduced-motion: reduce) { .tk-line.draw { animation: none; stroke-dashoffset: 0; } .tk-tape-in { animation: none; } }
