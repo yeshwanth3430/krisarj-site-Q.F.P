@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/notebook.css?v=10">
-<link rel="stylesheet" href="assets/site.css?v=22">
+<link rel="stylesheet" href="assets/site.css?v=23">
 <script src="assets/notebook.js?v=3"></script>
 </head>
 <body>
@@ -25,6 +25,7 @@
     <button role="tab" data-tab="roadmap" aria-selected="false" hidden style="display:none">Mathematics for Finance</button>
     <button role="tab" data-tab="cpp" aria-selected="false" hidden style="display:none">C++ &amp; DSA</button>
     <button role="tab" data-tab="sys" aria-selected="false" hidden style="display:none">Low-Latency Systems</button>
+    <button role="tab" data-tab="mkt" aria-selected="false" hidden style="display:none">Market Microstructure &amp; Market Making</button>
   </nav>
   <div class="tab-body">
   <p class="meta">Learning series</p>
@@ -68,6 +69,10 @@
   <div id="sys-root"></div>
   </section>
 
+  <section class="tab-panel" data-panel="mkt" hidden>
+  <div id="mkt-root"></div>
+  </section>
+
   <section class="tab-panel" data-panel="hft">
   <div id="hft-root"></div>
   <noscript><p>The Quant Trading Prep map needs JavaScript.</p></noscript>
@@ -84,8 +89,8 @@
 </div></footer>
 <script defer src="assets/roadmap.js?v=15"></script>
 <script defer src="assets/er-roadmap.js?v=4"></script>
-<script defer src="assets/hft-roadmap.js?v=8"></script>
-<script defer src="assets/track-roadmaps.js?v=4"></script>
+<script defer src="assets/hft-roadmap.js?v=9"></script>
+<script defer src="assets/track-roadmaps.js?v=5"></script>
 <script src="assets/tracker.js?v=13"></script>
 <script>
 // The maths map has no sidebar entry: it opens from the Maths & Quant Finance track. "Back" returns to the board.

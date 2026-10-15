@@ -54,7 +54,7 @@
           ["Features from order-book data", "turning ticks into inputs", "soon"],
           ["Time-series validation", "no peeking into the future", "soon"] ] }
       ] },
-    { id: "mkt", n: "05", name: "Market Microstructure & Market Making", short: "Market Microstructure & Market Making", tag: "How prices are actually made", col: "--ex-b",
+    { id: "mkt", n: "05", name: "Market Microstructure & Market Making", short: "Market Microstructure & Market Making", tag: "How prices are actually made", col: "--ex-b", opens: "mkt", openLabel: "open the reading maps →",
       about: "The limit order book, how exchanges match orders, and how a market maker earns the spread while managing inventory and adverse selection.",
       groups: [
         { name: "The order book", topics: [

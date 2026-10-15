@@ -389,3 +389,9 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
   .lls-body { grid-template-columns: 1fr; } .lls-lane { display: none; } .lls-dir { display: none; }
   .lls-chips { max-height: none; opacity: 1; margin-top: 8px; } .lls-chip { opacity: 1; transform: none; }
 }
+.trk-map { margin: 26px 0 8px; }
+.trk-map + .trk-map { margin-top: 46px; padding-top: 26px; border-top: 1px solid var(--rule); }
+.trk-map-title { display: flex; align-items: center; gap: 12px; margin: 0 0 6px; font: 700 21px/1.2 var(--sans); }
+.trk-map-title span { font: 700 11px/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--paper); background: var(--accent); padding: 6px 9px; border-radius: 8px; }
+.trk-obj { color: var(--ink-soft); margin: 0 0 12px; font-size: 15px; }
+.trk-obj b { font: 700 11px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-right: 6px; }

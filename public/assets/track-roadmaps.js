@@ -16,6 +16,43 @@
         { book: "Effective Modern C++", author: "Scott Meyers", purpose: "Master modern C++ practices", lane: "Modern C++", col: "--thm-b" }
       ]
     },
+    mkt: {
+      type: "maps",
+      title: "Market Microstructure & Market Making",
+      intro: "Two reading maps: first how markets work, then how to make them.",
+      maps: [
+        { title: "Map 1 · Market Microstructure",
+          objective: "Understand order books, market structure, liquidity, price formation, order flow and adverse selection.",
+          steps: [
+            { book: "Trading and Exchanges: Market Microstructure for Practitioners", author: "Larry Harris", lane: "Foundation", col: "--def-b",
+              purpose: "First choice for a complete picture of market mechanics, order types, dealers, bid–ask spreads, liquidity and trading rules. Its coverage of liquidity suppliers is especially relevant." },
+            { book: "Market Microstructure in Practice", author: "Charles-Albert Lehalle & Sophie Laruelle", lane: "Practical HFT focus", col: "--fin-b",
+              purpose: "A strong bridge between market mechanics and algorithmic trading practice: how microstructure concepts affect trading decisions." },
+            { book: "Trades, Quotes and Prices: Financial Markets Under the Microscope", author: "Bouchaud, Bonart, Donier & Gould", lane: "Quantitative depth", col: "--ex-b",
+              purpose: "Order-book dynamics, price impact, order flow and the empirical behaviour of financial markets." },
+            { book: "Empirical Market Microstructure", author: "Joel Hasbrouck", lane: "Empirical analysis", col: "--int-b",
+              purpose: "A specialist reference for analysing transaction and quote data, price discovery, transaction costs and liquidity with statistical and econometric methods." },
+            { book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Advanced theory", col: "--thm-b",
+              purpose: "The classic theory reference: inventory models, information-based models, informed traders and the economics of market making. More mathematical and abstract than Harris." },
+            { book: "Market Liquidity: Theory, Evidence, and Policy", author: "Thierry Foucault, Marco Pagano & Ailsa Röell", lane: "Advanced reference", col: "--warn-b",
+              purpose: "A broader academic treatment of liquidity: its economic foundations, empirical evidence and the effects of market design." }
+          ] },
+        { title: "Map 2 · Market Making",
+          objective: "Learn to set quotes, maximise expected trading profits, manage inventory, control adverse selection and build quantitative market-making strategies.",
+          steps: [
+            { book: "Algorithmic and High-Frequency Trading", author: "Álvaro Cartea, Sebastian Jaimungal & José Penalva", lane: "Primary quantitative text", col: "--def-b",
+              purpose: "Top choice for connecting market mechanics with mathematical trading strategies, optimal execution and market-making models." },
+            { book: "The Financial Mathematics of Market Liquidity: From Optimal Execution to Market Making", author: "Olivier Guéant", lane: "Advanced mathematical market making", col: "--mth-b",
+              purpose: "The mathematical formulation of optimal quoting, inventory risk and liquidity provision. Best studied after the fundamentals, with enough probability and optimisation." },
+            { book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Why market makers earn or lose", col: "--thm-b",
+              purpose: "Study the chapters on markets and market making, inventory models and information-based models: the economic forces behind quoting and spread formation." },
+            { book: "Trading and Exchanges", author: "Larry Harris", lane: "Practical foundation", col: "--fin-b",
+              purpose: "Revisit dealers, bid–ask spreads, liquidity and informed traders to see the real-world risks that mathematical models simplify." },
+            { book: "Trades, Quotes and Prices", author: "Bouchaud et al.", lane: "Order-flow and price dynamics", col: "--ex-b",
+              purpose: "Why fills are often followed by adverse price moves, how order flow moves prices, and why a quoted spread is not guaranteed profit." }
+          ] }
+      ]
+    },
     sys: {
       type: "stack",
       title: "Low-Latency Systems",
@@ -44,27 +81,35 @@
 
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;"); }
 
-  function build(root, T, id) {
+  function lanesHTML(steps) {
     var lanes = [];
-    T.steps.forEach(function (s) { if (!lanes.some(function (l) { return l[0] === s.lane; })) lanes.push([s.lane, s.col]); });
-    root.innerHTML =
-      '<p class="back-link"><a href="#hft" class="to-hft">← Back to Quant Trading Prep</a></p>' +
-      '<h2 class="trk-title">' + esc(T.title) + "</h2>" +
-      '<p class="trk-intro">' + esc(T.intro) + "</p>" +
-      '<div class="trk-lanes">' + lanes.map(function (l) { return '<span style="--c:var(' + l[1] + ')"><i></i>' + esc(l[0]) + "</span>"; }).join("") + "</div>" +
-      '<div class="trk"><svg class="trk-edges" aria-hidden="true"><defs><marker id="trk-ar-' + id + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' +
-      '<div class="trk-grid">' + T.steps.map(function (s, i) {
+    steps.forEach(function (s) { if (!lanes.some(function (l) { return l[0] === s.lane; })) lanes.push([s.lane, s.col]); });
+    return '<div class="trk-lanes">' + lanes.map(function (l) { return '<span style="--c:var(' + l[1] + ')"><i></i>' + esc(l[0]) + "</span>"; }).join("") + "</div>";
+  }
+  function gridHTML(steps, icon, mk) {
+    return '<div class="trk"><svg class="trk-edges" aria-hidden="true"><defs><marker id="' + mk + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' +
+      '<div class="trk-grid">' + steps.map(function (s, i) {
         return '<div class="trk-card" data-i="' + i + '" style="--c:var(' + s.col + ');--d:' + (i * 0.1) + 's">' +
           '<div class="trk-top"><span class="trk-n">' + (i < 9 ? "0" : "") + (i + 1) + '</span><span class="trk-lane">' + esc(s.lane) + "</span>" +
-          '<svg class="trk-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[T.icon || "book"] + '"/></svg></div>' +
+          '<svg class="trk-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="' + ICONS[icon || "book"] + '"/></svg></div>' +
           '<div class="trk-book">' + esc(s.book) + "</div>" + (s.author ? '<div class="trk-author">' + esc(s.author) + "</div>" : "") +
           '<div class="trk-purpose">' + esc(s.purpose) + "</div></div>";
       }).join("") + "</div></div>";
   }
+  function build(root, T, id) {
+    var head = '<p class="back-link"><a href="#hft" class="to-hft">← Back to Quant Trading Prep</a></p>' +
+      '<h2 class="trk-title">' + esc(T.title) + "</h2>" + '<p class="trk-intro">' + esc(T.intro) + "</p>";
+    if (T.type === "maps") {
+      root.innerHTML = head + T.maps.map(function (M, k) {
+        return '<section class="trk-map"><h3 class="trk-map-title"><span>' + esc(M.title.split(" · ")[0]) + "</span>" + esc(M.title.split(" · ")[1] || "") + "</h3>" +
+          '<p class="trk-obj"><b>Objective</b> ' + esc(M.objective) + "</p>" + lanesHTML(M.steps) + gridHTML(M.steps, T.icon, "trk-ar-" + id + "-" + k) + "</section>";
+      }).join("");
+    } else root.innerHTML = head + lanesHTML(T.steps) + gridHTML(T.steps, T.icon, "trk-ar-" + id);
+  }
 
   // connectors between consecutive cards, following the snake (left→right, then right→left on the next row)
-  function draw(root) {
-    var box = root.querySelector(".trk"); if (!box || !box.offsetWidth) return;
+  function draw(box) {
+    if (!box || !box.offsetWidth) return;
     var svg = box.querySelector(".trk-edges"), W = box.offsetWidth, H = box.offsetHeight, mk = svg.querySelector("marker").id;
     svg.setAttribute("width", W); svg.setAttribute("height", H); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
     svg.querySelectorAll("path.c").forEach(function (p) { p.remove(); });
@@ -151,9 +196,10 @@
       var root = document.getElementById(id + "-root"); if (!root) return;
       if (TRACKS[id].type === "stack") { buildStack(root, TRACKS[id], id); return; }
       build(root, TRACKS[id], id);
-      var box = root.querySelector(".trk");
-      if (window.ResizeObserver) new ResizeObserver(function () { draw(root); }).observe(box); else window.addEventListener("resize", function () { draw(root); });
-      document.querySelectorAll('[data-tab="' + id + '"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(function () { draw(root); }, 40); }); });
+      var redraw = function () { root.querySelectorAll(".trk").forEach(draw); };
+      root.querySelectorAll(".trk").forEach(function (box) { if (window.ResizeObserver) new ResizeObserver(function () { draw(box); }).observe(box); });
+      if (!window.ResizeObserver) window.addEventListener("resize", redraw);
+      document.querySelectorAll('[data-tab="' + id + '"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(redraw, 40); }); });
     });
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount); else mount();
