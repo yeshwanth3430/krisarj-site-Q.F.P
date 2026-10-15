@@ -318,7 +318,7 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
 .trk-edges path.c { fill: none; stroke: var(--ink-soft); stroke-opacity: .55; stroke-width: 2; stroke-dasharray: 400; stroke-dashoffset: 400; animation: rmm-draw .9s ease forwards; }
 .trk-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 46px; }
 .trk-card:nth-child(4) { grid-row: 2; grid-column: 3; } .trk-card:nth-child(5) { grid-row: 2; grid-column: 2; } .trk-card:nth-child(6) { grid-row: 2; grid-column: 1; }
-.trk-card { position: relative; display: grid; gap: 6px; padding: 16px 18px 16px; border-radius: 18px; background: var(--paper); border: 1.5px solid var(--rule);
+.trk-card { position: relative; display: grid; align-content: start; gap: 6px; padding: 16px 18px 16px; border-radius: 18px; background: var(--paper); border: 1.5px solid var(--rule);
   box-shadow: inset 4px 0 0 var(--c), 0 1px 0 var(--rule); opacity: 0; transform: translateY(10px);
   animation: trk-in .5s ease forwards; animation-delay: var(--d); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
 @keyframes trk-in { to { opacity: 1; transform: none; } }

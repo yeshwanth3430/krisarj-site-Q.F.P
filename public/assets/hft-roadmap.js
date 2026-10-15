@@ -87,7 +87,7 @@
           ["Algorithms & complexity", "sorting, searching, graphs, DP", "soon"],
           ["Coding-interview practice", "clean solutions under time", "soon"] ] }
       ] },
-    { id: "sys", n: "08", name: "Computer Systems & Low-Latency Engineering", short: "Low-Latency Systems", tag: "Shaving microseconds", col: "--accent",
+    { id: "sys", n: "08", name: "Computer Systems & Low-Latency Engineering", short: "Low-Latency Systems", tag: "Shaving microseconds", col: "--accent", opens: "sys", openLabel: "open the category map →",
       about: "How the hardware, the operating system and the network really behave, and how to measure and cut latency from tick to trade.",
       groups: [
         { name: "Hardware & OS", topics: [
