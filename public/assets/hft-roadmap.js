@@ -54,7 +54,7 @@
           ["Features from order-book data", "turning ticks into inputs", "soon"],
           ["Time-series validation", "no peeking into the future", "soon"] ] }
       ] },
-    { id: "mkt", n: "05", name: "Market Making & Market Microstructure", short: "Market Making", tag: "How prices are actually made", col: "--ex-b",
+    { id: "mkt", n: "05", name: "Market Microstructure & Market Making", short: "Market Microstructure & Market Making", tag: "How prices are actually made", col: "--ex-b",
       about: "The limit order book, how exchanges match orders, and how a market maker earns the spread while managing inventory and adverse selection.",
       groups: [
         { name: "The order book", topics: [
@@ -237,8 +237,14 @@
       else if (Math.abs(n.s) > 0.92) { lx = 0; ly = n.s < 0 ? -72 : 64; anchor = "middle"; }          // top and bottom: label above / below
       else if (Math.abs(n.c) > 0.92) { lx = 0; ly = -72; anchor = "middle"; }                          // far left and right: label above, so it never clips
       else { lx = n.c > 0 ? 50 : -50; ly = -4; anchor = n.c > 0 ? "start" : "end"; }
-      var l1 = el("text", { x: lx, y: ly, "text-anchor": anchor, "class": "hft-name" }, g); l1.textContent = narrow ? s.short : s.short;
-      var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? s.openLabel : s.groups.length + " branches · " + k.all + " topics";
+      var l1 = el("text", { x: lx, y: ly, "text-anchor": anchor, "class": "hft-name" }, g), extra = 0;
+      if (narrow && s.short.length > 24 && s.short.indexOf(" & ") > 0) {   // long names wrap onto two lines on phones
+        var cut = s.short.indexOf(" & ") + 2;
+        var t1 = el("tspan", { x: lx }, l1); t1.textContent = s.short.slice(0, cut);
+        var t2 = el("tspan", { x: lx, dy: 17 }, l1); t2.textContent = s.short.slice(cut + 1);
+        extra = 17;
+      } else l1.textContent = s.short;
+      var l2 = el("text", { x: lx, y: ly + 18 + extra, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? s.openLabel : s.groups.length + " branches · " + k.all + " topics";
       var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (s.opens ? " (click to open its roadmap)" : "");
       a.addEventListener("mouseenter", function () { peek(s); }); a.addEventListener("focus", function () { peek(s); });
       a.addEventListener("mouseleave", function () { peek(null); }); a.addEventListener("blur", function () { peek(null); });
