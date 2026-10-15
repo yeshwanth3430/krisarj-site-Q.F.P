@@ -17,38 +17,38 @@
       ]
     },
     mkt: {
-      type: "maps",
+      type: "depth",
       title: "Market Microstructure & Market Making",
       intro: "Two reading maps: first how markets work, then how to make them.",
       maps: [
         { title: "Map 1 · Market Microstructure",
           objective: "Understand order books, market structure, liquidity, price formation, order flow and adverse selection.",
           steps: [
-            { book: "Trading and Exchanges: Market Microstructure for Practitioners", author: "Larry Harris", lane: "Foundation", col: "--def-b",
+            { key: "harris", book: "Trading and Exchanges: Market Microstructure for Practitioners", author: "Larry Harris", lane: "Foundation", col: "--def-b",
               purpose: "First choice for a complete picture of market mechanics, order types, dealers, bid–ask spreads, liquidity and trading rules. Its coverage of liquidity suppliers is especially relevant." },
-            { book: "Market Microstructure in Practice", author: "Charles-Albert Lehalle & Sophie Laruelle", lane: "Practical HFT focus", col: "--fin-b",
+            { key: "lehalle", book: "Market Microstructure in Practice", author: "Charles-Albert Lehalle & Sophie Laruelle", lane: "Practical HFT focus", col: "--fin-b",
               purpose: "A strong bridge between market mechanics and algorithmic trading practice: how microstructure concepts affect trading decisions." },
-            { book: "Trades, Quotes and Prices: Financial Markets Under the Microscope", author: "Bouchaud, Bonart, Donier & Gould", lane: "Quantitative depth", col: "--ex-b",
+            { key: "bouchaud", book: "Trades, Quotes and Prices: Financial Markets Under the Microscope", author: "Bouchaud, Bonart, Donier & Gould", lane: "Quantitative depth", col: "--ex-b",
               purpose: "Order-book dynamics, price impact, order flow and the empirical behaviour of financial markets." },
-            { book: "Empirical Market Microstructure", author: "Joel Hasbrouck", lane: "Empirical analysis", col: "--int-b",
+            { key: "hasbrouck", book: "Empirical Market Microstructure", author: "Joel Hasbrouck", lane: "Empirical analysis", col: "--int-b",
               purpose: "A specialist reference for analysing transaction and quote data, price discovery, transaction costs and liquidity with statistical and econometric methods." },
-            { book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Advanced theory", col: "--thm-b",
+            { key: "ohara", book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Advanced theory", col: "--thm-b",
               purpose: "The classic theory reference: inventory models, information-based models, informed traders and the economics of market making. More mathematical and abstract than Harris." },
-            { book: "Market Liquidity: Theory, Evidence, and Policy", author: "Thierry Foucault, Marco Pagano & Ailsa Röell", lane: "Advanced reference", col: "--warn-b",
+            { key: "foucault", book: "Market Liquidity: Theory, Evidence, and Policy", author: "Thierry Foucault, Marco Pagano & Ailsa Röell", lane: "Advanced reference", col: "--warn-b",
               purpose: "A broader academic treatment of liquidity: its economic foundations, empirical evidence and the effects of market design." }
           ] },
         { title: "Map 2 · Market Making",
           objective: "Learn to set quotes, maximise expected trading profits, manage inventory, control adverse selection and build quantitative market-making strategies.",
           steps: [
-            { book: "Algorithmic and High-Frequency Trading", author: "Álvaro Cartea, Sebastian Jaimungal & José Penalva", lane: "Primary quantitative text", col: "--def-b",
+            { key: "cartea", book: "Algorithmic and High-Frequency Trading", author: "Álvaro Cartea, Sebastian Jaimungal & José Penalva", lane: "Primary quantitative text", col: "--def-b",
               purpose: "Top choice for connecting market mechanics with mathematical trading strategies, optimal execution and market-making models." },
-            { book: "The Financial Mathematics of Market Liquidity: From Optimal Execution to Market Making", author: "Olivier Guéant", lane: "Advanced mathematical market making", col: "--mth-b",
+            { key: "gueant", book: "The Financial Mathematics of Market Liquidity: From Optimal Execution to Market Making", author: "Olivier Guéant", lane: "Advanced mathematical market making", col: "--mth-b",
               purpose: "The mathematical formulation of optimal quoting, inventory risk and liquidity provision. Best studied after the fundamentals, with enough probability and optimisation." },
-            { book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Why market makers earn or lose", col: "--thm-b",
+            { key: "ohara", book: "Market Microstructure Theory", author: "Maureen O'Hara", lane: "Why market makers earn or lose", col: "--thm-b",
               purpose: "Study the chapters on markets and market making, inventory models and information-based models: the economic forces behind quoting and spread formation." },
-            { book: "Trading and Exchanges", author: "Larry Harris", lane: "Practical foundation", col: "--fin-b",
+            { key: "harris", book: "Trading and Exchanges", author: "Larry Harris", lane: "Practical foundation", col: "--fin-b",
               purpose: "Revisit dealers, bid–ask spreads, liquidity and informed traders to see the real-world risks that mathematical models simplify." },
-            { book: "Trades, Quotes and Prices", author: "Bouchaud et al.", lane: "Order-flow and price dynamics", col: "--ex-b",
+            { key: "bouchaud", book: "Trades, Quotes and Prices", author: "Bouchaud, Bonart, Donier & Gould", lane: "Order-flow and price dynamics", col: "--ex-b",
               purpose: "Why fills are often followed by adverse price moves, how order flow moves prices, and why a quoted spread is not guaranteed profit." }
           ] }
       ]
@@ -191,10 +191,130 @@
     }
     if (!reduce) requestAnimationFrame(frame);
   }
+
+  // ---- "depth" tracks: a market-depth chart. Map 1 = bids (left), Map 2 = asks (right); a book read in both maps is
+  // linked across the spread. Mark books as read and the spread narrows; read them all and it closes. ----
+  var SHORT = {"harris": "Harris", "lehalle": "Lehalle & Laruelle", "bouchaud": "Bouchaud et al.", "hasbrouck": "Hasbrouck", "ohara": "O'Hara", "foucault": "Foucault, Pagano & Röell", "cartea": "Cartea, Jaimungal & Penalva", "gueant": "Guéant"};
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function buildDepth(root, T, id) {
+    var KEY = "qfp-read-" + id, read = {};
+    try { read = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { read = {}; }
+    var bids = T.maps[0].steps, asks = T.maps[1].steps, both = {};
+    bids.forEach(function (b, i) { asks.forEach(function (a, j) { if (a.key === b.key) both[b.key] = [i + 1, j + 1]; }); });
+    var distinct = {}; bids.concat(asks).forEach(function (b) { distinct[b.key] = 1; }); var N = Object.keys(distinct).length;
+    root.innerHTML =
+      '<p class="back-link"><a href="#hft" class="to-hft">← Back to Quant Trading Prep</a></p>' +
+      '<h2 class="trk-title">' + esc(T.title) + "</h2>" +
+      '<p class="trk-intro">Two subjects, one order book. Microstructure books are the <b class="dp-g">bids</b>, Market Making books the <b class="dp-r">asks</b>, and the books you read in both are linked across the spread. Click a book to mark it read: the spread narrows, and when you have read them all it closes.</p>' +
+      '<div class="dp" id="dp-' + id + '">' +
+        '<div class="dp-bar"><i></i><i></i><i></i><span class="dp-ttl">MSMM <b>·</b> depth</span>' +
+          '<span class="dp-q dp-qb">BID <b class="dp-bid">0/6</b></span><span class="dp-spr">SPREAD <b class="dp-sv">' + N + '</b> books</span><span class="dp-q dp-qa">ASK <b class="dp-ask">0/5</b></span></div>' +
+        '<div class="dp-sides"><div><b>BIDS · Map 1</b> Market Microstructure<span>' + esc(T.maps[0].objective) + '</span></div><div class="dp-r-side"><b>ASKS · Map 2</b> Market Making<span>' + esc(T.maps[1].objective) + "</span></div></div>" +
+        '<div class="dp-chart"><svg class="dp-svg" aria-label="Market depth chart of the two reading maps"></svg></div>' +
+        '<div class="dp-peek"><span class="dp-pk-k">Hover a step for the book · click to mark it read</span><b>' + N + ' distinct books · 3 read in both maps</b></div>' +
+        '<div class="dp-foot"><span>step order = reading order, nearest the mid first</span><button type="button" class="dp-reset">reset</button></div>' +
+      "</div>";
+    var box = root.querySelector(".dp"), svg = box.querySelector(".dp-svg"), peekEl = box.querySelector(".dp-peek");
+    var gapNow = null, raf = null;
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(read)); } catch (e) {} }
+    function unread() { return Object.keys(distinct).filter(function (k) { return !read[k]; }).length; }
+    function el(tag, a, parent) { var e = document.createElementNS(SVGNS, tag); for (var k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; }
+
+    function render(gapFrac) {
+      var W = svg.parentNode.offsetWidth; if (!W) return;
+      var narrow = W < 640, H = narrow ? 300 : 380, base = H - 34, pad = 8, top = 64;
+      while (svg.firstChild) svg.removeChild(svg.firstChild);
+      svg.setAttribute("viewBox", "0 0 " + W + " " + H); svg.setAttribute("width", W); svg.setAttribute("height", H);
+      var defs = el("defs", {}, svg);
+      [["dpg", "#5fbf87"], ["dpr", "#ef7b70"]].forEach(function (g) {
+        var lg = el("linearGradient", { id: g[0] + id, x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+        el("stop", { offset: 0, "stop-color": g[1], "stop-opacity": 0.55 }, lg); el("stop", { offset: 1, "stop-color": g[1], "stop-opacity": 0.05 }, lg);
+      });
+      var glow = el("filter", { id: "dpglow" + id, x: "-50%", y: "-50%", width: "200%", height: "200%" }, defs);
+      el("feGaussianBlur", { stdDeviation: 3, result: "b" }, glow); var mg = el("feMerge", {}, glow); el("feMergeNode", { "in": "b" }, mg); el("feMergeNode", { "in": "SourceGraphic" }, mg);
+      for (var gy = top; gy <= base; gy += 40) el("line", { x1: 0, x2: W, y1: gy, y2: gy, "class": "dp-grid" }, svg);
+      var mid = W / 2, gmax = Math.min(W * 0.17, 150), gmin = 6, g = gmin + (gmax - gmin) * gapFrac;
+      var hstep = (base - top - 40) / 6;
+      function side(list, dir, color, grad) {
+        var span = mid - g - pad, sw = span / list.length, pts = [], steps = [];
+        list.forEach(function (b, i) {
+          var x0 = mid + dir * (g + i * sw), x1 = mid + dir * (g + (i + 1) * sw), h = base - (i + 1) * hstep - 22;
+          steps.push({ b: b, i: i, x0: Math.min(x0, x1), x1: Math.max(x0, x1), y: h });
+        });
+        var d = "M " + (mid + dir * g) + " " + base;
+        steps.forEach(function (s, i) { var xa = dir > 0 ? s.x0 : s.x1, xb = dir > 0 ? s.x1 : s.x0; d += " L " + xa + " " + s.y + " L " + xb + " " + s.y; });
+        d += " L " + (mid + dir * (g + span)) + " " + base + " Z";
+        el("path", { d: d, fill: "url(#" + grad + id + ")", "class": "dp-area" }, svg);
+        var line = "M " + (mid + dir * g) + " " + base; steps.forEach(function (s) { var xa = dir > 0 ? s.x0 : s.x1, xb = dir > 0 ? s.x1 : s.x0; line += " L " + xa + " " + s.y + " L " + xb + " " + s.y; });
+        el("path", { d: line, "class": "dp-line", stroke: color }, svg);
+        return steps;
+      }
+      var B = side(bids, -1, "#5fbf87", "dpg"), A = side(asks, 1, "#ef7b70", "dpr");
+      // links across the spread for books read in both maps
+      Object.keys(both).forEach(function (k) {
+        var sb = B[both[k][0] - 1], sa = A[both[k][1] - 1], xb = (sb.x0 + sb.x1) / 2, xa = (sa.x0 + sa.x1) / 2, yb = sb.y - 8, ya = sa.y - 8, cy = Math.min(yb, ya) - 34 - Math.abs(xa - xb) * 0.08;
+        el("path", { d: "M " + xb + " " + yb + " C " + xb + " " + cy + ", " + xa + " " + cy + ", " + xa + " " + ya, "class": "dp-link" + (read[k] ? " on" : ""), "data-k": k }, svg);
+      });
+      // the spread
+      el("rect", { x: mid - g, y: top - 20, width: 2 * g, height: base - top + 20, "class": "dp-gap" + (gapFrac < 0.01 ? " closed" : "") }, svg);
+      el("line", { x1: mid, x2: mid, y1: top - 26, y2: base, "class": "dp-mid" }, svg);
+      var mt = el("text", { x: mid, y: top - 32, "text-anchor": "middle", "class": "dp-midt" }, svg); mt.textContent = gapFrac < 0.01 ? "SPREAD CLOSED" : "MID";
+      // steps: hit areas, labels, read state
+      function stepEls(steps, sideName, color) {
+        steps.forEach(function (s) {
+          var k = s.b.key, isBoth = !!both[k], r = !!read[k], w = s.x1 - s.x0;
+          var gEl = el("g", { "class": "dp-step" + (r ? " read" : "") + (isBoth ? " both" : ""), "data-k": k, tabindex: 0, style: "--c:" + color }, svg);
+          el("rect", { x: s.x0 + 1.5, y: s.y, width: Math.max(1, w - 3), height: base - s.y, "class": "dp-hit" }, gEl);
+          el("rect", { x: s.x0 + 1.5, y: s.y - 2, width: Math.max(1, w - 3), height: 4, rx: 2, "class": "dp-cap" }, gEl);
+          var cx = (s.x0 + s.x1) / 2;
+          var nt = el("text", { x: cx, y: s.y + 20, "text-anchor": "middle", "class": "dp-n" }, gEl); nt.textContent = (r ? "✓ " : "") + (isBoth ? "◆ " : "") + (s.i + 1);
+          if (!narrow && w > 54) {
+            var words = SHORT[k].split(" "), lines = [], cur = "";
+            words.forEach(function (wd) { if ((cur + " " + wd).trim().length > Math.max(8, Math.floor(w / 7.2))) { lines.push(cur.trim()); cur = wd; } else cur += " " + wd; });
+            lines.push(cur.trim());
+            lines.slice(0, 3).forEach(function (ln, li) { var t = el("text", { x: cx, y: s.y + 38 + li * 14, "text-anchor": "middle", "class": "dp-lbl" }, gEl); t.textContent = ln; });
+          }
+          gEl.addEventListener("mouseenter", function () { peek(s.b, sideName, s.i + 1); hot(k, true); });
+          gEl.addEventListener("mouseleave", function () { hot(k, false); });
+          gEl.addEventListener("click", function () { toggle(k); });
+          gEl.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); toggle(k); } });
+        });
+      }
+      stepEls(B, "Map 1 · Microstructure", "#5fbf87"); stepEls(A, "Map 2 · Market Making", "#ef7b70");
+      var lb = el("text", { x: 10, y: base + 24, "class": "dp-axis" }, svg); lb.textContent = "◀ BIDS · Microstructure";
+      var la = el("text", { x: W - 10, y: base + 24, "text-anchor": "end", "class": "dp-axis" }, svg); la.textContent = "Market Making · ASKS ▶";
+    }
+    function hot(k, on) { box.querySelectorAll('.dp-step[data-k="' + k + '"], .dp-link[data-k="' + k + '"]').forEach(function (e) { e.classList.toggle("hot", on); }); box.classList.toggle("focus", on); }
+    function peek(b, sideName, n) {
+      var tw = both[b.key];
+      peekEl.innerHTML = '<span class="dp-pk-k">' + esc(sideName) + " · step " + n + " · " + esc(b.lane) + (tw ? ' · <em>read in both maps (Map 1 #' + tw[0] + " · Map 2 #" + tw[1] + ")</em>" : "") + "</span>" +
+        "<b>" + esc(b.book) + '</b><span class="dp-pk-a">' + esc(b.author) + '</span><span class="dp-pk-t">' + esc(b.purpose) + "</span>" +
+        '<span class="dp-pk-s">' + (read[b.key] ? "✓ marked read · click to undo" : "click the step to mark it read") + "</span>";
+    }
+    function stats() {
+      var u = unread(), rb = bids.filter(function (b) { return read[b.key]; }).length, ra = asks.filter(function (b) { return read[b.key]; }).length;
+      box.querySelector(".dp-bid").textContent = rb + "/" + bids.length; box.querySelector(".dp-ask").textContent = ra + "/" + asks.length;
+      box.querySelector(".dp-sv").textContent = u; box.classList.toggle("closed", u === 0);
+      return u / N;
+    }
+    function animateTo(target) {
+      if (raf) cancelAnimationFrame(raf);
+      var from = gapNow == null ? target : gapNow, t0 = null;
+      function step(ts) { if (!t0) t0 = ts; var f = Math.min(1, (ts - t0) / 600), e = 1 - Math.pow(1 - f, 3); gapNow = from + (target - from) * e; render(gapNow); if (f < 1) raf = requestAnimationFrame(step); }
+      raf = requestAnimationFrame(step);
+    }
+    function toggle(k) { if (read[k]) delete read[k]; else read[k] = 1; save(); animateTo(stats()); }
+    box.querySelector(".dp-reset").addEventListener("click", function () { read = {}; save(); animateTo(stats()); });
+    var first = true;
+    function relayout() { var f = stats(); if (first && box.offsetWidth) { first = false; gapNow = 1; animateTo(f); } else render(gapNow == null ? f : gapNow); }
+    if (window.ResizeObserver) new ResizeObserver(relayout).observe(svg.parentNode); else window.addEventListener("resize", relayout);
+    document.querySelectorAll('[data-tab="' + id + '"]').forEach(function (b) { b.addEventListener("click", function () { setTimeout(relayout, 40); }); });
+  }
   function mount() {
     Object.keys(TRACKS).forEach(function (id) {
       var root = document.getElementById(id + "-root"); if (!root) return;
       if (TRACKS[id].type === "stack") { buildStack(root, TRACKS[id], id); return; }
+      if (TRACKS[id].type === "depth") { buildDepth(root, TRACKS[id], id); return; }
       build(root, TRACKS[id], id);
       var redraw = function () { root.querySelectorAll(".trk").forEach(draw); };
       root.querySelectorAll(".trk").forEach(function (box) { if (window.ResizeObserver) new ResizeObserver(function () { draw(box); }).observe(box); });
