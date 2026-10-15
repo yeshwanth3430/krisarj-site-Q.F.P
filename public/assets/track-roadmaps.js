@@ -17,17 +17,24 @@
       ]
     },
     sys: {
-      title: "Low-Latency Systems: complete category map",
-      intro: "Six categories, from the hardware up to a deployed trading system.",
-      icon: "chip",
-      steps: [
-        { book: "Computer Architecture & Memory", purpose: "CPU, caches, RAM, NUMA, branch prediction, memory allocation and cache locality.", lane: "Hardware", col: "--warn-b" },
-        { book: "Operating Systems & Linux", purpose: "Processes, threads, scheduling, system calls, virtual memory and CPU affinity.", lane: "OS", col: "--int-b" },
-        { book: "Low-Latency C++ & Concurrency", purpose: "Modern C++, compiler optimization, atomics, synchronization, lock-free algorithms and predictable execution.", lane: "Code", col: "--mth-b" },
-        { book: "Computer Networking & Exchange Connectivity", purpose: "TCP/UDP, sockets, multicast, NICs, FIX, exchange protocols, market-data feeds and order gateways.", lane: "Network", col: "--fin-b" },
-        { book: "HFT System Architecture", purpose: "Event-driven systems, market-data pipelines, order-book reconstruction, risk checks and fault recovery.", lane: "Architecture", col: "--ex-b" },
-        { book: "Development Tools, Deployment & Projects and DevOps", purpose: "Git, CMake, Docker, CI/CD, deployment automation, AWS/cloud infrastructure and practical HFT systems projects.", lane: "DevOps", col: "--thm-b" }
-      ]
+      type: "stack",
+      title: "Low-Latency Systems",
+      intro: "Six categories, from the silicon up to a deployed trading system. Hover a layer to open it.",
+      // learning order is 01 → 06; the stack is drawn as the real system: hardware at the bottom, DevOps wrapping it all
+      layers: [
+        { n: "05", name: "HFT System Architecture", role: "decide · check risk · send", scale: "tick → trade: single-digit µs", key: "arch",
+          topics: ["Event-driven systems", "Market-data pipelines", "Order-book reconstruction", "Risk checks", "Fault recovery"] },
+        { n: "04", name: "Computer Networking & Exchange Connectivity", role: "the wire in and out", scale: "kernel stack ≈ 5–10 µs · bypass ≈ 1 µs", key: "net",
+          topics: ["TCP/UDP", "Sockets", "Multicast", "NICs", "FIX", "Exchange protocols", "Market-data feeds", "Order gateways"] },
+        { n: "03", name: "Low-Latency C++ & Concurrency", role: "the hot path", scale: "no allocation, no locks on the hot path", key: "cpp",
+          topics: ["Modern C++", "Compiler optimization", "Atomics", "Synchronization", "Lock-free algorithms", "Predictable execution"] },
+        { n: "02", name: "Operating Systems & Linux", role: "get out of the way", scale: "context switch ≈ µs · pin it, don't share it", key: "os",
+          topics: ["Processes", "Threads", "Scheduling", "System calls", "Virtual memory", "CPU affinity"] },
+        { n: "01", name: "Computer Architecture & Memory", role: "the silicon underneath", scale: "L1 hit ≈ 1 ns · RAM ≈ 100 ns", key: "hw",
+          topics: ["CPU", "Caches", "RAM", "NUMA", "Branch prediction", "Memory allocation", "Cache locality"] }
+      ],
+      rail: { n: "06", name: "Development Tools, Deployment & Projects and DevOps", role: "ship it", key: "ops",
+        topics: ["Git", "CMake", "Docker", "CI/CD", "Deployment automation", "AWS / cloud", "HFT systems projects"] }
     }
   };
   var ICONS = {
@@ -80,9 +87,69 @@
     }
   }
 
+
+  // ---- "stack" tracks: a live latency stack (layers, a packet running tick → trade, a side rail) ----
+  function buildStack(root, T, id) {
+    var chips = function (arr) { return arr.map(function (t, i) { return '<span class="lls-chip" style="--k:' + i + '">' + esc(t) + "</span>"; }).join(""); };
+    root.innerHTML =
+      '<p class="back-link"><a href="#hft" class="to-hft">← Back to Quant Trading Prep</a></p>' +
+      '<h2 class="trk-title">' + esc(T.title) + "</h2>" +
+      '<p class="trk-intro">' + esc(T.intro) + "</p>" +
+      '<div class="lls" id="lls-' + id + '">' +
+        '<div class="lls-bar"><i></i><i></i><i></i><span class="lls-ttl">latency-stack <b>·</b> tick → trade</span>' +
+          '<span class="lls-dir"><b class="lls-dir-t">MKT DATA ↑</b></span><span class="lls-live">t2t <b class="lls-t">0.00</b> µs</span></div>' +
+        '<div class="lls-body">' +
+          '<div class="lls-stack">' + T.layers.map(function (L) {
+            return '<div class="lls-layer" data-key="' + L.key + '" tabindex="0">' +
+              '<div class="lls-head"><span class="lls-n">' + L.n + '</span><span class="lls-name">' + esc(L.name) + '</span><span class="lls-role">' + esc(L.role) + "</span></div>" +
+              '<div class="lls-scale">' + esc(L.scale) + "</div>" +
+              '<div class="lls-chips">' + chips(L.topics) + "</div></div>";
+          }).join("") + "</div>" +
+          '<div class="lls-lane" aria-hidden="true"><span class="lls-io lls-in">wire in</span><span class="lls-io lls-out">wire out</span><i class="lls-track"></i><i class="lls-pkt"></i></div>' +
+          '<div class="lls-rail" data-key="' + T.rail.key + '" tabindex="0"><span class="lls-n">' + T.rail.n + '</span><span class="lls-rail-role">' + esc(T.rail.role) + "</span>" +
+            '<span class="lls-rail-name">' + esc(T.rail.name) + '</span><div class="lls-chips">' + chips(T.rail.topics) + "</div></div>" +
+        "</div>" +
+        '<div class="lls-foot"><span>learn 01 → 06 · the stack reads bottom → top</span><span>latencies are rough orders of magnitude</span></div>' +
+      "</div>";
+    var box = root.querySelector(".lls"), stackEl = box.querySelector(".lls-stack"), pkt = box.querySelector(".lls-pkt"), lane = box.querySelector(".lls-lane");
+    var tEl = box.querySelector(".lls-t"), dirEl = box.querySelector(".lls-dir-t");
+    // hover a layer (or the rail): it opens, everything else dims
+    box.querySelectorAll(".lls-layer, .lls-rail").forEach(function (el) {
+      var on = function () { box.classList.add("focus"); box.querySelectorAll(".lls-layer, .lls-rail").forEach(function (x) { x.classList.toggle("open", x === el); }); };
+      var off = function () { box.classList.remove("focus"); el.classList.remove("open"); };
+      el.addEventListener("mouseenter", on); el.addEventListener("focus", on); el.addEventListener("mouseleave", off); el.addEventListener("blur", off);
+    });
+    // the packet: up through the layers as market data, back down as an order (one loop ≈ 5 s)
+    var budget = { hw: 0.05, os: 0.35, cpp: 0.6, net: 1.1, arch: 1.4 };   // illustrative µs spent per layer on the way up and down
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches, t0 = null;
+    function frame(ts) {
+      if (!t0) t0 = ts;
+      if (!box.offsetParent) { t0 = ts; requestAnimationFrame(frame); return; }   // tab hidden: wait
+      var P = 5200, f = ((ts - t0) % P) / P, up = f < 0.5, g = up ? f * 2 : (1 - f) * 2;   // g: 0 = bottom, 1 = top
+      var layers = stackEl.querySelectorAll(".lls-layer"), sr = stackEl.getBoundingClientRect(), lr = lane.getBoundingClientRect();
+      var y = sr.bottom - g * sr.height;                     // packet height on screen
+      pkt.style.transform = "translate(-50%, " + (y - lr.top - 7) + "px)";
+      pkt.classList.toggle("down", !up);
+      var acc = 0, hit = null;
+      [].slice.call(layers).reverse().forEach(function (L) {   // bottom → top
+        var r = L.getBoundingClientRect(), b = budget[L.dataset.key] || 0;
+        var part = Math.max(0, Math.min(1, (sr.bottom - r.bottom + (r.bottom - y)) / Math.max(1, r.height) - (sr.bottom - r.bottom) / Math.max(1, r.height)));
+        if (y <= r.bottom && y >= r.top) hit = L;
+        if (y < r.top) acc += b; else if (y <= r.bottom) acc += b * (r.bottom - y) / r.height;
+      });
+      layers.forEach(function (L) { L.classList.toggle("hit", L === hit); });
+      var total = Object.keys(budget).reduce(function (a, k) { return a + budget[k]; }, 0);
+      tEl.textContent = (up ? acc : total + (total - acc)).toFixed(2);
+      dirEl.textContent = up ? "MKT DATA ↑" : "ORDER ↓";
+      dirEl.classList.toggle("down", !up);
+      requestAnimationFrame(frame);
+    }
+    if (!reduce) requestAnimationFrame(frame);
+  }
   function mount() {
     Object.keys(TRACKS).forEach(function (id) {
       var root = document.getElementById(id + "-root"); if (!root) return;
+      if (TRACKS[id].type === "stack") { buildStack(root, TRACKS[id], id); return; }
       build(root, TRACKS[id], id);
       var box = root.querySelector(".trk");
       if (window.ResizeObserver) new ResizeObserver(function () { draw(root); }).observe(box); else window.addEventListener("resize", function () { draw(root); });
