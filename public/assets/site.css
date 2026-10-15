@@ -306,3 +306,29 @@ a.rmt:hover { transform: translateY(-2px); box-shadow: 0 10px 26px -14px var(--a
   .rmm-scroll .rmm .rmm-bar { height: 4px; margin-top: 5px; }
   .rmm-scroll .rmm .rmm-meta { font-size: 10px; letter-spacing: .04em; }
 }
+
+/* ---------- track reading paths (e.g. C++ & DSA), opened from the Quant Trading Prep board ---------- */
+.trk-title { margin-top: 6px; }
+.trk-intro { color: var(--ink-soft); margin: 0 0 12px; }
+.trk-lanes { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.trk-lanes span { display: inline-flex; align-items: center; gap: 7px; font: 600 12px/1 var(--sans); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 999px; padding: 7px 11px; background: var(--paper-2); }
+.trk-lanes i { width: 9px; height: 9px; border-radius: 3px; background: var(--c); box-shadow: 0 0 8px var(--c); }
+.trk { position: relative; }
+.trk-edges { position: absolute; inset: 0; z-index: 0; color: var(--ink-soft); overflow: visible; pointer-events: none; }
+.trk-edges path.c { fill: none; stroke: var(--ink-soft); stroke-opacity: .55; stroke-width: 2; stroke-dasharray: 400; stroke-dashoffset: 400; animation: rmm-draw .9s ease forwards; }
+.trk-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px 46px; }
+.trk-card:nth-child(4) { grid-row: 2; grid-column: 3; } .trk-card:nth-child(5) { grid-row: 2; grid-column: 2; } .trk-card:nth-child(6) { grid-row: 2; grid-column: 1; }
+.trk-card { position: relative; display: grid; gap: 6px; padding: 16px 18px 16px; border-radius: 18px; background: var(--paper); border: 1.5px solid var(--rule);
+  box-shadow: inset 4px 0 0 var(--c), 0 1px 0 var(--rule); opacity: 0; transform: translateY(10px);
+  animation: trk-in .5s ease forwards; animation-delay: var(--d); transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+@keyframes trk-in { to { opacity: 1; transform: none; } }
+.trk-card:hover { transform: translateY(-3px); border-color: var(--c); box-shadow: inset 4px 0 0 var(--c), 0 12px 30px -16px var(--c); }
+.trk-top { display: flex; align-items: center; gap: 9px; }
+.trk-n { font: 700 13px/1 var(--mono); color: var(--paper); background: var(--c); border-radius: 8px; padding: 6px 7px; }
+.trk-lane { font: 700 10px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; color: var(--c); }
+.trk-ico { margin-left: auto; width: 20px; height: 20px; fill: none; stroke: var(--c); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; opacity: .8; }
+.trk-book { font: 700 17px/1.25 var(--sans); color: var(--ink); margin-top: 4px; }
+.trk-author { font: 500 13px/1.3 var(--sans); color: var(--ink-soft); }
+.trk-purpose { font: 400 14px/1.4 var(--serif); color: var(--ink); padding-top: 8px; margin-top: 4px; border-top: 1px dashed var(--rule); }
+@media (max-width: 860px) { .trk-grid { grid-template-columns: 1fr; gap: 26px; } .trk-card:nth-child(n) { grid-row: auto; grid-column: auto; } }
+@media (prefers-reduced-motion: reduce) { .trk-card { animation: none; opacity: 1; transform: none; } .trk-edges path.c { animation: none; stroke-dashoffset: 0; } }

@@ -28,7 +28,7 @@
           ["Explaining your reasoning", "thinking out loud in an interview", "soon"],
           ["Behavioural interviews", "stories that show how you work", "soon"] ] }
       ] },
-    { id: "qf", n: "03", name: "Mathematics & Quantitative Finance", short: "Maths & Quant Finance", tag: "Probability, statistics and pricing", col: "--def-b", opens: "roadmap",
+    { id: "qf", n: "03", name: "Mathematics & Quantitative Finance", short: "Maths & Quant Finance", tag: "Probability, statistics and pricing", col: "--def-b", opens: "roadmap", openLabel: "open the maths roadmap →",
       about: "The probability and statistics behind every interview puzzle and every strategy, with the linear algebra and calculus from Mathematics for Finance and the basics of pricing.",
       groups: [
         { name: "Probability", topics: [
@@ -76,7 +76,7 @@
           ["Position & risk limits", "how much can go wrong", "soon"],
           ["Scenario & stress testing", "the day the model breaks", "soon"] ] }
       ] },
-    { id: "cpp", n: "07", name: "C++ & Data Structures and Algorithms", short: "C++ & DSA", tag: "Write fast, correct code", col: "--mth-b",
+    { id: "cpp", n: "07", name: "C++ & Data Structures and Algorithms", short: "C++ & DSA", tag: "Write fast, correct code", col: "--mth-b", opens: "cpp", openLabel: "open the reading path →",
       about: "Modern C++ the way trading firms use it, the data structures and algorithms behind fast systems, and the coding interviews that test both.",
       groups: [
         { name: "Modern C++", topics: [
@@ -238,8 +238,8 @@
       else if (Math.abs(n.c) > 0.92) { lx = 0; ly = -72; anchor = "middle"; }                          // far left and right: label above, so it never clips
       else { lx = n.c > 0 ? 50 : -50; ly = -4; anchor = n.c > 0 ? "start" : "end"; }
       var l1 = el("text", { x: lx, y: ly, "text-anchor": anchor, "class": "hft-name" }, g); l1.textContent = narrow ? s.short : s.short;
-      var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? "open the maths roadmap →" : s.groups.length + " branches · " + k.all + " topics";
-      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (s.opens ? " (click to open the Mathematics for Finance roadmap)" : "");
+      var l2 = el("text", { x: lx, y: ly + 18, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? s.openLabel : s.groups.length + " branches · " + k.all + " topics";
+      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (s.opens ? " (click to open its roadmap)" : "");
       a.addEventListener("mouseenter", function () { peek(s); }); a.addEventListener("focus", function () { peek(s); });
       a.addEventListener("mouseleave", function () { peek(null); }); a.addEventListener("blur", function () { peek(null); });
     });
