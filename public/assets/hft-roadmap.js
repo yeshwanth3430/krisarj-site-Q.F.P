@@ -6,7 +6,8 @@
   // status: "live" (published, linked), "next" (being written), "soon" (planned)
   var TRACKS = [
     { id: "mm", n: "01", name: "Mental Maths", short: "Mental Maths", tag: "Fast, accurate numbers under pressure", col: "--warn-b",
-      about: "Arithmetic at speed, estimation you can trust, and the timed tests trading firms use to screen candidates.",
+      href: "mental-maths/", openLabel: "play the game →",
+      about: "The Mental Engine: a 12-level speed-maths game built on Benjamin's Secrets of Mental Math — learn each technique, then beat the clock.",
       groups: [
         { name: "Speed arithmetic", topics: [
           ["Multiplication & division tricks", "two- and three-digit work in your head", "soon"],
@@ -220,9 +221,13 @@
     // the track nodes
     TRACKS.forEach(function (s, i) {
       var n = nodes[i], k = count(s);
-      var a = el("g", { "class": "hft-node" + (s.opens ? " hft-link" : ""), "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0", role: s.opens ? "link" : "img" }, svg);
-      if (s.opens) {   // this track opens another tab's roadmap (e.g. Mathematics for Finance)
-        var go = function () { var tb = document.querySelector('.tabs [data-tab="' + s.opens + '"]'); if (tb) { tb.click(); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+      var linked = s.opens || s.href;
+      var a = el("g", { "class": "hft-node" + (linked ? " hft-link" : ""), "data-id": s.id, style: "--c:var(" + s.col + ");--i:" + i, tabindex: "0", role: linked ? "link" : "img" }, svg);
+      if (linked) {   // this track opens another tab's roadmap, or navigates to its own page (href)
+        var go = function () {
+          if (s.href) { window.location.href = s.href; return; }
+          var tb = document.querySelector('.tabs [data-tab="' + s.opens + '"]'); if (tb) { tb.click(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+        };
         a.addEventListener("click", go);
         a.addEventListener("keydown", function (ev) { if (ev.key === "Enter" || ev.key === " ") { ev.preventDefault(); go(); } });
       }
@@ -244,8 +249,8 @@
         var t2 = el("tspan", { x: lx, dy: 17 }, l1); t2.textContent = s.short.slice(cut + 1);
         extra = 17;
       } else l1.textContent = s.short;
-      var l2 = el("text", { x: lx, y: ly + 18 + extra, "text-anchor": anchor, "class": "hft-meta" + (s.opens ? " hft-meta-link" : "") }, g); l2.textContent = s.opens ? s.openLabel : s.groups.length + " branches · " + k.all + " topics";
-      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (s.opens ? " (click to open its roadmap)" : "");
+      var l2 = el("text", { x: lx, y: ly + 18 + extra, "text-anchor": anchor, "class": "hft-meta" + (linked ? " hft-meta-link" : "") }, g); l2.textContent = linked ? s.openLabel : s.groups.length + " branches · " + k.all + " topics";
+      var tt = el("title", {}, a); tt.textContent = s.name + ": " + s.tag + (linked ? (s.href ? " (click to play)" : " (click to open its roadmap)") : "");
       a.addEventListener("mouseenter", function () { peek(s); }); a.addEventListener("focus", function () { peek(s); });
       a.addEventListener("mouseleave", function () { peek(null); }); a.addEventListener("blur", function () { peek(null); });
     });
