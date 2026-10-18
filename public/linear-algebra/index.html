@@ -24,7 +24,19 @@
   border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
 @media (min-width: 861px) {
   .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }   /* content fills the viewport; footer sits at the bottom */
 }
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); }
+.la-cta .go { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.la-cta .go:hover { filter: brightness(1.08); }
+.la-cta .alt { color: var(--ink); background: var(--paper-2); }
+.la-cta .alt:hover { border-color: var(--accent); color: var(--accent); }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
 .la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
 .la-progress i { display: block; height: 100%; width: 45%; background: var(--accent); border-radius: 5px; }
 .la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
@@ -80,11 +92,24 @@
   <p class="subtitle">Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues, SVD — the language of portfolios and factor models.</p>
   <div class="la-progress"><i></i></div>
   <p class="la-progress-k">Lessons 01–14 are live · new lessons open in order</p>
+  <div class="la-cta">
+    <a class="go" href="01_geometry-of-linear-equations.html">▶ Start with Lesson 01</a>
+    <a class="alt" href="14_projections-onto-subspaces.html">Newest: Lesson 14 · Projections onto Subspaces →</a>
+  </div>
   <div class="box intuition"><span class="label">How to use this subject</span>
     <p>Pick a lesson from the sidebar and work it top to bottom. Every lesson has a <b>Notes</b> tab that explains each word from zero and an <b>Examples</b> tab whose first example is an interactive Nifty lab — change the inputs, predict the answer, then scroll to check.</p>
   </div>
   <div class="box finance"><span class="label">Why this subject is first</span>
     <p>Every portfolio is a vector, every hedge is a system of equations, every factor model is a projection. The rest of the maths roadmap — probability, statistics, time-series, stochastic calculus — speaks this language.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>31</b><span>lessons, one per MIT 18.06 lecture</span></div>
+    <div class="la-stat"><b>14</b><span>live now, with more opening in order</span></div>
+    <div class="la-stat"><b>14</b><span>interactive Nifty labs — one in every lesson</span></div>
+    <div class="la-stat"><b>2</b><span>PDFs per lesson: slide carousel + notes report</span></div>
+  </div>
+  <div class="box method"><span class="label">What you'll walk away with</span>
+    <p>By the end you can <b>set up and solve</b> any hedge as Ax&nbsp;=&nbsp;b, <b>read a matrix's rank and four subspaces</b> to know which targets a book of products can and cannot reach, and <b>project</b> one return onto others — which is exactly beta, regression and factor models.</p>
   </div>
   </div>
 </main>
