@@ -69,6 +69,8 @@
     var target = h && document.getElementById(h);
     var owner = target && target.closest(".tab-panel");
     show(owner ? owner.dataset.panel : h, false);
+    // deep links like lesson.html#projlab land on the element once its tab is open
+    if (target && owner) setTimeout(function () { target.scrollIntoView(); }, 60);
 
     // Highlight the section currently being read.
     var links = document.querySelectorAll(".tabs .subnav a");
