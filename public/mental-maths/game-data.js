@@ -169,7 +169,7 @@
         intro: "Mental maths runs <b>left to right</b> — the way you read — and leans constantly on <b>complements</b>: how far a number is from the next round number. Master these 10 questions’ worth of reflexes and every later level gets easier.",
         cards: [
           { k: "The complement", body: "The complement of a 2-digit number is its distance to 100. Shortcut: first digits sum to <b>9</b>, last digits sum to <b>10</b>. So for 87: 8+1=9, 7+3=10 → complement <b>13</b>. For 3-digit numbers (distance to 1000): all pairs sum to 9, the last pair to 10. 777 → <b>223</b>." },
-          { k: "Why it matters", body: "Complements turn subtraction into addition, power the ×11 and near-100 tricks later, and are exactly how traders think in ticks: “how far from the round level?”" }
+          { k: "Why it matters", body: "Complements turn subtraction into addition, power the add-back subtraction (Level 2) and the near-100 trick (Level 7) later, and are exactly how traders think in ticks: “how far from the round level?”" }
         ],
         examples: [
           { q: "100 − 44", steps: ["4 + ? = 9 → 5", "4 + ? = 10 → 6"], a: "56" },
@@ -207,7 +207,7 @@
           { q: "65²", steps: ["6 × 7 = 42, then append 25"], a: "4225" },
           { q: "9 × 47", steps: ["10 × 47 = 470, minus 47"], a: "423" }
         ],
-        tip: "When a factor is 8 or 9, round it to 10 and subtract: 9 × 47 = 470 − 47."
+        tip: "When a factor is 9, round it to 10 and subtract once: 9 × 47 = 470 − 47 = 423. When it’s 8, subtract twice: 8 × 47 = 470 − 94 = 376."
       } },
     { n: 4, phase: 2, title: "Divide and Conquer", sub: "Exact division, divisibility radar, sevenths by heart", lecture: "Divide and Conquer",
       count: 12, time: 110, gold: 70,
@@ -263,8 +263,8 @@
         intro: "One beautiful identity powers this whole level: <b>A² = (A+d)(A−d) + d²</b>. Slide to the nearest round number, multiply the easy pair, add the little square back.",
         cards: [
           { k: "Any 2-digit square", body: "<b>23²</b>: slide 3 to reach 20 ↔ 26: 20 × 26 = 520, add 3² → <b>529</b>. <b>67²</b>: slide 3: 70 × 64 = 4480, add 9 → <b>4489</b>. The slide distance is always to the nearest ten." },
-          { k: "Same tens, units summing to 10", body: "<b>43 × 47</b>: tens digit t = 4 → t × (t+1) = 20, units 3 × 7 = 21 → <b>2021</b>. (Why: it’s (45−2)(45+2) = 45² − 4.)" },
-          { k: "Both near 100", body: "<b>97 × 96</b>: shortfalls are 3 and 4. Left part: 97 − 4 (or 96 − 3) = 93. Right part: 3 × 4 = 12 → <b>9312</b>." },
+          { k: "Same tens, units summing to 10", body: "<b>43 × 47</b>: tens digit t = 4 → t × (t+1) = 20, units 3 × 7 = 21 → <b>2021</b>. (Why: it’s (45−2)(45+2) = 45² − 4.) The units product always takes <b>two digits</b>: 21 × 29 → 2 × 3 = 6, units 1 × 9 = <b>09</b> → 609." },
+          { k: "Both near 100", body: "<b>97 × 96</b>: shortfalls are 3 and 4. Left part: 97 − 4 (or 96 − 3) = 93. Right part: 3 × 4 = 12 → <b>9312</b>. The right part always takes <b>two digits</b>: 91 × 99 → left 90, right 1 × 9 = <b>09</b> → 9009." },
           { k: "Ends in 8 or 9? Round and subtract", body: "<b>89 × 23</b> = 90 × 23 − 23 = 2070 − 23 = <b>2047</b>." }
         ],
         examples: [
@@ -279,7 +279,7 @@
       brief: {
         intro: "Division has its own tricks. Dividing by 9 becomes writing <b>running sums</b>, and any divisor ending in 9 surrenders to a one-step fixed-point trick.",
         cards: [
-          { k: "÷ 9: running sums", body: "<b>1233 ÷ 9</b>: quotient digits are running sums of all digits but the last: 1, 1+2=3, 3+3=6 → 136. The remainder is the full digit sum: 1+2+3+3 = 9 — a full 9 carries into the quotient → <b>137</b>, remainder 0. (In this drill every division is exact.)" },
+          { k: "÷ 9: running sums", body: "<b>1233 ÷ 9</b>: quotient digits are running sums of all digits but the last: 1, 1+2=3, 3+3=6 → 136. Then the digit sum settles the remainder: 1+2+3+3 = 9, and <b>every full 9 in it adds +1</b> → <b>137</b>. Two repairs you’ll meet constantly: if a running sum spills past 9, carry the 1 into the digit before it (<b>288 ÷ 9</b>: sums 2, 10 → 30; digit sum 18 = two 9s → +2 → <b>32</b>); and a digit sum of 18 or 27 adds +2 or +3, not +1 (<b>396 ÷ 9</b>: sums 3, 12 → 42; +2 → <b>44</b>). (In this drill every division is exact.)" },
           { k: "Divisors ending in 9", body: "To divide by 19, note 19 = 20 − 1, so N = 19q means <b>q = (N + q) ÷ 20</b>: add your own guess to N, divide by the round number. <b>475 ÷ 19</b>: guess 475/20 ≈ 24 → (475+24)/20 ≈ 24.95 → try 25 → (475+25)/20 = 25 exactly → <b>25</b>. Same for 29 (use 30), 39 (40), 49 (50)." },
           { k: "÷ 11", body: "Estimate with ÷10, then shave: 2871 ÷ 11 — ÷10 says ≈ 287, shave ~10% → try 261: 261 × 11 = 2871 ✓ (check with the ×11 trick from Level 3!)." }
         ],

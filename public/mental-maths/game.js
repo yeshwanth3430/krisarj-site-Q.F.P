@@ -36,7 +36,7 @@
   }
   function endlessUnlocked() { return S.stars[1] >= 1 && S.stars[2] >= 1 && S.stars[3] >= 1; }
   function starStr(n) { var h = ""; for (var i = 1; i <= 3; i++) h += '<span class="' + (n >= i ? "" : "off") + '">★</span>'; return h; }
-  function fmtT(s) { return Math.floor(s / 60) + ":" + ("0" + Math.round(s % 60)).slice(-2); }
+  function fmtT(s) { return Math.floor(s / 60) + ":" + ("0" + Math.floor(s % 60)).slice(-2); }
   function bar(extraRight) {
     return '<div class="mm-bar"><i></i><i></i><i></i><span class="mm-ttl">MENTAL-ENGINE <b>·</b> speed maths bootcamp</span>' +
       '<span class="mm-bar-r">' + (extraRight || "") +
@@ -103,17 +103,21 @@
     root.innerHTML = h; bind();
     if (!L.boss) tryOne(n);
   }
+  var tryTok = 0;   // invalidates pending try-one refresh timers when the briefing changes
   function tryOne(n) {
     var box = document.getElementById("mm-try"); if (!box) return;
+    var tok = ++tryTok;
     var q = D.gen[n]();
     var qh = '<div class="mm-try-q">' + esc(q.t === "flash" ? "FLASH — memorize:" : q.q) + (q.note ? ' <span class="mm-q-note">' + esc(q.note) + "</span>" : "") + "</div>";
     if (q.t === "choice") {
       box.innerHTML = qh + '<div class="mm-choices">' + q.choices.map(function (c) { return '<button class="mm-choice" data-v="' + esc(c) + '">' + esc(c) + "</button>"; }).join("") + "</div><div class='mm-reveal'></div>";
+      var picked = false;
       box.querySelectorAll(".mm-choice").forEach(function (b) {
         b.addEventListener("click", function () {
+          if (picked) return; picked = true;
           var ok = b.dataset.v === String(q.a);
           box.querySelector(".mm-reveal").innerHTML = ok ? "<b>✓ correct</b>" : "✗ it’s <b>" + esc(q.a) + "</b>";
-          (ok ? sOK : sBad)(); setTimeout(function () { tryOne(n); }, 1200);
+          (ok ? sOK : sBad)(); setTimeout(function () { if (tok === tryTok) tryOne(n); }, 1200);
         });
       });
     } else {
@@ -121,7 +125,7 @@
       box.innerHTML = qh + (isFlash ? '<div class="mm-flash">' + q.show.split("").join(" ") + "</div>" : "") +
         '<input class="mm-input" inputmode="numeric" autocomplete="off" ' + (isFlash ? "style='display:none'" : "") + '><div class="mm-reveal"></div>';
       var inp = box.querySelector(".mm-input");
-      if (isFlash) setTimeout(function () { box.querySelector(".mm-flash").style.display = "none"; inp.style.display = ""; inp.focus(); }, q.ms);
+      if (isFlash) setTimeout(function () { if (tok !== tryTok) return; var fl = box.querySelector(".mm-flash"); if (!fl) return; fl.style.display = "none"; inp.value = ""; inp.style.display = ""; inp.focus(); }, q.ms);
       var done = false;
       function judge(submit) {
         if (done) return;
@@ -131,7 +135,7 @@
         if (ok || (q.t !== "est" && v.length >= String(q.a).length) || submit) {
           done = true;
           box.querySelector(".mm-reveal").innerHTML = ok ? "<b>✓ correct</b>" : "✗ answer: <b>" + (q.t === "est" ? "≈ " + Math.round(q.a).toLocaleString("en-IN") : esc(q.a)) + "</b>";
-          (ok ? sOK : sBad)(); setTimeout(function () { tryOne(n); }, 1400);
+          (ok ? sOK : sBad)(); setTimeout(function () { if (tok === tryTok) tryOne(n); }, 1400);
         }
       }
       inp.addEventListener("input", function () { inp.value = inp.value.replace(/[^\d]/g, ""); judge(false); });
@@ -160,7 +164,7 @@
   function nextQ() {
     if (run.mode === "level") { run.q = D.gen[run.n](); run.pts = 100; }
     else { var pk = poolPick(); run.q = pk.q; run.pts = pk.pts; run.lvl = pk.lvl; }
-    run.qStart = performance.now(); run.flashDone = false;
+    run.qStart = performance.now(); run.flashDone = false; run.settled = false;
   }
   function mult() { return 1 + Math.min(2, Math.floor(run.streak / 3)); }
   function paintDrill() {
@@ -185,10 +189,12 @@
     } else if (q.t === "flash") {
       st.innerHTML = '<div class="mm-q">MEMORIZE' + tag + '</div><div class="mm-flash" id="mm-flash">' + q.show.split("").join(" ") + '</div>' +
         '<input class="mm-input" id="mm-inp" inputmode="numeric" autocomplete="off" style="display:none"><div class="mm-reveal" id="mm-rev"></div>' + pad() + sk;
+      var flashRun = run;
       setTimeout(function () {
-        if (run.done || run.q !== q) return;
-        document.getElementById("mm-flash").style.display = "none";
-        var inp = document.getElementById("mm-inp"); inp.style.display = ""; inp.focus(); run.flashDone = true;
+        if (!run || run !== flashRun || run.done || run.q !== q) return;
+        var fl = document.getElementById("mm-flash"); if (fl) fl.style.display = "none";
+        var inp = document.getElementById("mm-inp"); if (!inp) return;
+        inp.value = ""; inp.style.display = ""; inp.focus(); run.flashDone = true;   // clear anything typed while digits were visible
       }, q.ms);
       wireInput(q);
     } else {
@@ -208,7 +214,8 @@
   function wireInput(q) {
     var inp = document.getElementById("mm-inp"), settled = false;
     function judge(submit) {
-      if (settled || run.done || run.q !== q) return;
+      if (settled || !run || run.done || run.q !== q) return;
+      if (q.t === "flash" && !run.flashDone) { inp.value = ""; return; }   // no answering while the digits are still on screen
       var v = inp.value.replace(/[^\d]/g, ""); inp.value = v;
       if (q.t === "est") { if (submit && v !== "") { settled = true; settle(Math.abs(+v - q.a) <= q.tol * q.a, q); } return; }
       if (v === String(q.a)) { settled = true; settle(true, q); }
@@ -225,7 +232,8 @@
     });
   }
   function settle(ok, q, skipped) {
-    if (run.done || run.q !== q) return;
+    if (!run || run.done || run.q !== q || run.settled) return;   // one settle per question (blocks double-clicks on choices/skip)
+    run.settled = true;
     var st = document.getElementById("mm-stage"), rev = document.getElementById("mm-rev");
     run.times.push((performance.now() - run.qStart) / 1000);
     if (ok) {
@@ -241,8 +249,9 @@
     if (sEl) { sEl.textContent = "×" + mult() + (run.streak ? " · " + run.streak + "🔥" : ""); sEl.className = "mm-streak pop s" + Math.min(3, Math.floor(run.streak / 3) + (run.streak ? 1 : 0)); setTimeout(function () { sEl.classList.remove("pop"); }, 160); }
     run.i++;
     var over = (run.mode === "level" && run.i >= run.count) || (run.mode !== "level" && run.lives <= 0);
+    var myRun = run;
     setTimeout(function () {
-      if (run.done) return;
+      if (!run || run !== myRun || run.done) return;
       if (over) return finish();
       nextQ();
       if (run.mode === "level") { var qc = root.querySelector(".mm-qcount"); if (qc) qc.innerHTML = "Q <b>" + (run.i + 1) + "</b>/" + run.count; }
