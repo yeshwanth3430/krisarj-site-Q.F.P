@@ -22,6 +22,12 @@
 .tabs .ch.off { color: var(--ink-soft); opacity: .62; }
 .tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
   border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+/* lessons nested directly under their chapter, like pages under a section */
+.tabs .chsub { margin: 0 0 6px 21px; padding-left: 9px; border-left: 1px solid var(--rule); }
+.tabs .chsub a { display: block; font: 400 12px/1.4 var(--sans); color: var(--ink-soft); text-decoration: none;
+  padding: 4px 8px; border-radius: 6px; }
+.tabs .chsub a:hover { color: var(--ink); background: var(--paper); }
+.tabs .chsub .todo { display: block; font: 400 12px/1.4 var(--sans); color: var(--ink-soft); opacity: .55; padding: 4px 8px; }
 .la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
 .la-progress i { display: block; height: 100%; width: 45%; background: var(--accent); border-radius: 5px; }
 .la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
@@ -40,12 +46,41 @@
   <nav class="tabs" aria-label="Chapters">
     <span class="tabs-title">Chapters · MIT 18.06</span>
     <a class="ch" href="topic-01.html"><span class="cn">01</span>Vectors &amp; linear equations</a>
+    <div class="chsub">
+      <a href="01_geometry-of-linear-equations.html">The Geometry of Linear Equations</a>
+    </div>
     <a class="ch" href="topic-02.html"><span class="cn">02</span>Elimination, A = LU &amp; permutations</a>
+    <div class="chsub">
+      <a href="02_elimination-with-matrices.html">Elimination with Matrices</a>
+      <a href="04_factorization-into-a-lu.html">Factorization into A = LU</a>
+    </div>
     <a class="ch" href="topic-03.html"><span class="cn">03</span>Inverses &amp; transposes</a>
+    <div class="chsub">
+      <a href="03_multiplication-and-inverse-matrices.html">Multiplication and Inverse Matrices</a>
+      <a href="05_transposes-permutations-vector-spaces.html">Transposes, Permutations, Vector Spaces</a>
+    </div>
     <a class="ch" href="topic-04.html"><span class="cn">04</span>Vector spaces, column space &amp; nullspace</a>
+    <div class="chsub">
+      <a href="06_column-space-and-nullspace.html">Column Space and Nullspace</a>
+      <a href="07_solving-ax-0-pivot-variables-special-solutions.html">Solving Ax = 0: Pivots, Special Solutions</a>
+      <a href="08_solving-ax-b-row-reduced-form-r.html">Solving Ax = b: Row Reduced Form R</a>
+    </div>
     <a class="ch" href="topic-05.html"><span class="cn">05</span>Independence, rank &amp; the four subspaces</a>
+    <div class="chsub">
+      <a href="09_independence-basis-and-dimension.html">Independence, Basis and Dimension</a>
+      <a href="10_the-four-fundamental-subspaces.html">The Four Fundamental Subspaces</a>
+    </div>
     <a class="ch" href="topic-06.html"><span class="cn">06</span>Graphs &amp; networks</a>
+    <div class="chsub">
+      <a href="11_matrix-spaces-rank-1-small-world-graphs.html">Matrix Spaces; Rank 1; Small World Graphs</a>
+      <a href="12_graphs-networks-incidence-matrices.html">Graphs, Networks, Incidence Matrices</a>
+    </div>
     <a class="ch" href="topic-07.html"><span class="cn">07</span>Orthogonality &amp; projections</a>
+    <div class="chsub">
+      <a href="13_orthogonal-vectors-and-subspaces.html">Orthogonal Vectors and Subspaces</a>
+      <a href="14_projections-onto-subspaces.html">Projections onto Subspaces</a>
+      <span class="todo">Projection Matrices and Least Squares · soon</span>
+    </div>
     <span class="ch off"><span class="cn">08</span>Least squares &amp; Gram–Schmidt<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">09</span>Determinants &amp; Cramer's rule<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">10</span>Eigenvalues, diagonalization &amp; powers<span class="soon">SOON</span></span>
