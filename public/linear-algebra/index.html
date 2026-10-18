@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Linear Algebra · Quant from First Principles</title>
-<meta name="description" content="Linear algebra following MIT OCW 18.06 — pick a chapter from the sidebar; every chapter teaches its ideas from zero with Nifty options labs.">
+<meta name="description" content="Linear Algebra following MIT OCW 18.06 — 31 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -12,34 +12,29 @@
 <link rel="stylesheet" href="../assets/site.css?v=5">
 <script src="../assets/notebook.js?v=4"></script>
 <style>
-/* chapter sidebar: same bones as the lesson sidebar, links instead of tab buttons */
 .tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
   font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
   border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
 .tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
 .tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
-.tabs .ch.here { background: var(--paper); color: var(--accent); border-color: var(--rule); box-shadow: inset 3px 0 0 var(--accent); }
 .tabs .ch.off { color: var(--ink-soft); opacity: .62; }
 .tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
   border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
 @media (min-width: 861px) {
   .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
-  main.page.tabbed { min-height: calc(100vh - 215px); }   /* content fills the viewport; footer sits at the bottom */
+  main.page.tabbed { min-height: calc(100vh - 215px); }
 }
 .la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
 .la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
-  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); }
-.la-cta .go { background: var(--accent); color: var(--paper); border-color: var(--accent); }
-.la-cta .go:hover { filter: brightness(1.08); }
-.la-cta .alt { color: var(--ink); background: var(--paper-2); }
-.la-cta .alt:hover { border-color: var(--accent); color: var(--accent); }
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
 .la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
 .la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
 .la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
 .la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
-.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
-.la-progress i { display: block; height: 100%; width: 45%; background: var(--accent); border-radius: 5px; }
-.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
 @media (max-width: 860px) {
   .tabs { display: block; max-height: 42vh; overflow-y: auto; }
   .tabs .ch { width: 100%; }
@@ -53,21 +48,21 @@
 </header>
 <main class="page tabbed">
   <nav class="tabs" aria-label="Lessons">
-    <span class="tabs-title">Lessons · MIT 18.06</span>
-    <a class="ch" href="01_geometry-of-linear-equations.html"><span class="cn">01</span>The Geometry of Linear Equations</a>
-    <a class="ch" href="02_elimination-with-matrices.html"><span class="cn">02</span>Elimination with Matrices</a>
-    <a class="ch" href="03_multiplication-and-inverse-matrices.html"><span class="cn">03</span>Multiplication and Inverse Matrices</a>
-    <a class="ch" href="04_factorization-into-a-lu.html"><span class="cn">04</span>Factorization into A = LU</a>
-    <a class="ch" href="05_transposes-permutations-vector-spaces.html"><span class="cn">05</span>Transposes, Permutations, Vector Spaces</a>
-    <a class="ch" href="06_column-space-and-nullspace.html"><span class="cn">06</span>Column Space and Nullspace</a>
-    <a class="ch" href="07_solving-ax-0-pivot-variables-special-solutions.html"><span class="cn">07</span>Solving Ax = 0: Pivot Variables, Special Solutions</a>
-    <a class="ch" href="08_solving-ax-b-row-reduced-form-r.html"><span class="cn">08</span>Solving Ax = b: Row Reduced Form R</a>
-    <a class="ch" href="09_independence-basis-and-dimension.html"><span class="cn">09</span>Independence, Basis and Dimension</a>
-    <a class="ch" href="10_the-four-fundamental-subspaces.html"><span class="cn">10</span>The Four Fundamental Subspaces</a>
-    <a class="ch" href="11_matrix-spaces-rank-1-small-world-graphs.html"><span class="cn">11</span>Matrix Spaces; Rank 1; Small World Graphs</a>
-    <a class="ch" href="12_graphs-networks-incidence-matrices.html"><span class="cn">12</span>Graphs, Networks, Incidence Matrices</a>
-    <a class="ch" href="13_orthogonal-vectors-and-subspaces.html"><span class="cn">13</span>Orthogonal Vectors and Subspaces</a>
-    <a class="ch" href="14_projections-onto-subspaces.html"><span class="cn">14</span>Projections onto Subspaces</a>
+    <span class="tabs-title">Lessons · MIT OCW 18.06</span>
+    <span class="ch off"><span class="cn">01</span>The Geometry of Linear Equations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Elimination with Matrices<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Multiplication and Inverse Matrices<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Factorization into A = LU<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Transposes, Permutations, Vector Spaces<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Column Space and Nullspace<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Solving Ax = 0: Pivot Variables, Special Solutions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Solving Ax = b: Row Reduced Form R<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Independence, Basis and Dimension<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>The Four Fundamental Subspaces<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Matrix Spaces; Rank 1; Small World Graphs<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Graphs, Networks, Incidence Matrices<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Orthogonal Vectors and Subspaces<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Projections onto Subspaces<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">15</span>Projection Matrices and Least Squares<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">16</span>Orthogonal Matrices and Gram-Schmidt<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">17</span>Properties of Determinants<span class="soon">SOON</span></span>
@@ -87,37 +82,32 @@
     <span class="ch off"><span class="cn">31</span>Left and Right Inverses; Pseudoinverse<span class="soon">SOON</span></span>
   </nav>
   <div class="tab-body">
-  <p class="meta">Subject 01 · follows MIT OCW 18.06 (Prof. Gilbert Strang)</p>
+  <p class="meta">Subject 01 · follows MIT OCW 18.06</p>
   <h1>Linear Algebra</h1>
-  <p class="subtitle">Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues, SVD — the language of portfolios and factor models.</p>
+  <p class="subtitle">Portfolios as vectors, hedges as equations.</p>
   <div class="la-progress"><i></i></div>
-  <p class="la-progress-k">Lessons 01–14 are live · new lessons open in order</p>
+  <p class="la-progress-k">31 lessons · opening in order, like Linear Algebra</p>
   <div class="la-cta">
-    <a class="go" href="01_geometry-of-linear-equations.html">▶ Start with Lesson 01</a>
-    <a class="alt" href="14_projections-onto-subspaces.html">Newest: Lesson 14 · Projections onto Subspaces →</a>
+    <a href="https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/" target="_blank" rel="noopener">Open the source course ↗</a>
   </div>
-  <div class="box intuition"><span class="label">How to use this subject</span>
-    <p>Pick a lesson from the sidebar and work it top to bottom. Every lesson has a <b>Notes</b> tab that explains each word from zero and an <b>Examples</b> tab whose first example is an interactive Nifty lab — change the inputs, predict the answer, then scroll to check.</p>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT OCW 18.06, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
   </div>
-  <div class="box finance"><span class="label">Why this subject is first</span>
+  <div class="box finance"><span class="label">Why this subject matters</span>
     <p>Every portfolio is a vector, every hedge is a system of equations, every factor model is a projection. The rest of the maths roadmap — probability, statistics, time-series, stochastic calculus — speaks this language.</p>
   </div>
   <div class="la-stats">
-    <div class="la-stat"><b>31</b><span>lessons, one per MIT 18.06 lecture</span></div>
-    <div class="la-stat"><b>14</b><span>live now, with more opening in order</span></div>
-    <div class="la-stat"><b>14</b><span>interactive Nifty labs — one in every lesson</span></div>
-    <div class="la-stat"><b>2</b><span>PDFs per lesson: slide carousel + notes report</span></div>
-  </div>
-  <div class="box method"><span class="label">What you'll walk away with</span>
-    <p>By the end you can <b>set up and solve</b> any hedge as Ax&nbsp;=&nbsp;b, <b>read a matrix's rank and four subspaces</b> to know which targets a book of products can and cannot reach, and <b>project</b> one return onto others — which is exactly beta, regression and factor models.</p>
+    <div class="la-stat"><b>31</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — notes open lesson by lesson</span></div>
+    <div class="la-stat"><b>01</b><span>of 13 subjects on the maths roadmap</span></div>
   </div>
   </div>
 </main>
 <footer class="site-foot"><div class="in">
   <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
-  <div>The Linear Algebra notes follow MIT OpenCourseWare 18.06, Linear Algebra (Prof. Gilbert Strang), used under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">CC BY-NC-SA 4.0</a>; these pages are shared under the same licence. Not affiliated with or endorsed by MIT.</div>
-  <div><b>Educational only, not investment advice.</b> Market examples use illustrative Nifty numbers; lot sizes and prices change, so check the exchange before using any figure.</div>
+  <div>The lesson list follows MIT OpenCourseWare 18.06, Linear Algebra (Prof. Gilbert Strang). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
 </div></footer>
-<script src="../assets/tracker.js?v=13"></script>
+<script src="../assets/tracker.js?v=14"></script>
 </body>
 </html>

@@ -16,22 +16,8 @@
     { id: "fin", name: "Maths for Finance", topics: 7 }
   ];
   // key: subject-topic-lesson ; url relative to the site root
-  var LESSONS = [
-    { key: "la-01-1", subject: "la", topic: 1, topicName: "Vectors & linear equations", title: "The Geometry of Linear Equations", url: "linear-algebra/01_geometry-of-linear-equations.html" },
-    { key: "la-02-1", subject: "la", topic: 2, topicName: "Elimination, A = LU & permutations", title: "Elimination with Matrices", url: "linear-algebra/02_elimination-with-matrices.html" },
-    { key: "la-02-2", subject: "la", topic: 2, topicName: "Elimination, A = LU & permutations", title: "Factorization into A = LU", url: "linear-algebra/04_factorization-into-a-lu.html" },
-    { key: "la-03-1", subject: "la", topic: 3, topicName: "Inverses & transposes", title: "Multiplication and Inverse Matrices", url: "linear-algebra/03_multiplication-and-inverse-matrices.html" },
-    { key: "la-03-2", subject: "la", topic: 3, topicName: "Inverses & transposes", title: "Transposes, Permutations, Vector Spaces", url: "linear-algebra/05_transposes-permutations-vector-spaces.html" },
-    { key: "la-04-1", subject: "la", topic: 4, topicName: "Vector spaces, column space & nullspace", title: "Column Space and Nullspace", url: "linear-algebra/06_column-space-and-nullspace.html" },
-    { key: "la-04-2", subject: "la", topic: 4, topicName: "Vector spaces, column space & nullspace", title: "Solving Ax = 0: Pivot Variables, Special Solutions", url: "linear-algebra/07_solving-ax-0-pivot-variables-special-solutions.html" },
-    { key: "la-04-3", subject: "la", topic: 4, topicName: "Vector spaces, column space & nullspace", title: "Solving Ax = b: Row Reduced Form R", url: "linear-algebra/08_solving-ax-b-row-reduced-form-r.html" },
-    { key: "la-05-1", subject: "la", topic: 5, topicName: "Independence, rank & the four subspaces", title: "Independence, Basis and Dimension", url: "linear-algebra/09_independence-basis-and-dimension.html" },
-    { key: "la-05-2", subject: "la", topic: 5, topicName: "Independence, rank & the four subspaces", title: "The Four Fundamental Subspaces", url: "linear-algebra/10_the-four-fundamental-subspaces.html" },
-    { key: "la-06-1", subject: "la", topic: 6, topicName: "Graphs & networks", title: "Matrix Spaces; Rank 1; Small World Graphs", url: "linear-algebra/11_matrix-spaces-rank-1-small-world-graphs.html" },
-    { key: "la-06-2", subject: "la", topic: 6, topicName: "Graphs & networks", title: "Graphs, Networks, Incidence Matrices", url: "linear-algebra/12_graphs-networks-incidence-matrices.html" },
-    { key: "la-07-1", subject: "la", topic: 7, topicName: "Orthogonality & projections", title: "Orthogonal Vectors and Subspaces", url: "linear-algebra/13_orthogonal-vectors-and-subspaces.html" },
-    { key: "la-07-2", subject: "la", topic: 7, topicName: "Orthogonality & projections", title: "Projections onto Subspaces", url: "linear-algebra/14_projections-onto-subspaces.html" }
-  ];
+  // catalog is empty while the lessons are being rewritten; pages re-register here as they go live
+  var LESSONS = [];
   var DONE_AFTER_MS = 2 * 60 * 1000;   // auto-complete: reached the end of the notes and spent 2+ minutes
 
   // ---------------- small helpers ----------------

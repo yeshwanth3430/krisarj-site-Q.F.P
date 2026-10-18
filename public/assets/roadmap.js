@@ -6,7 +6,7 @@
   // status: "live" (published, linked), "next" (being written), "soon" (planned)
   var SUBJECTS = [
     { id: "la", n: "01", name: "Linear Algebra", tag: "Portfolios as vectors, hedges as equations", state: "now", col: 0, row: 0, url: "linear-algebra/index.html",
-      lessons: [14, 31],   // live, total — shown on the map node
+      lessons: [0, 31],   // live, total — shown on the map node
       about: "Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues and the SVD. The language every portfolio, hedge and factor model is written in.",
       groups: [
         { name: "Solving equations", topics: [
@@ -197,7 +197,7 @@
       }).join("") + '</div>';
     }).join("");
     return '<div class="rmm-scroll"><div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div></div>' +
-      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>required</span><span><i class="lg-help"></i>helpful</span><span class="rmm-hint">Click Linear Algebra to open its lessons</span></div>';
+      '<div class="rmm-legend"><span><i class="lg-now"></i>In progress</span><span><i class="lg-later"></i>Later</span><span><i class="lg-edge"></i>required</span><span><i class="lg-help"></i>helpful</span><span class="rmm-hint">Click any subject to open its lesson list</span></div>';
   }
 
   function subjectHTML(s) {

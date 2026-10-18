@@ -81,7 +81,7 @@ PAGE = """<!doctype html>
   </div>
   <div class="la-stats">
     <div class="la-stat"><b>{nles}</b><span>lessons, straight from the course</span></div>
-    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — notes open lesson by lesson</span></div>
     <div class="la-stat"><b>{n}</b><span>of 13 subjects on the maths roadmap</span></div>
   </div>
   </div>
