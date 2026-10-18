@@ -17,8 +17,15 @@
   <div class="crumbs"><b>Quant from First Principles</b></div>
   <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
 </header>
-<main class="page tabbed">
-  <nav class="tabs" role="tablist" aria-label="Home sections">
+<style>
+/* the home page has a single visible section, so there is no sidebar: the tab nav stays in the
+   DOM (hidden) because the boards switch panels through its buttons */
+main.page.home-full { max-width: none; padding: 32px 48px 80px; }
+main.page.home-full .tab-body { max-width: none; margin: 0; }
+@media (max-width: 860px) { main.page.home-full { padding: 20px 16px 48px; } }
+</style>
+<main class="page home-full">
+  <nav class="tabs" role="tablist" aria-label="Home sections" hidden style="display:none">
     <span class="tabs-title">Quant from First Principles</span>
     <button role="tab" data-tab="hft" aria-selected="true">Quant Trading Prep</button>
     <button role="tab" data-tab="roadmap" aria-selected="false" hidden style="display:none">Mathematics for Finance</button>
