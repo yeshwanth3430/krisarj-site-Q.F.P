@@ -22,12 +22,9 @@
 .tabs .ch.off { color: var(--ink-soft); opacity: .62; }
 .tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
   border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
-/* lessons nested directly under their chapter, like pages under a section */
-.tabs .chsub { margin: 0 0 6px 21px; padding-left: 9px; border-left: 1px solid var(--rule); }
-.tabs .chsub a { display: block; font: 400 12px/1.4 var(--sans); color: var(--ink-soft); text-decoration: none;
-  padding: 4px 8px; border-radius: 6px; }
-.tabs .chsub a:hover { color: var(--ink); background: var(--paper); }
-.tabs .chsub .todo { display: block; font: 400 12px/1.4 var(--sans); color: var(--ink-soft); opacity: .55; padding: 4px 8px; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+}
 .la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
 .la-progress i { display: block; height: 100%; width: 45%; background: var(--accent); border-radius: 5px; }
 .la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
@@ -43,61 +40,48 @@
   <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
 </header>
 <main class="page tabbed">
-  <nav class="tabs" aria-label="Chapters">
-    <span class="tabs-title">Chapters · MIT 18.06</span>
-    <a class="ch" href="topic-01.html"><span class="cn">01</span>Vectors &amp; linear equations</a>
-    <div class="chsub">
-      <a href="01_geometry-of-linear-equations.html">The Geometry of Linear Equations</a>
-    </div>
-    <a class="ch" href="topic-02.html"><span class="cn">02</span>Elimination, A = LU &amp; permutations</a>
-    <div class="chsub">
-      <a href="02_elimination-with-matrices.html">Elimination with Matrices</a>
-      <a href="04_factorization-into-a-lu.html">Factorization into A = LU</a>
-    </div>
-    <a class="ch" href="topic-03.html"><span class="cn">03</span>Inverses &amp; transposes</a>
-    <div class="chsub">
-      <a href="03_multiplication-and-inverse-matrices.html">Multiplication and Inverse Matrices</a>
-      <a href="05_transposes-permutations-vector-spaces.html">Transposes, Permutations, Vector Spaces</a>
-    </div>
-    <a class="ch" href="topic-04.html"><span class="cn">04</span>Vector spaces, column space &amp; nullspace</a>
-    <div class="chsub">
-      <a href="06_column-space-and-nullspace.html">Column Space and Nullspace</a>
-      <a href="07_solving-ax-0-pivot-variables-special-solutions.html">Solving Ax = 0: Pivots, Special Solutions</a>
-      <a href="08_solving-ax-b-row-reduced-form-r.html">Solving Ax = b: Row Reduced Form R</a>
-    </div>
-    <a class="ch" href="topic-05.html"><span class="cn">05</span>Independence, rank &amp; the four subspaces</a>
-    <div class="chsub">
-      <a href="09_independence-basis-and-dimension.html">Independence, Basis and Dimension</a>
-      <a href="10_the-four-fundamental-subspaces.html">The Four Fundamental Subspaces</a>
-    </div>
-    <a class="ch" href="topic-06.html"><span class="cn">06</span>Graphs &amp; networks</a>
-    <div class="chsub">
-      <a href="11_matrix-spaces-rank-1-small-world-graphs.html">Matrix Spaces; Rank 1; Small World Graphs</a>
-      <a href="12_graphs-networks-incidence-matrices.html">Graphs, Networks, Incidence Matrices</a>
-    </div>
-    <a class="ch" href="topic-07.html"><span class="cn">07</span>Orthogonality &amp; projections</a>
-    <div class="chsub">
-      <a href="13_orthogonal-vectors-and-subspaces.html">Orthogonal Vectors and Subspaces</a>
-      <a href="14_projections-onto-subspaces.html">Projections onto Subspaces</a>
-      <span class="todo">Projection Matrices and Least Squares · soon</span>
-    </div>
-    <span class="ch off"><span class="cn">08</span>Least squares &amp; Gram–Schmidt<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">09</span>Determinants &amp; Cramer's rule<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">10</span>Eigenvalues, diagonalization &amp; powers<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">11</span>ODEs, Markov chains &amp; Fourier<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">12</span>Positive definite matrices &amp; minima<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">13</span>Complex matrices, FFT &amp; Jordan form<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">14</span>SVD &amp; linear transformations<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">15</span>Change of basis &amp; pseudoinverse<span class="soon">SOON</span></span>
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT 18.06</span>
+    <a class="ch" href="01_geometry-of-linear-equations.html"><span class="cn">01</span>The Geometry of Linear Equations</a>
+    <a class="ch" href="02_elimination-with-matrices.html"><span class="cn">02</span>Elimination with Matrices</a>
+    <a class="ch" href="03_multiplication-and-inverse-matrices.html"><span class="cn">03</span>Multiplication and Inverse Matrices</a>
+    <a class="ch" href="04_factorization-into-a-lu.html"><span class="cn">04</span>Factorization into A = LU</a>
+    <a class="ch" href="05_transposes-permutations-vector-spaces.html"><span class="cn">05</span>Transposes, Permutations, Vector Spaces</a>
+    <a class="ch" href="06_column-space-and-nullspace.html"><span class="cn">06</span>Column Space and Nullspace</a>
+    <a class="ch" href="07_solving-ax-0-pivot-variables-special-solutions.html"><span class="cn">07</span>Solving Ax = 0: Pivot Variables, Special Solutions</a>
+    <a class="ch" href="08_solving-ax-b-row-reduced-form-r.html"><span class="cn">08</span>Solving Ax = b: Row Reduced Form R</a>
+    <a class="ch" href="09_independence-basis-and-dimension.html"><span class="cn">09</span>Independence, Basis and Dimension</a>
+    <a class="ch" href="10_the-four-fundamental-subspaces.html"><span class="cn">10</span>The Four Fundamental Subspaces</a>
+    <a class="ch" href="11_matrix-spaces-rank-1-small-world-graphs.html"><span class="cn">11</span>Matrix Spaces; Rank 1; Small World Graphs</a>
+    <a class="ch" href="12_graphs-networks-incidence-matrices.html"><span class="cn">12</span>Graphs, Networks, Incidence Matrices</a>
+    <a class="ch" href="13_orthogonal-vectors-and-subspaces.html"><span class="cn">13</span>Orthogonal Vectors and Subspaces</a>
+    <a class="ch" href="14_projections-onto-subspaces.html"><span class="cn">14</span>Projections onto Subspaces</a>
+    <span class="ch off"><span class="cn">15</span>Projection Matrices and Least Squares<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Orthogonal Matrices and Gram-Schmidt<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Properties of Determinants<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Determinant Formulas and Cofactors<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Cramer's Rule, Inverse Matrix and Volume<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Eigenvalues and Eigenvectors<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Diagonalization and Powers of A<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Differential Equations and exp(At)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Markov Matrices; Fourier Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Symmetric Matrices and Positive Definiteness<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Complex Matrices; Fast Fourier Transform<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Positive Definite Matrices and Minima<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Similar Matrices and Jordan Form<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Singular Value Decomposition<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Linear Transformations and their Matrices<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Change of Basis; Image Compression<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Left and Right Inverses; Pseudoinverse<span class="soon">SOON</span></span>
   </nav>
   <div class="tab-body">
   <p class="meta">Subject 01 · follows MIT OCW 18.06 (Prof. Gilbert Strang)</p>
   <h1>Linear Algebra</h1>
   <p class="subtitle">Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues, SVD — the language of portfolios and factor models.</p>
   <div class="la-progress"><i></i></div>
-  <p class="la-progress-k">Chapters 01–07 are live · new chapters open in order</p>
+  <p class="la-progress-k">Lessons 01–14 are live · new lessons open in order</p>
   <div class="box intuition"><span class="label">How to use this subject</span>
-    <p>Pick a chapter from the sidebar and work it top to bottom. Inside a chapter, every lesson has a <b>Notes</b> tab that explains each word from zero and an <b>Examples</b> tab whose first example is an interactive Nifty lab — change the inputs, predict the answer, then scroll to check.</p>
+    <p>Pick a lesson from the sidebar and work it top to bottom. Every lesson has a <b>Notes</b> tab that explains each word from zero and an <b>Examples</b> tab whose first example is an interactive Nifty lab — change the inputs, predict the answer, then scroll to check.</p>
   </div>
   <div class="box finance"><span class="label">Why this subject is first</span>
     <p>Every portfolio is a vector, every hedge is a system of equations, every factor model is a projection. The rest of the maths roadmap — probability, statistics, time-series, stochastic calculus — speaks this language.</p>
