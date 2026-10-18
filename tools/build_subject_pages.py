@@ -86,11 +86,6 @@ PAGE = """<!doctype html>
   </div>
   </div>
 </main>
-<footer class="site-foot"><div class="in">
-  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
-  <div>The lesson list follows {credit}. Not affiliated with or endorsed by the course authors or their institutions.</div>
-  <div><b>Educational only, not investment advice.</b></div>
-</div></footer>
 <script src="../assets/tracker.js?v=13"></script>
 </body>
 </html>
