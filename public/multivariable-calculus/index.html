@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multivariable Calculus · Quant from First Principles</title>
+<meta name="description" content="Multivariable Calculus following MIT OCW 18.02SC — 102 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Multivariable Calculus</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT OCW 18.02SC</span>
+    <span class="ch off"><span class="cn">01</span>Vectors<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Dot Products<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Uses of the Dot Product: Lengths and Angles<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Vector Components<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Area and Determinants in 2D<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Volumes and Determinants in Space<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Cross Products<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Equations of Planes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Matrix Multiplication<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Meaning of Matrix Multiplication<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Matrix Inverses<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Equations of Planes II<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Linear Systems and Planes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Solutions to Square Systems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Equations of Lines<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Intersection of a Line and a Plane<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>General Parametric Equations; the Cycloid<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Point (Cusp) on Cycloid<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Velocity and Acceleration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Velocity and Arc Length<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Kepler’s Second Law<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Review of Topics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Review of Problems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Functions of Two Variables: Graphs<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Level Curves and Contour Plots<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Partial Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Approximation Formula<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Optimization Problems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Least Squares<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Second Derivative Test<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Total Differentials and the Chain Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Examples<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>The Chain Rule with More Variables<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Gradient: Definition, Perpendicular to Level Curves<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Proof<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Directional Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Statement of Lagrange Multipliers and Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">40</span>Proof of Lagrange Multipliers<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">41</span>Advanced Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">42</span>Constrained Differentials<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">43</span>Clearer Notation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">44</span>Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">45</span>Review of Topics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">46</span>Review of Problems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">47</span>Definition of Double Integration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">48</span>Examples of Double Integration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">49</span>Exchanging the Order of Integration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">50</span>Double Integrals in Polar Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">51</span>Applications: Mass and Average Value<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">52</span>Applications: Moment of Inertia<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">53</span>Change of Variables<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">54</span>Example: Polar Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">55</span>Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">56</span>Vector Fields<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">57</span>Work and Line Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">58</span>Geometric Approach<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">59</span>Example: Line Integrals for Work<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">60</span>Fundamental Theorem for Line Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">61</span>Conservative Fields, Path Independence, Exact Differentials<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">62</span>Gradient Fields<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">63</span>Potential Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">64</span>Curl<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">65</span>Green’s Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">66</span>Curl(F) = 0 Implies Conservative<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">67</span>Proof of Green’s Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">68</span>Planimeter: Green’s Theorem and Area<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">69</span>Flux in 2D<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">70</span>Normal Form of Green’s Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">71</span>Extended Green’s Theorem: Boundaries with Multiple Pieces<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">72</span>Simply Connected Regions and Conservative<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">73</span>Exam Review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">74</span>Triple Integrals: Rectangular and Cylindrical Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">75</span>Applications and Examples<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">76</span>Spherical Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">77</span>Triple Integrals in Spherical Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">78</span>Applications: Gravitational Attraction<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">79</span>Vector Fields in Space<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">80</span>Flux Through a Surface<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">81</span>Calculating Flux; Finding ndS<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">82</span>ndS for a Surface z = f(x, y)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">83</span>Other Ways to Find ndS<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">84</span>Divergence Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">85</span>Physical Meaning of Flux; Del Notation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">86</span>Proof of the Divergence Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">87</span>Diffusion Equation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">88</span>Line Integrals in Space<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">89</span>Gradient Fields and Potential Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">90</span>Curl in 3D<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">91</span>Stokes’ Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">92</span>Proof of Stokes’ Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">93</span>Example<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">94</span>Simply Connected Regions; Topology<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">95</span>Stokes’ Theorem and Surface Independence<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">96</span>Summary of Multiple Integration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">97</span>Curl and Physics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">98</span>Maxwell’s Equations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">99</span>Unit 1 Review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">100</span>Unit 2 Review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">101</span>Unit 3 Review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">102</span>Unit 4 Review<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 03 · follows MIT OCW 18.02SC</p>
+  <h1>Multivariable Calculus</h1>
+  <p class="subtitle">Many inputs at once.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">102 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT OCW 18.02SC, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>An option price depends on spot, volatility and time at once — the Greeks are partial derivatives, and risk surfaces live in many dimensions.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>102</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>03</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows MIT OpenCourseWare 18.02SC, Multivariable Calculus (Fall 2010). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Single Variable Calculus · Quant from First Principles</title>
+<meta name="description" content="Single Variable Calculus following MIT OCW 18.01SC — 102 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Single Variable Calculus</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT OCW 18.01SC</span>
+    <span class="ch off"><span class="cn">01</span>Introduction to Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Examples of Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Derivative as Rate of Change<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Limits and Continuity<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Discontinuity<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Calculating Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Derivatives of Sine and Cosine<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Limits of Sine and Cosine<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Product Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Quotient Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Chain Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Higher Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Implicit Differentiation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Examples of Implicit Differentiation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Implicit Differentiation and Inverse Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>The Derivative of a^x<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>The Exponential Function, its Derivative, and its Inverse<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Derivatives of other Exponential Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>An Interesting Limit Involving e<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Hyperbolic Trig Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Review for Exam 1 - Computing Derivatives Using Differentiation Rules<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Materials for Exam 1<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Linear Approximation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Examples of Linear Approximation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Introduction to Quadratic Approximation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Using Quadratic Approximations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Sketching Graphs I - Polynomials and Rational Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Sketching Graphs II - General Strategies<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Optimization Problems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Optimization Problems II<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Related Rates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Ring on a String<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Newton’s Method<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>Introduction to the Mean Value Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Using the Mean Value Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Differentials<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>Antiderivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Integration by Substitution<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Introduction to Differential Equations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">40</span>Separation of Variables<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">41</span>Review for Exam 2<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">42</span>Materials for Exam 2<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">43</span>Definite Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">44</span>Adding Areas of Rectangles<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">45</span>Some Easy Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">46</span>Riemann Sums<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">47</span>Introduction of the Fundamental Theorem of Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">48</span>The Fundamental Theorem of Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">49</span>Applications of the Fundamental Theorem of Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">50</span>Combining the Fundamental Theorem and the Mean Value Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">51</span>The Second Fundamental Theorem of Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">52</span>Proving the Fundamental Theorem of Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">53</span>New Functions From Old<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">54</span>The Second Fundamental Theorem and ln(x)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">55</span>Creating New Functions Using the Second Fundamental Theorem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">56</span>Geometric Interpretation of Definite Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">57</span>How to Calculate Volumes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">58</span>Volume of a Sphere, Revolving About x-axis<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">59</span>Volume of a Parabaloid, Revolving About y-axis<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">60</span>Integrals and Averages<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">61</span>Integrals and Weighted Averages<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">62</span>Integrals and Probability<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">63</span>Numerical Integration<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">64</span>Numerical Integration, Continued<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">65</span>Bell Curve, Conclusion<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">66</span>Review for Exam 3<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">67</span>Materials for Exam 3<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">68</span>Integral of sinⁿ(x) cosᵐ(x), Odd Exponents<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">69</span>Integral of sinⁿ(x) cosᵐ(x), Even Exponents<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">70</span>Preview of Trig Substitution and Polar Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">71</span>Integrals Involving secant, cosecant and cotangent<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">72</span>Trig Substitution<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">73</span>Completing the Square<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">74</span>Integration by Partial Fractions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">75</span>Advanced Partial Fractions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">76</span>Integration by Parts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">77</span>Volume of a Wine Glass<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">78</span>Computing the Length of a Curve<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">79</span>Surface Area<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">80</span>Parametric Curves<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">81</span>Examples Using Parametrized Curves<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">82</span>Polar Coordinates<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">83</span>Polar Coordinates, Continued<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">84</span>Polar Coordinates and Graphing<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">85</span>Review for Exam 4<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">86</span>Materials for Exam 4<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">87</span>L’Hospital’s Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">88</span>Examples of L’Hospital’s Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">89</span>L’Hospital’s Rule and Rates of Growth<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">90</span>Advanced Examples of L’Hospital’s Rule<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">91</span>Improper Integrals<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">92</span>Integral Comparison<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">93</span>Indefinite Integrals and Singularities<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">94</span>Infinite Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">95</span>Series Comparison<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">96</span>Stacking Blocks<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">97</span>Power Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">98</span>Taylor’s Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">99</span>Taylor’s Series, Continued<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">100</span>Operations on Power Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">101</span>Conclusion<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">102</span>Materials for Final Exam<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 02 · follows MIT OCW 18.01SC</p>
+  <h1>Single Variable Calculus</h1>
+  <p class="subtitle">How a price changes.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">102 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT OCW 18.01SC, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Delta is a derivative, P&amp;L is an integral, and every Greek starts with the question this subject answers: how fast does one thing change with another?</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>102</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>02</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows MIT OpenCourseWare 18.01SC, Single Variable Calculus (Fall 2010). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

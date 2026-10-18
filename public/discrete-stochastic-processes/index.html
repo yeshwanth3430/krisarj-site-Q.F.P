@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Discrete Stochastic Processes · Quant from First Principles</title>
+<meta name="description" content="Discrete Stochastic Processes following MIT OCW 6.262 — 25 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Discrete Stochastic Processes</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT OCW 6.262</span>
+    <span class="ch off"><span class="cn">01</span>Introduction and probability review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>More review; the Bernoulli process<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Laws of large numbers, convergence<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Poisson (the perfect arrival process)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Poisson combining and splitting<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>From Poisson to Markov<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Finite-state Markov chains; the matrix approach<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Markov eigenvalues and eigenvectors<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Markov rewards and dynamic programming<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Renewals and the strong law of large numbers (SLLN)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Renewals: strong law and rewards<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Renewal rewards, stopping trials, and Wald's equality<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Little, M/G/1, ensemble averages<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Review<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>The last renewal<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Renewals and countable state Markov<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Countable-state Markov chains<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Countable-state Markov chains and processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Countable-state Markov processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Markov processes and random walks<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Hypothesis testing and random walks<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Random walks and thresholds<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Martingales (plain, sub and super)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Martingales: stopping and converging<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Putting it all together<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 11 · follows MIT OCW 6.262</p>
+  <h1>Discrete Stochastic Processes</h1>
+  <p class="subtitle">Randomness step by step.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">25 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://ocw.mit.edu/courses/6-262-discrete-stochastic-processes-spring-2011/pages/syllabus/" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT OCW 6.262, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Order arrivals are Poisson processes, regimes are Markov chains, and stopping rules are martingale questions — randomness one step at a time, before continuous time.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>25</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>11</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows MIT OpenCourseWare 6.262, Discrete Stochastic Processes (Spring 2011). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

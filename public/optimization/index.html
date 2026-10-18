@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Optimization · Quant from First Principles</title>
+<meta name="description" content="Optimization following Optimization Bootcamp — 27 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Optimization</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · Optimization Bootcamp</span>
+    <span class="ch off"><span class="cn">01</span>Optimization: A Bootcamp for Machine Learning, Inverse Problems, and Control<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>The Anatomy of an Optimization Problem<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Applications of Optimization<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Convexity 101 [Optimization Bootcamp]<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Convex Sets<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Intersections of Convex Sets are Convex<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Affine Transformations and Convexity<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Dual Space of Supporting Hyperplanes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Convex Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Norms are Convex<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Activation Functions in Machine Learning<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Convexity Implies that Local Minima are Global Minima<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Convex Feasible Sets: Relationships Between Convex Sets and Convex Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Optimization_Gradient_01<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Optimization_Gradient_02<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Optimization_Gradient_03<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Optimization_Gradient_04<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Optimization_Gradient_05<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Optimization_Gradient_06<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Optimization_Gradient_07<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Optimization_Gradient_08<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Optimization_Gradient_09<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Optimization_Gradient_10<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Optimization_Gradient_11<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Optimization_Gradient_12<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Optimization_Gradient_13<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Optimization_Gradient_14<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 07 · follows Optimization Bootcamp</p>
+  <h1>Optimization</h1>
+  <p class="subtitle">Finding the best choice.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">27 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://youtube.com/playlist?list=PLMrJAkhIeNNS3UT10txhV70ZwIeIjkMQp" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows Optimization Bootcamp, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Portfolio construction, best execution and model calibration are all the same move: define a cost, respect the constraints, find the minimum.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>27</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>07</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows the Optimization Bootcamp lecture playlist (YouTube); lesson structure follows the public series. Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

@@ -29,7 +29,7 @@
           ["SVD & linear transformations", "factor models", "soon"],
           ["Change of basis & pseudoinverse", "hedging with spare products", "soon"] ] }
       ] },
-    { id: "svc", n: "02", name: "Single Variable Calculus", tag: "How a price changes", state: "later", col: 0, row: 1,
+    { id: "svc", n: "02", name: "Single Variable Calculus", tag: "How a price changes", state: "later", col: 0, row: 1, url: "single-variable-calculus/index.html", lessons: [0, 102],
       about: "Limits, derivatives, integrals, series and Taylor expansions: the base toolkit for pricing, sensitivities and compounding.",
       groups: [
         { name: "Change", topics: [
@@ -44,7 +44,7 @@
           ["Series & convergence", "when infinite sums settle", "soon"],
           ["Taylor series", "P&L for a small Nifty move: delta + gamma", "soon"] ] }
       ] },
-    { id: "mvc", n: "03", name: "Multivariable Calculus", tag: "Many inputs at once", state: "later", col: 1, row: 0,
+    { id: "mvc", n: "03", name: "Multivariable Calculus", tag: "Many inputs at once", state: "later", col: 1, row: 0, url: "multivariable-calculus/index.html", lessons: [0, 102],
       about: "Partial derivatives, gradients, Lagrange multipliers, multiple integrals and vector calculus: optimisation when a price depends on many things.",
       groups: [
         { name: "Many inputs", topics: [
@@ -59,7 +59,7 @@
           ["Line integrals & Green's theorem", "path-dependent quantities", "soon"],
           ["Divergence & Stokes", "the vector-calculus finale", "soon"] ] }
       ] },
-    { id: "pr", n: "04", name: "Probability", tag: "Uncertainty and expected payoffs", state: "later", col: 1, row: 1,
+    { id: "pr", n: "04", name: "Probability", tag: "Uncertainty and expected payoffs", state: "later", col: 1, row: 1, url: "probability/index.html", lessons: [0, 34],
       about: "Random variables, distributions, expectation, conditioning and limit theorems: the core of every quant model.",
       groups: [
         { name: "Foundations", topics: [
@@ -75,7 +75,7 @@
           ["Law of large numbers & CLT", "why averages are reliable", "soon"],
           ["Estimation & confidence", "trusting a backtest", "soon"] ] }
       ] },
-    { id: "de", n: "05", name: "Differential Equations", tag: "Change over time", state: "later", col: 1, row: 2,
+    { id: "de", n: "05", name: "Differential Equations", tag: "Change over time", state: "later", col: 1, row: 2, url: "differential-equations/index.html", lessons: [0, 39],
       about: "First and second order ODEs, systems, Laplace transforms, and the road to the PDEs behind option pricing.",
       groups: [
         { name: "First order", topics: [
@@ -88,7 +88,7 @@
         { name: "Towards PDEs", topics: [
           ["The heat equation", "the shape behind Black–Scholes", "soon"] ] }
       ] },
-    { id: "ra", n: "06", name: "Real Analysis", tag: "Calculus, proved properly", state: "later", col: 2, row: 0,
+    { id: "ra", n: "06", name: "Real Analysis", tag: "Calculus, proved properly", state: "later", col: 2, row: 0, url: "real-analysis/index.html", lessons: [0, 25],
       about: "Sequences, limits, continuity and integration done rigorously: the proofs that make stochastic calculus and probability theory sound.",
       groups: [
         { name: "Foundations", topics: [
@@ -98,7 +98,7 @@
           ["The Riemann integral", "areas, rigorously", "soon"],
           ["Series of functions", "when limits can be swapped", "soon"] ] }
       ] },
-    { id: "opt", n: "07", name: "Optimization", tag: "Finding the best choice", state: "later", col: 2, row: 1,
+    { id: "opt", n: "07", name: "Optimization", tag: "Finding the best choice", state: "later", col: 2, row: 1, url: "optimization/index.html", lessons: [0, 27],
       about: "Gradients, convexity, constraints and Lagrange multipliers, and the algorithms that find the best portfolio or the best-fitting model.",
       groups: [
         { name: "Foundations", topics: [
@@ -108,7 +108,7 @@
           ["Lagrange multipliers & KKT", "the best mix under a budget", "soon"],
           ["Linear & quadratic programming", "portfolio optimisation", "soon"] ] }
       ] },
-    { id: "st", n: "08", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 2,
+    { id: "st", n: "08", name: "Statistics", tag: "Learning from data", state: "later", col: 2, row: 2, url: "statistics/index.html", lessons: [0, 22],
       about: "Estimation, confidence intervals, hypothesis tests, regression and Bayesian thinking: deciding what the data really says.",
       groups: [
         { name: "Inference", topics: [
@@ -120,7 +120,7 @@
           ["Bayesian statistics", "updating beliefs with evidence", "soon"],
           ["Principal component analysis", "the main directions in data", "soon"] ] }
       ] },
-    { id: "dsp", n: "11", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 3, row: 1,
+    { id: "dsp", n: "11", name: "Discrete Stochastic Processes", tag: "Randomness step by step", state: "later", col: 3, row: 1, url: "discrete-stochastic-processes/index.html", lessons: [0, 25],
       about: "Poisson processes, Markov chains, random walks and martingales: the models behind order arrivals, regimes and fair prices.",
       groups: [
         { name: "Arrivals", topics: [
@@ -130,7 +130,7 @@
           ["Markov chains", "regimes and transitions", "soon"],
           ["Random walks & martingales", "fair games and prices", "soon"] ] }
       ] },
-    { id: "ca", n: "09", name: "Complex Analysis", tag: "Calculus with complex numbers", state: "later", col: 2, row: 3,
+    { id: "ca", n: "09", name: "Complex Analysis", tag: "Calculus with complex numbers", state: "later", col: 2, row: 3, url: "complex-analysis/index.html", lessons: [0, 13],
       about: "Complex functions, contour integrals and residues: the tools behind Fourier methods for pricing options quickly.",
       groups: [
         { name: "Complex functions", topics: [
@@ -139,7 +139,7 @@
         { name: "Transforms", topics: [
           ["Fourier & Laplace transforms", "fast option pricing", "soon"] ] }
       ] },
-    { id: "ts", n: "10", name: "Time-Series Analysis", tag: "Data that unfolds over time", state: "later", col: 3, row: 0,
+    { id: "ts", n: "10", name: "Time-Series Analysis", tag: "Data that unfolds over time", state: "later", col: 3, row: 0, url: "time-series/index.html", lessons: [0, 23],
       about: "Stationarity, ARMA models, volatility models and forecasting: modelling returns, spreads and volatility as they evolve.",
       groups: [
         { name: "Models", topics: [
@@ -147,7 +147,7 @@
           ["ARMA models", "memory in returns", "soon"],
           ["Volatility models (GARCH)", "risk that clusters", "soon"] ] }
       ] },
-    { id: "sc", n: "12", name: "Stochastic Calculus", tag: "Calculus for random paths", state: "later", col: 3, row: 2,
+    { id: "sc", n: "12", name: "Stochastic Calculus", tag: "Calculus for random paths", state: "later", col: 3, row: 2, url: "stochastic-calculus/index.html", lessons: [0, 6],
       about: "Brownian motion, Itô's lemma and stochastic differential equations: the language of Black–Scholes and continuous-time models.",
       groups: [
         { name: "Continuous randomness", topics: [
@@ -155,7 +155,7 @@
           ["Itô's lemma", "the chain rule for random paths", "soon"],
           ["Stochastic differential equations", "from GBM to Black–Scholes", "soon"] ] }
       ] },
-    { id: "fin", n: "13", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 4, row: 0,
+    { id: "fin", n: "13", name: "Maths for Finance", tag: "Where it all comes together", state: "later", col: 4, row: 0, url: "maths-for-finance/index.html", lessons: [0, 26],
       about: "Stochastic processes, Itô calculus, Black–Scholes, portfolio theory and time series: the payoff of every stage before.",
       groups: [
         { name: "Randomness in time", topics: [

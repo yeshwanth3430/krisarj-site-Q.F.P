@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stochastic Calculus · Quant from First Principles</title>
+<meta name="description" content="Stochastic Calculus following MIT 18.642 (stochastic lectures) — 6 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Stochastic Calculus</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT 18.642 (stochastic lectures)</span>
+    <span class="ch off"><span class="cn">01</span>Probability Theory (cont.); Stochastic Processes I<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Stochastic Processes I (cont.); Regression Analysis<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Stochastic Processes II<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Black-Scholes Formula, Risk Neutral Valuation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Stochastic Calculus<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Stochastic Calculus (cont.); Stochastic Differential Equations<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 12 · follows MIT 18.642 (stochastic lectures)</p>
+  <h1>Stochastic Calculus</h1>
+  <p class="subtitle">Calculus for random paths.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">6 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://ocw.mit.edu/courses/18-642-topics-in-mathematics-with-applications-in-finance-fall-2024/" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT 18.642 (stochastic lectures), in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Prices move continuously and randomly — Brownian motion, Itô's lemma and SDEs are the calculus that makes Black–Scholes a theorem instead of a guess.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>6</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>12</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows the stochastic-calculus lectures of MIT OpenCourseWare 18.642, Topics in Mathematics with Applications in Finance (Fall 2024). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>

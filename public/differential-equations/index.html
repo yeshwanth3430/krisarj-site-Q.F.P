@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Differential Equations · Quant from First Principles</title>
+<meta name="description" content="Differential Equations following MIT OCW 18.03SC — 39 lessons listed in course order; notes open lesson by lesson, each explained from zero with market examples.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#roadmap">Mathematics for Quants</a> / <b>Differential Equations</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Lessons · MIT OCW 18.03SC</span>
+    <span class="ch off"><span class="cn">01</span>Conventions and Preliminary Material<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Basic DE's and Separable Equations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Geometric Methods<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Numerical Methods<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>First Order Linear ODE's<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Solution by Integrating Factors<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Complex Arithmetic and Exponentials<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Sinusoidal Functions<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>First Order Constant Coefficient Linear ODE's<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Exponential Input; Gain and Phase Lag<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>First Order Autonomous Differential Equations<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Linear vs. Nonlinear<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Modes and the Characteristic Equation<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Damped Harmonic Oscillators<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Exponential Response<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Gain and Phase Lag<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Undetermined Coefficients<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Linear Operators, Linear Time Invariance<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Pure Resonance<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Frequency Response and Practical Resonance<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Applications: LRC Circuits<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Fourier Series: Basics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Operations on Fourier Series<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>ODE's with Periodic Input, Resonance<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Step and Delta Functions: Integrals and Generalized Derivatives<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Unit Step and Unit Impulse Response<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Convolution<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Laplace Transform: Basics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Partial Fractions and Inverse Laplace Transform<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Laplace Transform: Solving Initial Value Problems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Transfer (System) and Weight Functions, Green's Formula<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Poles, Amplitude Response, Connection to ERF<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Linear Systems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>Matrix Methods: Eigenvalues and Normal Modes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Qualitative Behavior: Phase Portraits<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Matrix Exponentials<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>Nonlinear Systems<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Linearization Near Critical Points<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Limitations of the Linear: Limit Cycles and Chaos<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Subject 05 · follows MIT OCW 18.03SC</p>
+  <h1>Differential Equations</h1>
+  <p class="subtitle">Change over time.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">39 lessons · opening in order, like Linear Algebra</p>
+  <div class="la-cta">
+    <a href="https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/" target="_blank" rel="noopener">Open the source course ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>The lesson list follows MIT OCW 18.03SC, in course order. As each lesson opens it gets the full treatment: a <b>Notes</b> tab that explains every word from zero and an <b>Examples</b> tab with worked market examples and an interactive lab.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Rates mean-revert, positions decay, hedges rebalance — writing change over time as an equation is the step before stochastic calculus adds the noise.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>39</b><span>lessons, straight from the course</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — Linear Algebra runs first</span></div>
+    <div class="la-stat"><b>05</b><span>of 13 subjects on the maths roadmap</span></div>
+  </div>
+  </div>
+</main>
+<footer class="site-foot"><div class="in">
+  <div><b>Quant from First Principles</b> · learn.krisarj.com · the maths behind the markets, explained from zero.</div>
+  <div>The lesson list follows MIT OpenCourseWare 18.03SC, Differential Equations (Fall 2011). Not affiliated with or endorsed by the course authors or their institutions.</div>
+  <div><b>Educational only, not investment advice.</b></div>
+</div></footer>
+<script src="../assets/tracker.js?v=13"></script>
+</body>
+</html>
