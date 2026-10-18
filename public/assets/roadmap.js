@@ -6,6 +6,7 @@
   // status: "live" (published, linked), "next" (being written), "soon" (planned)
   var SUBJECTS = [
     { id: "la", n: "01", name: "Linear Algebra", tag: "Portfolios as vectors, hedges as equations", state: "now", col: 0, row: 0, url: "linear-algebra/index.html",
+      lessons: [14, 31],   // live, total — shown on the map node
       about: "Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues and the SVD. The language every portfolio, hedge and factor model is written in.",
       groups: [
         { name: "Solving equations", topics: [
@@ -185,13 +186,14 @@
     var cols = [0, 1, 2, 3, 4].map(function (c) {
       var items = SUBJECTS.filter(function (s) { return s.col === c; }).sort(function (a, b) { return a.row - b.row; });
       return '<div class="rmm-col">' + items.map(function (s) {
-        var k = count(s), pct = Math.round(100 * k.live / k.all);
+        var k = s.lessons ? { live: s.lessons[0], all: s.lessons[1] } : null;   // lessons on the node, never topics
+        var pct = k ? Math.round(100 * k.live / k.all) : 0;
         var tag = s.url ? "a" : "div";   // only subjects that have started open a page
         return '<' + tag + ' class="rmm-node rmm-' + s.state + (s.url ? "" : " rmm-static") + '"' + (s.url ? ' href="' + s.url + '"' : "") + ' data-id="' + s.id + '">' +
           '<span class="rmm-n">' + s.n + '</span>' +
           '<span class="rmm-body"><span class="rmm-name">' + esc(s.name) + '</span><span class="rmm-tag">' + esc(s.tag) + '</span>' +
           '<span class="rmm-bar"><i style="--w:' + pct + '%"></i></span>' +
-          '<span class="rmm-meta">' + (s.state === "now" ? "In progress · " : "") + k.live + ' / ' + k.all + ' topics live</span></span></' + tag + '>';
+          '<span class="rmm-meta">' + (k ? (s.state === "now" ? "In progress · " : "") + k.live + ' / ' + k.all + ' lessons live' : 'Lessons open soon') + '</span></span></' + tag + '>';
       }).join("") + '</div>';
     }).join("");
     return '<div class="rmm-scroll"><div class="rmm" id="rmm"><svg class="rmm-edges" aria-hidden="true"><defs><marker id="rmm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker></defs></svg>' + cols + '</div></div>' +
