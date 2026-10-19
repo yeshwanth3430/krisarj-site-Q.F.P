@@ -39,6 +39,10 @@
   .tabs { display: block; max-height: 42vh; overflow-y: auto; }
   .tabs .ch { width: 100%; }
 }
+.tabs .chgrp { display: flex; align-items: center; gap: 7px; margin: 14px 4px 4px; padding: 0 8px;
+  font: 700 10.5px/1 var(--mono); letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+.tabs .chgrp::before { content: "➜"; font-size: 12px; }
+.tabs .chgrp:first-of-type { margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -49,17 +53,21 @@
 <main class="page tabbed">
   <nav class="tabs" aria-label="Lessons">
     <span class="tabs-title">Models</span>
+    <span class="chgrp">Foundations &amp; Trees</span>
     <span class="ch off"><span class="cn">01</span>Put–Call Parity &amp; No-Arbitrage Bounds<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">02</span>One-Step Binomial Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">03</span>Cox–Ross–Rubinstein Binomial Tree<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">04</span>Jarrow–Rudd &amp; Leisen–Reimer Trees<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">05</span>Trinomial Tree (Boyle)<span class="soon">SOON</span></span>
+    <span class="chgrp">The Black–Scholes Family</span>
     <span class="ch off"><span class="cn">06</span>Bachelier (Normal) Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">07</span>Black–Scholes–Merton Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">08</span>Black-76 Model (options on futures)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">09</span>Garman–Kohlhagen Model (FX options)<span class="soon">SOON</span></span>
+    <span class="chgrp">Jump Models</span>
     <span class="ch off"><span class="cn">10</span>Merton Jump-Diffusion Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">11</span>Kou Double-Exponential Jump-Diffusion<span class="soon">SOON</span></span>
+    <span class="chgrp">Local, Stochastic &amp; Rough Volatility</span>
     <span class="ch off"><span class="cn">12</span>CEV Model (Constant Elasticity of Variance)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">13</span>Displaced Diffusion Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">14</span>Dupire Local Volatility Model<span class="soon">SOON</span></span>
@@ -68,19 +76,23 @@
     <span class="ch off"><span class="cn">17</span>Bates Model (stochastic vol + jumps)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">18</span>Hull–White Stochastic Volatility Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">19</span>GARCH Option Pricing (Heston–Nandi)<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">20</span>Variance Gamma Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">21</span>Normal Inverse Gaussian Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">22</span>CGMY (Tempered Stable) Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">23</span>Rough Volatility Models (rBergomi, rough Heston)<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">24</span>Local-Stochastic Volatility (LSV)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Rough Volatility Models (rBergomi, rough Heston)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Local-Stochastic Volatility (LSV)<span class="soon">SOON</span></span>
+    <span class="chgrp">Heavy-Tail Models</span>
+    <span class="ch off"><span class="cn">22</span>Variance Gamma Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Normal Inverse Gaussian Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>CGMY (Tempered Stable) Model<span class="soon">SOON</span></span>
+    <span class="chgrp">American Exercise</span>
     <span class="ch off"><span class="cn">25</span>Barone-Adesi–Whaley Approximation (American)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">26</span>Bjerksund–Stensland Model (American)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">27</span>Roll–Geske–Whaley Model (American calls with dividends)<span class="soon">SOON</span></span>
+    <span class="chgrp">Numerical Engines</span>
     <span class="ch off"><span class="cn">28</span>Monte Carlo Pricing<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">29</span>Longstaff–Schwartz Least-Squares Monte Carlo<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">30</span>Finite Difference Methods (explicit, implicit, Crank–Nicolson)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">31</span>Fourier Pricing &amp; the Carr–Madan FFT<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">32</span>The COS Method<span class="soon">SOON</span></span>
+    <span class="chgrp">Interest-Rate Models</span>
     <span class="ch off"><span class="cn">33</span>Vasicek Model (bond options)<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">34</span>Cox–Ingersoll–Ross (CIR) Model<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">35</span>Hull–White One-Factor Model<span class="soon">SOON</span></span>

@@ -39,6 +39,10 @@
   .tabs { display: block; max-height: 42vh; overflow-y: auto; }
   .tabs .ch { width: 100%; }
 }
+.tabs .chgrp { display: flex; align-items: center; gap: 7px; margin: 14px 4px 4px; padding: 0 8px;
+  font: 700 10.5px/1 var(--mono); letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+.tabs .chgrp::before { content: "➜"; font-size: 12px; }
+.tabs .chgrp:first-of-type { margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -49,15 +53,18 @@
 <main class="page tabbed">
   <nav class="tabs" aria-label="Lessons">
     <span class="tabs-title">Strategies</span>
+    <span class="chgrp">Rookies</span>
     <span class="ch off"><span class="cn">01</span>Covered Call<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">02</span>Protective Put<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">03</span>Collar<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">04</span>Cash-Secured Put<span class="soon">SOON</span></span>
+    <span class="chgrp">Veterans</span>
     <span class="ch off"><span class="cn">05</span>Long Call<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">06</span>Long Put<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">07</span>Fig Leaf<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">08</span>Long Call Spread<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">09</span>Long Put Spread<span class="soon">SOON</span></span>
+    <span class="chgrp">Seasoned Veterans</span>
     <span class="ch off"><span class="cn">10</span>Short Call Spread<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">11</span>Short Put Spread<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">12</span>Long Straddle<span class="soon">SOON</span></span>
@@ -80,6 +87,7 @@
     <span class="ch off"><span class="cn">29</span>Long Condor Spread w/Calls<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">30</span>Long Condor Spread w/Puts<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">31</span>Iron Condor<span class="soon">SOON</span></span>
+    <span class="chgrp">All-Stars</span>
     <span class="ch off"><span class="cn">32</span>Short Call<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">33</span>Short Put<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">34</span>Short Straddle<span class="soon">SOON</span></span>
