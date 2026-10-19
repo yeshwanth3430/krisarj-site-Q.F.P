@@ -41,7 +41,13 @@
 }
 .tabs .chgrp { display: flex; align-items: center; gap: 7px; margin: 14px 4px 4px; padding: 0 8px;
   font: 700 10.5px/1 var(--mono); letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
-.tabs .chgrp::before { content: "➜"; font-size: 12px; }
+.tabs .chgrp { cursor: pointer; user-select: none; border: 0; background: none; width: 100%; text-align: left; }
+.tabs .chgrp::before { content: "▸"; font-size: 12px; transition: transform .15s; }
+.tabs .chgrp.open::before { content: "▾"; }
+.tabs .chgrp:hover { color: var(--ink); }
+.tabs .chgrp .ct { margin-left: auto; font: 600 9.5px/1 var(--mono); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 999px; padding: 3px 7px; letter-spacing: 0; }
+.tabs .chsubs { display: none; }
+.tabs .chsubs.open { display: block; }
 .tabs .chgrp:first-of-type { margin-top: 6px; }
 </style>
 </head>
@@ -118,5 +124,26 @@
   </div>
 </main>
 <script src="../../assets/tracker.js?v=14"></script>
+<script>
+(function () {
+  var nav = document.querySelector(".tabs"); if (!nav) return;
+  var groups = nav.querySelectorAll(".chgrp");
+  groups.forEach(function (g) {
+    var box = document.createElement("div"); box.className = "chsubs";
+    var n = g.nextElementSibling, count = 0;
+    while (n && !n.classList.contains("chgrp")) { var next = n.nextElementSibling; box.appendChild(n); count++; n = next; }
+    g.insertAdjacentElement("afterend", box);
+    var ct = document.createElement("span"); ct.className = "ct"; ct.textContent = count; g.appendChild(ct);
+    g.setAttribute("role", "button"); g.setAttribute("tabindex", "0"); g.setAttribute("aria-expanded", "false");
+    function toggle() {
+      var open = g.classList.toggle("open"); box.classList.toggle("open", open);
+      g.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    g.addEventListener("click", toggle);
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+  });
+  if (groups[0]) groups[0].click();   // first category starts open so the page never looks empty
+})();
+</script>
 </body>
 </html>
