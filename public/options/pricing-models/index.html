@@ -48,22 +48,59 @@
 </header>
 <main class="page tabbed">
   <nav class="tabs" aria-label="Lessons">
-    <span class="tabs-title">Lessons</span>
-    <span class="ch off"><span class="cn">—</span>lesson list coming soon<span class="soon">SOON</span></span>
+    <span class="tabs-title">Models</span>
+    <span class="ch off"><span class="cn">01</span>Put–Call Parity &amp; No-Arbitrage Bounds<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>One-Step Binomial Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Cox–Ross–Rubinstein Binomial Tree<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Jarrow–Rudd &amp; Leisen–Reimer Trees<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Trinomial Tree (Boyle)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Bachelier (Normal) Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Black–Scholes–Merton Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Black-76 Model (options on futures)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Garman–Kohlhagen Model (FX options)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Merton Jump-Diffusion Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Kou Double-Exponential Jump-Diffusion<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>CEV Model (Constant Elasticity of Variance)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Displaced Diffusion Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Dupire Local Volatility Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Heston Stochastic Volatility Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>SABR Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Bates Model (stochastic vol + jumps)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Hull–White Stochastic Volatility Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>GARCH Option Pricing (Heston–Nandi)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Variance Gamma Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Normal Inverse Gaussian Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>CGMY (Tempered Stable) Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Rough Volatility Models (rBergomi, rough Heston)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Local-Stochastic Volatility (LSV)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Barone-Adesi–Whaley Approximation (American)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Bjerksund–Stensland Model (American)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Roll–Geske–Whaley Model (American calls with dividends)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Monte Carlo Pricing<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Longstaff–Schwartz Least-Squares Monte Carlo<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Finite Difference Methods (explicit, implicit, Crank–Nicolson)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Fourier Pricing &amp; the Carr–Madan FFT<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>The COS Method<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Vasicek Model (bond options)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>Cox–Ingersoll–Ross (CIR) Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Hull–White One-Factor Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Heath–Jarrow–Morton Framework<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>LIBOR Market Model (BGM)<span class="soon">SOON</span></span>
   </nav>
   <div class="tab-body">
-  <p class="meta">Track 06 · Option Pricing Models</p>
+  <p class="meta">Track 06 · Option Pricing Models · 37 models</p>
   <h1>Option Pricing Models</h1>
   <p class="subtitle">What an option is worth, and why.</p>
   <div class="box intuition"><span class="label">What this section will cover</span>
-    <p>How a price is built from first principles: no-arbitrage and replication, binomial trees, risk-neutral pricing, Black–Scholes, the Greeks as sensitivities, and implied volatility — why the market quotes vol, not price.</p>
+    <p>Every pricing model in use, in learning order: no-arbitrage and trees, the Black–Scholes family, jumps, local and stochastic volatility, heavy tails and rough vol, American-exercise models, the numerical engines (Monte Carlo, finite differences, Fourier), and the rates models behind bond and LIBOR options.</p>
   </div>
   <div class="box finance"><span class="label">Why pricing comes first</span>
     <p>Every strategy in the next section is judged against fair value. Until you can price an option, you can't know whether a spread is cheap, rich or a coin flip.</p>
   </div>
   <div class="la-stats">
     <div class="la-stat"><b>01</b><span>of 2 sections on the Options &amp; Risk track</span></div>
-    <div class="la-stat"><b>0</b><span>lessons live yet — the list lands here first</span></div>
+    <div class="la-stat"><b>37</b><span>models, parity to the LIBOR Market Model</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — lessons open one model at a time</span></div>
   </div>
   </div>
 </main>
