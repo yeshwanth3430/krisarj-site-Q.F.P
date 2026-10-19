@@ -1,0 +1,108 @@
+         Exercises on solving Ax = b and row reduced form R
+
+
+Problem 8.1: (3.4 #13.(a,b,d) Introduction to Linear Algebra: Strang) Ex­
+plain why these are all false:
+a) The complete solution is any linear combination of x p and xn .
+
+b) The system Ax = b has at most one particular solution.
+
+c) If A is invertible there is no solution xn in the nullspace.
+
+Solution:
+a) The coefﬁcient of x p must be one.
+
+b) If xn ∈ N( A) is in the nullspace of A and x p is one particular solution,
+   then x p + xn is also a particular solution.
+
+c) There’s always xn = 0.
+
+
+Problem 8.2:    (3.4 #28.) Let
+                           �       �         � �
+                             1 2 3            5
+                      U=             and c =     .
+                             0 0 4            8
+
+     Use Gauss-Jordan elimination to reduce the matrices [U 0] and [U c]
+to [ R 0] and [ R d]. Solve Rx = 0 and Rx = d.
+     Check your work by plugging your values into the equations Ux = 0
+and Ux = c.
+
+Solution:    First we transform [U 0] into [ R 0]:
+          �             �     �             �      �         �
+            1 2 3 0             1 2 3 0              1 2 0 0
+ [U 0 ] =                 −→                  −→               = [ R 0].
+            0 0 4 0             0 0 1 0              0 0 1 0
+
+We now solve Rx = 0 via back substitution:
+             ⎡    ⎤                                        ⎡    ⎤
+  �        � x1        � �       �                �           2
+    1 2 0 ⎣              0          x1 + 2x2 = 0
+               x2 ⎦ =        −→                     −→ x = ⎣ −1 ⎦ ,
+    0 0 1                0                 x3 = 0
+               x3                                             0
+
+                                      1
+where we used the free variable x2 = −1. (cx is a solution for all c.)
+  We check that this is a correct solution by plugging it into Ux = 0:
+                                 ⎡      ⎤
+                    �          �      2      � �
+                      1 2 3 ⎣                  0
+                                    −1 =⎦          �
+                      0 0 4                    0
+                                      0
+
+   Next, we transform [U c] into [ R d]:
+         �           �    �              �    �          �
+           1 2 3 5           1 2 3 5            1 2 0 −1
+[U c ] =               −→                  −→              = [ R d ].
+           0 0 4 8           0 0 1 2            0 0 1  2
+
+We now solve Rx = d via back substitution:
+           ⎡    ⎤                                           ⎡    ⎤
+�        � x1       �      �     �                 �          −3
+  1 2 0 ⎣              −1           x1 + 2x2 = −1
+             x2 ⎦ =          −→                      −→ x = ⎣ 1 ⎦ ,
+  0 0 1                  2                  x3 = 2
+             x3                                                2
+
+where we used the free variable x2 = 1.
+   Finally, we check that this is the correct solution by plugging it into the
+equation Ux = c:
+                                   ⎡      ⎤
+                     �           � −3          � �
+                       1 2 3 ⎣                    5
+                                        1 ⎦=          �
+                       0 0 4                      8
+                                        2
+
+
+Problem 8.3:    (3.4 #36.) Suppose Ax = b and Cx = b have the same
+(complete) solutions for every b. Is it true that A = C?
+
+Solution: Yes. In order to check that A = C as matrices, it is enough
+to check that Ay = Cy for all vectors y of the correct size (or just for
+the standard basis vectors, since multiplication by them “picks out the
+columns”). So let y be any vector of the correct size, and set b = Ay. Then
+y is certainly a solution to Ax = b, and so by our hypothesis must also be
+a solution to Cx = b; in other words, Cy = b = Ay.
+
+
+
+
+                                      2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

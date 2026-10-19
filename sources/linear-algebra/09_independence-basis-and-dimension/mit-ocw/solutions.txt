@@ -1,0 +1,90 @@
+            Exercises on independence, basis, and dimension
+
+
+Problem 9.1: (3.5 #2. Introduction to Linear Algebra: Strang) Find the largest
+possible number of independent vectors among:
+                     ⎡      ⎤        ⎡      ⎤        ⎡      ⎤
+                          1               1               1
+                     ⎢ −1 ⎥          ⎢ 0 ⎥           ⎢ 0 ⎥
+               v1 = ⎢⎣ 0 ⎦ , v2 = ⎣ −1 ⎦ , v3 = ⎣ 0 ⎦ ,
+                            ⎥        ⎢      ⎥        ⎢      ⎥
+
+                          0               0             −1
+                   ⎡   ⎤        ⎡    ⎤         ⎡    ⎤
+                     0             0              0
+                  ⎢ 1 ⎥
+                       ⎥ , v5 = ⎢ 1 ⎥ and v6 = ⎢ 0 ⎥ .
+                                ⎢    ⎥         ⎢    ⎥
+             v4 = ⎢
+                  ⎣ −1 ⎦        ⎣ 0 ⎦          ⎣ 1 ⎦
+                     0            −1             −1
+
+Solution: Since v4 = v2 − v1 , v5 = v3 − v1 , and v6 = v3 − v2 , the vectors
+v4 , v5 , and v6 are dependent on the vectors v1 , v2 and v3 . To determine the
+relationship between the vectors v1 , v2 and v3 we apply row reduction to
+the matrix [v1 v2 v3 ]:
+ ⎡         ⎤    ⎡         ⎤    ⎡                       ⎤    ⎡               ⎤
+    1 1  1        1  1  1        1                1  1        1       1   1
+ ⎢ −1 0  0 ⎥
+           ⎥    ⎢ 0  1  1 ⎥
+                          ⎥    ⎢ 0                1  1 ⎥
+                                                       ⎥    ⎢ 0       1   1 ⎥
+ ⎢
+ ⎣ 0 −1      −→ ⎢
+                ⎣ 0 −1      −→ ⎢                         −→ ⎢               ⎥.
+         0 ⎦            0 ⎦    ⎣ 0                0  1 ⎦    ⎣ 0       0   1 ⎦
+    0 0 −1        0  0 −1        0                0 −1        0       0   0
+
+   As there are three pivots, the vectors v1 , v2 , and v3 are independent.
+Therefore the largest number of independent vectors among the given six
+vectors is three. This will be the rank of the 4 by 6 matrix of v’s.
+
+Problem 9.2: (3.5 #20.) Find a basis for the plane x − 2y + 3z = 0 in R3 .
+Then ﬁnd a basis for the intersection of that plane with the xy plane. Then
+ﬁnd a basis for all vectors perpendicular to the plane.
+                                                     �           �
+Solution: This plane is the nullspace of the matrix 1 −2 3 and also
+                                 ⎡            ⎤
+                                   1 −2 3
+                             A=⎣ 0       0 0 ⎦.
+                                   0     0 0
+
+                                      1
+The special solutions to Ax = 0 are
+                           ⎡ ⎤           ⎡    ⎤
+                             2             −3
+                     v1 = ⎣ 1 ⎦ and v2 = ⎣ 0 ⎦ .
+                             0              1
+
+These form a basis for the nullspace of A and thus for the plane.
+   The intersection of this plane with the xy plane contains v1 and does
+not contain v2 ; the intersection must be a line. Since v1 lies on this line it
+also provides a basis for it.
+   Finally, we can use “inspection” or the cross product to ﬁnd the vector
+                                     ⎡     ⎤
+                                         1
+                                v3 = ⎣ −2 ⎦ ,
+                                         3
+
+which is perpendicular to both v1 and v2 . It is therefore perpendicular
+to the plane. Since the space of vectors perpendicular to a plane in R3 is
+one-dimensional, v3 serves as a basis for that space.
+
+
+
+
+                                      2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

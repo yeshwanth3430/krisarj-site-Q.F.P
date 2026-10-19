@@ -1,0 +1,98 @@
+         Exercises on matrix spaces; rank 1; small world graphs
+
+
+Problem 11.1: [Optional] (3.5 #41. Introduction to Linear Algebra: Strang)
+Write the 3 by 3 identity matrix as a combination of the other ﬁve permuta­
+tion matrices. Then show that those ﬁve matrices are linearly independent.
+(Assume a combination gives c1 P1 + · · · + c5 P5 = 0 and check entries to
+prove ci is zero.) The ﬁve permutation matrices are a basis for the subspace
+of three by three matrices with row and column sums all equal.
+
+Solution:    The other ﬁve permutation matrices are:
+              ⎡          ⎤         ⎡          ⎤         ⎡          ⎤
+                     1                     1              1
+        P21 = ⎣ 1        ⎦ , P31 = ⎣    1     ⎦ , P32 = ⎣        1 ⎦,
+                       1             1                        1
+                       ⎡          ⎤                ⎡          ⎤
+                             1                              1
+             P32 P21 = ⎣        1 ⎦ and P21 P32 = ⎣ 1         ⎦.
+                         1                              1
+  Since P21 + P31 + P32 is the all ones matrix and P32 P21 + P21 P32 is the
+matrix with zeros on the diagonal and ones elsewhere,
+                    I = P21 + P31 + P32 − P32 P21 − P21 P32 .
+For the second part, setting c1 P1 + · · · + c5 P5 equal to zero gives:
+                    ⎡                                ⎤
+                          c3     c1 + c4 c2 + c5
+                    ⎣ c1 + c5       c2      c3 + c4 ⎦ = 0.
+                       c2 + c4 c3 + c5         c1
+So c1 = c2 = c3 = 0 along the diagonal, and c4 = c5 = 0 from the off-
+diagonal entries.
+
+Problem 11.2: (3.6 #31.) M is the space of three by three matrices. Mul­
+tiply each matrix X in M by:
+                             ⎡               ⎤
+                                 1    0 −1
+                         A = ⎣ −1     1    0 ⎦
+                                 0 −1      1
+              ⎡ ⎤ ⎡ ⎤
+                 1       0
+Notice that A ⎣ 1 ⎦ = ⎣ 0 ⎦.
+                1        0
+
+                                       1
+a) Which matrices X lead to AX = 0?
+
+b) Which matrices have the form AX for some matrix X?
+
+c) Part (a) ﬁnds the “nullspace” of the operation AX and part (b) ﬁnds
+   the “column space.” What are the dimensions of those two subspaces
+   of M? Why do the dimensions add to (n − r ) + r = 9?
+
+
+Solution:
+
+a) We can use row reduction or some other method to see that the rows of
+   A are dependent and that A has rank 2. Its nullspace has the basis:
+                                 ⎡ ⎤
+                                    1
+                                 ⎣ 1 ⎦.
+                                    1
+
+   AX = 0 precisely when the columns of X are in the nullspace of A, i.e.
+   when they are multiples of the basis of N ( A). Therefore, if AX = 0
+   then X must have the form:
+                                 ⎡         ⎤
+                                   a b c
+                            X = ⎣ a b c ⎦.
+                                   a b c
+
+b) On the other hand, the columns of any matrix of the form AX are lin­
+   ear combinations of the columns of A. That is, they are vectors whose
+   components all sum to 0, so a matrix has the form AX if and only if all
+   of its columns individually sum to 0:
+                                     ⎡                          ⎤
+                                          a        b       c
+           AX = B if and only if B = ⎣    d        e       f    ⎦.
+                                       − a − d −b − e −c − f
+
+c) The dimension of the “nullspace” is 3, while the dimension of the “col­
+   umn space” is 6. These add up to 9, which is the dimension of the space
+   of “inputs” M.
+
+
+
+                                    2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

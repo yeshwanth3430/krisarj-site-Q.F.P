@@ -1,0 +1,869 @@
+[
+  {
+    "id": "counting",
+    "version": 1,
+    "title": "Count the right things",
+    "subtitle": "Turn a story into an equally likely sample space.",
+    "topic": "Counting & sample spaces",
+    "minutes": 14,
+    "prerequisites": [],
+    "objectives": [
+      "Specify the elementary outcomes before dividing counts.",
+      "Distinguish selections from arrangements.",
+      "Use a complement when counting the unwanted event is easier."
+    ],
+    "sections": [
+      {
+        "title": "Start underneath the story",
+        "body": "A probability model begins with possible outcomes and their weights. Counting favorable outcomes and dividing by all outcomes works only when the elementary outcomes are equally likely. Two fair dice have 36 ordered face pairs. Their eleven possible sums are not equally likely: a sum of 7 has six supporting pairs, while a sum of 2 has one."
+      },
+      {
+        "title": "Does order change the outcome?",
+        "body": "Fill ordered positions one at a time. Choosing a captain and a deputy from n people gives n(n−1) outcomes when one person cannot hold both roles. A two-person committee has no roles; each committee was counted twice, so divide by 2. In general, ordered selections of k distinct items number n!/(n−k)!, and unordered selections number $\\binom{n}{k}=n!/[k!(n-k)!]$. State whether replacement is allowed before using either."
+      },
+      {
+        "title": "Count the simpler side",
+        "body": "Every event and its complement divide the sample space into two disjoint parts. Therefore $P(A)=1-P(A^c)$. For an 'at least one' question, 'none' is often a single product. This shortcut still needs the right dependence assumptions: multiply fixed probabilities across trials only when that is justified."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Two different jobs",
+        "prompt": "Seven distinct applicants are equally likely to receive two different roles: lead and reviewer. Nobody can fill both. How many assignments are possible, and what is the probability that Mira is selected for either role?",
+        "steps": [
+          {
+            "title": "Define an assignment",
+            "body": "An outcome is an ordered pair (lead, reviewer), so there are $7\\times6=42$ assignments."
+          },
+          {
+            "title": "Count the two disjoint cases",
+            "body": "Mira can lead with any of six reviewers, or review for any of six leads. These cases cannot overlap. Favorable assignments: 6+6=12."
+          },
+          {
+            "title": "Form the ratio",
+            "body": "The probability is $12/42=2/7$. As a check, exactly two of seven symmetric applicants are chosen."
+          }
+        ]
+      },
+      {
+        "title": "Exactly one six",
+        "prompt": "Two independent fair six-sided dice are rolled. What is the probability that exactly one die shows six?",
+        "steps": [
+          {
+            "title": "Keep the dice distinguishable",
+            "body": "There are 36 ordered pairs. A six on the first die and a six on the second die are different placements."
+          },
+          {
+            "title": "Exclude the double six",
+            "body": "First die six, second not six gives five pairs. Second die six, first not six gives five more. The pair (6,6) belongs to neither case."
+          },
+          {
+            "title": "Add disjoint counts",
+            "body": "There are ten favorable pairs, so the probability is $10/36=5/18$. The word 'exactly' prevents counting (6,6)."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "roles",
+        "prompt": "Three distinct roles are assigned to different people from seven applicants. How many assignments?",
+        "options": [
+          "35",
+          "210",
+          "343"
+        ]
+      },
+      {
+        "id": "complement",
+        "prompt": "Three independent fair coins are tossed. What is the probability of at least one head?",
+        "options": [
+          "1/2",
+          "3/8",
+          "7/8"
+        ]
+      },
+      {
+        "id": "equally-likely",
+        "prompt": "Why can you not assign probability 1/11 to every sum of two fair dice?",
+        "options": [
+          "The sums have different numbers of equally likely ordered pairs.",
+          "The dice are dependent.",
+          "A sum can never be used as a random variable."
+        ]
+      }
+    ],
+    "summary": [
+      "Choose the elementary outcome first.",
+      "Multiply along a sequence of choices; add mutually exclusive cases.",
+      "Divide out rearrangements only when order does not matter.",
+      "Try the complement for 'at least one'."
+    ],
+    "practiceTopics": [
+      "Combinatorics",
+      "Basic probability"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "conditioning",
+    "version": 1,
+    "title": "Update on the evidence",
+    "subtitle": "Choose the right denominator, then use Bayes naturally.",
+    "topic": "Conditional probability",
+    "minutes": 18,
+    "prerequisites": [
+      "counting"
+    ],
+    "objectives": [
+      "Read a conditional probability as a restricted sample space.",
+      "Use total probability to account for every way evidence can occur.",
+      "Explain why a rare cause can remain unlikely after a positive signal."
+    ],
+    "sections": [
+      {
+        "title": "The given event becomes your world",
+        "body": "If you know B occurred, discard outcomes outside B and renormalize the remaining weights. For $P(B)>0$, $P(A|B)=P(A\\cap B)/P(B)$. The denominator is the event after the vertical bar. Swapping A and B usually changes the question."
+      },
+      {
+        "title": "Reverse a signal with Bayes",
+        "body": "Both $P(A|B)P(B)$ and $P(B|A)P(A)$ describe the same intersection. Equating them gives $P(A|B)=P(B|A)P(A)/P(B)$. Think 'prior weight × compatibility with evidence, then normalize'. The denominator must include signals from every possible cause, including false positives."
+      },
+      {
+        "title": "Build the denominator by cases",
+        "body": "If H and its complement exhaust the possibilities, $P(B)=P(B|H)P(H)+P(B|H^c)P(H^c)$. This is a weighted average, not an unweighted average of the two signal rates. A frequency table over an imagined population often makes the same calculation easier to audit."
+      },
+      {
+        "title": "Translate odds before using a probability",
+        "body": "Odds in favor of H compare H with its complement. Odds a:b therefore mean $P(H)=a/(a+b)$, not a/b. For example, 2:3 odds mean a probability of 2/5. When both likelihoods are positive, Bayes also says posterior odds equal prior odds multiplied by the likelihood ratio $P(B|H)/P(B|H^c)$. Keep odds and probability as different quantities when interpreting a signal."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Which machine made it?",
+        "prompt": "Machine A makes 60% of a factory's parts and has a 2% defect rate. Machine B makes 40% and has a 5% defect rate. A random part is defective. What is the probability it came from B?",
+        "steps": [
+          {
+            "title": "Count an imagined batch",
+            "body": "Among 1,000 parts, A contributes 600 and B contributes 400. Their expected defective counts are 12 and 20 respectively. These are weighted counts, not a claim about one exact batch."
+          },
+          {
+            "title": "Restrict to defective parts",
+            "body": "The defective pool has expected size 12+20=32. Of that pool, 20 come from B."
+          },
+          {
+            "title": "Normalize",
+            "body": "$P(B|D)=20/32=5/8=62.5\\%$. B makes fewer total parts but contributes more defects."
+          }
+        ]
+      },
+      {
+        "title": "A coin chosen before a toss",
+        "prompt": "A fair coin and a double-headed coin are equally likely to be selected. The chosen coin is tossed once and shows heads. What is the probability it is the double-headed coin?",
+        "steps": [
+          {
+            "title": "Weight the evidence under each choice",
+            "body": "Fair-and-heads has probability $(1/2)(1/2)=1/4$. Double-headed-and-heads has probability $(1/2)(1)=1/2$."
+          },
+          {
+            "title": "Find the total heads probability",
+            "body": "$P(H)=1/4+1/2=3/4$. Both coin types can produce the observed result."
+          },
+          {
+            "title": "Restrict and divide",
+            "body": "$P(\\text{double-headed}|H)=(1/2)/(3/4)=2/3$. One head is evidence, not certainty."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "denominator",
+        "prompt": "In P(A|B), which event supplies the denominator?",
+        "options": [
+          "A",
+          "B",
+          "The union of A and B"
+        ]
+      },
+      {
+        "id": "weighted-signal",
+        "prompt": "A source is type H with probability 0.25. It emits a signal with probability 0.8 if H and 0.2 otherwise. What is the signal probability?",
+        "options": [
+          "0.35",
+          "0.50",
+          "0.80"
+        ]
+      },
+      {
+        "id": "base-rate",
+        "prompt": "Holding sensitivity and false-positive rate fixed and nonzero, what happens to P(H|positive) when H becomes rarer?",
+        "options": [
+          "It always remains equal to sensitivity.",
+          "It increases.",
+          "It decreases."
+        ]
+      }
+    ],
+    "summary": [
+      "Read 'given' before calculating.",
+      "Bayes reverses a conditional using prior weights.",
+      "Include every route into the evidence.",
+      "Use imagined counts when proportions feel abstract."
+    ],
+    "practiceTopics": [
+      "Conditional probability"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "independence",
+    "version": 1,
+    "title": "Know when to multiply",
+    "subtitle": "Separate independence, exclusion, and conditioning.",
+    "topic": "Independence",
+    "minutes": 16,
+    "prerequisites": [
+      "conditioning"
+    ],
+    "objectives": [
+      "Test independence with an intersection probability.",
+      "Recognize that disjoint positive-probability events are dependent.",
+      "Distinguish pairwise independence from mutual independence."
+    ],
+    "sections": [
+      {
+        "title": "Independence is an equation",
+        "body": "Events A and B are independent when $P(A\\cap B)=P(A)P(B)$. If P(B)>0, this means learning B does not change the chance of A. Independence is a property of the probability model, not something established because two events sound unrelated."
+      },
+      {
+        "title": "Different from mutually exclusive",
+        "body": "Mutually exclusive events cannot both happen: their intersection probability is zero. If each has positive probability, their product is positive, so they cannot be independent. Learning one occurred rules out the other. By contrast, independent events can occur together."
+      },
+      {
+        "title": "A group needs more than pairwise checks",
+        "body": "For three events, mutual independence requires every pairwise factorization and the triple factorization. Pairwise independence alone can hide a constraint linking all three. Conditioning can also create dependence: independent dice become dependent once their sum is known."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Parity on two dice",
+        "prompt": "Roll two independent fair dice. Let A mean the first die is even and B mean the sum is odd. Are A and B independent?",
+        "steps": [
+          {
+            "title": "Find the marginal probabilities",
+            "body": "Half the first-die faces are even, so P(A)=1/2. The sum is odd when one die is even and the other odd, so P(B)=1/2."
+          },
+          {
+            "title": "Count their intersection",
+            "body": "For A and B together, the first die is even and the second odd. There are 3×3=9 ordered pairs out of 36: P(A∩B)=1/4."
+          },
+          {
+            "title": "Compare with the product",
+            "body": "$1/4=(1/2)(1/2)$, so the events are independent. An event involving both dice can still be independent of an event on one die."
+          }
+        ]
+      },
+      {
+        "title": "Pairwise is not the whole story",
+        "prompt": "Toss two independent fair coins. A is first coin heads, B is second coin heads, and C is both coins matching. Are the three events mutually independent?",
+        "steps": [
+          {
+            "title": "Check each pair",
+            "body": "Each event has probability 1/2. A∩B, A∩C, and B∩C each occur only on HH, with probability 1/4. Every pair is independent."
+          },
+          {
+            "title": "Check the triple",
+            "body": "A∩B∩C is still HH, with probability 1/4. But P(A)P(B)P(C)=1/8."
+          },
+          {
+            "title": "Identify the hidden relation",
+            "body": "The events are pairwise independent but not mutually independent. Once both individual coin outcomes are known, matching is determined."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "disjoint",
+        "prompt": "Two mutually exclusive events each have probability strictly between 0 and 1. Can they be independent?",
+        "options": [
+          "Yes, because they cannot influence each other.",
+          "No, because their intersection is zero but their probability product is positive.",
+          "Only when their probabilities are equal."
+        ]
+      },
+      {
+        "id": "intersection",
+        "prompt": "P(A)=0.4, P(B)=0.5, and P(A∩B)=0.2. Are A and B independent?",
+        "options": [
+          "Yes",
+          "No",
+          "There is not enough information"
+        ]
+      },
+      {
+        "id": "sampling",
+        "prompt": "An urn has two red and two blue balls. Two draws are made without replacement. Does a red first draw change the probability of a red second draw?",
+        "options": [
+          "No; both colors began equally likely.",
+          "Yes; it increases to 2/3.",
+          "Yes; it decreases from 1/2 to 1/3."
+        ]
+      }
+    ],
+    "summary": [
+      "Independence means probabilities factor.",
+      "Disjoint is usually the opposite of independent.",
+      "Check the full collection, not only each pair.",
+      "State whether conditioning changes the model."
+    ],
+    "practiceTopics": [
+      "Basic probability",
+      "Conditional probability"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "distributions",
+    "version": 1,
+    "title": "Choose a model that fits",
+    "subtitle": "Translate random experiments into useful distributions.",
+    "topic": "Random variables & distributions",
+    "minutes": 18,
+    "prerequisites": [
+      "counting",
+      "independence"
+    ],
+    "objectives": [
+      "Distinguish an outcome from the value of a random variable.",
+      "Recognize the assumptions behind a binomial model.",
+      "Use area, rather than point height, for continuous probabilities."
+    ],
+    "sections": [
+      {
+        "title": "A random variable summarizes an outcome",
+        "body": "A random variable assigns a number to each outcome. The same experiment can support several variables: number of heads, longest run, or total payoff. A probability mass function assigns weights to discrete values; those weights must be nonnegative and sum to one."
+      },
+      {
+        "title": "Count successes in a fixed window",
+        "body": "A Bernoulli variable is 1 for success and 0 for failure. A binomial count X uses n independent Bernoulli trials with the same success chance p. Then $P(X=k)=\\binom{n}{k}p^k(1-p)^{n-k}$ for k=0,…,n. The combination counts placements; the product weights each placement. Changing p across trials or drawing without replacement generally breaks this model."
+      },
+      {
+        "title": "A density is not a point probability",
+        "body": "For a continuous variable, probabilities are areas under its density. A single point has probability zero even when the density there is positive. For a uniform variable on [a,b], the density is 1/(b−a), and an interval inside the support has probability equal to its length divided by b−a. A density may exceed one; its total area must equal one."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Two wins in three trials",
+        "prompt": "Three independent trials each succeed with probability 1/2. What is the probability of exactly two successes?",
+        "steps": [
+          {
+            "title": "Confirm the model",
+            "body": "There is a fixed number of independent trials, and all have the same success probability: X is binomial with n=3 and p=1/2."
+          },
+          {
+            "title": "Choose the successful positions",
+            "body": "There are $\\binom{3}{2}=3$ placements: SSF, SFS, and FSS. Each has probability 1/8."
+          },
+          {
+            "title": "Add the weights",
+            "body": "The placements are disjoint, so P(X=2)=3/8. A single ordered sequence would give only 1/8."
+          }
+        ]
+      },
+      {
+        "title": "Uniform waiting window",
+        "prompt": "A simulated arrival time X is uniform from 2 to 8 minutes. What are P(3≤X≤5) and P(X=4)?",
+        "steps": [
+          {
+            "title": "Measure the support",
+            "body": "The full interval has length 8−2=6. Its constant density is 1/6 per minute."
+          },
+          {
+            "title": "Measure the event",
+            "body": "The interval from 3 to 5 has length 2, so its probability is 2/6=1/3."
+          },
+          {
+            "title": "Separate a point from a neighborhood",
+            "body": "P(X=4)=0 because one exact point has zero width. This does not say that times near 4 are impossible."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "binomial-assumptions",
+        "prompt": "Which experiment is directly binomial?",
+        "options": [
+          "Count red balls in five draws without replacement.",
+          "Count successes in five independent trials, each with p=0.3.",
+          "Wait until the fifth success."
+        ]
+      },
+      {
+        "id": "continuous-point",
+        "prompt": "A variable has a continuous density. What is the probability of any one exact value?",
+        "options": [
+          "Zero",
+          "The density at that value",
+          "One divided by the maximum density"
+        ]
+      },
+      {
+        "id": "mass",
+        "prompt": "A discrete variable only takes 0, 1, or 2. P(X=0)=0.2 and P(X=1)=0.5. What must P(X=2) be?",
+        "options": [
+          "0.7",
+          "0.5",
+          "0.3"
+        ]
+      }
+    ],
+    "summary": [
+      "Identify what is being counted or measured.",
+      "Check distribution assumptions before using its formula.",
+      "A PMF gives point probabilities; a PDF gives density.",
+      "A model must assign total probability one."
+    ],
+    "practiceTopics": [
+      "Distributions",
+      "Basic probability"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "expectation",
+    "version": 1,
+    "title": "Add up the average",
+    "subtitle": "Use weighted outcomes and indicators to avoid case explosions.",
+    "topic": "Expected value",
+    "minutes": 18,
+    "prerequisites": [
+      "distributions"
+    ],
+    "objectives": [
+      "Calculate a weighted average of possible payoffs.",
+      "Use linearity even when terms are dependent.",
+      "Break counting problems into indicator variables."
+    ],
+    "sections": [
+      {
+        "title": "Expectation is a weighted average",
+        "body": "For a discrete variable, $E[X]=\\sum_x xP(X=x)$ when the expectation exists. It describes a model average, not a promise for the next outcome and not necessarily a value X can take. Keep losses negative and distinguish a gross payout from a net payoff after fees."
+      },
+      {
+        "title": "Linearity is the workhorse",
+        "body": "$E[aX+bY+c]=aE[X]+bE[Y]+c$ for variables with finite expectations. Independence is not required. This often avoids finding the entire distribution of a complicated total. In contrast, $E[XY]=E[X]E[Y]$ is not generally valid without additional assumptions such as independence."
+      },
+      {
+        "title": "Count with indicators",
+        "body": "An indicator I is 1 when an event occurs and 0 otherwise, so E[I]=P(event). If a total counts how many events occur, write it as a sum of indicators and add their probabilities. You can also average conditional means: split the model into exhaustive cases and weight each conditional expectation by its case probability."
+      }
+    ],
+    "examples": [
+      {
+        "title": "A signed payoff",
+        "prompt": "A game gives a net payoff of +8 units with probability 1/4 and −2 units otherwise. What is its expected net payoff?",
+        "steps": [
+          {
+            "title": "List all net outcomes",
+            "body": "The payoffs already include any costs, so use +8 and −2 directly. Their probabilities are 1/4 and 3/4."
+          },
+          {
+            "title": "Weight and add",
+            "body": "$E[X]=8(1/4)+(-2)(3/4)=2-1.5=0.5$."
+          },
+          {
+            "title": "Interpret the answer",
+            "body": "The model average is +0.5 units per game. No individual game pays 0.5, and a positive mean does not remove risk."
+          }
+        ]
+      },
+      {
+        "title": "Correctly returned badges",
+        "prompt": "Ten named badges are randomly permuted among their ten owners, with every permutation equally likely. How many owners get their own badge, on average?",
+        "steps": [
+          {
+            "title": "Use one indicator per owner",
+            "body": "Let I_i be 1 if owner i receives the correct badge. The total correct returns is X=I_1+⋯+I_10."
+          },
+          {
+            "title": "Use symmetry for one owner",
+            "body": "Each owner is equally likely to receive any of ten badges, so E[I_i]=P(I_i=1)=1/10."
+          },
+          {
+            "title": "Add without requiring independence",
+            "body": "E[X]=10×(1/10)=1. Correct-return events are dependent, but linearity still applies."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "linearity",
+        "prompt": "X and Y are dependent and have finite means. Is E[X+Y]=E[X]+E[Y] valid?",
+        "options": [
+          "Yes",
+          "Only if they are positively correlated",
+          "No"
+        ]
+      },
+      {
+        "id": "indicator",
+        "prompt": "An indicator equals 1 with probability 0.12 and 0 otherwise. What is its expected value?",
+        "options": [
+          "0.88",
+          "0.12",
+          "1"
+        ]
+      },
+      {
+        "id": "conditional-mean",
+        "prompt": "A process is in state A 30% of the time, with conditional mean output 10; otherwise its conditional mean is 4. What is the overall mean?",
+        "options": [
+          "7",
+          "14",
+          "5.8"
+        ]
+      }
+    ],
+    "summary": [
+      "Keep payoff signs and fees consistent.",
+      "Add expectations before seeking a full distribution.",
+      "Write counts as sums of indicators.",
+      "Average conditional means with the correct weights."
+    ],
+    "practiceTopics": [
+      "Expected value"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "variance",
+    "version": 1,
+    "title": "Measure what the mean hides",
+    "subtitle": "Track spread, scale, and the way variables move together.",
+    "topic": "Variance & covariance",
+    "minutes": 18,
+    "prerequisites": [
+      "expectation"
+    ],
+    "objectives": [
+      "Calculate variance using a second moment.",
+      "Handle translations and scaling correctly.",
+      "Include covariance when adding dependent quantities."
+    ],
+    "sections": [
+      {
+        "title": "Spread around a mean",
+        "body": "Variance is $\\operatorname{Var}(X)=E[(X-E[X])^2]=E[X^2]-E[X]^2$ for finite second moments. It uses squared units. Standard deviation is the nonnegative square root and has the original units. Two distributions can share a mean while carrying very different uncertainty."
+      },
+      {
+        "title": "Shifting does not spread; scaling does",
+        "body": "Adding a constant moves every outcome and the mean equally, leaving deviations unchanged. Multiplying by a changes each deviation by a and its square by a²: $\\operatorname{Var}(aX+b)=a^2\\operatorname{Var}(X)$. A negative multiplier also squares, so variance cannot become negative."
+      },
+      {
+        "title": "The missing cross-term",
+        "body": "$\\operatorname{Var}(X+Y)=\\operatorname{Var}(X)+\\operatorname{Var}(Y)+2\\operatorname{Cov}(X,Y)$. Covariance records whether deviations tend to align. Independence implies zero covariance when second moments exist, but zero covariance does not generally imply independence. For a weighted sum, the cross-term becomes 2ab Cov(X,Y)."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Spread of a fair die",
+        "prompt": "Find the variance of a fair six-sided die value X.",
+        "steps": [
+          {
+            "title": "Find the mean",
+            "body": "E[X]=(1+2+3+4+5+6)/6=7/2."
+          },
+          {
+            "title": "Find the second moment",
+            "body": "E[X²]=(1+4+9+16+25+36)/6=91/6. Square the outcomes before averaging."
+          },
+          {
+            "title": "Subtract the squared mean",
+            "body": "$\\operatorname{Var}(X)=91/6-(7/2)^2=182/12-147/12=35/12$. This is distinct from E[X²]."
+          }
+        ]
+      },
+      {
+        "title": "Two quantities moving against each other",
+        "prompt": "X and Y have variances 4 and 9, and covariance −1. What is the variance of X+Y?",
+        "steps": [
+          {
+            "title": "Keep the covariance term",
+            "body": "The problem supplies dependence information, so do not simply add 4 and 9."
+          },
+          {
+            "title": "Substitute into the sum rule",
+            "body": "Var(X+Y)=4+9+2(−1)=11."
+          },
+          {
+            "title": "Check the direction",
+            "body": "Negative covariance reduces the total spread relative to the zero-covariance value 13. It does not make the variance negative."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "translation",
+        "prompt": "Var(X)=5. What is Var(X+100)?",
+        "options": [
+          "105",
+          "5",
+          "10005"
+        ]
+      },
+      {
+        "id": "scaling",
+        "prompt": "Var(X)=2. What is Var(−3X)?",
+        "options": [
+          "−6",
+          "6",
+          "18"
+        ]
+      },
+      {
+        "id": "zero-covariance",
+        "prompt": "Which statement is valid for variables with finite second moments?",
+        "options": [
+          "Independence implies zero covariance.",
+          "Zero covariance always implies independence.",
+          "Covariance is always nonnegative."
+        ]
+      }
+    ],
+    "summary": [
+      "Average squares before subtracting the squared mean.",
+      "Constant shifts do not affect variance.",
+      "Scale factors are squared.",
+      "Look for a covariance term before adding spreads."
+    ],
+    "practiceTopics": [
+      "Statistics",
+      "Variance"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "waiting-times",
+    "version": 1,
+    "title": "Reason about the wait",
+    "subtitle": "Use geometric trials, memorylessness, and small state models.",
+    "topic": "Waiting times & processes",
+    "minutes": 20,
+    "prerequisites": [
+      "independence",
+      "expectation"
+    ],
+    "objectives": [
+      "State which convention a geometric variable uses.",
+      "Use the memoryless property only when assumptions hold.",
+      "Build a recurrence when a pattern requires multiple states."
+    ],
+    "sections": [
+      {
+        "title": "First success after repeated attempts",
+        "body": "Suppose trials are independent with fixed success probability p>0, and T counts trials through the first success. Then $P(T=k)=(1-p)^{k-1}p$ for k≥1, and E[T]=1/p. If instead you count failures before success, that variable is T−1 and its mean is (1−p)/p. Naming the convention prevents an off-by-one error."
+      },
+      {
+        "title": "Past failures do not make success due",
+        "body": "For geometric T, $P(T>m+n|T>m)=P(T>n)$. Given m failures, the remaining wait follows the same model because future trials remain independent with the same p. This does not apply to sampling without replacement, a changing success chance, or a mechanism that learns from failures."
+      },
+      {
+        "title": "A pattern needs a state",
+        "body": "Waiting for consecutive successes is different from waiting for a single success. Track the useful suffix of the history: for two heads in a row, either you have no trailing head or one trailing head. Write 'one trial plus the expected remaining work' for each state, then solve the simultaneous equations."
+      }
+    ],
+    "examples": [
+      {
+        "title": "A 20% success chance",
+        "prompt": "Independent trials succeed with probability 0.2. T counts attempts through the first success. Find E[T] and P(T>3).",
+        "steps": [
+          {
+            "title": "Use the trial-count convention",
+            "body": "The successful trial is included, so T starts at 1 and E[T]=1/0.2=5."
+          },
+          {
+            "title": "Translate the tail event",
+            "body": "T>3 means that all of the first three attempts fail. The fourth attempt need not be the success."
+          },
+          {
+            "title": "Multiply independent failures",
+            "body": "P(T>3)=0.8³=0.512. A mean wait of 5 does not make the wait exactly five trials."
+          }
+        ]
+      },
+      {
+        "title": "Two heads in a row",
+        "prompt": "Toss an independent fair coin until HH first appears. What is the expected number of tosses from the start?",
+        "steps": [
+          {
+            "title": "Name the two unfinished states",
+            "body": "Let E₀ be the remaining mean wait with no trailing head, and E₁ with one trailing head. The completed HH state has zero remaining wait."
+          },
+          {
+            "title": "Write first-step equations",
+            "body": "From no trailing head: E₀=1+(1/2)E₀+(1/2)E₁. From one head: E₁=1+(1/2)E₀, since a head finishes and a tail resets the useful suffix."
+          },
+          {
+            "title": "Solve and interpret",
+            "body": "The first equation gives E₀=2+E₁. Substitute the second to get E₀=3+E₀/2, hence E₀=6. Treating disjoint pairs as single trials would answer a different stopping rule."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "convention",
+        "prompt": "Each independent attempt succeeds with probability 1/5. What is the expected number of failures before the first success?",
+        "options": [
+          "4",
+          "5",
+          "6"
+        ]
+      },
+      {
+        "id": "memoryless",
+        "prompt": "A fixed-p independent trial process has failed ten times. What is the chance the next trial succeeds?",
+        "options": [
+          "More than p, because success is due.",
+          "p",
+          "Less than p, because the process is unlucky."
+        ]
+      },
+      {
+        "id": "state",
+        "prompt": "While waiting for two consecutive heads, the current last toss is H. A tail arrives. What state should a first-step recurrence use next?",
+        "options": [
+          "The completed state",
+          "One trailing head",
+          "No trailing head"
+        ]
+      }
+    ],
+    "summary": [
+      "Say whether you count trials or failures.",
+      "A geometric tail means several failures in a row.",
+      "Memorylessness comes from the model, not from intuition about luck.",
+      "For patterns, model the useful history as states."
+    ],
+    "practiceTopics": [
+      "Expected value",
+      "Stochastic processes"
+    ],
+    "problemIds": []
+  },
+  {
+    "id": "estimation",
+    "version": 1,
+    "title": "Quantify what you do not know",
+    "subtitle": "Connect sample size, uncertainty, and honest conclusions.",
+    "topic": "Statistical estimation",
+    "minutes": 20,
+    "prerequisites": [
+      "distributions",
+      "variance"
+    ],
+    "objectives": [
+      "Distinguish sample spread from uncertainty in a sample mean.",
+      "Estimate a proportion and its standard error.",
+      "State the assumptions and interpretation of a confidence interval."
+    ],
+    "sections": [
+      {
+        "title": "A sample mean is also random",
+        "body": "For n independent identically distributed observations with mean μ and finite variance σ², the sample mean has expectation μ and variance σ²/n. Its standard deviation, called its standard error, is σ/√n. Four times as much data halves this standard error; it does not quarter it. Dependence can invalidate the independent-sample calculation."
+      },
+      {
+        "title": "Estimate a chance with a proportion",
+        "body": "For n independent Bernoulli observations, the fraction of successes estimates p. Its true standard error is √[p(1−p)/n]. Replacing p by the observed proportion gives a plug-in estimate. A normal approximation is useful with enough expected successes and failures, but becomes unreliable near 0 or 1 or with very small samples."
+      },
+      {
+        "title": "Separate uncertainty from bias",
+        "body": "Under suitable normal or large-sample assumptions, an approximate 95% confidence interval is estimate ±1.96 standard errors. The 95% refers to long-run coverage of the procedure over repeated samples; it is not a frequentist probability assigned to a fixed parameter after seeing one interval. More observations can reduce sampling noise while leaving selection bias untouched."
+      }
+    ],
+    "examples": [
+      {
+        "title": "Precision of a sample mean",
+        "prompt": "Sixty-four independent observations from a normal population have sample mean 12. The population standard deviation is known to be 4. Find the standard error and a 95% confidence interval for the population mean.",
+        "steps": [
+          {
+            "title": "Scale the population spread",
+            "body": "The standard error is 4/√64=4/8=0.5. This describes uncertainty in the sample mean, not spread of individual observations."
+          },
+          {
+            "title": "Find the margin",
+            "body": "Using the standard normal 97.5th percentile, approximately 1.96, the margin is 1.96×0.5=0.98."
+          },
+          {
+            "title": "Center the interval",
+            "body": "The interval is [12−0.98,12+0.98]=[11.02,12.98]. Normality and known population spread justify the normal-based procedure here."
+          }
+        ]
+      },
+      {
+        "title": "Estimating a success probability",
+        "prompt": "A fixed process produces 96 successes in 400 independent trials. Estimate p and its standard error, and form an approximate 95% normal interval.",
+        "steps": [
+          {
+            "title": "Compute the observed proportion",
+            "body": "The estimate is 96/400=0.24. Both observed success and failure counts are comfortably away from zero."
+          },
+          {
+            "title": "Plug into the standard-error formula",
+            "body": "The estimated standard error is √[0.24×0.76/400]≈0.02135."
+          },
+          {
+            "title": "State the approximation",
+            "body": "The margin is about 1.96×0.02135≈0.04185, giving approximately [0.198,0.282]. This is a large-sample approximation under the independent, fixed-probability model."
+          }
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "sample-size",
+        "prompt": "Under the iid model with unchanged population variance, sample size grows from 100 to 400. What happens to the mean's standard error?",
+        "options": [
+          "It quarters.",
+          "It halves.",
+          "It stays the same."
+        ]
+      },
+      {
+        "id": "coverage",
+        "prompt": "What does 95% confidence describe in the usual frequentist interpretation?",
+        "options": [
+          "A 95% probability that every future observation is inside the interval.",
+          "A guarantee that this particular interval contains the mean.",
+          "The long-run fraction of intervals from this procedure that cover the fixed parameter."
+        ]
+      },
+      {
+        "id": "bias",
+        "prompt": "An estimate uses only self-selected survey respondents. Does collecting many more respondents by the same mechanism guarantee removal of selection bias?",
+        "options": [
+          "No",
+          "Yes, by the law of large numbers",
+          "Yes, once n exceeds 30"
+        ]
+      }
+    ],
+    "summary": [
+      "Standard error describes an estimator's sampling variation.",
+      "More data helps at a square-root rate under independence.",
+      "Label approximations and check their assumptions.",
+      "Precision does not guarantee lack of bias."
+    ],
+    "practiceTopics": [
+      "Statistics",
+      "Estimation"
+    ],
+    "problemIds": []
+  }
+]

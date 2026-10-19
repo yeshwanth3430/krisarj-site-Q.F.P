@@ -1,0 +1,157 @@
+Solving Ax = b: row reduced form R
+When does Ax = b have solutions x, and how can we describe those solutions?
+
+Solvability conditions on b
+We again use the example:
+                                ⎡        ⎤
+                                1 2 2 2
+                            A=⎣ 2 4 6  8 ⎦.
+                                3 6 8 10
+The third row of A is the sum of its ﬁrst and second rows, so we know that
+if Ax = b the third component of b equals the sum of its ﬁrst and second
+components. If b does not satisfy b3 = b1 + b2 the system has no solution. If a
+combination of the rows of A gives the zero row, then the same combination of
+the entries of b must equal zero.
+    One way to ﬁnd out whether Ax = b is solvable is to use elimination on
+the augmented matrix. If a row of A is completely eliminated, so is the corre­
+sponding entry in b. In our example, row 3 of A is completely eliminated:
+      ⎡                    ⎤             ⎡                           ⎤
+         1 2 2      2 b1                   1 2 2 2 b1
+      ⎣ 2 4 6       8 b2 ⎦ → · · · → ⎣ 0 0 2 4 b2 − 2b1              ⎦.
+         3 6 8 10 b3                       0 0 0 0 b3 − b2 − b1
+If Ax = b has a solution, then b3 − b2 − b1 = 0. For example, we could choose
+       1
+     � �
+b=     5   .
+       6
+    From an earlier lecture, we know that Ax = b is solvable exactly when b is
+in the column space C ( A). We have these two conditions on b; in fact they are
+equivalent.
+
+Complete solution
+In order to ﬁnd all solutions to Ax = b we ﬁrst check that the equation is
+solvable, then ﬁnd a particular solution. We get the complete solution of the
+equation by adding the particular solution to all the vectors in the nullspace.
+
+A particular solution
+One way to ﬁnd a particular solution to the equation Ax = b is to set all free
+variables to zero, then solve for the pivot variables.
+    For our example matrix A, we let x2 = x4 = 0 to get the system of equa­
+tions:
+                               x1 + 2x3   = 1
+                                    2x3   = 3
+
+                                      1
+which has the solution x3 = 3/2, x1 = −2. Our particular solution is:
+                                    ⎡      ⎤
+                                       −2
+                                    ⎢    0 ⎥
+                              xp = ⎢⎣ 3/2 ⎦ .
+                                           ⎥
+
+                                         0
+
+Combined with the nullspace
+The general solution to Ax = b is given by xcomplete = x p + xn , where xn is a
+     � vector �in the nullspace. To see this, we add Ax p = b to Axn = 0 and
+generic
+get A x p + xn = b for every vector xn in the nullspace.
+   Last lecture we learned that the nullspace of A is the collection of all combi­
+                                         −2
+                                ⎡     ⎤       ⎡     ⎤
+                                                     2
+                                          1 ⎥     ⎢ 0 ⎥
+nations of the special solutions ⎣            and ⎣      . So the complete solution
+                                 ⎢
+                                          0 ⎦       −2 ⎦
+                                          0          1
+                           1
+                       �       �
+to the equation Ax =       5       is:
+                           6
+                               ⎡  ⎤ ⎡      ⎤     ⎡    ⎤
+                               −2       −2          2
+                            ⎢   0 ⎥
+                                  ⎥ ⎢ 1 ⎥
+                                      ⎢    ⎥     ⎢ 0 ⎥
+                xcomplete = ⎢
+                            ⎣ 3/2 ⎦ + ⎣ 0 ⎦ + c2 ⎣ −2 ⎦ ,
+                                                 ⎢    ⎥
+
+                                0        0          1
+
+where c1 and c2 are real numbers.
+  The nullspace of A is a two dimensional subspace of R4 , and the solutions
+                                                                          −2
+                                                                ⎡      ⎤
+                                                                       0 ⎥
+to the equation Ax = b form a plane parallel to that through x p = ⎣       .
+                                                                   ⎢
+                                                                     3/2 ⎦
+                                                                            0
+
+
+Rank
+The rank of a matrix equals the number of pivots of that matrix. If A is an m
+by n matrix of rank r, we know r ≤ m and r ≤ n.
+
+Full column rank
+If r = n, then from the previous lecture we know that the nullspace has dimen­
+sion n − r = 0 and contains only the zero vector. There are no free variables or
+special solutions.
+     If Ax = b has a solution, it is unique; there is either 0 or 1 solution. Exam­
+ples like this, in which the columns are independent, are common in applica­
+tions.
+     We know r ≤ m, so if r = n the number of columns of the matrix is less
+than or equal to the number of rows. The row reduced echelon form of the
+
+
+                                             2
+                            � �
+                            I
+matrix will look like R =       . For any vector b in Rm that’s not a linear
+                            0
+combination of the columns of A, there is no solution to Ax = b.
+
+Full row rank
+                                          �        �
+If r = m, then the reduced matrix R = I F has no rows of zeros and so
+there are no requirements for the entries of b to satisfy. The equation Ax = b is
+solvable for every b. There are n − r = n − m free variables, so there are n − m
+special solutions to Ax = 0.
+
+Full row and column rank
+If r = m = n is the number of pivots of A, then A is an invertible square matrix
+and R is the identity matrix. The nullspace has dimension zero, and Ax = b
+has a unique solution for every b in Rm .
+
+Summary
+If R is in row reduced form with pivot columns ﬁrst (rref), the table below
+summarizes our results.
+              r=m=n r=n<m               r=m<n            r < m, r < n
+                                �       �                             �           �
+                                    I             �           �           I   F
+ R                 I                                  I   F
+                                    0                                     0   0
+
+ # solutions       1            0 or 1          inﬁnitely many    0 or inﬁnitely many
+ to Ax = b
+
+
+
+
+                                            3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

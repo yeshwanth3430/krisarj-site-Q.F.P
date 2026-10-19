@@ -1,0 +1,651 @@
+[
+  {
+    "slug": "covered-call",
+    "name": "Covered Call",
+    "category": "Rookies",
+    "outlook": [
+      "Bull",
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/covered-call",
+    "setup": "You own the stock; Sell a call, strike price A; Generally, the stock price will be below strike A",
+    "who": "Rookies and higher",
+    "when": "You’re neutral to bullish, and you’re willing to sell stock if it reaches a specific price.",
+    "breakeven": "Current stock price minus the premium received for selling the call.",
+    "max_profit": "When the call is first sold, potential profit is limited to the strike price minus the current stock price plus the premium received for selling the call.",
+    "max_loss": "… (see source)",
+    "margin": "Because you own the stock, no additional margin is required."
+  },
+  {
+    "slug": "protective-put",
+    "name": "Protective Put",
+    "category": "Rookies",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/protective-put",
+    "setup": "You own the stock; Buy a put, strike price A; Generally, the stock price will be above strike A",
+    "who": "Rookies and higher",
+    "when": "You’re bullish but nervous.",
+    "breakeven": "From the point the protective put is established, the break-even point is the current stock price plus the premium paid for the put.",
+    "max_profit": "Potential profit is theoretically unlimited, because you’ll still own the stock and you have not capped the upside.",
+    "max_loss": "Risk is limited to the “deductible” plus the premium paid for the put.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "collar-option",
+    "name": "Collar",
+    "category": "Rookies",
+    "outlook": [
+      "Bull",
+      "Question"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/collar-option",
+    "setup": "You own the stock; Buy a put, strike price A; Sell a call, strike price B; Generally, the stock price will be between strikes Aand B",
+    "who": "Rookies and higher",
+    "when": "You’re bullish but nervous.",
+    "breakeven": "From the point the collar is established, there are two break-even points: If established for a net credit, the break-even is current stock price minus net credit received. … (see source)",
+    "max_profit": "From the point the collar is established, potential profit is limited to strike B minus current stock price minus the net debit paid, or plus net credit received.",
+    "max_loss": "From the point the collar is established, risk is limited to the current stock price minus strike A plus the net debit paid, or minus the net credit received.",
+    "margin": "Because you own the stock, the call you sold is considered “covered.” So no additional margin is required after the trade is established."
+  },
+  {
+    "slug": "cash-secured-put",
+    "name": "Cash-Secured Put",
+    "category": "Rookies",
+    "outlook": [
+      "Bearish",
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/cash-secured-put",
+    "setup": "Sell a put, strike price A; Keep enough cash on hand to buy the stock if the put is assigned; Generally, the stock price will be above strike A",
+    "who": "Rookies and higher",
+    "when": "You’re slightly bearish short-term, bullish long-term.",
+    "breakeven": "Strike A minus the premium received for the put.",
+    "max_profit": "Potential profit is limited to the premium received from selling the put.",
+    "max_loss": "Potential loss is substantial, but limited to the strike price if the stock goes to zero.",
+    "margin": "You must have enough cash to cover the cost of purchasing the stock at the strike price."
+  },
+  {
+    "slug": "long-call",
+    "name": "Long Call",
+    "category": "Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-call",
+    "setup": "Buy a call, strike price A; Generally, the stock price will be at or above strike A",
+    "who": "Veterans and higher",
+    "when": "You’re bullish as a matador.",
+    "breakeven": "Strike A plus the cost of the call.",
+    "max_profit": "There’s a theoretically unlimited profit potential, if the stock goes to infinity.",
+    "max_loss": "Risk is limited to the premium paid for the call option.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-put",
+    "name": "Long Put",
+    "category": "Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-put",
+    "setup": "Buy a put, strike price A; Generally, the stock price will be at or below strike A",
+    "who": "Veterans and higher",
+    "when": "You’re bearish as a grizzly.",
+    "breakeven": "Strike A minus the cost of the put.",
+    "max_profit": "There’s a substantial profit potential. If the stock goes to zero you make the entire strike price minus the cost of the put contract.",
+    "max_loss": "Risk is limited to the premium paid for the put.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "leveraged-covered-call",
+    "name": "Fig Leaf",
+    "category": "Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/leveraged-covered-call",
+    "setup": "Buy an in-the-money LEAPS call, strike price A; Sell an out-of-the-money short-term call, strike price B; Generally, the stock price will be closer to strike B than strike A",
+    "who": "Veterans and higher",
+    "when": "You’re mildly bullish",
+    "breakeven": "It is possible to approximate break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "Potential profit is limited to the premium received for sale of the front-month call plus the performance of the LEAPS call.",
+    "max_loss": "Potential risk is limited to the debit paid to establish the strategy.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-call-spread",
+    "name": "Long Call Spread",
+    "category": "Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-call-spread",
+    "setup": "Buy a call, strike price A; Sell a call, strike price B; Generally, the stock will be at or above strike A and below strike B",
+    "who": "Veterans and higher",
+    "when": "You’re bullish, but you have an upside target.",
+    "breakeven": "Strike A plus net debit paid.",
+    "max_profit": "Potential profit is limited to the difference between strike A and strike B minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-put-spread",
+    "name": "Long Put Spread",
+    "category": "Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-put-spread",
+    "setup": "Sell a put, strike price A; Buy a put, strike price B; Generally, the stock will be at or below strike B and above strike A",
+    "who": "Veterans and higher",
+    "when": "You’re bearish, with a downside target.",
+    "breakeven": "Strike B minus the net debit paid.",
+    "max_profit": "Potential profit is limited to the difference between strike A and strike B, minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "short-call-spread",
+    "name": "Short Call Spread",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bearish",
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-call-spread",
+    "setup": "Sell a call, strike price A; Buy a call, strike price B; Generally, the stock will be below strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re bearish. You may also be expecting neutral activity if strike A is out-of-the-money.",
+    "breakeven": "Strike A plus the net credit received when opening the position.",
+    "max_profit": "Potential profit is limited to the net credit received when opening the position.",
+    "max_loss": "Risk is limited to the difference between strike A and strike B, minus the net credit received.",
+    "margin": "Margin requirement is the difference between the strike prices."
+  },
+  {
+    "slug": "short-put-spread",
+    "name": "Short Put Spread",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bull",
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-put-spread",
+    "setup": "Buy a put, strike price A; Sell a put, strike price B; Generally, the stock will be above strike B",
+    "who": "Seasoned Veterans and higher",
+    "when": "You're bullish. You may also be anticipating neutral activity if strike B is out-of-the-money.",
+    "breakeven": "Strike B minus the net credit received when selling thespread.",
+    "max_profit": "Potential profit is limited to the net credit you receive when you set up the strategy.",
+    "max_loss": "Risk is limited to the difference between strike A andstrike B, minus the net credit received.",
+    "margin": "Margin requirement is the difference between the strike prices."
+  },
+  {
+    "slug": "long-straddle",
+    "name": "Long Straddle",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Question"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-straddle",
+    "setup": "Buy a call, strike price A; Buy a put, strike price A; Generally, the stock price will be at strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re anticipating a swing in stock price, but you’re not sure which direction it will go.",
+    "breakeven": "There are two break-even points: Strike A plus the net debit paid.; Strike A minus the net debit paid.",
+    "max_profit": "Potential profit is theoretically unlimited if the stock goes up.; If the stock goes down, potential profit may be substantial but limited to the strike price minus the net debit paid.",
+    "max_loss": "Potential losses are limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-strangle",
+    "name": "Long Strangle",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Question"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-strangle",
+    "setup": "Buy a put, strike price A; Buy a call, strike price B; Generally, the stock price will be between strikes A and B",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re anticipating a swing in stock price, but you’re not sure which direction it will go.",
+    "breakeven": "There are two break-even points: Strike A minus the net debit paid.; Strike B plus the net debit paid.",
+    "max_profit": "Potential profit is theoretically unlimited if the stock goes up.; If the stock goes down, potential profit may be substantial but limited to strike A minus the net debit paid.",
+    "max_loss": "Potential losses are limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "call-backspread",
+    "name": "Back Spread w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/call-backspread",
+    "setup": "Sell a call, strike price A; Buy two calls, strike price B; Generally, the stock will be at or around strike price A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re extremely bullish on a highly volatile stock.",
+    "breakeven": "If established for a net debit, the break-even point is equal to strike B plus the maximum risk.; If established for a net credit, there are two break-even points for this play: Strike A plus the net credit received … (see source)",
+    "max_profit": "There’s a theoretically unlimited profit potential if the stock goes to infinity. But since the real world doesn’t always operate like a theoretical one, let’s just say “a lot.”",
+    "max_loss": "Risk is limited to strike B minus strike A, minus the net credit received or plus the net debit paid.",
+    "margin": "Margin requirement is the difference between the strike prices of the short call spread embedded into this strategy."
+  },
+  {
+    "slug": "put-backspread",
+    "name": "Back Spread w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/put-backspread",
+    "setup": "Sell a put, strike price B; Buy two puts, strike price A; Generally, the stock will be at or around strike price B",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re extremely bearish on a highly volatile stock.",
+    "breakeven": "If established for a net debit, the break-even point is strike A minus the maximum risk.; If established for a net credit, there are two break-even points for this play: Strike A minus the maximum risk … (see source)",
+    "max_profit": "There is a substantial profit potential if the stock goes to zero. But keep in mind stocks don’t go to zero very often.",
+    "max_loss": "Risk is limited to strike B minus strike A, minus the net credit received or plus the net debit paid.",
+    "margin": "Margin requirement is the difference between the strike prices of the short put spread embedded into this strategy."
+  },
+  {
+    "slug": "calendar-call-spread",
+    "name": "Long Calendar Spread w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/calendar-call-spread",
+    "setup": "Sell a call, strike price A; Buy a call, strike price A; Generally, the stock will be at or around strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "It is possible to approximate break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "Potential profit is limited to the premium received for the back-month call minus the cost to buy back the front-month call, minus the net debit paid to establish the position.",
+    "max_loss": "Limited to the net debit paid to establish the trade.",
+    "margin": "After the trade is paid for, no additional margin isrequired if the position is closed at expiration of the front-month option."
+  },
+  {
+    "slug": "calendar-put-spread",
+    "name": "Long Calendar Spread w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/calendar-put-spread",
+    "setup": "Sell a put, strike price A; Buy a put, strike price A; Generally, the stock will be at or around strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "It is possible to approximate break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "Potential profit is limited to the premium received for the back-month put minus the cost to buy back the front-month put, minus the net debit paid to establish the position.",
+    "max_loss": "Limited to the net debit paid to establish the trade.",
+    "margin": "After the trade is paid for, no additional margin is required if the position is closed at expiration of the front-month option."
+  },
+  {
+    "slug": "diagonal-call-spread",
+    "name": "Diagonal Spread w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral",
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/diagonal-call-spread",
+    "setup": "Sell an out-of-the-money call, strike price A; Buy a further out-of-the-money call, strike price B; At expiration of the front-month call, sell another call with strike A and the same expiration as the back-month call … (see source)",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re expecting neutral activity during the front month, then neutral to bearish activity during the back month.",
+    "breakeven": "It is possible to approximate break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "Potential profit is limited to the net credit received for selling both calls with strike A, minus the premium paid for the call with strike B.",
+    "max_loss": "If established for a net credit, risk is limited to the difference between strike A and strike B, minus the net credit received. … (see source)",
+    "margin": "Margin requirement is the difference between the strike prices."
+  },
+  {
+    "slug": "diagonal-put-spread",
+    "name": "Diagonal Spread w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral",
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/diagonal-put-spread",
+    "setup": "Sell an out-of-the-money put, strike price B; Buy a further out-of-the-money put, strike price A; At expiration of the front-month put, sell another put with strike B and the same expiration as the back-month put … (see source)",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re expecting neutral activity during the front month, then neutral to bullish activity during the back month.",
+    "breakeven": "It is possible to approximate break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "Profit is limited to the net credit received for selling bothputs with strike B, minus the premium paid for the putwith strike A.",
+    "max_loss": "If established for a net credit, risk is limited to the difference between strike A and strike B, minus the net credit received. … (see source)",
+    "margin": "Margin requirement is the difference between the strike prices."
+  },
+  {
+    "slug": "long-call-butterfly-spread",
+    "name": "Long Butterfly w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-call-butterfly-spread",
+    "setup": "Buy a call, strike price A; Sell two calls, strike price B; Buy a call, strike price C; Generally, the stock will be at strike B",
+    "who": "Seasoned Veterans and higher",
+    "when": "Typically, investors will use butterfly spreads when anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points for this play: Strike A plus the net debit paid.; Strike C minus the net debit paid.",
+    "max_profit": "Potential profit is limited to strike B minus strike A minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-put-butterfly-spread",
+    "name": "Long Butterfly w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-put-butterfly-spread",
+    "setup": "Buy a put, strike price A; Sell two puts, strike price B; Buy a put, strike price C; Generally, the stock will be at strike B",
+    "who": "Seasoned Veterans and higher",
+    "when": "Typically, investors will use butterfly spreads when anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points for this play: Strike A plus the net debit paid.; Strike C minus the net debit paid.",
+    "max_profit": "Potential profit is limited to strike C minus strike B minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "iron-butterfly",
+    "name": "Iron Butterfly",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/iron-butterfly",
+    "setup": "Buy a put, strike price A; Sell a put, strike price B; Sell a call, strike price B; Buy a call, strike price C; Generally, the stock will be at strike B",
+    "who": "Seasoned Veterans and higher",
+    "when": "Typically, investors will use butterfly spreads when anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points for this play: Strike B plus net credit received.; Strike B minus net credit received.",
+    "max_profit": "Potential profit is limited to the net credit received.",
+    "max_loss": "Risk is limited to strike B minus strike A, minus the net credit received when establishing the position.",
+    "margin": "Margin requirement is the short call spread requirement or short put spread requirement."
+  },
+  {
+    "slug": "broken-wing-butterfly-call",
+    "name": "Skip Strike Butterfly w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/broken-wing-butterfly-call",
+    "setup": "Buy a call, strike price A; Sell two calls, strike price B; Skip over strike price C; Buy a call, strike price D; Generally, the stock will be at or below strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re slightly bullish. You want the stock to rise to strike B and then stop.",
+    "breakeven": "If established for a net credit then the break-even point is strike C plus the net credit received when establishing the strategy.; If established for a net debit, then there are two break-even points: Strike A plus net debit paid. … (see source)",
+    "max_profit": "Potential profit is limited to strike B minus strike A minus the net debit paid, or plus the net credit received.",
+    "max_loss": "Risk is limited to the difference between strike C and strike D minus the net credit received or plus the net debit paid.",
+    "margin": "Margin requirement is equal to the difference between the strike prices of the short call spread embedded into this strategy."
+  },
+  {
+    "slug": "broken-wing-butterfly-put",
+    "name": "Skip Strike Butterfly w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/broken-wing-butterfly-put",
+    "setup": "Buy a put, strike price A; Skip strike price B; Sell two puts, strike price C; Buy a put, strike price D; Generally, the stock will be at or above strike D",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re slightly bearish. You want the stock to go down to strike C and then stop.",
+    "breakeven": "If established for a net credit then the break-even point is strike B minus the net credit received when establishing the strategy.; If established for a net debit, then there are two break-even points: Strike D minus net debit paid. … (see source)",
+    "max_profit": "Potential profit is limited to strike D minus strike C minus the net debit paid, or plus the net credit received.",
+    "max_loss": "Risk is limited to the difference between strike A and strike B, minus the net credit received or plus the net debit paid.",
+    "margin": "Margin requirement is equal to the difference between the strike prices of the short put spread embedded into this strategy."
+  },
+  {
+    "slug": "inverse-broken-wing-butterfly-call",
+    "name": "Inverse Skip Strike Butterfly w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/inverse-broken-wing-butterfly-call",
+    "setup": "Sell a call with strike price A; Buy two calls with strike price B; Skip over strike price C; Sell a call with strike price D; Generally, the stock will be at or around strike price A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re extremely bullish on a highly volatile stock.",
+    "breakeven": "If established for a net debit, the break-even point is strike C plus the net debit paid.; If established for a net credit, there are two break-even points: Strike A plus the net credit received … (see source)",
+    "max_profit": "Potential profit is limited to strike D minus strike C minus the net debit paid, or plus the net credit received.",
+    "max_loss": "Potential risk is limited to strike B minus strike A plus the net debit paid, or minus the net credit received.",
+    "margin": "Margin requirement is equal to the difference between the strike prices of the short call spread embedded into this strategy."
+  },
+  {
+    "slug": "inverse-broken-wing-butterfly-put",
+    "name": "Inverse Skip Strike Butterfly w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/inverse-broken-wing-butterfly-put",
+    "setup": "Sell a put with strike price D; Buy two puts with strike price C; Skip over strike price B; Sell a put with strike price A; Generally, the stock will be at or around strike price D",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re extremely bearish on a highly volatile stock.",
+    "breakeven": "If established for a net debit, the break-even point is strike B minus the net debit paid.; If established for a net credit, there are two break-even points: Strike D minus the net credit received … (see source)",
+    "max_profit": "Potential profit is limited to strike B minus strike A minus the net debit paid, or plus the net credit received.",
+    "max_loss": "Potential risk is limited to strike D minus strike C plus the net debit paid, or minus the net credit received.",
+    "margin": "Margin requirement is equal to the difference between the strike prices of the short put spread embedded into this strategy."
+  },
+  {
+    "slug": "christmas-tree-butterfly-call",
+    "name": "Christmas Tree Butterfly w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/christmas-tree-butterfly-call",
+    "setup": "Buy a call, strike price A; Skip over strike price B; Sell three calls, strike price C; Buy two calls, strike price D; Generally, the stock will be at or around strike A",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re slightly bullish. You want the stock to rise to strike C and then stop.",
+    "breakeven": "There are two break-even points for this strategy: Strike A plus the net debit paid; Strike D minus one-half of the net debit paid",
+    "max_profit": "Potential profit is limited to strike C minus strike A minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "christmas-tree-butterfly-put",
+    "name": "Christmas Tree Butterfly w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/christmas-tree-butterfly-put",
+    "setup": "Buy a put, strike price D; Skip over strike price C; Sell three puts, strike price B; Buy two puts, strike price A; Generally, the stock will be at or around strike D",
+    "who": "Seasoned Veterans and higher",
+    "when": "You’re slightly bearish. You want the stock to fall to strike B and then stop.",
+    "breakeven": "There are two break-even points for this strategy: Strike D minus the net debit paid; Strike A plus half the net debit paid",
+    "max_profit": "Potential profit is limited to strike D minus strike B minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-call-condor-spread",
+    "name": "Long Condor Spread w/Calls",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-call-condor-spread",
+    "setup": "Buy a call, strike price A; Sell a call, strike price B; Sell a call, strike price C; Buy a call, strike price D; Generally, the stock will be between strike price Band strike price C",
+    "who": "Veterans and higher",
+    "when": "You’re anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points: Strike A plus the net debit paid; Strike D minus the net debit paid",
+    "max_profit": "Potential profit is limited to strike B minus strike A minus the net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid to establish the condor.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "long-put-condor-spread",
+    "name": "Long Condor Spread w/Puts",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/long-put-condor-spread",
+    "setup": "Buy a put, strike price A; Sell a put, strike price B; Sell a put, strike price C; Buy a put, strike price D; Generally, the stock will be between strike price Band strike price C",
+    "who": "Veterans and higher",
+    "when": "You’re anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points: Strike A plus the net debit paid; Strike D minus the net debit paid",
+    "max_profit": "Potential profit is limited to strike D minus strike C minusthe net debit paid.",
+    "max_loss": "Risk is limited to the net debit paid to establish the condor.",
+    "margin": "After the trade is paid for, no additional margin is required."
+  },
+  {
+    "slug": "iron-condor",
+    "name": "Iron Condor",
+    "category": "Seasoned Veterans",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/iron-condor",
+    "setup": "Buy a put, strike A; Sell a put, strike B; Sell a call, strike C; Buy a call, strike D; Generally, the stock will be between strike price Band strike price C",
+    "who": "Veterans and higher",
+    "when": "You’re anticipating minimal movement on the stock within a specific time frame.",
+    "breakeven": "There are two break-even points: Strike B minus the net credit received.; Strike C plus the net credit received.",
+    "max_profit": "Profit is limited to the net credit received.",
+    "max_loss": "Risk is limited to strike B minus strike A, minus the netcredit received.",
+    "margin": "Margin requirement is the short call spread requirement or short put spread requirement."
+  },
+  {
+    "slug": "short-call",
+    "name": "Short Call",
+    "category": "All-Stars",
+    "outlook": [
+      "Bearish",
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-call",
+    "setup": "Sell a call, strike price A; Generally, the stock price will be below strike A",
+    "who": "All-Stars only",
+    "when": "You’re bearish to neutral.",
+    "breakeven": "Strike A plus the premium received for the call.",
+    "max_profit": "Potential profit is limited to the premium received for selling the call.; If the stock keeps rising above strike A, you keep losing money.",
+    "max_loss": "Risk is theoretically unlimited. If the stock keeps rising, you keep losing money.",
+    "margin": "Margin requirement is the greater of the following: 25% of the underlying security value minus the out-of-the-money amount, plus the premium received; OR 10% of the underlying security value plus the premium received"
+  },
+  {
+    "slug": "short-put",
+    "name": "Short Put",
+    "category": "All-Stars",
+    "outlook": [
+      "Bull",
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-put",
+    "setup": "Sell a put, strike price A; Generally, the stock price will be above strike A",
+    "who": "All-Stars only",
+    "when": "You’re bullish to neutral.",
+    "breakeven": "Strike A minus the premium received for the put.",
+    "max_profit": "Potential profit is limited to the premium received for selling the put.",
+    "max_loss": "Potential loss is substantial, but limited to the strike price minus the premium received if the stock goes to zero.",
+    "margin": "Margin requirement is the greater of the following: 25% of the underlying security value minus the out-of-the-money amount, plus the premium received; OR 10% of the underlying security value plus the premium received"
+  },
+  {
+    "slug": "short-straddle",
+    "name": "Short Straddle",
+    "category": "All-Stars",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-straddle",
+    "setup": "Sell a call, strike price A; Sell a put, strike price A; Generally, the stock price will be at strike A",
+    "who": "All-Stars only",
+    "when": "You’re expecting minimal movement on the stock.",
+    "breakeven": "There are two break-even points: Strike A minus the net credit received.; Strike A plus the net credit received.",
+    "max_profit": "Potential profit is limited to the net credit received for selling the call and the put.",
+    "max_loss": "If the stock goes up, your losses could be theoretically unlimited.; If the stock goes down, your losses may be substantial but limited to the strike price minus net credit received for selling the straddle.",
+    "margin": "Margin requirement is the short call or short put requirement, plus the premium received from the other side."
+  },
+  {
+    "slug": "short-strangle",
+    "name": "Short Strangle",
+    "category": "All-Stars",
+    "outlook": [
+      "Question"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/short-strangle",
+    "setup": "Sell a put, strike price A; Sell a call, strike price B; Generally, the stock price will be between strikes Aand B",
+    "who": "All-Stars only",
+    "when": "You are anticipating minimal movement on the stock.",
+    "breakeven": "There are two break-even points: Strike A minus the net credit received.; Strike B plus the net credit received.",
+    "max_profit": "Potential profit is limited to the net credit received.",
+    "max_loss": "If the stock goes up, your losses could be theoretically unlimited.; If the stock goes down, your losses may be substantia but limited to strike A minus the net credit received.",
+    "margin": "Margin requirement is the short call or short put requirement, plus the premium received from the other side."
+  },
+  {
+    "slug": "synthetic-long-stock",
+    "name": "Long Combination",
+    "category": "All-Stars",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/synthetic-long-stock",
+    "setup": "Buy a call, strike price A; Sell a put, strike price A; The stock should be at or very near strike A",
+    "who": "All-Stars only",
+    "when": "You’re bullish.",
+    "breakeven": "Strike A plus the net debit paid or minus the net credit received to establish the strategy.",
+    "max_profit": "There is a theoretically unlimited profit potential if the stock price keeps rising.",
+    "max_loss": "Potential loss is substantial, but limited to strike price A plus the net debit paid or minus net credit received.",
+    "margin": "Margin requirement is the short put requirement."
+  },
+  {
+    "slug": "synthetic-short-stock",
+    "name": "Short Combination",
+    "category": "All-Stars",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/synthetic-short-stock",
+    "setup": "Sell a call, strike price A; Buy a put, strike price A; The stock should be at or very near strike A",
+    "who": "All-Stars only",
+    "when": "You’re bearish.",
+    "breakeven": "Strike A plus the net credit received or minus the net debit paid to establish the strategy.",
+    "max_profit": "Potential profit is substantial if stock goes to zero, but limited to strike price A plus the net credit received or minus the net debit paid to establish the strategy.",
+    "max_loss": "Risk is theoretically unlimited if the stock price keeps rising.",
+    "margin": "Margin requirement is the short call requirement."
+  },
+  {
+    "slug": "call-ratio-vertical-spread",
+    "name": "Front Spread w/Calls",
+    "category": "All-Stars",
+    "outlook": [
+      "Bull"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/call-ratio-vertical-spread",
+    "setup": "Buy a call, strike price A; Sell two calls, strike price B; Generally, the stock will be below or at strike A",
+    "who": "All-Stars only",
+    "when": "You’re slightly bullish. You want the stock to rise to strike B and then stop.",
+    "breakeven": "If established for a net debit, there are two break-even points: Strike A plus net debit paid to establish the position.; Strike B plus the maximum profit potential.; If established for a net credit, there is only one break-even point: … (see source)",
+    "max_profit": "If established for a net debit, potential profit is limited to the difference between strike A and strike B, minus the net debit paid. … (see source)",
+    "max_loss": "If established for a net debit: Risk is limited to the debit paid for the spread if the stock price goes down.; Risk is unlimited if the stock price goes way, way up.; If established for a net credit: … (see source)",
+    "margin": "Margin requirement is the requirement for the uncovered short call portion of the front spread."
+  },
+  {
+    "slug": "put-ratio-vertical-spread",
+    "name": "Front Spread w/Puts",
+    "category": "All-Stars",
+    "outlook": [
+      "Bearish"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/put-ratio-vertical-spread",
+    "setup": "Sell two puts, strike price A; Buy a put, strike price B; Generally, the stock will be at or above strike B.",
+    "who": "All-Stars only",
+    "when": "You’re slightly bearish. You want the stock to go down to strike A and then stop.",
+    "breakeven": "If established for a net debit, there are two break-even points: Strike B minus the net debit paid to establish the position.; Strike A minus the maximum profit potential. … (see source)",
+    "max_profit": "If established for a net debit, potential profit is limited to the difference between strike A and strike B, minus the net debit paid. … (see source)",
+    "max_loss": "If established for a net debit: Risk is limited to the net debit paid if the stock price goes up.; Risk is substantial but limited to strike A plus the net debit paid if the stock goes to zero. … (see source)",
+    "margin": "Margin requirement is the requirement for the uncovered short put portion of the front spread."
+  },
+  {
+    "slug": "double-diagonal-spread",
+    "name": "Double Diagonal",
+    "category": "All-Stars",
+    "outlook": [
+      "Neutral"
+    ],
+    "url": "https://www.optionsplaybook.com/option-strategies/double-diagonal-spread",
+    "setup": "Buy an out-of-the-money put, strike price A; Sell an out-of-the-money put, strike price B; Sell an out-of-the-money call, strike price C; Buy an out-of-the-money call, strike price D … (see source)",
+    "who": "All-Stars only",
+    "when": "You’re anticipating minimal movement on the stock over at least two option expiration cycles.",
+    "breakeven": "It is possible to approximate your break-even points, but there are too many variables to give an exact formula. … (see source)",
+    "max_profit": "… (see source)",
+    "max_loss": "… (see source)",
+    "margin": "Margin requirement is the diagonal call spread requirement or the diagonal put spread requirement."
+  }
+]

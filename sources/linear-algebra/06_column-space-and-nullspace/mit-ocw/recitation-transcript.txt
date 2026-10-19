@@ -1,0 +1,119 @@
+MITOCW | MIT18_06SC_110711_N2_300k-mp4
+
+
+NIKOLA        Hi everyone. In this video, we're going to explore briefly the concept of a vector subspace.
+KAMBUROV:
+
+
+              This is the problem we're going to do. We're given these four different subsets of R^3, and we
+
+              are asked to figure out which of these is, in fact, a subspace. So I'll give you a few moments to
+              try to do this on your own, and then please come back to see whether you were right.
+
+
+              So hi again. So before we start, let's briefly recall what a vector subspace is. Well vector
+
+              subspace, of course, it's a subset. In this case, a subset of R^3. But it behaves like a vector
+
+              space itself, meaning that if we take linear combination of elements in the subset, what we get
+
+              is still something in that subset.
+
+
+              And in class, Professor Strang showed you a few specific examples of subspaces, which are
+              related to matrices. One of them was the null space of a matrix, all the vectors that the matrix
+
+              sends to 0, and the column space of a matrix, which is the span of the column of a matrix. So
+              let's see if we can apply what we've learned in lecture to our problem.
+
+
+              Number one: we are given a linear equation relation between b_1, b_2, and b_3. Once we
+              have something linear-- this is a philosophy that you'll learn in this class-- we can always write
+
+              this as a matrix equation.
+
+
+              So in particular, b_1 plus b_2 minus b_3 equals 0, we can just write it as the matrix 1, 1,
+              negative 1, times [b_1, b_2, b_3] equal to 0. So therefore, b_1, b_2, and b_3 precisely
+              describe the null space of 1, 1 negative 1. And thus, what we are given in the first question is a
+
+              subspace.
+
+
+              What about the second one? Again, we are given the relation between b_1, b_2, b_3. but it's
+
+              not linear. b_3 is the product of b_1 and b_2. So right, your guts tell you that this shouldn't be
+
+              a vector space. But we need to prove why.
+
+
+              Well, see that the vector [1, 1, 1] is inside this subset, because the third entry is the product-- 1
+
+              is the product 1 and 1. If the subset were a subspace itself, then we would have 2, 2, and 2 in
+              it as well. Right, because any multiple of a vector in the subspace is inside the subspace. But
+
+              is [2, 2, 2] described by this equation? Well no, because the third entry, 2, is not equal to 2
+
+              times 2.
+So the example in number 2 is not a subspace.
+
+
+Let's try 3. And first-- so we are given-- so the subset in question 3 is given as the linear span
+
+of these two vectors, [1, 0, -1] and [1, 0, 1]. Plus the vector [1, 0, 0]. So let's think about this
+
+geometrically. We know that the linear span of two linear independent vectors-- and these are
+
+obviously linearly independent-- is a plane in R^3. So we have the plane, and we add a vector
+to the point on this plane.
+
+
+So what if the vector were lying on the plane? Well we're not going to change the plane. We're
+
+still going to remain in the plane. What I'm hinting at is the following thing. That, in fact, [1, 0, 0]
+
+is a linear combination of [1, 0, -1] and [1, 0, 1], and it's fairly obvious to see which linear
+
+combination of these two vectors it is. It's 1/2 [1, 0, -1] plus 1/2 times [1, 0, 1].
+
+
+So we can write the whole relation here in the following way. [b_1, b_2, b_3] is [1, 0, 0], which
+we can write this, plus c_1 [1, 0, -1], and c_2 [1 0, 1].
+
+
+Let me continue this here. So b_1, b_2, and b_3 is precisely c_1 plus 1/2 of [1, 0, -1] plus c_2
+
+plus 1/2 of [1, 0, 1]. So indeed, the points b_1, b_2, and b_3 are described by the linear span
+
+[1, 0, -1] and [1, 0, 1]. So it is a vector subspace itself.
+
+
+And finally, let's look at number 4. So we have a similar situation. I mean, it's almost the same
+
+situation. We again have the linear span of precisely the same vectors as in question 3. But
+
+this time we add the vector [0, 1, 0] to them.
+
+
+Now, [0, 1, 0] is not in the span of these two vectors. So the argument that we just showed for
+3 doesn't work. But what we know about vector subspaces is the following thing. I follows
+
+almost trivially from the axioms that 0 needs to be inside the subset in order for it to be a
+
+subspace. It's a necessary condition.
+
+
+Well is 0 inside this subset? Meaning can we find coefficients c_1 and c_2, plus [0, 1, 0] to
+
+equal zero vector? And the answer is no. And why is this? There's a very easy way to see it.
+Well we just look at the second entry of the vectors, and we see that any multiple-- so the
+
+linear span of these two vectors will have as its second entry 0. And when we add it to 1, we
+
+can never get a zero entry here. So the subset in 4 is not a subspace.
+
+
+So I hope this was useful in just getting an intuition which subsets of R^3 are subspaces. I'll
+
+see you guys later.
+

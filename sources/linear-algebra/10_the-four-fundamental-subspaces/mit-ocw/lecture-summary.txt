@@ -1,0 +1,112 @@
+The four fundamental subspaces
+In this lecture we discuss the four fundamental spaces associated with a matrix
+and the relations between them.
+
+Four subspaces
+Any m by n matrix A determines four subspaces (possibly containing only the
+zero vector):
+
+Column space, C ( A)
+C ( A) consists of all combinations of the columns of A and is a vector space in
+Rm .
+
+Nullspace, N ( A)
+This consists of all solutions x of the equation Ax = 0 and lies in Rn .
+
+Row space, C ( A T )
+The combinations of the row vectors of A form a subspace of Rn . We equate
+this with C ( A T ), the column space of the transpose of A.
+
+Left nullspace, N ( A T )
+We call the nullspace of A T the left nullspace of A. This is a subspace of Rm .
+
+Basis and Dimension
+Column space
+The r pivot columns form a basis for C ( A)
+
+                                  dim C ( A) = r.
+
+Nullspace
+The special solutions to Ax = 0 correspond to free variables and form a basis
+for N ( A). An m by n matrix has n − r free variables:
+
+                               dim N ( A) = n − r.
+
+
+
+
+                                         1
+Row space
+We could perform row reduction on A T , but instead we make use of R, the row
+reduced echelon form of A.
+          ⎡              ⎤         ⎡                 ⎤
+             1 2 3 1                    1 0 1 1         �        �
+                                                           I F
+     A = ⎣ 1 1 2 1 ⎦ → ··· → ⎣ 0 1 1 0 ⎦ =                         =R
+                                                          0 0
+             1 2 3 1                    0 0 0 0
+Although the column spaces of A and R are different, the row space of R is the
+same as the row space of A. The rows of R are combinations of the rows of A,
+and because reduction is reversible the rows of A are combinations of the rows
+of R.
+   The ﬁrst r rows of R are the ”echelon” basis for the row space of A:
+
+                                 dim C ( A T ) = r.
+
+Left nullspace
+The matrix A T has m columns. We just saw that r is the rank of A T , so the
+number of free columns of A T must be m − r:
+                              dim N ( A T ) = m − r.
+     The left nullspace is the collection of vectors y for which A T y = 0. Equiva­
+lently, y T A = 0; here y and 0 are row vectors. We say “left nullspace” because
+y T is on the left of A in this equation.
+     To ﬁnd a basis for the left nullspace we reduce an augmented version of A:
+                      �                �     �                �
+                        Am×n Im×n −→ Rm×n Em×n .
+From this we get the matrix E for which EA = R. (If A is a square, invertible
+matrix then E = A−1 .) In our example,
+            ⎡               ⎤⎡             ⎤ ⎡                 ⎤
+               −1     2 0        1 2 3 1          1 0 1 1
+      EA = ⎣ 1 −1 0 ⎦ ⎣ 1 1 2 1 ⎦ = ⎣ 0 1 1 0 ⎦ = R.
+               −1     0 1        1 2 3 1          0 0 0 0
+The bottom m − r rows of E describe linear dependencies of rows of A, because
+the bottom m − r rows of R are zero. Here m − r = 1 (one zero row in R).
+    The bottom m − r rows of E satisfy the equation y T A = 0 and form a basis
+for the left nullspace of A.
+
+New vector space
+The collection of all 3 × 3 matrices forms a vector space; call it M. We can
+add matrices and multiply them by scalars and there’s a zero matrix (additive
+identity). If we ignore the fact that we can multiply matrices by each other,
+they behave just like vectors.
+   Some subspaces of M include:
+
+
+                                         2
+   • all upper triangular matrices
+   • all symmetric matrices
+   • D, all diagonal matrices
+D is the intersection of the ﬁrst two spaces. Its dimension is 3; one basis for D
+is:                ⎡           ⎤ ⎡            ⎤ ⎡           ⎤
+                     1 0 0          1 0 0           0 0 0
+                   ⎣ 0 0 0 ⎦,⎣ 0 3 0 ⎦,⎣ 0 0 0 ⎦.
+                     0 0 0          0 0 0           0 0 7
+
+
+
+
+                                       3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

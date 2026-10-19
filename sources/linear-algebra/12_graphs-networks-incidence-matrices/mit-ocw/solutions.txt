@@ -1,0 +1,105 @@
+         Exercises on graphs, networks, and incidence matrices
+
+Problem 12.1: (8.2 #1. Introduction to Linear Algebra: Strang) Write down
+the four by four incidence matrix A for the square graph, shown below.
+(Hint: the ﬁrst row has -1 in column 1 and +1 in column 2.) What vectors
+( x1 , x2 , x3 , x4 ) are in the nullspace of A? How do you know that (1,0,0,0) is
+not in the row space of A?
+
+
+
+
+Solution:    The incidence matrix A is written as:
+                            ⎡                   ⎤
+                              −1      1 0     0
+                            ⎢ 0 −1 1          0 ⎥
+                       A=⎢                      ⎥.
+                            ⎣ 0       0 1 −1 ⎦
+                              −1      0 0     1
+To ﬁnd the vectors in the nullspace, we solve Ax = 0 :
+         ⎡                    ⎤⎡     ⎤ ⎡            ⎤ ⎡ ⎤
+            −1     1 0     0      x1        x2 − x1        0
+         ⎢ 0 −1 1          0 ⎥ ⎢ x2 ⎥ ⎢ x3 − x2 ⎥ ⎢ 0 ⎥
+                              ⎥ ⎢    ⎥    ⎢         ⎥    ⎢
+         ⎢                             =               =     ⎥,
+         ⎣ 0       0 1 −1 ⎦ ⎣ x3 ⎦ ⎣ x3 − x4 ⎦ ⎣ 0 ⎦
+            −1     0 0     1      x4        x4 − x1        0
+so x1 = x2 = x3 = x4 . Therefore, the nullspace consists of vectors of the
+form ( a, a, a, a).
+    Finally, (1,0,0,0) is not in the row space of A because it is not orthogonal
+to the nullspace.
+
+Problem 12.2: (8.2 #7.) Continuing with the network from problem one,
+suppose the conductance matrix is
+                             ⎡            ⎤
+                                1 0 0 0
+                             ⎢ 0 2 0 0 ⎥
+                         C=⎢ ⎣ 0 0 2 0 ⎦.
+                                          ⎥
+
+                                0 0 0 1
+
+                                        1
+Multiply matrices to ﬁnd A T CA. For f = (1, 0, −1, 0), ﬁnd a solution to
+A T CAx = f. Write the potentials x and currents y = −CAx on the square
+graph (see above) for this current source f going into node 1 and out from
+node 3.
+
+Solution:   From the previous question, we know that the incidence ma­
+trix is:                   ⎡                 ⎤
+                             −1     1 0    0
+                           ⎢ 0 −1 1        0 ⎥
+                      A=⎢                    ⎥.
+                           ⎣ 0      0 1 −1 ⎦
+                             −1     0 0    1
+Multiply to obtain A T CA:
+⎡            ⎤⎡                     ⎤⎡            ⎤ ⎡               ⎤
+  −1 0  0 −1    1 0           0   0     −1 1 0  0        2 −1  0 −1
+⎢ 1 −1  0                           ⎥ ⎢ 0 −1 1    ⎥ = ⎢ −1  3 −2
+           0 ⎥⎢ 0 2           0   0 ⎥ ⎢         0 ⎥   ⎢           0 ⎥
+⎢            ⎥⎢                                                     ⎥.
+⎣ 0  1  1  0 ⎦⎣ 0 0           2   0 ⎦ ⎣  0 0 1 −1 ⎦   ⎣  0 −2  4 −2 ⎦
+   0 0 −1  1    0 0           0   1     −1 0 0  1       −1  0 −2  3
+
+   Solving the equation A T CAx = f by performing row reduction on the
+augmented matrix
+                      ⎡                        ⎤
+                        −1     0    0 −1     1
+                      ⎢ 1 −1        0   0    0 ⎥
+                      ⎢                        ⎥
+                      ⎣ 0      1    1   0 −1 ⎦
+                           0   0 −1     1    0
+and choosing x3 = 0 to represent a grounded node gives:
+                             ⎡     ⎤ ⎡       ⎤
+                               x1        3/4
+                             ⎢ x2 ⎥ ⎢ 1/4 ⎥
+                         x=⎢ ⎣ x3 ⎦ = ⎣ 0 ⎦ .
+                                   ⎥ ⎢       ⎥
+
+                               x4        1/4
+    We know y = −CAx, so
+                ⎡             ⎤⎡      ⎤ ⎡       ⎤
+                  1 −1   0  0     3/4       1/2
+                ⎢ 0   2 −2  0 ⎥
+                              ⎥ ⎢ 1/4 ⎥ = ⎢ 1/2 ⎥ .
+                                ⎢     ⎥ ⎢       ⎥
+            y=⎢ ⎣ 0   0 −2  2 ⎦⎣    0 ⎦ ⎣ 1/2 ⎦
+                  1   0  0 −1     1/4       1/2
+We draw these values on the square graph:
+
+                                    2
+3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

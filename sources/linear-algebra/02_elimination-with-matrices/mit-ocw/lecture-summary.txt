@@ -1,0 +1,126 @@
+Elimination with matrices
+Method of Elimination
+Elimination is the technique most commonly used by computer software to
+solve systems of linear equations. It ﬁnds a solution x to Ax = b whenever
+the matrix A is invertible. In the example used in class,
+                           ⎡           ⎤          ⎡       ⎤
+                              1 2 1                   2
+                     A = ⎣ 3 8 1 ⎦ and b = ⎣ 12 ⎦ .
+                              0 4 1                   2
+
+    The number 1 in the upper left corner of A is called the ﬁrst pivot. We recopy
+the ﬁrst row, then multiply the numbers in it by an appropriate value (in this
+case 3) and subtract those values from the numbers in the second row. The ﬁrst
+number in the second row becomes 0. We have thus eliminated the 3 in row 2
+column 1.
+    The next step is to perform another elimination to get a 0 in row 3 column
+1; here this is already the case.
+    The second pivot is the value 2 which now appears in row 2 column 2. We
+ﬁnd a multiplier (in this case 2) by which we multiply the second row to elimi­
+nate the 4 in row 3 column 2. The third pivot is then the 5 now in row 3 column
+3.
+    We started with an invertible matrix A and ended with an upper triangular
+matrix U; the lower left portion of U is ﬁlled with zeros. Pivots 1, 2, 5 are on
+the diagonal of U.
+
+            ⎡                ⎤    ⎡              ⎤        ⎡             ⎤
+           1 2             1        1 2        1            1 2       1
+       A=⎣ 3 8             1 ⎦ −→ ⎣ 0 2       −2 ⎦ −→ U = ⎣ 0 2      −2 ⎦
+           0 4             1        0 4        1            0 0       5
+
+                                                                               2
+                                                                          �        �
+   We repeat the multiplications and subtractions with the vector b =         12       .
+                                                                               2
+For example, we multiply the 2 in the ﬁrst position by 3 and subtract from
+12 to get 6 in the second position. When calculating by hand we can do this
+efﬁciently by augmenting the matrix A, appending the vector b as a fourth or
+ﬁnal column. The method of elimination transforms the equation Ax = b into
+                                                        1   2    1
+                                                   �          �
+a new equation Ux = c. In the example above, U =        0   2   −2   comes from
+                                                        0   0    5
+                  2
+            �         �
+A and c =         6       comes from b.
+                −10
+   The equation Ux = c is easy to solve by back substitution; in our example,
+z = −2, y = 1 and x = 2. This is also a solution to the original system Ax = b.
+
+
+                                          1
+   The determinant of U is the product of the pivots. We will see this again.
+   Pivots may not be 0. If there is a zero in the pivot position, we must ex­
+change that row with one below to get a non-zero value in the pivot position.
+   If there is a zero in the pivot position and no non-zero value below it, then
+the matrix A is not invertible. Elimination can not be used to ﬁnd a unique
+solution to the system of equations – it doesn’t exist.
+
+Elimination Matrices
+The product of a matrix (3x3) and a column vector (3x1) is a column vector
+(3x1) that is a linear combination of the columns of the matrix.
+   The product of a row (1x3) and a matrix (3x3) is a row (1x3) that is a linear
+combination of the rows of the matrix.
+   We can subtract 3 times row 1 of matrix A from row 2 of A by calculating
+the matrix product:
+                  ⎡           ⎤⎡             ⎤ ⎡              ⎤
+                      1 0 0        1 2 1           1 2     1
+                  ⎣ −3 1 0 ⎦ ⎣ 3 8 1 ⎦ = ⎣ 0 2 −2 ⎦ .
+                      0 0 1        0 4 1           0 4     1
+
+The elimination matrix used to eliminate the entry in row m column n is denoted
+Emn . The calculation above took us from A to E21 A. The three elimination steps
+leading to U were: E32 ( E31 ( E21 A)) = U, where E31 = I. Thus E32 ( E21 A) = U.
+    Matrix multiplication is associative, so we can also write ( E32 E21 ) A = U.
+The product E32 E21 tells us how to get from A to U. The inverse of the matrix
+E32 E21 tells us how to get from U to A.
+    If we solve Ux = EAx = Eb, then it is also true that Ax = b. This is why
+the method of elimination works: all steps can be reversed.
+    A permutation matrix exchanges two rows of a matrix; for example,
+                                      ⎡         ⎤
+                                        0 1 0
+                                 P = ⎣ 1 0 0 ⎦.
+                                        0 0 1
+
+The ﬁrst and second rows of the matrix PA are the second and ﬁrst rows of
+the matrix A. The matrix P is constructed by exchanging rows of the identity
+matrix.
+   To exchange the columns of a matrix, multiply on the right (as in AP) by a
+permutation matrix.
+   Note that matrix multiplication is not commutative: PA �= AP.
+
+Inverses
+We have a matrix:                  ⎡              ⎤
+                                      1     0   0
+                             E21 = ⎣ −3     1   0 ⎦
+                                      0     0   1
+
+                                       2
+which subtracts 3 times row 1 from row 2. To “undo” this operation we must
+add 3 times row 1 to row 2 using the inverse matrix:
+                                   ⎡          ⎤
+                                      1 0 0
+                              −1
+                            E21  = ⎣ 3 1 0 ⎦.
+                                      0 0 1
+          −1
+In fact, E21 E21 = I.
+
+
+
+
+                                    3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

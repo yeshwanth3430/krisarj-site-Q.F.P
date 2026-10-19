@@ -1,0 +1,113 @@
+Solving Ax = 0: pivot variables, special solutions
+We have a deﬁnition for the column space and the nullspace of a matrix, but
+how do we compute these subspaces?
+
+Computing the nullspace
+The nullspace of a matrix A is made up of the vectors x for which Ax = 0.
+   Suppose:                      ⎡               ⎤
+                                   1 2 2       2
+                            A=⎣ 2 4 6          8 ⎦.
+                                   3 6 8 10
+(Note that the columns of this matrix A are not independent.) Our algorithm
+for computing the nullspace of this matrix uses the method of elimination, de­
+spite the fact that A is not invertible. We don’t need to use an augmented
+matrix because the right side (the vector b) is 0 in this computation.
+    The row operations used in the method of elimination don’t change the
+solution to Ax = b so they don’t change the nullspace. (They do affect the
+column space.)
+    The ﬁrst step of elimination gives us:
+                    ⎡               ⎤            ⎡              ⎤
+                        1 2 2     2                 1 2 2 2
+               A=⎣ 2 4 6          8 ⎦ −→ ⎣ 0 0 2 4 ⎦ .
+                        3 6 8 10                    0 0 2 4
+
+We don’t ﬁnd a pivot in the second column, so our next pivot is the 2 in the
+third column of the second row:
+              ⎡              ⎤         ⎡             ⎤
+                  1 2 2 2                1 2 2 2
+              ⎣ 0 0 2 4 ⎦ −→ ⎣ 0 0 2 4 ⎦ = U
+                  0 0 2 4                0 0 0 0
+
+The matrix U is in echelon (staircase) form. The third row is zero because row 3
+was a linear combination of rows 1 and 2; it was eliminated.
+   The rank of a matrix A equals the number of pivots it has. In this example,
+the rank of A (and of U) is 2.
+
+Special solutions
+Once we’ve found U we can use back-substitution to ﬁnd the solutions x to the
+equation Ux = 0. In our example, columns 1 and 3 are pivot columns containing
+pivots, and columns 2 and 4 are free columns. We can assign any value to x2 and
+x4 ; we call these free variables. Suppose x2 = 1 and x4 = 0. Then:
+
+                        2x3 + 4x4 = 0       =⇒   x3 = 0
+
+
+
+                                        1
+and:
+                  x1 + 2x2 + 2x3 + 2x4 = 0    =⇒     x1 = −2.
+                            −2
+                        ⎡      ⎤
+                             1 ⎥
+So one solution is x = ⎣         (because the second column is just twice the
+                       ⎢
+                             0 ⎦
+                             0
+ﬁrst column). Any multiple of this vector is in the nullspace.
+   Letting a different free variable equal 1 and setting the other free variables
+equal to zero gives us other vectors in the nullspace. For example:
+                                         ⎡   ⎤
+                                       2
+                                    ⎢ 0 ⎥
+                                  x=⎣
+                                      −2 ⎦
+                                       1
+
+has x4 = 1 and x2 = 0. The nullspace of A is the collection of all linear combi­
+nations of these “special solution” vectors.
+    The rank r of A equals the number of pivot columns, so the number of free
+columns is n − r: the number of columns (variables) minus the number of pivot
+columns. This equals the number of special solution vectors and the dimension
+of the nullspace.
+
+Reduced row echelon form
+By continuing to use the method of elimination we can convert U to a matrix
+R in reduced row echelon form (rref form), with pivots equal to 1 and zeros above
+and below the pivots.
+        ⎡              ⎤       ⎡                 ⎤     ⎡                 ⎤
+          1 2 2 2                 1 2 0 −2                1 2 0 −2
+  U=⎣ 0 0 2 4 ⎦ → ⎣ 0 0 2                     4 ⎦ → ⎣ 0 0 1            2 ⎦ = R.
+          0 0 0 0                 0 0 0       0           0 0 0        0
+
+   By exchanging some columns, R can be rewritten with a copy of the identity
+matrix in the upper left corner, possibly followed by some free columns on the
+right. If some rows of A are linearly dependent, the lower rows of the matrix
+R will be ﬁlled with zeros:           �        �
+                                        I F
+                                 R=              .
+                                        0 0
+(Here I is an r by r square matrix.) �   �
+                                    −F
+   If N is the nullspace matrix N =        then RN = 0. (Here I is an n − r by
+                                       I
+n − r square matrix and 0 is an m by n − r matrix.) The columns of N are the
+special solutions.
+
+
+
+
+                                         2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

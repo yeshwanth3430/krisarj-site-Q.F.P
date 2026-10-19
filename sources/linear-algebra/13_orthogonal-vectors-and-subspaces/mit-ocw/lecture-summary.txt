@@ -1,0 +1,106 @@
+Orthogonal vectors and subspaces
+In this lecture we learn what it means for vectors, bases and subspaces to be
+orthogonal. The symbol for this is ⊥.
+    The “big picture” of this course is that the row space of a matrix’ is orthog­
+onal to its nullspace, and its column space is orthogonal to its left nullspace.
+
+                 row space                         column space
+                dimension r                         dimension r
+                     ⊥                                   ⊥
+                 nullspace                    left nullspace N ( A T )
+              dimension n − r                   dimension m − r
+
+Orthogonal vectors
+Orthogonal is just another word for perpendicular. Two vectors are orthogonal if
+the angle between them is 90 degrees. If two vectors are orthogonal, they form
+a right triangle whose hypotenuse is the sum of the vectors. Thus, we can use
+the Pythagorean theorem to prove that the dot product x T y = y T x is zero exactly
+when x and y are orthogonal. (The length squared ||x||2 equals x T x.)
+    Note that all vectors are orthogonal to the zero vector.
+
+Orthogonal subspaces
+Subspace S is orthogonal to subspace T means: every vector in S is orthogonal
+to every vector in T. The blackboard is not orthogonal to the ﬂoor; two vectors
+in the line where the blackboard meets the ﬂoor aren’t orthogonal to each other.
+    In the plane, the space containing only the zero vector and any line through
+the origin are orthogonal subspaces. A line through the origin and the whole
+plane are never orthogonal subspaces. Two lines through the origin are orthog­
+onal subspaces if they meet at right angles.
+
+Nullspace is perpendicular to row space
+The row space of a matrix is orthogonal to the nullspace, because Ax = 0
+means the dot product of x with each row of A is 0. But then the product of x
+with any combination of rows of A must be 0.
+   The column space is orthogonal to the left nullspace of A because the row
+space of A T is perpendicular to the nullspace of A T .
+   In some sense, the row space and the nullspace
+                                               �        of a matrix
+                                                             �      subdivide Rn
+                                                  1   2    5
+into two perpendicular subspaces. For A =                      , the row space has
+                                                  2   4   10
+                            1
+                       � �
+dimension 1 and basis       2   and the nullspace has dimension 2 and is the
+                            5
+
+
+
+
+                                        1
+                                                                    1
+                                                               �        �
+plane through the origin perpendicular to the vector                2       .
+                                                                    5
+   Not only is the nullspace orthogonal to the row space, their dimensions add
+up to the dimension of the whole space. We say that the nullspace and the row
+space are orthogonal complements in Rn . The nullspace contains all the vectors
+that are perpendicular to the row space, and vice versa.
+   We could say that this is part two of the fundamental theorem of linear alge­
+bra. Part one gives the dimensions of the four subspaces, part two says those
+subspaces come in orthogonal pairs, and part three will be about orthogonal
+bases for these subspaces.
+
+N ( AT A) = N ( A)
+Due to measurement error, Ax = b is often unsolvable if m > n. Our next
+challenge is to ﬁnd the best possible solution in this case. The matrix A T A
+plays a key role in this effort: the central equation is A T Ax̂ = A T b.
+   We know that A T A is square (n × n) and symmetric. When is it invertible?
+                        1   1
+                  �         �
+   Suppose A =          1   2       . Then:
+                        1   5
+                                                      ⎡     ⎤
+                                �                 �     1 1   �                 �
+                    T               1     1   1       ⎣ 1 2 ⎦= 3         8
+                  A A=
+                                    1     2   5                 8       30
+                                                        1 5
+
+is invertible. A T A is not always invertible. In fact:
+
+                                        N ( AT A)
+                                            = N ( A)
+                                              T
+                                rank of A A = rank of A.
+
+We conclude that A T A is invertible exactly when A has independent columns.
+
+
+
+
+                                                      2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

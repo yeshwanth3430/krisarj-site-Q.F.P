@@ -1,0 +1,146 @@
+MITOCW | MIT18_06SC_110706_B1_300k-mp4
+
+
+BEN HARRIS:   Hi. I'm Ben.
+
+
+              Today we are going to do an LU decomposition problem. Here's the problem right here. Find
+
+              that LU decomposition of this matrix A. Now notice that this matrix A has variables, as well as
+
+              numbers. So the sentence ends: when it exists. And the second part of the question asks you:
+              for which real numbers a and b does the LU decomposition of this matrix actually exist?
+
+
+              Now, you can hit pause now and I'll give you a few seconds. You can try to solve this on your
+
+              own, and then we'll be back and we can do it together.
+
+
+              And we're back. Now, what do you have to remember when doing an LU decomposition
+
+              problem? Well, we do elimination in the same way that we did before in order to find U. But
+              with this question we need to find L as well. So we need to do elimination, but we also need to
+              keep track of the elimination matrices along the way. Good. So let's do that.
+
+
+              So let me put my matrix up here. And we want to do elimination. So which entry do we
+              eliminate first? That's right. It's this (2, 1) entry. So we replace the second row by the second
+
+              row minus a times the first row, and we get this.
+
+
+              But we're not just doing elimination, we're finding an LU decomposition. So we need to keep
+
+              track of the matrix that I multiplied the elimination matrix, that I multiplied this matrix A by on
+              the left to get this matrix. So what is that? That's this E_(2,1). Since I eliminated the (2, 1)
+              entry, I'll call it E_(2,1). And it's this matrix.
+
+
+              Why is it this matrix? Well, remember how multiplication on the left works. I replaced the first
+
+              row by just the first row. I replaced the second row by the second row minus a times the first
+              row. So you can just read off from these rows which operations I did.
+
+
+              Now, which entries should we eliminate next? We need to eliminate this b. So we will replace
+              the third row by the third row minus b times the first row. And which elimination matrix did we
+
+              use? Well, note, we replaced the third row by the third row minus b times the first row. That's
+
+              exactly what you should read off this elimination matrix. Good.
+
+
+              Now, we only have one step left. We only need to eliminate one last entry. But this one's a little
+
+              tricky, so let's be careful. In order to eliminate this b, we need a to be a pivot. In particular, we
+              need a to be nonzero. If a were zero here, then we would have to do a row exchange. And
+need a to be nonzero. If a were zero here, then we would have to do a row exchange. And
+
+that's no good. You can't find an LU decomposition if you have to do a row exchange in
+
+elimination. So we need to assume that a is non-zero in order to keep going. So let's just
+
+assume there that a is non-zero.
+
+
+Now, what do we do? Well we can replace the third row by the third row minus b over a times
+
+the second row. And we just get this. a minus b. And let's write down our elimination matrix.
+E_(3,2) now. There's our elimination matrix. We replaced the third row by the third row minus
+
+b over a times the second row. Good.
+
+
+So we found our U matrix. That's what elimination does, it gives us our U matrix. So let me
+
+write it up here. 1, 0, 1; 0, a, 0; 0, 0, a minus b. Good.
+
+
+Now we have to find our L matrix, and we need to use these elimination matrices that we've
+
+been recording along the way in order to do that. So remember that we started with A, and we
+got U. And how did we do that? Well we multiplied on the left by all of these elimination
+
+matrices, E_(2,1), E_(3,1) and E_(3,2). Sorry if that's scrunching together there.
+
+
+Now, if we move these elimination matrices to the other side then we'll get L. So what do we
+
+have? We have A equals E_(2,1) inverse, E_(3,1) inverse, E_(3,2) inverse times U. And this is
+our L, this product of these three matrices. Good.
+
+
+So let's compute it now. So L is the product of three matrices. I need to get them by going
+
+back and looking at these three elimination matrices and taking their inverses. Well the nice
+
+thing about taking an inverse of an elementary matrix like this is we just make a minus a plus
+
+or a plus a minus. So that's easy enough. We just change the off-diagonal entries, we just
+
+change their signs. You can check that that does what we wanted it to. It gives us the inverse.
+Good.
+
+
+And the last comment is that multiplying these three matrices is really easy in this order. Turns
+
+out all you do is you just plop these entries right in. 1, 1. Good. So this is our L matrix.
+
+
+So now we have our U matrix and our L matrix, and we're done with the first part of the
+
+question.
+
+
+The second part asks us for which real numbers a and b does this decomposition exist? Now
+
+let's go back and remember that at one point we had to assume that A was non-zero. That
+
+was the only assumption we had to make to get this decomposition. So it exists-- it being this
+decomposition-- when a is non-zero. And that's the answer to the second part. So we have our
+LU decomposition, and we know when it exists.
+
+
+Before I end, two comments. First, always check your work. Always go back and multiply L
+
+times U and make sure it's A, because it's easy to screw up the elimination process and it's
+
+easy to check your work. So if you go back and make sure things are as they should be.
+
+
+Second comment is that you might be worried when you do this elimination process that-- well
+
+OK, we had to assume a is non-zero because we wanted a non-zero pivot. You might worry
+
+that we might have to have a minus b be non-zero. But in fact, a minus b can be 0. It's not a
+
+problem for this entry to be 0 because we don't have to do a row exchange to get U. That's
+
+the only time when we can't do the LU decomposition. In particular, singular matrices can have
+
+LU decompositions. Good.
+
+
+Thanks.
+

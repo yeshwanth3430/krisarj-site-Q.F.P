@@ -1,0 +1,60 @@
+                Exercises on projections onto subspaces
+
+
+Problem 15.1: (4.2 #13. Introduction to Linear Algebra: Strang) Suppose A
+is the four by four identity matrix with its last column removed; A is four
+by three. Project b = (1, 2, 3, 4) onto the column space of A. What shape is
+the projection matrix P and what is P?
+
+Solution: P will be four by four since we are projecting a 4-dimensional
+vector to another 4-dimensional vector. We will have:
+                              ⎡             ⎤
+                                 1 0 0 0
+                              ⎢ 0 1 0 0 ⎥
+                          P=⎢ ⎣ 0 0 1 0 ⎦
+                                            ⎥
+
+                                 0 0 0 0
+This can be seen by observing that the column space of A is the wxy−space,
+so we just need to subtract the z coordinate from the 4-dimensional vector
+(w, x, y, z) we’re projecting. The projection of b is therefore:
+                             ⎡             ⎤⎡ ⎤ ⎡ ⎤
+                                1 0 0 0        1          1
+                             ⎢ 0 1 0 0 ⎥⎢ 2 ⎥ ⎢ 2 ⎥
+                 p = Pb = ⎢  ⎣ 0 0 1 0 ⎦⎣ 3 ⎦ = ⎣ 3 ⎦.
+                                           ⎥⎢ ⎥ ⎢ ⎥
+
+                                0 0 0 0        4          0
+
+
+Problem 15.2: (4.2 #17.) If P2 = P, show that ( I − P)2 = I − P. For the
+matrices A and P from the previous question, P projects onto the column
+space of A and I − P projects onto the         .
+
+Solution:
+   ( I − P)2 = I 2 − IP − PI + P2 = I − 2P + P2 = I − 2P + P = I − P.
+Using the matrices A and P from the previous question,
+                                ⎡            ⎤
+                                  0 0 0 0
+                                ⎢ 0 0 0 0 ⎥
+                        I−P=⎢   ⎣ 0 0 0 0 ⎦
+                                             ⎥
+
+                                  0 0 0 1
+projects onto the left nullspace of A.
+
+                                     1
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

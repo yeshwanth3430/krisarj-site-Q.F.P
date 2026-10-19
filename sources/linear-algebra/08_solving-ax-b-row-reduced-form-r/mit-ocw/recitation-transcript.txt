@@ -1,0 +1,118 @@
+MITOCW | MIT18_06SC_110714_M3_300k-mp4
+
+
+MARTINA       Hi. Welcome.
+BALAGOVIC:
+
+
+              Today's problem is about finding solutions of this non-homogeneous linear system: x minus 2y
+
+              minus 2z equals b_1, 2x minus 5y minus 4z equals b_2, and 4x minus 9y minus 8z equals
+              b_3. And as you can see, the system doesn't only have numbers and unknowns, it also has
+
+              parameters, b_1, b_2, and b_3, and the solution will depend on these parameters, but also
+
+              the existence of the solution will depend on these parameters. And we're asked to find a
+
+              solution and find when it exists, depending on the values of b_1, b_2, and b_3.
+
+
+              So now you should pause the video, solve the problem, and come back and compare your
+              solution with mine.
+
+
+              And we're back. Let's try it. Let's start by solving this system as though b_1, b_2, and b_3
+
+              were numbers.
+
+
+              So we write the matrix of the system, which is 1, minus 2, minus 2, b_1; and then 2, minus 5,
+
+              minus 4, b_2; and 4, minus 9 minus 8, b_3. And we do elimination. So we multiply the first row
+              by minus 2 and add it to the second row. And we multiply it by minus 4 and add it to the third
+
+              row. And we get 1, minus 2, minus 2, b_1; 0, 4 minus 5 is minus 1, 4 minus 4 is 0, and minus 2
+              times b_1 plus b_2. And here we get 0, 8 minus 9 is minus 1, and 8 minus 8 is 0. Finally, on
+              the right-hand side, minus 4*b_1 plus b_3. And you can already see that something's going to
+
+              happen here. But let's do one more step.
+
+
+              So eliminating further, we get 1, minus 2, minus 2, b_1; 0, minus 1, 0, minus 2*b_1 plus b_2.
+
+              And in the last row we replace it with the last row minus the second row, and we get 0, 0, 0,
+
+              minus 4*b_1 plus 2-- so minus minus 2*b_2 is minus 2*b_1 minus b_2 and plus b_3. I hope I
+              did this right.
+
+
+              So now let's think of it as a system again. The last equation says 0 equals this expression in
+              b_1, b_2, and b_3. So this is something to note down. If minus 2*b_1 minus b_2 plus b_3 is
+
+              some number that's not 0, then the last equation is going to say 0 equals nonzero. It's never
+
+              going to be satisfied, and the entire system is never going to have a solution. So in this case,
+              we have no solutions.
+If this is equal to 0, so minus 2*b_1 minus b_2 plus b_3 is equal to 0, then let's do one more
+step on this matrix here. Let's turn this number into 1 by multiplying this row by negative 1.
+
+And let's use it to eliminate this number here as well.
+
+
+So in this case, we get-- let me write it from the last row, which now becomes 0, 0, 0, equals 0,
+
+which is fine. The second row becomes 0, 1, 0, 2*b_1 minus b_2. And the first one, to get rid
+
+of this minus 2, we multiply this row by negative 2 and add it to the first one. We get 1, 0,
+negative 2, and here we get b_1 plus 4*b_1 which is 5*b_1, minus 2*b_2.
+
+
+The reason why we did it was to get the identity matrix here. And now let's solve this.
+
+
+These two columns, corresponding to variables x and y, have pivots in them. So these are the
+
+pivot variables. This column here has no pivot in it, so it's a free variable. And now we're going
+to calculate the solutions, but by picking particular values for z, and then calculating the values
+
+for x and y. We have two kinds of solution. One kind is the particular solution. So this one
+solves A*x equals b. There's only one of them. And we get it by setting the free variable equal
+
+to 0.
+
+
+Setting the free variable equal to 0, we get, well this is equal to 0. The second equation says y
+
+equals this thing here, so 2*b_1 minus b_2. And the first equation says x minus 2 times 0
+
+equals this expression here. So 5*b_1 minus 2*b_2. That's our particular solution.
+
+
+The next kind is the special solution. So remember, those solve A*x equals 0. There's as many
+
+of them as there are free variables. In our case, there's only one. And we get it by setting all
+
+free variables equal to 0, except one equal to 1. And do it for every free variable. So in our
+
+case there's only one free variable and we set z equal to 1.
+
+
+The solution that we get in this case, and remember we're solving Ax equals 0-- we don't care
+
+about the right-hand side anymore-- so z is 1. This second equation says y equals 0, and the
+
+first equation says x minus 2 times 1 equals 0. In other words, x equals 2. So the special
+
+solution is [2, 0, 1]. And now all solutions are of the form x equals the particular solution plus
+
+any multiple of the special solution.
+
+
+Let me recap. In case this particular combination of parameters is not 0, there's no solutions.
+
+In case this particular combination of parameters is equal to 0, there are solutions, there are
+
+as many of them as there are real numbers c, and they're all of this form for these two vectors.
+
+And that's all I wanted to say today.
+

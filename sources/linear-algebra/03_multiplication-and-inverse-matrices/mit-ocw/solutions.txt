@@ -1,0 +1,74 @@
+             Exercises on multiplication and inverse matrices
+
+
+Problem 3.1: Add AB to AC and compare with A( B + C ) :
+
+                       �             �         �             �               �         �
+                            1 2                        1 0                       0 0
+                 A=                      B=                          C=
+                            3 4                        0 0                       5 6
+
+Solution: We ﬁrst add AB to AC :
+
+       �         ��         �        �         �                     �           ��          �       �           �
+           1 2        1 0                1 0                             1 2          0 0                10 12
+AB =                             =                 ,    AC =                                     =
+           3 4        0 0                3 0                             3 4          5 6                20 24
+                                     �         �       �                 �       �           �
+                                         1 0               10 12                     11 12
+           −→ AB + AC =                            +                         =                   .
+                                         3 0               20 24                     23 24
+
+We then compute A( B + C ) :
+                       �      � �     � �     �
+                          1 0     0 0     1 0
+              B+C =            +       =
+                          0 0     5 6     5 6
+
+                             �            ��            �        �               �
+                                 1 2           1 0                   11 12
+       −→ A( B + C ) =                                      =                        = AB + AC.
+                                 3 4           5 6                   23 24
+
+Therefore, AB + AC = A( B + C ).
+
+Problem 3.2: (2.5 #24. Introduction to Linear Algebra: Strang) Use Gauss-
+Jordan elimination on [U I ] to ﬁnd the upper triangular U −1 :
+
+                        ⎡    ⎤⎡           ⎤ ⎡         ⎤
+                       1 a b                    1 0 0
+           UU −1 = I ⎣ 0 1 c ⎦ ⎣ x1 x2 x3 ⎦ = ⎣ 0 1 0 ⎦ .
+                       0 0 1                    0 0 1
+
+Solution: Row reduce [U I ] to get [ I U −1 ] as follows (here, Ri = row i)
+
+
+
+                                                   1
+⎡                   ⎤                         ⎡                             ⎤
+  1 a b     1 0 0           ( R1 = R1 − aR2 )   1 0 b − ac    1 −a        0
+⎣ 0 1 c     0 1 0 ⎦ −→ ( R2 = R2 − cR2 ) ⎣ 0 1            0   0    1 −c ⎦
+  0 0 1     0 0 1                               0 0       1   0    0      1
+                                 ⎡                          ⎤
+       ( R1 = R1 − (b − ac) R3 )   1 0 0      1 − a ac − b
+    −→                           ⎣ 0 1 0      0   1    − c ⎦ = [ I L −1 ]
+                                   0 0 1      0   0      1
+
+
+
+
+                                   2
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

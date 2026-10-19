@@ -1,0 +1,170 @@
+MITOCW | MIT18_06SC_110711_N1_300k-mp4
+
+
+NIKOLA        Hi, guys. Today we're going to see how one can use linear algebra to describe graphs and
+KAMBUROV:     networks. In particular, we'll do the following problem.
+
+
+              We're given this very simple graph here with five nodes and six edges. We've already labeled
+
+              them, and we've put directions on the edges. And we are asked to write down the incidence
+              matrix A, and then to compute its kernel and the kernel of A transpose. And finally, we're
+
+              asked to compute the trace of A transpose A.
+
+
+              I'll give you a few moments to try the problem on your own. And then you'll see my take on it.
+
+
+              Hello again. OK, so let's first recall what an incidence matrix is. So an incidence matrix is
+
+              supposed to encode how the nodes connect to the edges. In particular, it has as many rows
+              as there are edges and as many columns as there are nodes.
+
+
+              And we're going to fill in the rows. And we'll fill them out as follows. So we're going to use only
+
+              negative 1, 1, and 0. And we're going to put a negative 1 in entry i and 1 in entry j if the
+              corresponding edge connects node i to node j.
+
+
+              OK, let me just do it concretely. So let's look at edge number 1. So it corresponds to the first
+              row. It connects 1 to 2. So we have a negative 1 and a 1.
+
+
+              Then edge number 2, it connects node 2 to 3, so negative 1, 1. Edge number 3 connects node
+              1 to 3, so negative 1, 1. And I believe you get the picture, right?
+
+
+              So I'm just going to fill out the rest of the entries. All right, 4 is: negative 1, to 1. 5 is: well, 4,
+
+              well, negative 1, 1 here. And 6 is: negative 1 and 1.
+
+
+              OK. So we've constructed the matrix A. Now, we'll compute its null space. And we're going to
+              do it without performing any row operations whatsoever.
+
+
+              So in order to do this, it's helpful to look at the graph as an electric circuit and to assign to
+              each of the nodes an electric potential. If we collect all the electric potentials in a vector x, then
+
+              A times x is a vector with as many entries as there are edges and gives precisely the potential
+
+              differences across the edges of the graph. OK, so then if A*x is to be 0, this means that across
+
+              the graph, across all the edges of the graph, all potential differences are 0.
+Therefore, all the potentials at all the nodes need to be equal to a constant number. So
+
+therefore, we conclude that the null space of A is spanned by constant 1. OK? There are five
+1's here, corresponding to the five nodes.
+
+
+Now what about the null space of A transpose? Adopt this analogy with electric circuits. But
+
+this time, we're going to look at currents flowing across the edges of the graph. Oh, and we
+
+are going to adopt the following convention for the currents. So a current is going to be
+
+positive if it flows in the direction of the edge and negative if it flows in the opposite direction.
+
+
+Right. So then, what is A transpose y, where y is a vector, each of whose entries is a current
+
+on the edge? Well, the entries of A transpose y are precisely equal to the total current flowing
+through each of the nodes of the graph. So A transpose y being equal to 0 means that there is
+
+a balance in the circuit, that the currents that flow into each node equal the currents that flow
+
+out of it.
+
+
+Right. And it's fairly easy to find such a configuration of currents that satisfies this balance
+
+equation. We do it by flowing around loops of the graph.
+
+
+So you see, this graph has three loops. The first one is this triangle up there. The second one
+
+is this square.
+
+
+And I'm just, by this curled direction, I'm signifying in which way I'm going to trace the loop.
+
+And there is third loop, is along the outer contour of the graph. But in fact, the third one can be
+
+thought of as a superposition of these two, and I'll explain why in a second.
+
+
+So let's figure out the configuration of currents that balances these loops. So if we flow a
+
+current 1 from 1 to 2 and then flow a current of 1 along edge 2, from 2 to 3, and then we flow
+
+a current of negative 1, mind that the direction is opposite to the direction of the loop, then
+
+we're going to have a balanced configuration of currents. So let me write this down. The
+
+following configuration, so 1 along edge 1, 1 along edge 2, and negative 1 along edge 3, and
+
+the rest 0, is a solution to A transpose y.
+
+
+Let's see what solution we get by flowing around the loop in the square. Well, we flow a
+
+current of 1 along edge 4, current of 1 along edge 5, current of 1 along edge 6, and current of
+
+negative 1 along edge 2. So let's be careful.
+
+
+So it was 0, then along edge 2 was negative 1. Along 3: 0; along 4: 1; along 5: 1; along 6: 1.
+Now we can do the same thing with the big loop and produce a vector corresponding to it. And
+
+I prompt you to do it. But what you'll see is that the vector that you get is precisely a sum of
+
+these two vectors. In a way, the big loop is a superposition of the small loops.
+
+
+OK, so we figured out what the null space of A transpose is. And now, let's concentrate our
+
+attention on finding the trace of A transpose A. We're going to do it right here.
+
+
+So the trace of a matrix is the sum of its diagonal entries. And we've seen this many times
+
+already, that the diagonal entries of A transpose A are precisely the magnitudes squared of
+
+the columns of A. OK? So the (1, 1) entry is the magnitude squared of the first column. The (2,
+2) entry is the magnitude squared of the second column, and so on.
+
+
+Now what is the magnitude squared of a column of an incidence matrix? Well, each entry in a
+
+column of an incidence matrix is either 1, negative 1, or 0. So when we square these entries,
+
+we get 1's or 0's. And when we add them up, we get precisely a number which is the nontrivial
+
+entries in that column. OK?
+
+
+So the magnitude squared of the column is the number of nontrivial entries in it. But if we go
+
+back to the matrix A, and we count the number of non-zero entries, this is precisely the
+
+number of edges that connect with a node. OK, so the number of edges that connects with
+
+each node is called the degree of the node. In this way, trace of A transpose A will be just the
+
+sum of the degrees of the graph in the picture.
+
+
+So we have there are 2 edges connecting to 1, so 2, plus 3 edges connecting to 2, 3 edges
+
+connecting to 3. And we've got a 2 for the number of edges connecting to 4, and 2 for the
+
+number of edges connecting to 5. So altogether, we get 12.
+
+
+So you see, in this problem, we computed certain linear algebra objects without performing the
+
+usual algebraic operations, but just by looking at the graph and seeing how the linear algebra
+is encoded in it. I hope it was most illuminating. I'll see you next time.
+

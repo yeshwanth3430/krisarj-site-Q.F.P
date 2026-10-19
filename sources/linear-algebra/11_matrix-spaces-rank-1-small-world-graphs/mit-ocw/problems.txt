@@ -1,0 +1,48 @@
+         Exercises on matrix spaces; rank 1; small world graphs
+
+
+Problem 11.1: [Optional] (3.5 #41. Introduction to Linear Algebra: Strang)
+Write the 3 by 3 identity matrix as a combination of the other ﬁve per­
+mutation matrices. Then show that those ﬁve matrices are linearly inde­
+pendent. (Assume a combination gives c1 P1 + · · · + c5 P5 = 0 and check
+entries to prove ci is zero.) The ﬁve permutation matrices are a basis for the
+subspace of three by three matrices with row and column sums all equal.
+
+Problem 11.2: (3.6 #31.) M is the space of three by three matrices. Multiply
+each matrix X in M by:
+                                ⎡                ⎤
+                                    1    0 −1
+                          A = ⎣ −1       1     0 ⎦
+                                    0 −1       1
+             ⎡ ⎤ ⎡ ⎤
+                1         0
+Notice that A 1 = 0 ⎦.
+             ⎣     ⎦    ⎣
+                1         0
+
+a) Which matrices X lead to AX = 0?
+
+b) Which matrices have the form AX for some matrix X?
+
+c) Part (a) ﬁnds the “nullspace” of the operation AX and part (b) ﬁnds
+   the “column space.” What are the dimensions of those two subspaces
+   of M? Why do the dimensions add to (n − r ) + r = 9?
+
+
+
+
+                                      1
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

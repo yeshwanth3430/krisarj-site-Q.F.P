@@ -1,0 +1,38 @@
+             Exercises on orthogonal vectors and subspaces
+
+
+Problem 16.1: (4.1 #7. Introduction to Linear Algebra: Strang) For every
+system of m equations with no solution, there are numbers y1 , ..., ym that
+multiply the equations so they add up to 0 = 1. This is called Fredholm’s
+Alternative:
+
+     Exactly one of these problems has a solution:
+     Ax = b OR A T y = 0 with y T b = 1.
+If b is not in the column space of A it is not orthogonal to the nullspace of
+A T . Multiply the equations x1 − x2 = 1, x2 − x3 = 1 and x1 − x3 = 1 by
+numbers y1 , y2 and y3 chosen so that the equations add up to 0 = 1.
+
+Problem 16.2: (4.1#32.) Suppose I give you four nonzero vectors r, n, c
+and l in R2 .
+ a) What are the conditions for those to be bases for the four fundamental
+    subspaces C ( A T ), N ( A), C ( A), and N ( A T ) of a 2 by 2 matrix?
+ b) What is one possible matrix A?
+
+
+
+
+                                     1
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

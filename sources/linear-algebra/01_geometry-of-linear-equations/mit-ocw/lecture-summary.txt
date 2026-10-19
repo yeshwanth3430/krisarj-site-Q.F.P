@@ -1,0 +1,157 @@
+The geometry of linear equations
+The fundamental problem of linear algebra is to solve n linear equations in n
+unknowns; for example:
+                                   2x − y = 0
+                                 − x + 2y = 3.
+In this ﬁrst lecture on linear algebra we view this problem in three ways.
+    The system above is two dimensional (n = 2). By adding a third variable z
+we could expand it to three dimensions.
+
+Row Picture
+Plot the points that satisfy each equation. The intersection of the plots (if they
+do intersect) represents the solution to the system of equations. Looking at
+Figure 1 we see that the solution to this system of equations is x = 1, y = 2.
+
+                             y     4
+
+                                   3
+
+                                   2         (1, 2)
+                                       −x + 2y = 3
+                                   1           2x − y = 0
+
+                                   0
+                           −1          0        1      2
+                                                        x
+                                 −1
+
+                                 −2
+
+ Figure 1: The lines 2x − y = 0 and − x + 2y = 3 intersect at the point (1, 2).
+
+  We plug this solution in to the original system of equations to check our
+work:
+                                  2·1−2     = 0
+                                 −1 + 2 · 2 = 3.
+   The solution to a three dimensional system of equations is the common
+point of intersection of three planes (if there is one).
+
+
+                                           1
+Column Picture
+In the column picture we rewrite the system of linear equations as a single
+equation by turning the coefﬁcients in the columns of the system into vectors:
+                         �     �     �      � �     �
+                             2          −1        0
+                       x         +y           =       .
+                           −1             2       3
+    Given two vectors c and d and scalars x and y, the sum xc + yd is called
+a linear combination of c and d. Linear combinations are important throughout
+this course.
+� Geometrically,
+       �            we want to ﬁnd numbers
+                                      �    � x and y so that x�copies
+                                                                  � of vector
+     2                                  −1                      0
+          added to y copies of vector       equals the vector      . As we see
+   −1                                    2                      3
+from Figure 2, x = 1 and y = 2, agreeing with the row picture in Figure 2.
+
+                              4
+
+
+                              3
+                                                  
+                                           −1
+                              2           2
+                                      0
+                                      3
+                              1
+                                                                
+                                                           −1
+                              0                              2
+                      −1          0            1           2
+                                              
+                                           2
+                            −1            −1
+
+  Figure 2: A linear combination of the column vectors equals the vector b.
+
+   In three dimensions, the column picture requires us to ﬁnd a linear combi­
+nation of three 3-dimensional vectors that equals the vector b.
+
+Matrix Picture
+We write the system of equations
+                                  2x − y= 0
+                               − x + 2y = 3
+
+
+
+                                          2
+as a single equation by using matrices and vectors:
+                           �          ��     � �      �
+                               2 −1       x        0
+                                               =        .
+                              −1   2      y        3
+                        �          �
+                             2 −1
+    The matrix A =                   is called the coefﬁcient matrix. The vector
+     �    �               −1     2
+        x
+x=          is the vector of unknowns. The values on the right hand side of the
+        y
+equations form the vector b:
+                                     Ax = b.
+   The three dimensional matrix picture is very like the two dimensional one,
+except that the vectors and matrices increase in size.
+
+Matrix Multiplication
+How do we multiply a matrix A by a vector x?
+                          �      ��     �
+                            2 5      1
+                                          = ?
+                            1 3      2
+   One method is to think of the entries of x as the coefﬁcients of a linear
+combination of the column vectors of the matrix:
+              �        ��   �     �    �    �    � �      �
+                 2 5      1          2         5       12
+                              =1         +2       =         .
+                 1 3      2          1         3        7
+
+This technique shows that Ax is a linear combination of the columns of A.
+   You may also calculate the product Ax by taking the dot product of each
+row of A with the vector x:
+                �       ��    � �               � �        �
+                  2 5       1         2·1+5·2           12
+                                =                  =         .
+                  1 3       2         1·1+3·2            7
+
+Linear Independence
+In the column and matrix pictures, the right hand side of the equation is a
+vector b. Given a matrix A, can we solve:
+
+                                     Ax = b
+
+for every possible vector b? In other words, do the linear combinations of the
+column vectors ﬁll the xy-plane (or space, in the three dimensional case)?
+    If the answer is “no”, we say that A is a singular matrix. In this singular
+case its column vectors are linearly dependent; all linear combinations of those
+vectors lie on a point or line (in two dimensions) or on a point, line or plane (in
+three dimensions). The combinations don’t ﬁll the whole space.
+
+
+                                        3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

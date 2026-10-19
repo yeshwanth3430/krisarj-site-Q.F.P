@@ -1,0 +1,127 @@
+Independence, basis, and dimension
+What does it mean for vectors to be independent? How does the idea of inde­
+pendence help us describe subspaces like the nullspace?
+
+Linear independence
+Suppose A is an m by n matrix with m < n (so Ax = b has more unknowns
+than equations). A has at least one free variable, so there are nonzero solutions
+to Ax = 0. A combination of the columns is zero, so the columns of this A are
+dependent.
+    We say vectors x1 , x2 , ...xn are linearly independent (or just independent) if
+c1 x1 + c2 x2 + · · · + cn xn = 0 only when c1 , c2 , ..., cn are all 0. When those vectors
+are the columns of A, the only solution to Ax = 0 is x = 0.
+    Two vectors are independent if they do not lie on the same line. Three
+vectors are independent if they do not lie in the same plane. Thinking of Ax as
+a linear combination of the column vectors of A, we see that the column vectors
+of A are independent exactly when the nullspace of A contains only the zero
+vector.
+    If the columns of A are independent then all columns are pivot columns,
+the rank of A is n, and there are no free variables. If the columns of A are
+dependent then the rank of A is less than n and there are free variables.
+
+Spanning a space
+Vectors v1 , v2 , ...vk span a space when the space consists of all combinations of
+those vectors. For example, the column vectors of A span the column space of
+A.
+   If vectors v1 , v2 , ...vk span a space S, then S is the smallest space containing
+those vectors.
+
+Basis and dimension
+A basis for a vector space is a sequence of vectors v1 , v2 , ...vd with two proper­
+ties:
+
+   • v1 , v2 , ...vd are independent
+   • v1 , v2 , ...vd span the vector space.
+The basis of a space tells us everything we need to know about that space.
+
+
+
+
+                                            1
+Example: R3
+                               1           0           0
+                      ��           � �         � �          ��
+One basis for R3 is            0       ,   1       ,   0          . These are independent because:
+                               0           0           1
+
+                               1                   0                  0               0
+                           �       �           �       �          �       �       �       �
+                      c1       0       + c2        1       + c3       0       =       0
+                               0                   0                  1               0
+
+is only possible when c1 = c2 = c3 = 0. These vectors span R3 .
+                                                                                      1           2                 3
+                                                      � � �                                           �         �       �
+   As discussed at the start of Lecture 10, the vectors                               1       ,   2       and       3
+                                                                                      2           5                 8
+do not form a basis for R3 because these are the column vectors of a matrix that
+has two identical rows. The three vectors are not linearly independent.
+   In general, n vectors in Rn form a basis if they are the column vectors of an
+invertible matrix.
+
+Basis for a subspace
+               1                   2
+             � �               �       �
+The vectors    1      and          2       span a plane in R3 but they cannot form a basis
+               2                   5
+for R3 . Given a space, every basis for that space has the same number of vec­
+tors; that number is the dimension of the space. So there are exactly n vectors in
+every basis for Rn .
+
+Bases of a column space and nullspace
+Suppose:                                       ⎡     ⎤
+                                             1 2 3 1
+                                       A = ⎣ 1 1 2 1 ⎦.
+                                             1 2 3 1
+By deﬁnition, the four column vectors of A span the column space of A. The
+third and fourth column vectors are dependent on the ﬁrst and second, and the
+ﬁrst two columns are independent. Therefore, the ﬁrst two column vectors are
+the pivot columns. They form a basis for the column space C ( A). The matrix
+has rank 2. In fact, for any matrix A we can say:
+
+       rank( A) = number of pivot columns of A = dimension of C ( A).
+
+(Note that matrices have a rank but not a dimension. Subspaces have a dimen­
+sion but not a rank.)
+   The column vectors of this A are not independent, so the nullspace N ( A)
+contains more than just the zero vector. Because the third column is the sum
+
+
+
+                                                       2
+                                           −1
+                                          ⎡    ⎤
+                                         ⎢ −1 ⎥
+of the ﬁrst two, we know that the vector ⎣      is in the nullspace. Similarly,
+                                            1 ⎦
+                                            0
+   −1
+⎡      ⎤
+⎢ 0 ⎥
+⎣ 0 ⎦ is also in N ( A). These are the two special solutions to Ax = 0. We’ll
+   −1
+see that:
+
+            dimension of N ( A) = number of free variables = n − r,
+
+so we know that the dimension of N ( A) is 4 − 2 = 2. These two special solu­
+tions form a basis for the nullspace.
+
+
+
+
+                                      3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

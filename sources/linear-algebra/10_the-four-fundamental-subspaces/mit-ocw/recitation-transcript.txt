@@ -1,0 +1,136 @@
+MITOCW | MIT18_06SC_110526_B2_300k-mp4
+
+
+BEN HARRIS:   Hi, and welcome back. Today we're going to do a problem about the four fundamental
+              subspaces. So here we have a matrix B. B is written as the product of a lower triangular matrix
+
+              and an upper triangular matrix. And we're going to find a basis for, and compute the
+              dimension of, each of the four fundamental subspaces of B.
+
+
+              I'll give you a minute to try that on your own, to hit pause, and then I'll be right back in just a
+
+              minute and we can do it together.
+
+
+              OK. We're back. Now, the first thing to notice is that this is an LU decomposition of B. So we
+
+              have L here and U here. Now let's go one space at a time. Let's start with the column space.
+
+              And first, let's just say what the dimension of the column space is. OK, so let's look at our U
+              matrix. How many pivots do we have? We have two pivots, so the column space has
+              dimension 2. This is the number of pivots.
+
+
+              Good. Now, how do we find a basis for the column space? How do we find that basis? Well, in
+              lecture, Professor Strang had started with a matrix B. He did elimination on it, and then he took
+
+              the pivot columns in the original matrix. And that's great. That works. You can also take the
+              pivot columns in the L matrix. You can see by multiplying this out that it will amount to
+              essentially the same thing.
+
+
+              So a basis for this column space, I can just take these two pivot columns of my L matrix, [1, 2,
+              -1] and [0, 1, 0]. Good. OK. So there's the dimension of and the basis for the column space of
+
+              B.
+
+
+              Next, let's do the null space together. OK. What's the dimension of the null space? Well, the
+
+              dimension of the null space is always the number of columns minus the number of pivots.
+
+              Right? It's the number of free variables. So here, that's just one. Good.
+
+
+              And how do we find this one vector in the null space? Well, what we do is we can just plug in 1
+
+              for our free variable, and we can backsolve to get the other two. So this equation tells me that
+              my second number is -1, and this equation tells me that that third variable -3/5, if I can fit it in
+
+              here. That's a -3/5, if it's difficult to see that on the tape.
+
+
+              Now, let's move on, next, to the row space. Next is the row space. So how do we find the
+
+              dimension of the row space? I'm going to write row space as column space of B transpose.
+How do we find that? Well, remember that one of our big facts in this class is that the
+dimension of the row space is the same as the dimension of the column space. It's just the
+
+number of pivots. So that's good. It's 2. And how do we find a basis for the row space? There
+
+are a couple ways of thinking about this.
+
+
+One way to think about it is: we got this upper triangular matrix from B by doing elimination.
+
+And elimination doesn't change the row space. So I can just use the two pivot rows of the
+matrix U. Basis for my row space here is: I just put these two pivot rows together, and I get a
+
+basis for this row space.
+
+
+The last one is always the toughest and the trickiest. We have to do the left null space or the
+
+null space of B transpose. First, let's compute its dimension. What's the dimension of this left
+
+null space? Well, there's a similar formula to the one we used when we were computing the
+dimension of the null space. It's just the number of rows minus the number of pivots. So there
+
+are three rows. Our matrix is 3 by 3. And there are two pivots. So this is just one-dimensional,
+again.
+
+
+We need to compute, now, this left null space. Let me go back to our original matrix. The way
+
+to do this is to take B equals L*U, and invert L, and get E*B equals U. So we need to move L
+
+over to the left-hand side. If we do that-- I'm just going to write that down here. So what's the
+
+inverse of the L matrix? We just get 1, -2, 1, 0, 1, 1, times B, is our U matrix, this upper
+triangular matrix. Now that I moved L over to the other side, I can read off the vectors in my
+
+left null space.
+
+
+Now, I'm looking at not my pivot variables but my free variables, because it's some sort of null
+
+space. but I want to look at this E matrix. So the third row of this E matrix, the third row
+
+corresponds to the three row here and when I multiply this by B, I just get zeros, so this is in
+
+the left null space. A basis for this left null space is-- see if I can fit it here-- just this [1, 0, 1].
+Good.
+
+
+So we've found the dimension of and basis for all of the four fundamental subspaces. Before I
+
+move on, I just want to recall which of the L matrix or the U matrix we used for each of these
+
+subspaces. So for the column space, we used the pivot columns of the L matrix. For the null
+
+space, we looked at the U matrix. For the row space, we also looked at the U matrix. And for
+the left null space, we needed to invert the L matrix and look at the free row.
+
+
+We're done with the problem. But the last thing that's useful is to draw a picture, which I have
+right here. I know in lecture Professor Strang has drawn you some sort of cartoon pictures of
+
+what these subspaces look like. But here I want to try to actually draw them in a special case.
+
+So if you can read my drawing here, what do we have? We have the row space here, and the
+null space here. Right? And so B maps this picture into this picture.
+
+
+The null space here-- all the scalar multiples of this vector-- all go to 0, because they're in the
+
+null space. That's exactly what B takes to 0. B takes everything else, including the row space,
+
+into this column space. And what does B transpose do? Well, B transpose kills this left null
+
+space, kills this vector, and it take everything else into the row space, into the column space of
+B transpose. OK.
+
+
+Thanks for doing this exercise together. I hope this picture is helpful.
+

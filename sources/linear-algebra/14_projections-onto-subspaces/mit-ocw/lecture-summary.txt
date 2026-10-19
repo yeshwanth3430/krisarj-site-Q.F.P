@@ -1,0 +1,155 @@
+Projections onto subspaces
+Projections
+If we have a vector b and a line determined by a vector a, how do we ﬁnd the
+point on the line that is closest to b?
+
+                                                       b
+
+                                                                  a
+                                                           p
+
+
+
+         Figure 1: The point closest to b on the line determined by a.
+
+    We can see from Figure 1 that this closest point p is at the intersection
+formed by a line through b that is orthogonal to a. If we think of p as an
+approximation of b, then the length of e = b − p is the error in that approxi­
+mation.
+    We could try to ﬁnd p using trigonometry or calculus, but it’s easier to use
+linear algebra. Since p lies on the line through a, we know p = xa for some
+number x. We also know that a is perpendicular to e = b − xa:
+
+                               a T (b − xa)= 0
+                                      xa a = a T b
+                                        T
+
+                                             aT b
+                                         x =       ,
+                                             aT a
+                    aT b
+and p = ax = a           . Doubling b doubles p. Doubling a does not affect p.
+                    aT a
+
+Projection matrix
+We’d like to write this projection in terms of a projection matrix P: p = Pb.
+
+                                                aa T a
+                                   p = xa =            ,
+                                                 aT a
+so the matrix is:
+                                              aa T
+                                      P=           .
+                                              aT a
+Note that aa T is a three by three matrix, not a number; matrix multiplication is
+not commutative.
+    The column space of P is spanned by a because for any b, Pb lies on the
+line determined by a. The rank of P is 1. P is symmetric. P2 b = Pb because
+
+
+                                            1
+the projection of a vector already on the line through a is just that vector. In
+general, projection matrices have the properties:
+
+                           PT = P           and       P2 = P.
+
+Why project?
+As we know, the equation Ax = b may have no solution. The vector Ax is
+always in the column space of A, and b is unlikely to be in the column space.
+So, we project b onto a vector p in the column space of A and solve Ax̂ = p.
+
+Projection in higher dimensions
+In R3 , how do we project a vector b onto the closest point p in a plane?
+     If a1 and a2 form
+                     � a basis �for the plane, then that plane is the column space
+of the matrix A = a1 a2 .
+     We know that p = x̂1 a1 + x̂2 a2 = Ax̂. We want to ﬁnd x̂. There are many
+ways to show that e = b − p = b − Ax̂ is orthogonal to the plane we’re pro­
+jecting onto, after which we can use the fact that e is perpendicular to a1 and
+a2 :
+                     a1T (b − Ax̂) = 0 and a2T (b − Ax̂) = 0.
+In matrix form, A T (b − Ax̂) = 0. When we were projecting onto a line, A only
+had one column and so this equation looked like: a T (b − xa) = 0.
+   Note that e = b − Ax̂ is in the nullspace of A T and so is in the left nullspace
+of A. We know that everything in the left nullspace of A is perpendicular to
+the column space of A, so this is another conﬁrmation that our calculations are
+correct.
+   We can rewrite the equation A T (b − Ax̂) = 0 as:
+
+                                      A T Ax̂ = A T b.
+
+When projecting onto a line, A T A was just a number; now it is a square matrix.
+So instead of dividing by a T a we now have to multiply by ( A T A)−1
+    In n dimensions,
+
+                                 x̂     = ( A T A ) −1 A T b
+                          p = Ax̂       =    A ( A T A ) −1 A T b
+                                 P      =    A ( A T A ) −1 A T .
+
+    It’s tempting to try to simplify these expressions, but if A isn’t a square
+matrix we can’t say that ( A T A)−1 = A−1 ( A T )−1 . If A does happen to be a
+square, invertible matrix then its column space is the whole space and contains
+b. In this case P is the identity, as we ﬁnd when we simplify. It is still true that:
+
+                           PT = P           and       P2 = P.
+
+
+                                             2
+                    y
+
+                        2
+
+
+                        1
+
+
+                        0
+               −1             0         1            2       3     4
+                                                                   x
+                Figure 2: Three points and a line close to them.
+
+
+Least Squares
+Suppose we’re given a collection of data points (t, b):
+
+                                  {(1, 1), (2, 2), (3, 2)}
+
+and we want to ﬁnd the closest line b = C + Dt to that collection. If the line
+went through all three points, we’d have:
+
+                                     C+D   = 1
+                                    C + 2D = 2
+                                    C + 3D = 2,
+
+which is equivalent to:
+                          ⎡     ⎤                        ⎡   ⎤
+                            1 1          �       �         1
+                          ⎣ 1 2 ⎦            C           ⎣ 2 ⎦
+                                                     =
+                                             D                 .
+                            1 3                            2
+                             A               x             b
+
+    In our example the line does not go through all three points, so this equation
+is not solvable. Instead we’ll solve:
+
+                                     A T Ax̂ = A T b.
+
+
+
+
+                                             3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

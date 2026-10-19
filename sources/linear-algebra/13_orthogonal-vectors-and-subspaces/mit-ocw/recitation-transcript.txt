@@ -1,0 +1,147 @@
+MITOCW | MIT18_06SC_110706_D1_300k-mp4
+
+
+DAVID         Hi everyone. I'm Dave.
+SHIROKOFF:
+
+
+              Now today, I'd like to tackle a problem in orthogonal subspaces. So the problem we'd like to
+
+              tackle: given a subspace S, and suppose S is spanned by two vectors, [1, 2, 2, 3] and [1, 3, 3,
+              2]. We have a question here which is to find a basis for S perp-- S perp is another subspace
+
+              which is orthogonal to S. And then secondly, can every vector in R^4 be uniquely written in
+
+              terms of S and S perp. So I'll let you think about this for now, and I'll come back in a minute.
+
+
+              Hi everyone. Welcome back.
+
+
+              OK, so why don't we tackle this problem? OK, so first off, what does it mean for a vector to be
+              in S perp? Well, if I have a vector x, and S perp, and x is in S perp, what this means is x is
+              going to be orthogonal to every vector in S. Now specifically, S is spanned by these two
+
+              vectors. So it's sufficient that x be perpendicular to the two basis vectors in S.
+
+
+              So specifically, I can take [1, 2, 2, 3] and dot it with x, and it's going to be 0. So I'm treating x
+
+              as a column vector here. In addition, x must also be orthogonal to [1, 3, 2, 2]. So any vector x
+              that's an S perp must be orthogonal to both of these vectors. So what we can do is we can
+
+              write this as a matrix equation. And we do this by combining these two vectors as rows of the
+              matrix.
+
+
+              So if we step back and take a look at this equation, we see that what we're really asking is to
+              find all x that are in the null space of this matrix. So how do we find x in the null space of a
+
+              matrix? Well what we can do is we can row reduce this matrix and try and find a basis for the
+
+              null space.
+
+
+              So I'm going to just row reduce this matrix. And notice that by row reduction, we don't actually
+
+              change the null space of a matrix. So if I'm only interested in the null space, this system is
+
+              going to be equivalent to-- I can keep the top row the same. And then just to simplify our lives,
+              we can take the second row and subtract one copy of the first row.
+
+
+              Now, if I do that, I obtain 0, 1, 1, -1.
+
+
+              Now, to parameterize the null space, what I'm going to do is I'm going to write x out as
+              components. So if I write x with components x_1, x_2, x_3 and x_4, we see here that this
+components. So if I write x with components x_1, x_2, x_3 and x_4, we see here that this
+
+matrix has a rank of 2. Now, we're looking at vectors which live in R^4, so we know that the
+
+null space is going to have a dimension which is 4 minus 2. So that means there should be two
+
+vectors in the null space of this matrix.
+
+
+To parameterize these two-dimensional vectors, what I'm going to do is I'm going to let x_4
+
+equal some constant, and x_3 equal another constant. So specifically, I'm going to let x_4
+equal b, and x_3 equal a.
+
+
+Now what we do is we take a look at these two equations, and this bottom equation will say
+
+that x_2 is equal to negative x_3 plus x_4, which is going to equal negative a-- x_4-- plus b.
+
+And then the top equation says that x_1 is equal to negative 2*x_2 minus 2*x_3 minus 3*x_4.
+
+And if I substitute in, x_2 is -a plus b. x_3 is a. And x_4 is b. So when the dust settles, the a's
+cancel and I'm left with minus 5b.
+
+
+So we can combine everything together and we end up obtaining [x_1, x_2, x_3, x_4] equals -
+
+5b, x_2 is minus a plus b, x_3 is a, and x_4 is b.
+
+
+And now what we can do is we can take this vector and we can decompose it into pieces
+
+which are a multiplied by a vector, and b multiplied by a vector. So you'll note that this is
+actually a times [0, -1, 1, 0] plus b times [-5, 1, 0, 1]. OK?
+
+
+So we have successfully achieved a parameterization of the null space of this matrix as some
+
+constant a times a vector [0, -1, 1, 0] plus b times a vector [-5, 1, 0, 1]. And now we claim that
+
+this is the entire space, S perp.
+
+
+So S perp is going to be spanned by this vector and this vector. Now notice how, if I were to
+
+take either of these two vectors in S and dot it with any vector in the null space, by
+
+construction, it automatically vanishes.
+
+
+So this concludes part one. Now for part two. Can every vector v in R^4 be written uniquely in
+
+terms of S and S perp? The answer is yes. So how do we see this?
+
+
+Well, if I have a vector v, what I can do is I can try and write it as some constant c_1 times the
+
+vector [1, 2, 2, 3] plus c_2 times the vector [1, 3, 3, 2] plus the vector c_3 [0, -1, 1, 0] plus c4 [-
+
+5, 1, 0, 1]. OK? So c_1 and c_2 are multiplying the vectors in S, and c_3 and c_4 are
+
+multiplying the vectors in S perp.
+
+
+So the question is, given any v, can I find constants c_1, c_2, c_3, c_4, such that this equation
+holds? And the answer is yes. Just to see why it's yes, what we can do is we can rewrite this in
+
+matrix notation, and there's kind of a handy trick.
+
+
+What I can do is I can take these columns and write them as columns of the matrix. And this
+
+whole expression is actually equivalent to this matrix multiplied by the constant, c_1, c_2, c_3,
+c_4. And on the right-hand side, we have the vector v.
+
+
+Now, by construction, these vectors are linearly independent. And we know from linear algebra
+
+that if we have a matrix with linearly independent columns, the matrix is invertible. What this
+
+means is, for any v on the right-hand side, we can invert this matrix and obtain unique
+
+coefficients, c_1, c_2, c_3, c_4. This then gives us a unique decomposition for v in terms of a
+
+piece which is in S and a piece which is in S perp. And in general this can be done for any
+vector space.
+
+
+Well I'd like to conclude this problem now and I hope you had a good time.
+

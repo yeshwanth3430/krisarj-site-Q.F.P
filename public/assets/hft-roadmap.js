@@ -67,6 +67,7 @@
           ["Market-making strategies & simulation", "quote, hedge, repeat", "soon"] ] }
       ] },
     { id: "opt", n: "06", name: "Options Trading & Risk Management", short: "Options & Risk", tag: "Pricing, Greeks and staying alive", col: "--int-b",
+      href: "options/", openLabel: "open the strategy playbook →",
       about: "Option payoffs and pricing, the Greeks and how to hedge them, volatility surfaces, and the risk limits that keep a desk in business.",
       groups: [
         { name: "Options", topics: [

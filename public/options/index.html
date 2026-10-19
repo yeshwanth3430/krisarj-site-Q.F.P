@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Options &amp; Risk · Quant from First Principles</title>
+<meta name="description" content="Options Trading &amp; Risk Management — 40 strategies from rookie to all-star, listed in playing order; each opens as a full lesson with payoff, Greeks and risk rules.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="../index.html#hft">Quant Trading Prep</a> / <b>Options &amp; Risk</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Lessons">
+    <span class="tabs-title">Strategies · The Options Playbook</span>
+    <span class="ch off"><span class="cn">01</span>Covered Call<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Protective Put<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Collar<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Cash-Secured Put<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Long Call<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Long Put<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Fig Leaf<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Long Call Spread<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Long Put Spread<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Short Call Spread<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Short Put Spread<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Long Straddle<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Long Strangle<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Back Spread w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Back Spread w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Long Calendar Spread w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Long Calendar Spread w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Diagonal Spread w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Diagonal Spread w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Long Butterfly w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Long Butterfly w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Iron Butterfly<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Skip Strike Butterfly w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Skip Strike Butterfly w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Inverse Skip Strike Butterfly w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Inverse Skip Strike Butterfly w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Christmas Tree Butterfly w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Christmas Tree Butterfly w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Long Condor Spread w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Long Condor Spread w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Iron Condor<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Short Call<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Short Put<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>Short Straddle<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Short Strangle<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Long Combination<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>Short Combination<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Front Spread w/Calls<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Front Spread w/Puts<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">40</span>Double Diagonal<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Track 06 · follows The Options Playbook — rookies to all-stars</p>
+  <h1>Options Trading &amp; Risk Management</h1>
+  <p class="subtitle">Pricing, Greeks and staying alive.</p>
+  <div class="la-progress"><i></i></div>
+  <p class="la-progress-k">40 strategies · opening in playing order</p>
+  <div class="la-cta">
+    <a href="https://www.optionsplaybook.com/option-strategies" target="_blank" rel="noopener">Open the source playbook ↗</a>
+  </div>
+  <div class="box intuition"><span class="label">How this subject will work</span>
+    <p>One strategy per lesson, in the playbook&rsquo;s order — rookies first, all-stars last. As each lesson opens it gets the full treatment: the payoff at expiry drawn from zero, when to play it, the Greeks that drive it, and a Nifty-lots example with real breakevens.</p>
+  </div>
+  <div class="box finance"><span class="label">Why this subject matters</span>
+    <p>Options are where the maths meets the market: every strategy is a portfolio of calls and puts, every P&amp;L is a payoff diagram, and risk management is knowing — before entry — exactly where you make money, lose money and break even.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>40</b><span>strategies, straight from the playbook</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — lessons open one strategy at a time</span></div>
+    <div class="la-stat"><b>4</b><span>skill tiers: rookies → veterans → seasoned → all-stars</span></div>
+  </div>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+                 Exercises on factorization into A = LU
+
+
+Problem 4.1: What matrix E puts A into triangular form EA = U? Mul­
+tiply by E−1 = L to factor A into LU.
+
+                                 ⎡    ⎤
+                                1 3 0
+                            A=⎣ 2 4 0 ⎦
+                                2 0 1
+
+Solution: We will perform a series of row operations to transform the
+matrix A into an upper triangular matrix. First, we multiply the ﬁrst row
+by 2 and then subtract it from the second row in order to make the ﬁrst
+element of the second row 0:
+               ⎡            ⎤⎡         ⎤ ⎡               ⎤
+                   1 0 0       1 3 0           1    3 0
+               ⎣ −2 1 0 ⎦ ⎣ 2 4 0 ⎦ = ⎣ 0 −2 0 ⎦
+                   0 0 1       2 0 1           2    0 1
+
+Next, we multiply the ﬁrst row by 2 (again) and subtract it from the third
+row in order to make the ﬁrst element of the third row 0:
+              ⎡           ⎤⎡             ⎤ ⎡              ⎤
+                  1 0 0        1   3 0           1   3 0
+              ⎣ 0 1 0 ⎦ ⎣ 0 −2 0 ⎦ = ⎣ 0 −2 0 ⎦
+                −2 0 1         2   0 1           0 −6 1
+
+   Now, we multiply the second row by 3 and subtract it from the third
+row in order to make the second element of the third row 0:
+           ⎡           ⎤⎡           ⎤ ⎡                ⎤
+              1   0 0       1   3 0         1     3 0
+           ⎣ 0    1 0 ⎦ ⎣ 0 −2 0 ⎦ = ⎣ 0 −2 0 ⎦ = U.
+              0 −3 1        0 −6 1          0     0 1
+
+We take the three matrices we used to perform each operation and multi­
+ply them to get E:
+                  ⎡          ⎤⎡             ⎤⎡           ⎤
+                    1    0 0       1 0 0         1 0 0
+             E=⎣ 0       1 0 ⎦ ⎣ 0 1 0 ⎦ ⎣ −2 1 0 ⎦
+                    0 −3 1       −2 0 1          0 0 1
+
+                                     1
+           ⎡      ⎤⎡         ⎤ ⎡           ⎤
+           1  0 0      1 0 0        1  0 0
+        =⎣ 0  1 0 ⎦ ⎣ −2 1 0 ⎦ = ⎣ −2  1 0 ⎦ = E.
+           0 −3 1     −2 0 1        4 −3 1
+
+To check, we evaluate EA:
+           ⎡            ⎤⎡        ⎤ ⎡          ⎤
+               1    0 0     1 3 0       1  3 0
+           ⎣ −2     1 0 ⎦ ⎣ 2 4 0 ⎦ = ⎣ 0 −2 0 ⎦ = U.
+               4 −3 1       2 0 1       0  0 1
+
+To ﬁnd E−1 , use the Gauss-Jordan elimination method (or just insert the
+multipliers 2, 2, 3 into E−1 )
+         ⎡                     ⎤      ⎡                     ⎤
+              1      0 0 1 0 0          1    0 0    1 0 0
+         ⎣ −2        1 0 0 1 0 ⎦ −→ ⎣ 0      1 0    2 1 0 ⎦
+              4 −3 1 0 0 1              0 −3 1 −4 0 1
+               ⎡            ⎤    ⎡       ⎤
+                1 0 0 1 0 0        1 0 0
+           −→ ⎣ 0 1 0 2 1 0 ⎦ −→ ⎣ 2 1 0 ⎦ = E−1
+                0 0 1 2 3 1        2 3 1
+
+We can check that this is in fact the inverse of E:
+                ⎡                ⎤⎡           ⎤ ⎡         ⎤
+                     1     0 0        1 0 0         1 0 0
+        EE−1 = ⎣ −2        1 0 ⎦ ⎣ 2 1 0 ⎦ = ⎣ 0 1 0 ⎦ = I.
+                     4 −3 1           2 3 1         0 0 1
+
+Finally, to factorize A into LU (where L = E−1 ):
+           ⎡          ⎤              ⎡          ⎤⎡       ⎤
+              1 3 0                     1 0 0      1 3 0
+           ⎣ 2 4 0 ⎦ = A = LU = ⎣ 2 1 0 ⎦ ⎣ 0 −2 0 ⎦ .
+              2 0 1                     2 3 1      0 0 1
+
+
+Problem 4.2: (2.6 #13. Introduction to Linear Algebra: Strang) Compute L
+and U for the symmetric matrix
+
+
+
+
+                                   2
+                                ⎡               ⎤
+                               a      a   a   a
+                             ⎢ a      b   b   b ⎥
+                           A=⎢
+                             ⎣ a
+                                                ⎥.
+                                      b   c   c ⎦
+                               a      b   c   d
+Find four conditions on a, b, c, d to get A = LU with four pivots.
+
+Solution: Elimination subtracts row 1 from rows 2-4, then row 2 from
+rows 3-4, and ﬁnally row 3 from row 4; the result is U. All the multipli­
+ers �ij are equal to 1; so L is the lower triangular matrix with 1’s on the
+diagonal and below it.
+
+           ⎡             ⎤    ⎡                     ⎤
+           a  a   a   a         a   a     a     a
+         ⎢ 0 b−a b−a b−a ⎥
+                         ⎥ −→ ⎢ 0 b − a b − a b − a ⎥
+                              ⎢                     ⎥
+    A −→ ⎢
+         ⎣ 0 b−a c−a c−a ⎦    ⎣ 0   0   c−b c−b ⎦
+           0 b−a c−a d−a        0   0   c−b d−b
+            ⎡              ⎤          ⎡                            ⎤
+             a  a   a   a               1                0   0   0
+           ⎢ 0 b−a b−a b−a ⎥          ⎢ 1                1   0   0 ⎥
+        −→ ⎢               ⎥ = U, L = ⎢                            ⎥.
+           ⎣ 0  0  c−b c−b ⎦          ⎣ 1                1   1   0 ⎦
+             0  0   0  d−c              1                1   1   1
+   The pivots are the nonzero entries on the diagonal of U. So there are
+four pivots when these four conditions are satisﬁed: a �= 0, b �= a, c �= b,
+and d �= c.
+
+
+
+
+                                     3
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

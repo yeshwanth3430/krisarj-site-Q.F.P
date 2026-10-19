@@ -1,0 +1,30 @@
+                Exercises on projections onto subspaces
+
+
+Problem 15.1: (4.2 #13. Introduction to Linear Algebra: Strang) Suppose A
+is the four by four identity matrix with its last column removed; A is four
+by three. Project b = (1, 2, 3, 4) onto the column space of A. What shape is
+the projection matrix P and what is P?
+
+Problem 15.2: (4.2 #17.) If P2 = P, show that ( I − P)2 = I − P. For the
+matrices A and P from the previous question, P projects onto the column
+space of A and I − P projects onto the           .
+
+
+
+
+                                     1
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+

@@ -1,0 +1,45 @@
+         Exercises on graphs, networks, and incidence matrices
+
+
+Problem 12.1: (8.2 #1. Introduction to Linear Algebra: Strang) Write down
+the four by four incidence matrix A for the square graph, shown below.
+(Hint: the ﬁrst row has -1 in column 1 and +1 in column 2.) What vectors
+( x1 , x2 , x3 , x4 ) are in the nullspace of A? How do you know that (1,0,0,0) is
+not in the row space of A?
+
+
+
+
+Problem 12.2: (8.2 #7.) Continuing with the network from problem one,
+suppose the conductance matrix is
+                              ⎡            ⎤
+                                1 0 0 0
+                              ⎢ 0 2 0 0 ⎥
+                          C=⎢ ⎣ 0 0 2 0 ⎦.
+                                           ⎥
+
+                                0 0 0 1
+
+Multiply matrices to ﬁnd A T CA. For f = (1, 0, −1, 0), ﬁnd a solution to
+A T CAx = f. Write the potentials x and currents y = −CAx on the square
+graph (see above) for this current source f going into node 1 and out from
+node 3.
+
+
+
+
+                                        1
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+
+
+
+18.06SC Linear Algebra
+Fall 2011
+
+
+
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
