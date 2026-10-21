@@ -20,6 +20,7 @@
           ["Trading & market-making games", "quoting under pressure", "soon"] ] }
       ] },
     { id: "res", n: "02", name: "Research & Analysis", short: "Research & Analysis", tag: "Find the story in the data", col: "--fin-b",
+      href: "research/", openLabel: "open the model catalogue →",
       about: "How to research a market, test an idea and write analysis that holds up: sources, process, and conclusions you can defend.",
       groups: [
         { name: "Research", topics: [

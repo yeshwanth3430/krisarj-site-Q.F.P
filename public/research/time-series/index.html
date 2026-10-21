@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time-Series Models · Research &amp; Analysis · Quant from First Principles</title>
+<meta name="description" content="Time-Series Models — 65 models: How a series moves through time.">
+<link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../../assets/site.css?v=5">
+<script src="../../assets/notebook.js?v=4"></script>
+<style>
+.tabs .ch { display: flex; align-items: baseline; gap: 10px; width: 100%; box-sizing: border-box;
+  font: 500 13px/1.35 var(--sans); color: var(--ink); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; padding: 8px 12px; }
+.tabs .ch .cn { font: 600 11px/1.5 var(--mono); color: var(--ink-soft); flex: none; width: 18px; }
+.tabs a.ch:hover { background: var(--paper); border-color: var(--rule); }
+.tabs .ch.off { color: var(--ink-soft); opacity: .62; }
+.tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
+  border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+@media (min-width: 861px) {
+  .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
+  main.page.tabbed { min-height: calc(100vh - 215px); }
+}
+.la-cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 0 0 26px; }
+.la-cta a { display: inline-flex; align-items: center; gap: 9px; text-decoration: none; border-radius: 10px;
+  font: 600 14.5px/1 var(--sans); padding: 13px 20px; border: 1px solid var(--rule); color: var(--ink); background: var(--paper-2); }
+.la-cta a:hover { border-color: var(--accent); color: var(--accent); }
+.la-progress { height: 7px; border-radius: 5px; background: var(--paper-2); border: 1px solid var(--rule); overflow: hidden; max-width: 460px; }
+.la-progress i { display: block; height: 100%; width: 0%; background: var(--accent); border-radius: 5px; }
+.la-progress-k { font: 600 11px/1 var(--mono); color: var(--ink-soft); margin: 7px 0 22px; }
+.la-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 26px 0 8px; }
+.la-stat { border: 1px solid var(--rule); border-radius: 10px; background: var(--paper-2); padding: 14px 16px; }
+.la-stat b { display: block; font: 700 22px/1.1 var(--mono); color: var(--accent); margin-bottom: 5px; }
+.la-stat span { font: 500 12px/1.4 var(--sans); color: var(--ink-soft); }
+@media (max-width: 860px) {
+  .tabs { display: block; max-height: 42vh; overflow-y: auto; }
+  .tabs .ch { width: 100%; }
+}
+.tabs .chgrp { display: flex; align-items: center; gap: 7px; margin: 14px 4px 4px; padding: 0 8px;
+  font: 700 10.5px/1 var(--mono); letter-spacing: .12em; color: var(--accent); text-transform: uppercase; }
+.tabs .chgrp { cursor: pointer; user-select: none; border: 0; background: none; width: 100%; text-align: left; }
+.tabs .chgrp::before { content: "▸"; font-size: 12px; transition: transform .15s; }
+.tabs .chgrp.open::before { content: "▾"; }
+.tabs .chgrp:hover { color: var(--ink); }
+.tabs .chgrp .ct { margin-left: auto; font: 600 9.5px/1 var(--mono); color: var(--ink-soft); border: 1px solid var(--rule); border-radius: 999px; padding: 3px 7px; letter-spacing: 0; }
+.tabs .chsubs { display: none; }
+.tabs .chsubs.open { display: block; }
+.tabs .chgrp:first-of-type { margin-top: 6px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="crumbs"><a href="../../index.html">Quant from First Principles</a> / <a href="../../index.html#hft">Quant Trading Prep</a> / <a href="../index.html">Research &amp; Analysis</a> / <b>Time-Series Models</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" aria-label="Models">
+    <span class="tabs-title">Models</span>
+    <span class="chgrp">Classical Univariate Models</span>
+    <span class="ch off"><span class="cn">01</span>AR — Autoregressive<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>MA — Moving Average<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>ARMA<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>ARIMA<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>SARIMA<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>ARIMAX<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>SARIMAX<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>ARFIMA<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Fractional ARIMA<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>ARDL<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Exponential Smoothing (ETS)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Holt's Linear Trend<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Holt–Winters<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Local-Level Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">15</span>Local-Linear-Trend Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Structural Time-Series Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Dynamic Regression<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Quantile Autoregression<span class="soon">SOON</span></span>
+    <span class="chgrp">Multivariate &amp; Cross-Asset Models</span>
+    <span class="ch off"><span class="cn">19</span>VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>VARX<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Bayesian VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Structural VAR (SVAR)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>Threshold VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>VECM<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">25</span>Cointegrated VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Factor-Augmented VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Panel VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Mixed-Frequency VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>MIDAS Regression<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Dynamic Factor Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Dynamic Nelson–Siegel<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Multivariate State-Space Models<span class="soon">SOON</span></span>
+    <span class="chgrp">Nonlinear &amp; Regime-Switching Models</span>
+    <span class="ch off"><span class="cn">33</span>TAR — Threshold Autoregressive<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">34</span>SETAR — Self-Exciting Threshold AR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>STAR — Smooth Transition AR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>LSTAR — Logistic STAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>ESTAR — Exponential STAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Markov-Switching AR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Markov-Switching VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">40</span>Hidden Markov Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">41</span>Hidden Semi-Markov Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">42</span>Structural-Break Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">43</span>Bayesian Change-Point Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">44</span>Time-Varying Parameter Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">45</span>Switching State-Space Models<span class="soon">SOON</span></span>
+    <span class="chgrp">State Estimation &amp; Filtering</span>
+    <span class="ch off"><span class="cn">46</span>Kalman Filter<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">47</span>Extended Kalman Filter<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">48</span>Unscented Kalman Filter<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">49</span>Particle Filter<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">50</span>Dynamic Linear Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">51</span>Time-Varying Beta Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">52</span>Dynamic Cointegration Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">53</span>Bayesian Structural Time-Series Models<span class="soon">SOON</span></span>
+    <span class="chgrp">Dependence, Long Memory &amp; Signal Processing</span>
+    <span class="ch off"><span class="cn">54</span>Cointegration Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">55</span>Fractional Differencing Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">56</span>Long-Memory Spectral Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">57</span>Fourier and Spectral Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">58</span>Periodogram-Based Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">59</span>Wavelet Time-Series Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">60</span>Singular Spectrum Analysis<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">61</span>Empirical Mode Decomposition<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">62</span>Variational Mode Decomposition<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">63</span>Dynamic Copula Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">64</span>Autoregressive Copula Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">65</span>Multivariate Extreme-Value Time-Series Models<span class="soon">SOON</span></span>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Track 02 · Time-Series Models · 65 models</p>
+  <h1>Time-Series Models</h1>
+  <p class="subtitle">How a series moves through time.</p>
+  <div class="box intuition"><span class="label">What this section covers</span>
+    <p>Modelling prices, returns, spreads and rates through time: the classical ARIMA family, multivariate and cointegration models for cross-asset work, nonlinear and regime-switching models, state-space filtering, and long-memory and signal-processing methods.</p>
+  </div>
+  <div class="box finance"><span class="label">Why it matters</span>
+    <p>Mean reversion, pairs trading, lead–lag relationships and regime detection are all time-series questions. This is the toolkit that turns a price history into a testable claim about tomorrow.</p>
+  </div>
+  <div class="la-stats">
+    <div class="la-stat"><b>65</b><span>models in this section</span></div>
+    <div class="la-stat"><b>5</b><span>families, open one at a time</span></div>
+    <div class="la-stat"><b>0</b><span>live yet — lessons open one model at a time</span></div>
+  </div>
+  </div>
+</main>
+<script src="../../assets/tracker.js?v=14"></script>
+<script>
+(function () {
+  var nav = document.querySelector(".tabs"); if (!nav) return;
+  var groups = nav.querySelectorAll(".chgrp");
+  groups.forEach(function (g) {
+    var box = document.createElement("div"); box.className = "chsubs";
+    var n = g.nextElementSibling, count = 0;
+    while (n && !n.classList.contains("chgrp")) { var next = n.nextElementSibling; box.appendChild(n); count++; n = next; }
+    g.insertAdjacentElement("afterend", box);
+    var ct = document.createElement("span"); ct.className = "ct"; ct.textContent = count; g.appendChild(ct);
+    g.setAttribute("role", "button"); g.setAttribute("tabindex", "0"); g.setAttribute("aria-expanded", "false");
+    function toggle() {
+      var open = g.classList.toggle("open"); box.classList.toggle("open", open);
+      g.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    g.addEventListener("click", toggle);
+    g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } });
+  });
+  if (groups[0]) groups[0].click();   // first category starts open so the page never looks empty
+})();
+</script>
+</body>
+</html>
