@@ -19,15 +19,15 @@
           ["Timed arithmetic drills", "speed with accuracy", "soon"],
           ["Trading & market-making games", "quoting under pressure", "soon"] ] }
       ] },
-    { id: "eng", n: "02", name: "English", short: "English", tag: "Read fast, write clearly, interview well", col: "--fin-b",
-      about: "Reading dense material quickly, writing crisp explanations, and communicating clearly in interviews and on a trading desk.",
+    { id: "res", n: "02", name: "Research & Analysis", short: "Research & Analysis", tag: "Find the story in the data", col: "--fin-b",
+      about: "How to research a market, test an idea and write analysis that holds up: sources, process, and conclusions you can defend.",
       groups: [
-        { name: "Reading & writing", topics: [
-          ["Reading comprehension", "dense text, quickly and accurately", "soon"],
-          ["Clear written communication", "say it once, say it simply", "soon"] ] },
-        { name: "Speaking", topics: [
-          ["Explaining your reasoning", "thinking out loud in an interview", "soon"],
-          ["Behavioural interviews", "stories that show how you work", "soon"] ] }
+        { name: "Research", topics: [
+          ["Company & market research", "where the facts live", "soon"],
+          ["Data sources & screening", "finding what is worth a look", "soon"] ] },
+        { name: "Analysis", topics: [
+          ["Fundamental analysis", "what a business is worth", "soon"],
+          ["Writing the analysis", "from numbers to a defensible view", "soon"] ] }
       ] },
     { id: "qf", n: "03", name: "Mathematics & Quantitative Finance", short: "Maths & Quant Finance", tag: "Probability, statistics and pricing", col: "--def-b", opens: "roadmap", openLabel: "open the maths roadmap →",
       about: "The probability and statistics behind every interview puzzle and every strategy, with the linear algebra and calculus from Mathematics for Finance and the basics of pricing.",
@@ -104,7 +104,7 @@
   // simple line icons (24 × 24, stroke)
   var ICON = {
     mm: "M13 2 4 14h7l-1 8 9-12h-7z",
-    eng: "M4 5h16v11H9l-5 4z M8 9h8 M8 12h5",
+    res: "M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z M14.5 14.5 20 20 M7 10l2 2 3-4",
     qf: "M17 4H7l6 8-6 8h10",
     ml: "M5 6a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M5 18a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M15 12a2 2 0 1 0 4 0a2 2 0 1 0-4 0 M9 6l6 5 M9 18l6-5",
     mkt: "M4 20V9 M9 20V5 M14 20v-8 M19 20v-4",
