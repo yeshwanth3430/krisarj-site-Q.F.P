@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>High-Frequency &amp; Microstructure Models · Research &amp; Analysis · Quant from First Principles</title>
-<meta name="description" content="High-Frequency &amp; Microstructure Models — 56 models: What happens inside the spread.">
+<title>High-Frequency &amp; Market-Microstructure Models · Research &amp; Analysis · Quant from First Principles</title>
+<meta name="description" content="High-Frequency &amp; Market-Microstructure Models — 57 models: What happens inside the spread.">
 <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -53,86 +53,87 @@
 </head>
 <body>
 <header class="topbar">
-  <div class="crumbs"><a href="../../index.html">Quant from First Principles</a> / <a href="../../index.html#hft">Quant Trading Prep</a> / <a href="../index.html">Research &amp; Analysis</a> / <b>High-Frequency &amp; Microstructure Models</b></div>
+  <div class="crumbs"><a href="../../index.html">Quant from First Principles</a> / <a href="../../index.html#hft">Quant Trading Prep</a> / <a href="../index.html">Research &amp; Analysis</a> / <b>High-Frequency &amp; Market-Microstructure Models</b></div>
   <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
 </header>
 <main class="page tabbed">
   <nav class="tabs" aria-label="Models">
     <span class="tabs-title">Models</span>
-    <span class="chgrp">Point-Process &amp; Order-Arrival Models</span>
-    <span class="ch off"><span class="cn">01</span>Poisson Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">02</span>Nonhomogeneous Poisson Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">03</span>Cox Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">04</span>Self-Correcting Point Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">05</span>Hawkes Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">06</span>Multivariate Hawkes Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">07</span>Marked Hawkes Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">08</span>Mutually Exciting Hawkes Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">09</span>State-Dependent Hawkes Process<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">10</span>Markov-Modulated Poisson Process<span class="soon">SOON</span></span>
-    <span class="chgrp">Trade-Duration &amp; Transaction-Count Models</span>
-    <span class="ch off"><span class="cn">11</span>Autoregressive Conditional Duration (ACD)<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">12</span>Log-ACD<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">13</span>Burr-ACD<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">14</span>Augmented ACD<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">15</span>Multiplicative Error Model (MEM)<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">16</span>Integer-Valued AR (INAR)<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">17</span>Poisson Count Regression<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">18</span>Negative Binomial Count Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">19</span>Zero-Inflated Count Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">20</span>Duration Models with Exogenous Variables<span class="soon">SOON</span></span>
-    <span class="chgrp">Limit Order Book &amp; Queueing Models</span>
-    <span class="ch off"><span class="cn">21</span>Markov Queueing Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">22</span>Queue-Reactive Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">23</span>Limit Order Book State-Transition Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">24</span>Birth–Death Queue Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">25</span>Queue-Length Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">26</span>Order-Book Imbalance Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">27</span>Microprice Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">28</span>Queue-Position and Fill-Probability Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">29</span>Order Cancellation Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">30</span>Limit-Order Arrival Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">31</span>Multi-Level Order-Book Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">32</span>Priority-Queue Execution Models<span class="soon">SOON</span></span>
-    <span class="chgrp">Price Discovery &amp; Market Impact</span>
-    <span class="ch off"><span class="cn">33</span>Kyle's Lambda<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">34</span>Glosten–Milgrom Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">35</span>Roll Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">36</span>Hasbrouck VAR Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">37</span>Vector Error-Correction Price-Discovery Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">38</span>Madhavan–Richardson–Roomans (MRR) Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">39</span>Permanent and Temporary Market-Impact Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">40</span>Signed Order-Flow Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">41</span>Trade-Size Impact Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">42</span>Order-Flow Imbalance Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">43</span>Bid–Ask Spread Decomposition Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">44</span>Effective and Realized Spread Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">45</span>Adverse-Selection Models<span class="soon">SOON</span></span>
+    <span class="chgrp">Data, Spreads &amp; Price Discovery</span>
+    <span class="ch off"><span class="cn">01</span>Trade and Quote Data Structure<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">02</span>Tick-by-Tick Price Dynamics<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">03</span>Bid–Ask Spread Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">04</span>Roll Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">05</span>Glosten–Milgrom Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">06</span>Kyle's Lambda<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">07</span>Madhavan–Richardson–Roomans (MRR) Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">08</span>Hasbrouck VAR<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">09</span>Price-Impact Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">10</span>Permanent and Temporary Market Impact<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">11</span>Signed Order-Flow Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">12</span>Order-Flow Imbalance<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">13</span>Effective and Realized Spread Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">14</span>Adverse-Selection Models<span class="soon">SOON</span></span>
+    <span class="chgrp">Point Processes &amp; Order Arrivals</span>
+    <span class="ch off"><span class="cn">15</span>Poisson Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">16</span>Nonhomogeneous Poisson Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">17</span>Cox Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">18</span>Self-Correcting Point Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">19</span>Hawkes Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">20</span>Multivariate Hawkes Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">21</span>Marked Hawkes Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">22</span>Mutually Exciting Hawkes Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">23</span>State-Dependent Hawkes Processes<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">24</span>Markov-Modulated Poisson Processes<span class="soon">SOON</span></span>
+    <span class="chgrp">Durations &amp; Transaction Counts</span>
+    <span class="ch off"><span class="cn">25</span>Autoregressive Conditional Duration (ACD)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">26</span>Log-ACD<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">27</span>Burr-ACD<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">28</span>Augmented ACD<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">29</span>Multiplicative Error Models (MEM)<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">30</span>Integer-Valued Autoregressive Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">31</span>Poisson Count Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">32</span>Negative Binomial Count Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">33</span>Zero-Inflated Count Models<span class="soon">SOON</span></span>
+    <span class="chgrp">Limit Order Book &amp; Queues</span>
+    <span class="ch off"><span class="cn">34</span>Limit Order Book State-Transition Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">35</span>Markov Queueing Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">36</span>Birth–Death Queue Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">37</span>Queue-Reactive Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">38</span>Queue-Length Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">39</span>Order-Book Imbalance Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">40</span>Microprice Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">41</span>Queue-Position Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">42</span>Fill-Probability Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">43</span>Order-Cancellation Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">44</span>Limit-Order Arrival Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">45</span>Multi-Level Order-Book Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">46</span>Priority-Queue Execution Models<span class="soon">SOON</span></span>
     <span class="chgrp">Market Making &amp; Execution</span>
-    <span class="ch off"><span class="cn">46</span>Avellaneda–Stoikov Market-Making Framework<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">47</span>Guéant–Lehalle–Fernandez-Tapia Framework<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">48</span>Cartea–Jaimungal Market-Making Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">49</span>Inventory-Control Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">50</span>Optimal Execution Models<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">51</span>Almgren–Chriss Execution Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">52</span>Obizhaeva–Wang Market-Impact Model<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">53</span>Optimal Stopping Models for Execution<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">54</span>Dynamic Programming Models for Order Placement<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">55</span>Stochastic Control Models for Market Making<span class="soon">SOON</span></span>
-    <span class="ch off"><span class="cn">56</span>Execution Models with Latency and Queue Risk<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">47</span>Avellaneda–Stoikov Framework<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">48</span>Guéant–Lehalle–Fernandez-Tapia Framework<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">49</span>Cartea–Jaimungal Market-Making Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">50</span>Inventory-Control Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">51</span>Optimal Execution Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">52</span>Almgren–Chriss Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">53</span>Obizhaeva–Wang Model<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">54</span>Optimal Stopping for Execution<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">55</span>Dynamic Programming for Order Placement<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">56</span>Stochastic-Control Market-Making Models<span class="soon">SOON</span></span>
+    <span class="ch off"><span class="cn">57</span>Execution Models with Latency and Queue Risk<span class="soon">SOON</span></span>
   </nav>
   <div class="tab-body">
-  <p class="meta">Track 02 · High-Frequency &amp; Microstructure Models · 56 models</p>
-  <h1>High-Frequency &amp; Microstructure Models</h1>
+  <p class="meta">Track 02 · Section 06 · 57 models</p>
+  <h1>High-Frequency &amp; Market-Microstructure Models</h1>
   <p class="subtitle">What happens inside the spread.</p>
   <div class="box intuition"><span class="label">What this section covers</span>
-    <p>Tick-level modelling: point processes for order arrivals, duration and count models for trade timing, queueing models of the limit order book, price-discovery and market-impact models, and the market-making and optimal-execution frameworks built on them.</p>
+    <p>Tick-level modelling: quote data and price discovery, point processes for order arrivals, duration and count models, queueing models of the limit order book, and the market-making and optimal-execution frameworks built on them.</p>
   </div>
   <div class="box finance"><span class="label">Why it matters</span>
-    <p>At high frequency the price is not a number but a queue. These models say how orders arrive, where you sit in the book, what your trade costs the market, and how a market maker quotes without getting run over.</p>
+    <p>At high frequency the price is not a number but a queue. These models say how orders arrive, where you sit in the book, and what your trade costs the market.</p>
   </div>
   <div class="la-stats">
-    <div class="la-stat"><b>56</b><span>models in this section</span></div>
+    <div class="la-stat"><b>57</b><span>models in this section</span></div>
     <div class="la-stat"><b>5</b><span>families, open one at a time</span></div>
     <div class="la-stat"><b>0</b><span>live yet — lessons open one model at a time</span></div>
   </div>
