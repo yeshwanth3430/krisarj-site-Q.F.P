@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multiplication and Inverse Matrices · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 3: five ways to multiply matrices, when a matrix has no inverse, and Gauss-Jordan elimination for finding one.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-03">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Multiplication and Inverse Matrices</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 3</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="explanation" aria-selected="false">Explanation</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+    <button role="tab" data-tab="problems" aria-selected="false">Problems</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 3 (MIT 18.06, Lecture 3)</p>
+  <h1>Multiplication and Inverse Matrices</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{What is } AB \text{ really doing — and when can } A \text{ be undone?}} $$</p>
+      <p>Two topics. First the <b>rules for multiplying two matrices</b> — and the interesting part is that there are several ways to do it, they all give the same answer, and they are all important. Then <b>inverses</b>: the single most important question you can ask about a square matrix is whether it has one, and the lecture ends with a method for finding it.</p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The standard way</a></li>
+        <li><a href="#t2">Way 2: by columns</a></li>
+        <li><a href="#t3">Way 3: by rows</a></li>
+        <li><a href="#t4">Way 4: column times row</a></li>
+        <li><a href="#t5">Way 5: by blocks</a></li>
+        <li><a href="#t6">Inverses: the big question</a></li>
+        <li><a href="#t7">No inverse: the column reason</a></li>
+        <li><a href="#t8">No inverse: Ax = 0</a></li>
+        <li><a href="#t9">An inverse is n systems</a></li>
+        <li><a href="#t10">Gauss–Jordan</a></li>
+        <li><a href="#t11">Why Gauss–Jordan works</a></li>
+        <li><a href="#t12">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The topics, in the order he teaches them. Click one to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">The standard way</a><span>Each entry of \(C\) is a row of \(A\) dotted with a column of \(B\) — plus the shape rule that says when multiplication is even allowed.</span></li>
+      <li><a href="#t2">Way 2: by columns</a><span>Whole columns at a time: the columns of \(C\) are combinations of the columns of \(A\).</span></li>
+      <li><a href="#t3">Way 3: by rows</a><span>Whole rows at a time: the rows of \(C\) are combinations of the rows of \(B\).</span></li>
+      <li><a href="#t4">Way 4: column times row</a><span>A column times a row gives a full matrix — a very special one — and \(AB\) is a sum of them.</span></li>
+      <li><a href="#t5">Way 5: by blocks</a><span>Cut both matrices into blocks and multiply as if the blocks were numbers.</span></li>
+      <li><a href="#t6">Inverses: the big question</a><span>\(A^{-1}A = I = AA^{-1}\), and why for square matrices a left inverse is automatically a right inverse.</span></li>
+      <li><a href="#t7">No inverse: the column reason</a><span>If the columns lie on one line, no product can ever produce the identity.</span></li>
+      <li><a href="#t8">No inverse: Ax = 0</a><span>The reason he likes best: a non-zero \(x\) sent to zero is a disaster no inverse can repair.</span></li>
+      <li><a href="#t9">An inverse is n systems</a><span>\(A\) times column \(j\) of \(A^{-1}\) is column \(j\) of \(I\) — the same old \(Ax = b\), \(n\) times over.</span></li>
+      <li><a href="#t10">Gauss–Jordan</a><span>Solve all \(n\) systems at once by augmenting with the whole identity, then eliminating upwards too.</span></li>
+      <li><a href="#t11">Why Gauss–Jordan works</a><span>\(E[A \mid I] = [I \mid E]\), and \(EA = I\) forces \(E\) to be \(A^{-1}\).</span></li>
+      <li><a href="#t12">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The standard way</h3>
+
+    <p>Take \(A\) times \(B\) and call the result \(C\). The standard rule describes <b>one entry at a time</b>. Always write the row number first, then the column number, so \(c_{34}\) is the entry in row 3, column 4. Where does it come from? <b>Row 3 of \(A\), column 4 of \(B\)</b>:</p>
+
+    $$ c_{34} = (\text{row 3 of } A) \cdot (\text{column 4 of } B) $$
+
+    <p>Write it out with indices. The first entry of row 3 is \(a_{31}\); the first entry of column 4 is \(b_{14}\); multiply them. Then move one step along the row and one step down the column — \(a_{32}\) times \(b_{24}\) — and keep accumulating:</p>
+
+    $$ c_{34} = a_{31}b_{14} + a_{32}b_{24} + a_{33}b_{34} + \cdots $$
+
+    <p>which is the summation formula, with \(k\) walking <b>along the row and down the column together</b>:</p>
+
+    $$ \boxed{\,c_{ij} = \sum_{k=1}^{n} a_{ik}b_{kj}\,} $$
+
+    <h4>When is multiplication allowed?</h4>
+    <p>The sum only makes sense if the row and the column are the <b>same length</b>. So if \(A\) is \(m \times n\), then \(B\) must have \(n\) rows — the number of entries we meet coming down must match the number we meet going across:</p>
+
+    $$ \underbrace{(m \times n)}_{A}\ \underbrace{(n \times p)}_{B} = \underbrace{(m \times p)}_{C} $$
+
+    <div class="box method"><span class="label">Rule · shapes</span>
+      <p>The <b>inner</b> dimensions must match; the <b>outer</b> dimensions give the shape of the answer. \(C\) has \(m\) rows (as many as \(A\)) and \(p\) columns (as many as \(B\)) — so there are \(m \times p\) entries to compute, each one a sum like the box above.</p>
+    </div>
+
+    <p>That is the standard rule, and everybody uses it. But the same calculation can be organised by <b>whole columns</b> and <b>whole rows</b>, and those views are where the understanding is.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Way 2: by columns</h3>
+
+    <p>We already know how to multiply a matrix by a single column. So put \(p\) columns of \(B\) side by side, resting next to each other, and multiply \(A\) by each one:</p>
+
+    $$ A\big[\,b_1 \ \ b_2 \ \ \cdots \ \ b_p\,\big] = \big[\,Ab_1 \ \ Ab_2 \ \ \cdots \ \ Ab_p\,\big] $$
+
+    <p><b>\(A\) times column \(j\) of \(B\) is column \(j\) of \(C\)</b> — and nothing else in \(B\) entered that part of the answer.</p>
+
+    <div class="box theorem"><span class="label">What this tells us ★</span>
+      <p>$$ \boxed{\text{the columns of } C \text{ are combinations of the columns of } A} $$</p>
+      <p>Because each one is \(A\) times a vector, and from Lesson 1 that is a combination of \(A\)'s columns. The numbers inside \(B\) are simply <b>telling us which combination</b>. It even checks out by length: the columns of \(A\) have \(m\) entries, and so do the columns of \(C\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Way 3: by rows</h3>
+
+    <p>Now take a <b>row of \(A\)</b> and let it multiply the whole matrix \(B\). From Lesson 2, a row times a matrix mixes up the rows — so that row of \(A\) takes a combination of the rows of \(B\), and the result is one row of the answer:</p>
+
+    $$ (\text{row } i \text{ of } A)\,B = \text{row } i \text{ of } C $$
+
+    <div class="box theorem"><span class="label">What this tells us ★</span>
+      <p>$$ \boxed{\text{the rows of } C \text{ are combinations of the rows of } B} $$</p>
+    </div>
+
+    <p>So the two halves of a product do different jobs, and it is worth saying them side by side:</p>
+
+    <table class="sl-table">
+      <tr><th>View</th><th>What you take</th><th>What comes out</th></tr>
+      <tr><td><b>By columns</b></td><td>\(A\) times one column of \(B\)</td><td>one column of \(C\) — a combination of the <b>columns of \(A\)</b></td></tr>
+      <tr><td><b>By rows</b></td><td>one row of \(A\) times \(B\)</td><td>one row of \(C\) — a combination of the <b>rows of \(B\)</b></td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Way 4: column times row</h3>
+
+    <p>Way 1 was a row times a column, and it produced a <b>number</b>. Turn it around: what does a <b>column times a row</b> produce?</p>
+
+    <p>Check the shapes. A column of \(A\) is \(m \times 1\); a row of \(B\) is \(1 \times p\). The inner dimensions are both \(1\), so the product is legal, and the outer dimensions say the answer is \(m \times p\) — <b>a full-sized matrix</b>.</p>
+
+    $$ \begin{bmatrix} 2 \\ 3 \\ 4 \end{bmatrix}\begin{bmatrix} 1 & 6 \end{bmatrix}
+      = \begin{bmatrix} 2(1) & 2(6) \\ 3(1) & 3(6) \\ 4(1) & 4(6) \end{bmatrix}
+      = \begin{bmatrix} 2 & 12 \\ 3 & 18 \\ 4 & 24 \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">A very special matrix</span>
+      <p>Look at its <b>columns</b>: \((2,3,4)\) and \((12,18,24)\) — both are multiples of \((2,3,4)\). Look at its <b>rows</b>: \((2,12)\), \((3,18)\), \((4,24)\) — all multiples of \((1,6)\).</p>
+      <p>That follows the rules we just wrote: the columns are combinations of the one column we fed in, and a combination of a single vector is only a multiple of it. Same for the rows.</p>
+    </div>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 300" role="img" aria-label="The rows 2,12 and 3,18 and 4,24 all lie on the line through 1,6">
+        <g class="grid">
+          <line x1="50" y1="54" x2="400" y2="54"/><line x1="50" y1="108" x2="400" y2="108"/>
+          <line x1="50" y1="162" x2="400" y2="162"/><line x1="50" y1="216" x2="400" y2="216"/>
+          <line x1="120" y1="20" x2="120" y2="280"/><line x1="190" y1="20" x2="190" y2="280"/>
+          <line x1="260" y1="20" x2="260" y2="280"/><line x1="330" y1="20" x2="330" y2="280"/>
+        </g>
+        <line class="axis" x1="50" y1="270" x2="410" y2="270"/><line class="axis" x1="50" y1="285" x2="50" y2="20"/>
+        <text class="tick" x="117" y="286">1</text><text class="tick" x="187" y="286">2</text><text class="tick" x="257" y="286">3</text><text class="tick" x="327" y="286">4</text>
+        <text class="tick" x="26" y="220">6</text><text class="tick" x="22" y="166">12</text><text class="tick" x="22" y="112">18</text><text class="tick" x="22" y="58">24</text>
+        <line class="l1" x1="50" y1="270" x2="360" y2="31"/>
+        <circle class="hit" cx="120" cy="216" r="5"/><text class="lbl c3" x="128" y="212">(1, 6) — the row of B</text>
+        <circle class="pt" cx="190" cy="162" r="5"/><text class="lbl ci" x="198" y="158">(2, 12)</text>
+        <circle class="pt" cx="260" cy="108" r="5"/><text class="lbl ci" x="268" y="104">(3, 18)</text>
+        <circle class="pt" cx="330" cy="54" r="5"/><text class="lbl ci" x="256" y="46">(4, 24)</text>
+        <text class="lbl c1" x="60" y="40">every row lies on this one line</text>
+      </svg>
+      <figcaption><b>All the rows point the same way.</b> Plot the three rows of the product as points: \((2,12)\), \((3,18)\), \((4,24)\). They are \(2\), \(3\) and \(4\) times the row \((1,6)\) we multiplied by, so they all sit on a single line through the origin — nothing in this matrix escapes that direction. Later this gets a name: the <b>row space</b> of this matrix is just the line through \((1,6)\), and the <b>column space</b> is just the line through \((2,3,4)\). It is about as minimal as a non-zero matrix can be.</figcaption>
+    </figure>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-rank1" style="width:100%;height:420px"></div>
+      <figcaption><b>And the columns too, in 3D — drag to rotate.</b> The two columns of that product, \((2,3,4)\) and \((12,18,24)\), are drawn from the origin. Turn the figure and they never separate: the second is exactly \(6\) times the first, so both lie along one line in space. A matrix built as a single column times a single row can only ever reach one direction — which is precisely why such matrices are called <b>rank one</b>, the subject of a later lesson.</figcaption>
+    </figure>
+
+    <h4>And the fourth way itself</h4>
+    <p>The point of all that is the rule it unlocks: <b>\(AB\) is a sum of (column of \(A\)) times (row of \(B\))</b> — first column times first row, plus second column times second row, and so on:</p>
+
+    $$ AB = \sum_{k=1}^{n} \begin{bmatrix} a_{1k} \\ \vdots \\ a_{mk} \end{bmatrix}\begin{bmatrix} b_{k1} & \cdots & b_{kp} \end{bmatrix} $$
+
+    <p>Try it on a case where the second piece vanishes. Take the columns \((2,3,4)\) and \((7,8,9)\), and the rows \((1,6)\) and \((0,0)\):</p>
+
+    $$ \begin{bmatrix} 2 & 7 \\ 3 & 8 \\ 4 & 9 \end{bmatrix}\begin{bmatrix} 1 & 6 \\ 0 & 0 \end{bmatrix}
+      = \underbrace{\begin{bmatrix} 2 \\ 3 \\ 4 \end{bmatrix}\begin{bmatrix} 1 & 6 \end{bmatrix}}_{\text{col}_1 \times \text{row}_1}
+      + \underbrace{\begin{bmatrix} 7 \\ 8 \\ 9 \end{bmatrix}\begin{bmatrix} 0 & 0 \end{bmatrix}}_{= \ \text{all zeros}}
+      = \begin{bmatrix} 2 & 12 \\ 3 & 18 \\ 4 & 24 \end{bmatrix} \quad ✓ $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Way 5: by blocks</h3>
+
+    <p>One more, and it is genuinely useful. Cut both matrices into <b>blocks</b> — say four square blocks each — and multiply as though the blocks were ordinary numbers:</p>
+
+    $$ \begin{bmatrix} A_1 & A_2 \\ A_3 & A_4 \end{bmatrix}\begin{bmatrix} B_1 & B_2 \\ B_3 & B_4 \end{bmatrix}
+      = \begin{bmatrix} C_1 & C_2 \\ C_3 & C_4 \end{bmatrix}, \qquad \boxed{C_1 = A_1B_1 + A_2B_3} $$
+
+    <p>It is block rows times block columns — exactly the familiar pattern, one level up. The sizes do not have to be equal, they only have to <b>match properly</b>: the blocks you multiply must themselves be multipliable. These matrices might be \(20 \times 20\) with \(10 \times 10\) blocks, and each product above is then a legitimate \(10 \times 10\) multiplication.</p>
+
+    <div class="box intuition"><span class="label">All five are the same multiplication</span>
+      <p>Not even Gauss could see instantly that block multiplication works — but check it through and all five ways perform exactly the same little multiplications, only grouped differently. The familiar entry-by-entry rule is what we are <i>really</i> doing in every case; the other four just bundle those products into columns, rows, outer products or blocks.</p>
+    </div>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <svg viewBox="0 0 640 330" role="img" aria-label="The four ways to organise a matrix product">
+        <g class="tick" font-size="12.5">
+          <text x="20" y="20">1 · row × column → one NUMBER</text>
+          <text x="340" y="20">2 · matrix × column → one COLUMN</text>
+          <text x="20" y="180">3 · row × matrix → one ROW</text>
+          <text x="340" y="180">4 · column × row → a whole MATRIX</text>
+        </g>
+        <!-- 1: row x column -> number -->
+        <g>
+          <rect x="24" y="34" width="86" height="18" class="l1" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <rect x="24" y="56" width="86" height="56" class="axis" fill="none" stroke-width="1"/>
+          <rect x="126" y="34" width="18" height="78" class="l2" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <rect x="146" y="34" width="56" height="78" class="axis" fill="none" stroke-width="1"/>
+          <text class="tick" x="212" y="78" font-size="15">=</text>
+          <rect x="230" y="64" width="18" height="18" class="l3" fill="currentColor" fill-opacity=".3" stroke-width="1.5"/>
+          <text class="tick" x="24" y="134">one entry c₃₄ = Σ a₃ₖ bₖ₄</text>
+        </g>
+        <!-- 2: matrix x column -> column -->
+        <g>
+          <rect x="344" y="34" width="86" height="78" class="axis" fill="none" stroke-width="1.5"/>
+          <rect x="446" y="34" width="18" height="78" class="l2" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <rect x="466" y="34" width="56" height="78" class="axis" fill="none" stroke-width="1"/>
+          <text class="tick" x="532" y="78" font-size="15">=</text>
+          <rect x="550" y="34" width="18" height="78" class="l3" fill="currentColor" fill-opacity=".25" stroke-width="1.5"/>
+          <text class="tick" x="344" y="134">columns of C = combinations of columns of A</text>
+        </g>
+        <!-- 3: row x matrix -> row -->
+        <g>
+          <rect x="24" y="194" width="86" height="18" class="l1" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <rect x="24" y="216" width="86" height="56" class="axis" fill="none" stroke-width="1"/>
+          <rect x="126" y="194" width="76" height="78" class="axis" fill="none" stroke-width="1.5"/>
+          <text class="tick" x="212" y="238" font-size="15">=</text>
+          <rect x="230" y="194" width="76" height="18" class="l3" fill="currentColor" fill-opacity=".25" stroke-width="1.5"/>
+          <text class="tick" x="24" y="294">rows of C = combinations of rows of B</text>
+        </g>
+        <!-- 4: column x row -> matrix -->
+        <g>
+          <rect x="344" y="194" width="18" height="78" class="l1" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <rect x="378" y="194" width="76" height="18" class="l2" fill="currentColor" fill-opacity=".18" stroke-width="1.5"/>
+          <text class="tick" x="466" y="238" font-size="15">=</text>
+          <rect x="486" y="194" width="76" height="78" class="l3" fill="currentColor" fill-opacity=".25" stroke-width="1.5"/>
+          <text class="tick" x="344" y="294">AB = sum of these, one per column-of-A / row-of-B pair</text>
+        </g>
+        <text class="tick" x="20" y="320">5 · by blocks — cut both matrices up and multiply the blocks as if they were numbers: C₁ = A₁B₁ + A₂B₃</text>
+      </svg>
+      <figcaption><b>Five ways to organise one calculation.</b> Shaded bands are what you pick up, and what comes out. Way 1 takes a thin row and a thin column and returns a single number; way 2 keeps a whole column intact; way 3 keeps a whole row intact; way 4 does the opposite of way 1, taking a column and a row and spreading them into a full matrix. Every one performs the same underlying products — the choice is only which grouping makes the structure visible, and that depends on what you are trying to see.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Inverses: the big question</h3>
+
+    <p>Second topic. Take a <b>square</b> matrix \(A\). It may or may not have an inverse — not all matrices do — and that is <b>the most important question you can ask about it</b>.</p>
+
+    <div class="box definition"><span class="label">The inverse</span>
+      <p>If it exists, \(A^{-1}\) is the matrix with</p>
+      $$ \boxed{A^{-1}A = I = AA^{-1}} $$
+      <p>and \(A\) is then called <b>invertible</b> or <b>non-singular</b>. Those are the good ones.</p>
+    </div>
+
+    <p>Notice that both orders appear. For square matrices, <b>a left inverse is automatically a right inverse</b> — find a matrix that gives \(I\) on the left and the same matrix gives \(I\) on the right. That is not easy to prove, but it is true, and it is special to square matrices: for rectangular ones we will later meet a left inverse that is <i>not</i> a right inverse, and the shapes alone would forbid it.</p>
+
+    <p>Two questions follow, and the rest of the lecture is both: <b>when does \(A^{-1}\) exist</b>, and <b>how do you find it?</b></p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. No inverse: the column reason</h3>
+
+    <p>Start with the negative case, because it is where the understanding is. Here is a matrix with no inverse:</p>
+
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix} $$
+
+    <p>Why not? If you know determinants — which you are not supposed to yet — you would compute \(1(6) - 3(2) = 0\) and stop. Here is the reason that actually explains it.</p>
+
+    <p>Suppose some matrix \(B\) had \(AB = I\). By way 2, <b>every column of \(AB\) is a combination of the columns of \(A\)</b>. So the question becomes: can a combination of \(\begin{bmatrix} 1 \\ 2\end{bmatrix}\) and \(\begin{bmatrix} 3 \\ 6\end{bmatrix}\) produce \(\begin{bmatrix} 1 \\ 0\end{bmatrix}\), the first column of \(I\)?</p>
+
+    <p><b>No way.</b> Those two columns lie on the same line — \((3,6)\) is three times \((1,2)\) — so every combination of them stays on that line, and \((1,0)\) is not on it.</p>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 300" role="img" aria-label="Both columns lie on one line, so the target 1,0 cannot be reached">
+        <defs>
+          <marker id="ia1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ia3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <g class="grid">
+          <line x1="40" y1="50" x2="400" y2="50"/><line x1="40" y1="100" x2="400" y2="100"/>
+          <line x1="40" y1="150" x2="400" y2="150"/><line x1="40" y1="200" x2="400" y2="200"/>
+          <line x1="110" y1="20" x2="110" y2="280"/><line x1="180" y1="20" x2="180" y2="280"/>
+          <line x1="250" y1="20" x2="250" y2="280"/><line x1="320" y1="20" x2="320" y2="280"/>
+        </g>
+        <line class="axis" x1="30" y1="250" x2="410" y2="250"/><line class="axis" x1="40" y1="285" x2="40" y2="20"/>
+        <text class="tick" x="107" y="266">1</text><text class="tick" x="177" y="266">2</text><text class="tick" x="247" y="266">3</text>
+        <text class="tick" x="24" y="204">2</text><text class="tick" x="24" y="154">4</text><text class="tick" x="24" y="104">6</text>
+        <line class="l1" x1="40" y1="250" x2="300" y2="64" stroke-opacity=".3" stroke-width="9"/>
+        <line class="l1" x1="40" y1="250" x2="110" y2="200" marker-end="url(#ia1)"/>
+        <text class="lbl c1" x="104" y="222">column 1 = (1, 2)</text>
+        <line class="l1" x1="40" y1="250" x2="250" y2="100" marker-end="url(#ia1)"/>
+        <text class="lbl c1" x="186" y="92">column 2 = (3, 6) = 3 × column 1</text>
+        <line class="l3 dash" x1="40" y1="250" x2="110" y2="250" marker-end="url(#ia3)"/>
+        <circle class="hit" cx="110" cy="250" r="5"/>
+        <text class="lbl c3" x="118" y="246">(1, 0) — unreachable</text>
+        <text class="lbl ci" x="150" y="40">every combination stays on the thick line</text>
+      </svg>
+      <figcaption><b>Both columns point the same way, so the reachable set is a line.</b> The shaded band is every combination \(x(1,2) + y(3,6)\) — adding multiples of two vectors that share a direction can never leave that direction. The first column of the identity, \((1,0)\), sits off the line, so no matrix \(B\) can make \(AB = I\): the very first column of the target is already impossible. This is the column picture of Lesson 1 answering a question about inverses.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. No inverse: Ax = 0</h3>
+
+    <p>Here is another reason — <b>the reason he likes best</b>. In mathematics all the key equations have zero on the right-hand side:</p>
+
+    $$ Ax = 0 $$
+
+    <p>For our matrix, find a non-zero \(x\) that does it. Take \(x = \begin{bmatrix} 3 \\ -1\end{bmatrix}\):</p>
+
+    $$ \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix}\begin{bmatrix} 3 \\ -1 \end{bmatrix}
+      = 3\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 3 \\ 6 \end{bmatrix}
+      = \begin{bmatrix} 3 - 3 \\ 6 - 6 \end{bmatrix}
+      = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \quad ✓ $$
+
+    <p>In words: <b>three of the first column minus one of the second gives the zero column</b>. And \(x = 0\) would always work, so the whole point is that this \(x\) is <b>not</b> zero.</p>
+
+    <div class="box pitfall"><span class="label">Why that spells disaster ★</span>
+      <p>Suppose \(A^{-1}\) existed. Multiply \(Ax = 0\) by it on the left:</p>
+      $$ A^{-1}(Ax) = A^{-1}0 \;\Longrightarrow\; (A^{-1}A)x = 0 \;\Longrightarrow\; Ix = 0 \;\Longrightarrow\; x = 0 $$
+      <p>But \(x\) is \((3,-1)\), which is not zero. Contradiction — so no such \(A^{-1}\) can exist.</p>
+      <p>Said without algebra: \(A\) takes this non-zero vector <b>to zero</b>, and once you are at zero there is nothing left to tell you where you came from. No matrix can recover it, because \(A^{-1}0\) must be \(0\).</p>
+    </div>
+
+    <div class="box theorem"><span class="label">The conclusion to carry</span>
+      <p>$$ \boxed{\text{A square matrix is singular exactly when some non-zero } x \text{ has } Ax = 0} $$</p>
+      <p>Equivalently: some combination of its columns gives the zero column. The two statements in sections 7 and 8 are the same fact seen from two sides.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. An inverse is n systems</h3>
+
+    <p>Back to the positive side. Change that \(6\) to a \(7\) and the matrix becomes invertible:</p>
+
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix} $$
+
+    <p>Determinant fans compute \(1(7) - 3(2) = 1 \ne 0\). Column fans look at \((1,2)\) and \((3,7)\) and see that they <b>point in different directions</b>, so their combinations can reach anything.</p>
+
+    <p>Now find \(A^{-1}\). Write it with four unknown entries and look at the equation <b>one column at a time</b>:</p>
+
+    $$ \begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}\begin{bmatrix} a & c \\ b & d \end{bmatrix} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} $$
+
+    $$ \underbrace{A\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \end{bmatrix}}_{\text{first column}}
+      \qquad\qquad
+      \underbrace{A\begin{bmatrix} c \\ d \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \end{bmatrix}}_{\text{second column}} $$
+
+    <div class="box theorem"><span class="label">Finding an inverse is nothing new ★</span>
+      <p>$$ \boxed{A \times (\text{column } j \text{ of } A^{-1}) = \text{column } j \text{ of } I} $$</p>
+      <p>That is just \(Ax = b\) again — \(n\) of them, all with the <b>same matrix \(A\)</b> but with different right-hand sides, namely the columns of the identity. Solve them all and you have built \(A^{-1}\) column by column.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Gauss–Jordan</h3>
+
+    <p>Gauss would solve those systems one at a time. <b>Jordan's idea: solve them together.</b></p>
+
+    <p>For a single system we tacked the right-hand side on as an extra column — the augmented matrix of Lesson 2. Now tack on <b>two</b> extra columns, which is to say the whole identity, and run elimination on the long matrix:</p>
+
+    $$ [\,A \mid I\,] = \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 2 & 7 & 0 & 1 \end{array}\right] $$
+
+    <p><b>Step 1 (Gauss, downwards).</b> Subtract 2 times row one from row two, acting on all four columns:</p>
+
+    $$ \begin{aligned}
+      \text{row}_2 - 2\,\text{row}_1 &= \begin{bmatrix} 2 & 7 & 0 & 1 \end{bmatrix} - 2\begin{bmatrix} 1 & 3 & 1 & 0 \end{bmatrix} \\
+      &= \begin{bmatrix} 2-2 & \ 7-6 & \ 0-2 & \ 1-0 \end{bmatrix} = \begin{bmatrix} 0 & 1 & -2 & 1 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ \left[\begin{array}{cc|cc} 1 & 3 & 1 & 0 \\ 0 & 1 & -2 & 1 \end{array}\right] $$
+
+    <p>This is upper triangular. <b>Gauss would quit here — Jordan says keep going</b>, eliminating <i>upwards</i> to clear the entries above the pivots too.</p>
+
+    <p><b>Step 2 (Jordan, upwards).</b> The pivot in row two is \(1\), and we must remove the \(3\) above it, so subtract 3 times row two from row one:</p>
+
+    $$ \begin{aligned}
+      \text{row}_1 - 3\,\text{row}_2 &= \begin{bmatrix} 1 & 3 & 1 & 0 \end{bmatrix} - 3\begin{bmatrix} 0 & 1 & -2 & 1 \end{bmatrix} \\
+      &= \begin{bmatrix} 1-0 & \ 3-3 & \ 1-(-6) & \ 0-3 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 7 & -3 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ \left[\begin{array}{cc|cc} 1 & 0 & 7 & -3 \\ 0 & 1 & -2 & 1 \end{array}\right] = [\,I \mid A^{-1}\,] $$
+
+    <div class="box theorem"><span class="label">The inverse</span>
+      $$ \boxed{A^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}} $$
+      <p>Check it the old-fashioned way, entry by entry:</p>
+      $$ A^{-1}A = \begin{bmatrix} 7 & -3 \\ -2 & 1 \end{bmatrix}\begin{bmatrix} 1 & 3 \\ 2 & 7 \end{bmatrix}
+        = \begin{bmatrix} 7-6 & \ 21-21 \\ -2+2 & \ -6+7 \end{bmatrix}
+        = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} \quad ✓ $$
+    </div>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <svg viewBox="0 0 640 240" role="img" aria-label="The Gauss-Jordan march from A and I to I and A inverse">
+        <g class="tick" font-size="12.5">
+          <text x="18" y="24">[ A | I ]</text><text x="250" y="24">Gauss: down</text><text x="476" y="24">Jordan: up → [ I | A⁻¹ ]</text>
+        </g>
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16" fill="currentColor">
+          <text x="30" y="80" text-anchor="middle">1</text><text x="68" y="80" text-anchor="middle">3</text>
+          <text x="118" y="80" text-anchor="middle">1</text><text x="156" y="80" text-anchor="middle">0</text>
+          <text x="30" y="112" text-anchor="middle">2</text><text x="68" y="112" text-anchor="middle">7</text>
+          <text x="118" y="112" text-anchor="middle">0</text><text x="156" y="112" text-anchor="middle">1</text>
+
+          <text x="268" y="80" text-anchor="middle">1</text><text x="306" y="80" text-anchor="middle">3</text>
+          <text x="356" y="80" text-anchor="middle">1</text><text x="394" y="80" text-anchor="middle">0</text>
+          <text x="268" y="112" text-anchor="middle">0</text><text x="306" y="112" text-anchor="middle">1</text>
+          <text x="356" y="112" text-anchor="middle">−2</text><text x="394" y="112" text-anchor="middle">1</text>
+
+          <text x="500" y="80" text-anchor="middle">1</text><text x="538" y="80" text-anchor="middle">0</text>
+          <text x="588" y="80" text-anchor="middle">7</text><text x="626" y="80" text-anchor="middle">−3</text>
+          <text x="500" y="112" text-anchor="middle">0</text><text x="538" y="112" text-anchor="middle">1</text>
+          <text x="588" y="112" text-anchor="middle">−2</text><text x="626" y="112" text-anchor="middle">1</text>
+        </g>
+        <!-- dividers -->
+        <line class="axis" x1="93" y1="60" x2="93" y2="124" stroke-dasharray="4 3"/>
+        <line class="axis" x1="331" y1="60" x2="331" y2="124" stroke-dasharray="4 3"/>
+        <line class="axis" x1="563" y1="60" x2="563" y2="124" stroke-dasharray="4 3"/>
+        <!-- arrows -->
+        <line class="axis" x1="180" y1="96" x2="240" y2="96" stroke-width="2"/><polygon points="240,96 232,91 232,101" fill="currentColor"/>
+        <text class="lbl c1" x="168" y="152">row₂ − 2 row₁</text>
+        <line class="axis" x1="418" y1="96" x2="478" y2="96" stroke-width="2"/><polygon points="478,96 470,91 470,101" fill="currentColor"/>
+        <text class="lbl c2" x="406" y="152">row₁ − 3 row₂</text>
+        <text class="tick" x="18" y="190">Left half starts as A and is driven to I. Whatever is done to the left half</text>
+        <text class="tick" x="18" y="210">is done to the right half, so the right half starts as I and ends as A⁻¹.</text>
+      </svg>
+      <figcaption><b>The Gauss–Jordan march.</b> One long matrix, four columns wide. Elimination goes <i>down</i> first, clearing below the pivot as in Lesson 2, and then <i>up</i>, clearing above it — that upward sweep is Jordan's addition. The dashed line is only a bookkeeping divider: every row operation is applied straight across it. When the left half has become the identity, the right half has quietly turned into \(A^{-1}\).</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. Why Gauss–Jordan works</h3>
+
+    <p>The mechanics are easy; the question is <b>why the inverse appears on the right</b>.</p>
+
+    <p>From Lesson 2, every elimination step is a matrix multiplying from the left. This run had two steps, so call their product \(E\) — one matrix doing the whole job. Applied to the long matrix:</p>
+
+    $$ E\,[\,A \mid I\,] = [\,EA \mid E\,] $$
+
+    <p>because multiplying from the left acts on each half independently. Now use the one thing we know: <b>the left half ended up as the identity</b>. So \(EA = I\) — and that equation alone tells us what \(E\) is:</p>
+
+    $$ EA = I \;\Longrightarrow\; \boxed{E = A^{-1}} $$
+
+    <p>And therefore the right half, which started as \(I\) and became \(E\), is \(A^{-1}\):</p>
+
+    $$ E\,[\,A \mid I\,] = [\,I \mid E\,] = [\,I \mid A^{-1}\,] $$
+
+    <div class="box intuition"><span class="label">The whole idea in one sentence</span>
+      <p>We never had to compute \(E\). We simply <b>tucked the identity on</b>, drove the left half to \(I\) by elimination, and whatever those steps did to the identity <i>is</i> \(A^{-1}\) — because the matrix that turns \(A\) into \(I\) can only be the inverse.</p>
+      <p>Verify it here if you like: the two steps were \(\begin{bmatrix} 1 & 0 \\ -2 & 1\end{bmatrix}\) then \(\begin{bmatrix} 1 & -3 \\ 0 & 1\end{bmatrix}\), and their product is \(\begin{bmatrix} 7 & -3 \\ -2 & 1\end{bmatrix} = A^{-1}\) ✓.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t12"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Shapes</b></td><td>\((m \times n)(n \times p) = (m \times p)\): inner dimensions must match, outer ones give the answer.</td></tr>
+      <tr><td><b>Way 1 · entries</b></td><td>\(c_{ij} = \sum_k a_{ik}b_{kj}\) — row \(i\) of \(A\) dotted with column \(j\) of \(B\).</td></tr>
+      <tr><td><b>Way 2 · columns</b></td><td>\(A\) times column \(j\) of \(B\) = column \(j\) of \(C\). Columns of \(C\) are combinations of <b>columns of \(A\)</b>.</td></tr>
+      <tr><td><b>Way 3 · rows</b></td><td>Row \(i\) of \(A\) times \(B\) = row \(i\) of \(C\). Rows of \(C\) are combinations of <b>rows of \(B\)</b>.</td></tr>
+      <tr><td><b>Way 4 · column × row</b></td><td>Gives a full matrix whose columns all share one direction and whose rows all share one direction; \(AB\) is the sum of these.</td></tr>
+      <tr><td><b>Way 5 · blocks</b></td><td>Block rows times block columns, if the blocks match: \(C_1 = A_1B_1 + A_2B_3\).</td></tr>
+      <tr><td><b>Inverse</b></td><td>\(A^{-1}A = I = AA^{-1}\); for square matrices a left inverse is also a right inverse.</td></tr>
+      <tr><td><b>Singular, by columns</b></td><td>Columns on one line → every product's columns stay on that line → \(I\) is unreachable.</td></tr>
+      <tr><td><b>Singular, by \(Ax=0\)</b></td><td>Some non-zero \(x\) with \(Ax = 0\). Then \(A^{-1}\) would force \(x = 0\) — contradiction.</td></tr>
+      <tr><td><b>Example, singular</b></td><td>\(\begin{bmatrix} 1 & 3 \\ 2 & 6\end{bmatrix}\) with \(x = (3,-1)\): three of column one minus column two is zero.</td></tr>
+      <tr><td><b>Finding \(A^{-1}\)</b></td><td>\(A\,(\text{column } j \text{ of } A^{-1}) = \text{column } j \text{ of } I\) — \(n\) systems sharing one matrix.</td></tr>
+      <tr><td><b>Gauss–Jordan</b></td><td>Augment \([A \mid I]\), eliminate down <b>and up</b> until the left half is \(I\); the right half is \(A^{-1}\).</td></tr>
+      <tr><td><b>Why it works</b></td><td>\(E[A \mid I] = [EA \mid E] = [I \mid E]\), and \(EA = I\) means \(E = A^{-1}\).</td></tr>
+      <tr><td><b>Example, invertible</b></td><td>\(\begin{bmatrix} 1 & 3 \\ 2 & 7\end{bmatrix}^{-1} = \begin{bmatrix} 7 & -3 \\ -2 & 1\end{bmatrix}\).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>All the ways give the same answer, and they are all important ★</b>
+        <span>The entry rule is what you compute with; the column and row views are what let you <i>see</i> what a product does.</span></li>
+      <li><b>Columns of the product come from columns of \(A\); rows come from rows of \(B\)</b>
+        <span>Used immediately afterwards to prove a matrix has no inverse — this is not decoration, it is the working tool.</span></li>
+      <li><b>The best reason for singularity is \(Ax = 0\) with \(x \ne 0\) ★</b>
+        <span>"In mathematics, all the key equations have zero on the right-hand side." Once a non-zero vector is sent to zero, no inverse can bring it back.</span></li>
+      <li><b>Finding an inverse is just \(Ax = b\), \(n\) times over</b>
+        <span>Nothing new is needed — only the trick of solving all \(n\) systems simultaneously.</span></li>
+      <li><b>Gauss goes down, Jordan keeps going up</b>
+        <span>And the identity you tacked on turns into the inverse, because the matrix taking \(A\) to \(I\) can only be \(A^{-1}\).</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Elimination has now given us \(U\) (Lesson 2) and \(A^{-1}\) (this lesson). What it has not yet given us is the clean <b>factorisation</b> of \(A\) itself. The next lesson takes the inverse direction seriously and arrives at \(A = LU\) — the matrix of multipliers times the matrix of pivots — which is how elimination is actually stored and reused.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+
+  <section class="tab-panel" data-panel="explanation" hidden></section>
+  <section class="tab-panel" data-panel="examples" hidden></section>
+  <section class="tab-panel" data-panel="problems" hidden></section>
+  </div>
+</main>
+<script>
+// 3D figure: the two columns of a column-times-row matrix share one direction.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t, lo, hi, dt) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: dt, tickfont: { size: 11, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  if (document.getElementById("fig3d-rank1")) {
+    var L = { margin: { l: 0, r: 0, t: 0, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+      legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" },
+      scene: { xaxis: axis("x", 0, 14, 4), yaxis: axis("y", 0, 20, 4), zaxis: axis("z", 0, 26, 5),
+        aspectmode: "cube", dragmode: "turntable", camera: { eye: { x: 1.8, y: -1.5, z: 0.75 }, up: { x: 0, y: 0, z: 1 } } } };
+    Plotly.newPlot("fig3d-rank1", [
+      { type: "scatter3d", mode: "lines", name: "the line both columns lie on", hoverinfo: "name",
+        line: { color: soft, width: 3, dash: "dot" }, x: [0, 13], y: [0, 19.5], z: [0, 26] },
+      { type: "scatter3d", mode: "lines", name: "column 1 = (2, 3, 4)", hoverinfo: "name",
+        line: { color: blue, width: 10 }, x: [0, 2], y: [0, 3], z: [0, 4] },
+      { type: "scatter3d", mode: "lines", name: "column 2 = (12, 18, 24) = 6 × column 1", hoverinfo: "name",
+        line: { color: green, width: 7 }, x: [0, 12], y: [0, 18], z: [0, 24] },
+      { type: "scatter3d", mode: "markers+text", name: "(2, 3, 4)", hoverinfo: "name", marker: { color: blue, size: 6 },
+        x: [2], y: [3], z: [4], text: ["(2, 3, 4)"], textposition: "bottom right", textfont: { color: blue, size: 12 } },
+      { type: "scatter3d", mode: "markers+text", name: "(12, 18, 24)", hoverinfo: "name", marker: { color: green, size: 6 },
+        x: [12], y: [18], z: [24], text: ["(12, 18, 24)"], textposition: "top left", textfont: { color: green, size: 12 } }
+    ], L, { responsive: true, displaylogo: false, displayModeBar: false });
+  }
+});
+</script>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
