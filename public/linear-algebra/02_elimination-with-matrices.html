@@ -186,7 +186,7 @@
           <text x="14" y="26">A</text><text x="246" y="26">after the 2,1 step</text><text x="516" y="26">U</text>
         </g>
         <!-- A -->
-        <g font-family="var(--mono)" font-size="15" class="ci" fill="currentColor">
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" class="ci" fill="currentColor">
           <text x="30" y="70">1   2   1</text><text x="30" y="100">3   8   1</text><text x="30" y="130">0   4   1</text>
         </g>
         <rect x="22" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
@@ -196,7 +196,7 @@
         <text class="lbl c1" x="146" y="86">row₂ − 3 row₁</text>
         <text class="tick" x="152" y="118">multiplier 3</text>
         <!-- middle -->
-        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" fill="currentColor">
           <text x="258" y="70">1   2   1</text><text x="258" y="100">0   2  −2</text><text x="258" y="130">0   4   1</text>
         </g>
         <rect x="250" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
@@ -206,7 +206,7 @@
         <text class="lbl c2" x="374" y="86">row₃ − 2 row₂</text>
         <text class="tick" x="384" y="118">multiplier 2</text>
         <!-- U -->
-        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" fill="currentColor">
           <text x="490" y="70">1   2   1</text><text x="490" y="100">0   2  −2</text><text x="490" y="130">0   0   5</text>
         </g>
         <rect x="482" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
@@ -476,7 +476,7 @@
         <text class="tick" x="30" y="24" font-size="13">identity — does nothing</text>
         <text class="tick" x="250" y="24" font-size="13">E₂₁ — one step</text>
         <text class="tick" x="440" y="24" font-size="13">E₃₂ — one step</text>
-        <g font-family="var(--mono)" font-size="16" fill="currentColor">
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="16" fill="currentColor">
           <text x="40" y="66">1   0   0</text><text x="40" y="100">0   1   0</text><text x="40" y="134">0   0   1</text>
           <text x="250" y="66">1   0   0</text><text x="250" y="100">−3  1   0</text><text x="250" y="134">0   0   1</text>
           <text x="440" y="66">1   0   0</text><text x="440" y="100">0   1   0</text><text x="440" y="134">0  −2   1</text>
@@ -545,47 +545,110 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t13">13. Permutation matrices</h3>
 
-    <p>One elementary matrix is still missing: the one that <b>exchanges two rows</b>, promised back in section 7 for when a zero lands in a pivot position. It is called a <b>permutation matrix</b>.</p>
+    <p>One elementary matrix is still missing: the one that <b>exchanges two rows</b>, promised in section 7 for when a zero lands in a pivot position. Every other step of elimination has been written as a matrix, so this one must be too. It is called a <b>permutation matrix</b>.</p>
 
-    <h4>Finding it in two dimensions</h4>
-    <p>Which matrix swaps the rows of \(\begin{bmatrix} a & b \\ c & d\end{bmatrix}\)? The row we want on top is \(\begin{bmatrix} c & d\end{bmatrix}\) — so take none of row one and one of row two. Underneath, the reverse:</p>
+    <h4>First: a row of a left matrix is a pointer</h4>
 
-    $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
-      PA = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} a & b \\ c & d \end{bmatrix}
-      = \begin{bmatrix} c & d \\ a & b \end{bmatrix} \quad ✓ $$
+    <p>Everything here follows from the one fact in section 10 — <b>a matrix on the left builds each row of the answer as a combination of the rows of \(A\)</b>. Read that literally for a single row. Suppose row 2 of the left matrix is \(\begin{bmatrix} 0 & 1 & 0\end{bmatrix}\). Then row 2 of the answer is</p>
 
-    <div class="box method"><span class="label">Method · building a permutation matrix</span>
-      <p>Perform the exchange you want <b>on the identity matrix</b>. The result is the matrix that performs that same exchange on any matrix.</p>
+    $$ 0\,(\text{row}_1 \text{ of } A) \;+\; 1\,(\text{row}_2 \text{ of } A) \;+\; 0\,(\text{row}_3 \text{ of } A) \;=\; \text{row}_2 \text{ of } A $$
+
+    <div class="box intuition"><span class="label">The mechanism in one line</span>
+      <p>A row of zeros with a single \(1\) in position \(k\) means: <b>“fetch row \(k\) of \(A\).”</b> The \(1\) is a pointer, and the position of that \(1\) says which row to go and get.</p>
     </div>
 
-    <h4>Columns need the other side</h4>
-    <p>Can a matrix on the left exchange <b>columns</b>? No — multiplying on the left does row operations, always. For a column operation the permutation goes on the <b>right</b>, where it combines columns instead:</p>
+    <p>That makes the identity matrix more than a symbol — it is three pointers, each aimed at itself:</p>
 
-    $$ AP = \begin{bmatrix} a & b \\ c & d \end{bmatrix}\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
-      = \begin{bmatrix} b & a \\ d & c \end{bmatrix} \quad ✓ $$
+    $$ I = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \qquad
+      \begin{aligned}
+        \text{row 1} &= \begin{bmatrix} 1 & 0 & 0\end{bmatrix} && \rightarrow \ \text{fetch row 1} \\
+        \text{row 2} &= \begin{bmatrix} 0 & 1 & 0\end{bmatrix} && \rightarrow \ \text{fetch row 2} \\
+        \text{row 3} &= \begin{bmatrix} 0 & 0 & 1\end{bmatrix} && \rightarrow \ \text{fetch row 3}
+      \end{aligned} $$
+
+    <p>Every row fetches itself, so nothing changes. Now <b>a swap is just repointing two of those arrows</b>:</p>
+
+    $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \qquad
+      \begin{aligned}
+        \text{row 1} &= \begin{bmatrix} 0 & 1 & 0\end{bmatrix} && \rightarrow \ \text{fetch row \textbf{2}} \\
+        \text{row 2} &= \begin{bmatrix} 1 & 0 & 0\end{bmatrix} && \rightarrow \ \text{fetch row \textbf{1}} \\
+        \text{row 3} &= \begin{bmatrix} 0 & 0 & 1\end{bmatrix} && \rightarrow \ \text{fetch row 3}
+      \end{aligned} $$
+
+    <div class="box method"><span class="label">Method · building a permutation matrix</span>
+      <p>Perform the exchange you want <b>on the identity matrix</b>. The result performs that same exchange on any matrix.</p>
+      <p>Now you can see <i>why</i> that recipe works: swapping rows of \(I\) is exactly swapping which row each pointer aims at.</p>
+    </div>
+
+    <figure class="fig" style="max-width:600px;margin:22px auto">
+      <svg viewBox="0 0 600 268" role="img" aria-label="Each row of a permutation matrix points at the row of A it fetches">
+        <defs>
+          <marker id="pa1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="pa2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="pa3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <text class="tick" x="26" y="26" font-size="13">P — each row is a pointer</text>
+        <text class="tick" x="402" y="26" font-size="13">A — the rows being fetched</text>
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="17" fill="currentColor">
+          <text x="46" y="72" text-anchor="middle">0</text>
+          <text x="84" y="72" text-anchor="middle">1</text>
+          <text x="122" y="72" text-anchor="middle">0</text>
+          <text x="46" y="122" text-anchor="middle">1</text>
+          <text x="84" y="122" text-anchor="middle">0</text>
+          <text x="122" y="122" text-anchor="middle">0</text>
+          <text x="46" y="172" text-anchor="middle">0</text>
+          <text x="84" y="172" text-anchor="middle">0</text>
+          <text x="122" y="172" text-anchor="middle">1</text>
+          <text x="440" y="72" text-anchor="middle">1</text>
+          <text x="478" y="72" text-anchor="middle">2</text>
+          <text x="516" y="72" text-anchor="middle">1</text>
+          <text x="440" y="122" text-anchor="middle">3</text>
+          <text x="478" y="122" text-anchor="middle">8</text>
+          <text x="516" y="122" text-anchor="middle">1</text>
+          <text x="440" y="172" text-anchor="middle">0</text>
+          <text x="478" y="172" text-anchor="middle">4</text>
+          <text x="516" y="172" text-anchor="middle">1</text>
+        </g>
+        <!-- ring the single 1 in each row of P -->
+        <rect x="70" y="54" width="28" height="24" class="l1" fill="none" stroke-width="2" rx="4"/>
+        <rect x="32" y="104" width="28" height="24" class="l2" fill="none" stroke-width="2" rx="4"/>
+        <rect x="108" y="154" width="28" height="24" class="l3" fill="none" stroke-width="2" rx="4"/>
+        <!-- arrows: P row n  ->  the row of A it fetches -->
+        <path class="l1" d="M150 66 C 250 60, 300 108, 404 116" fill="none" marker-end="url(#pa1)"/>
+        <path class="l2" d="M150 128 C 250 134, 300 74, 404 66" fill="none" marker-end="url(#pa2)"/>
+        <path class="l3" d="M150 168 C 250 168, 300 168, 404 168" fill="none" marker-end="url(#pa3)"/>
+        <text class="lbl c1" x="170" y="52">row 1 → fetches row 2</text>
+        <text class="lbl c2" x="170" y="152">row 2 → fetches row 1</text>
+        <text class="lbl c3" x="236" y="190">row 3 → fetches row 3</text>
+        <text class="tick" x="26" y="232">Follow the arrows and PA is built without a single multiplication:</text>
+        <text class="tick" x="26" y="252">row 1 of PA = (3 8 1),   row 2 = (1 2 1),   row 3 = (0 4 1) unchanged.</text>
+      </svg>
+      <figcaption><b>A permutation matrix is a set of pointers.</b> The ringed \(1\) in each row of \(P\) says which row of \(A\) that output row goes and collects — nothing is scaled, nothing is added, rows are only redirected. Follow the three arrows and you have built \(PA\) without doing a single multiplication. This is why swapping rows of the identity is the whole construction: you are swapping which row each arrow points at.</figcaption>
+    </figure>
+
+    <h4>The swap, carried out</h4>
+
+    $$ PA = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      = \begin{bmatrix} 3 & 8 & 1 \\ 1 & 2 & 1 \\ 0 & 4 & 1 \end{bmatrix} \quad ✓ $$
+
+    <h4>Why the right-hand side swaps columns instead</h4>
+
+    <p>On the right the mirror fact holds: <b>each column of the answer is a combination of the columns of \(A\)</b>. So column 1 of \(AP\) is \(A\) times column 1 of \(P\), which is \(\begin{bmatrix} 0 \\ 1 \\ 0\end{bmatrix}\) — and that fetches <b>column 2</b> of \(A\). Same pointer logic, turned ninety degrees:</p>
+
+    $$ AP = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 2 & 1 & 1 \\ 8 & 3 & 1 \\ 4 & 0 & 1 \end{bmatrix} \quad ✓ $$
 
     <div class="box theorem"><span class="label">Left and right</span>
       <p>$$ \boxed{\begin{aligned} \text{row operations} &\;\longrightarrow\; \text{multiply on the \textbf{left}} \\ \text{column operations} &\;\longrightarrow\; \text{multiply on the \textbf{right}} \end{aligned}} $$</p>
       <p>And it is row operations we are really doing — columns have hardly entered this lecture, though they certainly will.</p>
     </div>
 
-    <h4>The same thing on our 3 × 3</h4>
-    <p>To swap rows one and two, swap those rows of the identity:</p>
-
-    $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
-
-    $$ PA = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
-      = \begin{bmatrix} 3 & 8 & 1 \\ 1 & 2 & 1 \\ 0 & 4 & 1 \end{bmatrix}
-      \qquad \text{\footnotesize rows 1 and 2 traded} $$
-
-    $$ AP = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
-      \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 2 & 1 & 1 \\ 8 & 3 & 1 \\ 4 & 0 & 1 \end{bmatrix}
-      \qquad \text{\footnotesize columns 1 and 2 traded} $$
-
     <div class="box pitfall"><span class="label">Order matters: \(AB \ne BA\) ★</span>
-      <p>The same \(P\) and the same \(A\) gave two completely different matrices depending on the side. That settles it: <b>the commutative law is false for matrices</b>. Keep them in their Gauss-given order — only the parentheses are free to move.</p>
+      <p>The same \(P\) and the same \(A\) just produced two completely different matrices, depending only on which side \(P\) sat. One example is enough: <b>the commutative law is false for matrices</b>. Keep them in their Gauss-given order — only the parentheses are free to move.</p>
     </div>
 
     <figure class="fig" style="max-width:620px;margin:22px auto">
@@ -593,44 +656,57 @@
         <text class="tick" x="40" y="24" font-size="13">A</text>
         <text class="tick" x="238" y="24" font-size="13">PA — rows 1,2 traded</text>
         <text class="tick" x="452" y="24" font-size="13">AP — columns 1,2 traded</text>
-        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" fill="currentColor">
           <text x="30" y="66">1   2   1</text><text x="30" y="98">3   8   1</text><text x="30" y="130">0   4   1</text>
           <text x="240" y="66">3   8   1</text><text x="240" y="98">1   2   1</text><text x="240" y="130">0   4   1</text>
           <text x="452" y="66">2   1   1</text><text x="452" y="98">8   3   1</text><text x="452" y="130">4   0   1</text>
         </g>
-        <!-- row highlight on PA -->
         <rect x="232" y="50" width="96" height="22" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
         <rect x="232" y="82" width="96" height="22" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
-        <!-- column highlight on AP -->
         <rect x="444" y="50" width="26" height="86" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
         <rect x="476" y="50" width="26" height="86" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
-        <g class="tick">
-          <text x="166" y="94" font-size="15">P ·</text>
-          <text x="404" y="94" font-size="15">· P</text>
-        </g>
+        <g class="tick"><text x="166" y="94" font-size="15">P ·</text><text x="404" y="94" font-size="15">· P</text></g>
         <text class="lbl c3" x="236" y="176">multiply on the LEFT</text>
         <text class="lbl c3" x="448" y="176">multiply on the RIGHT</text>
         <text class="tick" x="30" y="212">Same P, same A, two different answers — the order of a matrix product cannot be swapped.</text>
         <text class="tick" x="30" y="232">Swapping twice returns the original: P·P = I, so a permutation is its own inverse.</text>
       </svg>
-      <figcaption><b>Left swaps rows, right swaps columns.</b> The shaded bands show what moved: on the left two <i>rows</i> traded places, on the right two <i>columns</i> did. Since \(PA\) and \(AP\) are visibly different matrices, this one picture is a proof that matrix multiplication is not commutative. One extra fact falls out for free: performing the same swap twice puts everything back, so \(P^2 = I\) and a row-exchange matrix is its own inverse.</figcaption>
+      <figcaption><b>Left swaps rows, right swaps columns.</b> The shaded bands show what moved: on the left two <i>rows</i> traded places, on the right two <i>columns</i> did. Since \(PA\) and \(AP\) are visibly different matrices, this one picture proves matrix multiplication is not commutative. A bonus fact falls out: perform the same swap twice and everything is back, so \(P^2 = I\) — a row-exchange matrix is its own inverse, which is the smallest possible example of section 14.</figcaption>
     </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t14">14. The first inverse</h3>
 
-    <p>There is a better way to handle \(E_{32}E_{21}\) — and it starts by turning the question around. Instead of asking how to get from \(A\) to \(U\), ask <b>how to get from \(U\) back to \(A\)</b>. Reversing a step is the idea of the <b>inverse</b>.</p>
+    <p>There is a better way to handle \(E_{32}E_{21}\), and it begins by turning the question round: instead of asking how to get from \(A\) to \(U\), ask <b>how to get from \(U\) back to \(A\)</b>. Undoing a step is the idea of the <b>inverse</b>.</p>
 
-    <h4>Say it in words first</h4>
-    <p>\(E_{21}\) subtracted 3 times row one from row two. What undoes that? <b>Add 3 times row one back to row two.</b> What was subtracted is added back — the words are obvious, and the matrix just writes them down:</p>
+    <h4>Forget matrices — an elimination step is a recipe</h4>
 
-    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      \qquad\Longrightarrow\qquad
-      E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \ \ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+    <p>Strip \(E_{21}\) of its brackets and it is one instruction:</p>
 
-    <p>Same shape, one sign flipped. That is all an inverse is here.</p>
+    $$ \textbf{do:} \quad \text{new row}_2 = \text{row}_2 - 3\,\text{row}_1 \qquad \text{(rows 1 and 3 untouched)} $$
 
-    <h4>Multiply them and watch the steps cancel</h4>
+    <p>What undoes that instruction? No algebra is needed to say it:</p>
+
+    $$ \textbf{undo:} \quad \text{new row}_2 = \text{row}_2 + 3\,\text{row}_1 $$
+
+    <p>Do the first, then the second: you took away three row-ones and then put three row-ones back. Row 2 is exactly where it started, and rows 1 and 3 were never touched.</p>
+
+    <div class="box definition"><span class="label">What an inverse is</span>
+      <p><b>Doing a step and then undoing it means doing nothing at all.</b> And “doing nothing”, written as a matrix, is the identity. That sentence <i>is</i> the definition:</p>
+      $$ \boxed{E^{-1}E = I} $$
+      <p>read as: apply \(E\), then apply \(E^{-1}\), and you are back where you began.</p>
+    </div>
+
+    <h4>The matrix is just the recipe written down</h4>
+
+    <p>Since the matrix only encodes the instruction, changing <i>subtract</i> to <i>add</i> changes exactly one number — its sign:</p>
+
+    $$ \underbrace{E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}}_{\text{subtract } 3\,\text{row}_1}
+      \qquad\qquad
+      \underbrace{E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \ \ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}}_{\text{add back } 3\,\text{row}_1} $$
+
+    <h4>Watch the cancellation happen</h4>
+    <p>Row by row, each row of \(E_{21}^{-1}\) taking its combination of the rows of \(E_{21}\):</p>
 
     $$ \begin{aligned}
       \text{row 1:} &\quad 1\begin{bmatrix} 1 & 0 & 0 \end{bmatrix} && = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \\[4pt]
@@ -639,33 +715,47 @@
       \text{row 3:} &\quad 1\begin{bmatrix} 0 & 0 & 1 \end{bmatrix} && = \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
     \end{aligned} $$
 
-    $$ E_{21}^{-1}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad ✓ $$
+    $$ E_{21}^{-1}E_{21} = I \quad ✓ $$
 
-    <p>And in the other order it also collapses — row two of \(E_{21}\) against \(E_{21}^{-1}\) gives \(-3\begin{bmatrix} 1 & 0 & 0\end{bmatrix} + \begin{bmatrix} 3 & 1 & 0\end{bmatrix} = \begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), so \(E_{21}E_{21}^{-1} = I\) as well.</p>
+    <p>The \(+3\) and the \(-3\) met in row 2 and annihilated each other — the arithmetic version of “subtract it, then add it back”. The other order works too: row 2 of \(E_{21}\) against \(E_{21}^{-1}\) gives \(-3\begin{bmatrix} 1 & 0 & 0\end{bmatrix} + \begin{bmatrix} 3 & 1 & 0\end{bmatrix} = \begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), so \(E_{21}E_{21}^{-1} = I\) as well.</p>
 
-    <div class="box definition"><span class="label">Notation</span>
-      <p>If \(E\) is the matrix and \(I\) the identity, the matrix undoing \(E\) is written \(E^{-1}\) — "\(E\) inverse" — and is defined by</p>
-      $$ \boxed{E^{-1}E = I} $$
-    </div>
-
-    <h4>The same thing in numbers</h4>
-    <p>Watch it on the right-hand side of our system. The first step turned \(b\) into a new vector; the inverse step turns it straight back:</p>
+    <h4>And in plain numbers</h4>
+    <p>Follow the right-hand side of our own system through the step and back:</p>
 
     $$ \begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix}
-      \;\xrightarrow{\ E_{21}:\ 12 - 3(2) = 6\ }\;
+      \;\xrightarrow[\ 12 - 3(2) = 6\ ]{E_{21}}\;
       \begin{bmatrix} 2 \\ 6 \\ 2 \end{bmatrix}
-      \;\xrightarrow{\ E_{21}^{-1}:\ 6 + 3(2) = 12\ }\;
+      \;\xrightarrow[\ 6 + 3(2) = 12\ ]{E_{21}^{-1}}\;
       \begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix} \quad ✓ $$
 
-    <div class="box theorem"><span class="label">Why elimination is legitimate</span>
-      <p>Every elimination step has an inverse, so <b>every step can be reversed</b>. Solving the easy system \(Ux = c\) — that is, \(EAx = Eb\) — therefore produces exactly the solutions of the original \(Ax = b\). Nothing was created or destroyed on the way; only the shape of the system changed.</p>
+    <h4>Why this matters — first payoff: it licenses the method</h4>
+
+    <div class="box theorem"><span class="label">Elimination does not change the answer</span>
+      <p>Elimination replaced \(Ax = b\) with a different system \(Ux = c\). How do we know no solution was lost or invented along the way? Because every step is reversible:</p>
+      $$ Ax = b \;\xrightarrow{\ \times E\ }\; EAx = Eb, \ \text{that is } Ux = c
+         \qquad\text{and}\qquad
+         Ux = c \;\xrightarrow{\ \times E^{-1}\ }\; Ax = b $$
+      <p>Two systems you can convert between in <b>both</b> directions have exactly the same solutions. Without invertibility, elimination would be arithmetic we merely hoped was valid.</p>
     </div>
 
-    <div class="box intuition"><span class="label">A look ahead — why the backwards direction is nicer</span>
-      <p>Undo the steps in reverse order and you get the matrix taking \(U\) back to \(A\):</p>
-      $$ A = E_{21}^{-1}E_{32}^{-1}\,U = LU, \qquad
-         L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix} $$
-      <p>Look at what \(L\) contains: the multipliers \(3\) and \(2\), sitting <b>exactly in the positions they cleared</b>, with no stray \(6\) anywhere. The forward product \(E_{32}E_{21}\) mixed the steps together; the backward product keeps them separate. That is the whole reason the next lessons prefer \(A = LU\) to \(EA = U\).</p>
+    <h4>Why this matters — second payoff: a far nicer matrix</h4>
+
+    <p>Compare the two directions side by side:</p>
+
+    $$ \underbrace{E_{32}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ \mathbf{6} & -2 & 1 \end{bmatrix}}_{\text{forward: } A \to U}
+      \qquad\qquad
+      \underbrace{E_{21}^{-1}E_{32}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \mathbf{3} & 1 & 0 \\ 0 & \mathbf{2} & 1 \end{bmatrix}}_{\text{backward: } U \to A} $$
+
+    <p><b>Where the 6 comes from.</b> In the forward product, row 3 of \(E_{32}\) is \(\begin{bmatrix} 0 & -2 & 1\end{bmatrix}\), so it reaches for row 2 of \(E_{21}\) — but row 2 of \(E_{21}\) has <b>already been changed</b> to \(\begin{bmatrix} -3 & 1 & 0\end{bmatrix}\). The product picks up \(-2 \times (-3) = +6\). <b>Step two trips over step one's edit.</b></p>
+
+    <p><b>Why nothing collides backwards.</b> Undo in reverse order and each undo lands on a row the previous one never disturbed. Row 3 of \(E_{21}^{-1}\) is \(\begin{bmatrix} 0 & 0 & 1\end{bmatrix}\) — untouched — so row 3 of the product is simply \(E_{32}^{-1}\)'s own row \(\begin{bmatrix} 0 & 2 & 1\end{bmatrix}\). Nothing mixes, and <b>the multipliers \(3\) and \(2\) sit exactly in the positions they cleared</b>.</p>
+
+    <div class="box intuition"><span class="label">A look ahead: \(A = LU\)</span>
+      <p>That backward matrix has a name, \(L\), and it factors \(A\):</p>
+      $$ A = \underbrace{\begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix}}_{L \ \text{— the multipliers}}
+             \underbrace{\begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix}}_{U \ \text{— the pivots}} $$
+      <p>Check the bottom row: \(0(\text{row}_1 \text{ of } U) + 2\begin{bmatrix} 0 & 2 & -2\end{bmatrix} + 1\begin{bmatrix} 0 & 0 & 5\end{bmatrix} = \begin{bmatrix} 0 & 4 & 1\end{bmatrix}\) — row 3 of \(A\) ✓.</p>
+      <p>Elimination hands you both factors for free: \(U\) is what it produced, \(L\) is the list of multipliers it used. That is where the next lessons go.</p>
     </div>
 
     <!-- ====================================================== -->
