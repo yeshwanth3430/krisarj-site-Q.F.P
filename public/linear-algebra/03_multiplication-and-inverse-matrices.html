@@ -266,30 +266,58 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t6">6. Inverses: the big question</h3>
 
-    <p>Second topic. Take a <b>square</b> matrix \(A\). It may or may not have an inverse — not all matrices do — and that is <b>the most important question you can ask about it</b>.</p>
+    <p>Second topic. Start with ordinary numbers, because the idea is the same.</p>
 
-    <div class="box definition"><span class="label">The inverse</span>
-      <p>If it exists, \(A^{-1}\) is the matrix with</p>
+    <p>Multiplying by \(5\) can be undone — multiply by \(\tfrac15\), and \(5 \times \tfrac15 = 1\). The number \(\tfrac15\) is the <b>undo</b> for \(5\). Every number has one, except \(0\): nothing you multiply \(0\) by gives \(1\), because \(0\) wipes everything out.</p>
+
+    <p>Matrices work the same way, with two swaps of vocabulary:</p>
+
+    <table class="sl-table">
+      <tr><th>Numbers</th><th>Matrices</th></tr>
+      <tr><td>the number \(1\), which changes nothing</td><td>the identity \(I\), which changes nothing</td></tr>
+      <tr><td>the undo of \(5\) is \(\tfrac15\)</td><td>the undo of \(A\) is \(A^{-1}\)</td></tr>
+      <tr><td>\(5 \times \tfrac15 = 1\)</td><td>\(A^{-1}A = I\)</td></tr>
+    </table>
+
+    <div class="box definition"><span class="label">The inverse, in one line</span>
+      <p><b>\(A^{-1}\) is the matrix that undoes \(A\).</b> Apply \(A\), then apply \(A^{-1}\), and you are back where you started — which is what the identity does:</p>
       $$ \boxed{A^{-1}A = I = AA^{-1}} $$
-      <p>and \(A\) is then called <b>invertible</b> or <b>non-singular</b>. Those are the good ones.</p>
+      <p>A matrix that has one is called <b>invertible</b>, or <b>non-singular</b>. Those are the good ones.</p>
     </div>
 
-    <p>Notice that both orders appear. For square matrices, <b>a left inverse is automatically a right inverse</b> — find a matrix that gives \(I\) on the left and the same matrix gives \(I\) on the right. That is not easy to prove, but it is true, and it is special to square matrices: for rectangular ones we will later meet a left inverse that is <i>not</i> a right inverse, and the shapes alone would forbid it.</p>
+    <p>Notice the equation appears in <b>both orders</b>. Undoing from the left and undoing from the right give the same matrix — a fact that is special to <b>square</b> matrices, and not easy to prove. (For rectangular matrices we will later meet a left inverse that is <i>not</i> a right inverse; the shapes alone would forbid it.)</p>
 
-    <p>Two questions follow, and the rest of the lecture is both: <b>when does \(A^{-1}\) exist</b>, and <b>how do you find it?</b></p>
+    <p>Here is the interesting part. With numbers, only \(0\) fails. <b>With matrices, plenty of perfectly ordinary-looking matrices fail</b> — they cannot be undone. So the most important question you can ask about a square matrix is:</p>
+
+    $$ \text{does } A \text{ have an inverse, and if so, how do we find it?} $$
+
+    <p>The next two sections answer the first half, by looking closely at one matrix that fails. The sections after that answer the second half.</p>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t7">7. No inverse: the column reason</h3>
 
-    <p>Start with the negative case, because it is where the understanding is. Here is a matrix with no inverse:</p>
+    <p>Here is a matrix with no inverse:</p>
 
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix} $$
 
-    <p>Why not? If you know determinants — which you are not supposed to yet — you would compute \(1(6) - 3(2) = 0\) and stop. Here is the reason that actually explains it.</p>
+    <p>Why does it fail? Here is the explanation in four short steps.</p>
 
-    <p>Suppose some matrix \(B\) had \(AB = I\). By way 2, <b>every column of \(AB\) is a combination of the columns of \(A\)</b>. So the question becomes: can a combination of \(\begin{bmatrix} 1 \\ 2\end{bmatrix}\) and \(\begin{bmatrix} 3 \\ 6\end{bmatrix}\) produce \(\begin{bmatrix} 1 \\ 0\end{bmatrix}\), the first column of \(I\)?</p>
+    <ol class="index-list">
+      <li><b>\(A\) can only build things out of its own columns.</b>
+        <span>That was way 2 in section 2: whatever matrix you put next to \(A\), every column of the answer is a combination of \(A\)'s columns.</span></li>
+      <li><b>This \(A\)'s two columns point the same way.</b>
+        <span>They are \(\begin{bmatrix} 1 \\ 2\end{bmatrix}\) and \(\begin{bmatrix} 3 \\ 6\end{bmatrix}\), and the second is just \(3\) times the first.</span></li>
+      <li><b>So everything \(A\) can build lies on one line.</b>
+        <span>Adding multiples of two arrows that share a direction can never leave that direction.</span></li>
+      <li><b>The identity is not on that line.</b>
+        <span>Its first column is \(\begin{bmatrix} 1 \\ 0\end{bmatrix}\), which points along the horizontal axis — off the line entirely.</span></li>
+    </ol>
 
-    <p><b>No way.</b> Those two columns lie on the same line — \((3,6)\) is three times \((1,2)\) — so every combination of them stays on that line, and \((1,0)\) is not on it.</p>
+    <div class="box theorem"><span class="label">Say it in one line</span>
+      <p><b>\(A\) can only reach one line, and \(I\) is not on it.</b> So no matrix \(B\) can make \(AB = I\) — the very first column of the target is already out of reach.</p>
+    </div>
+
+    <p>(If you know determinants — which you are not supposed to yet — you would compute \(1(6) - 3(2) = 0\) and stop. That is faster, but it tells you nothing about <i>why</i>.)</p>
 
     <figure class="fig" style="max-width:520px;margin:22px auto">
       <svg viewBox="0 0 420 300" role="img" aria-label="Both columns lie on one line, so the target 1,0 cannot be reached">
@@ -316,35 +344,70 @@
         <text class="lbl c3" x="118" y="246">(1, 0) — unreachable</text>
         <text class="lbl ci" x="150" y="40">every combination stays on the thick line</text>
       </svg>
-      <figcaption><b>Both columns point the same way, so the reachable set is a line.</b> The shaded band is every combination \(x(1,2) + y(3,6)\) — adding multiples of two vectors that share a direction can never leave that direction. The first column of the identity, \((1,0)\), sits off the line, so no matrix \(B\) can make \(AB = I\): the very first column of the target is already impossible. This is the column picture of Lesson 1 answering a question about inverses.</figcaption>
+      <figcaption><b>Both columns point the same way, so the reachable set is a line.</b> The thick band is every combination \(x(1,2) + y(3,6)\) that \(A\) could ever produce. The first column of the identity, \((1,0)\), sits off that line — no choice of \(x\) and \(y\) brings you to it. That is the column picture of Lesson 1, now answering a question about inverses.</figcaption>
     </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t8">8. No inverse: Ax = 0</h3>
 
-    <p>Here is another reason — <b>the reason he likes best</b>. In mathematics all the key equations have zero on the right-hand side:</p>
+    <p>Here is the same failure seen from another side — and this is <b>the reason he likes best</b>.</p>
 
-    $$ Ax = 0 $$
+    <h4>Start with numbers again</h4>
+    <p>Multiplying by \(0\) destroys information. \(5 \times 0 = 0\) and \(7 \times 0 = 0\); handed the answer \(0\), you cannot say what went in. That is exactly why \(0\) has no undo.</p>
 
-    <p>For our matrix, find a non-zero \(x\) that does it. Take \(x = \begin{bmatrix} 3 \\ -1\end{bmatrix}\):</p>
+    <p><b>A matrix can do the same thing</b> — not to every vector, just to one — and that is enough to ruin it. Our matrix does it to \(x = \begin{bmatrix} 3 \\ -1\end{bmatrix}\):</p>
 
     $$ \begin{bmatrix} 1 & 3 \\ 2 & 6 \end{bmatrix}\begin{bmatrix} 3 \\ -1 \end{bmatrix}
       = 3\begin{bmatrix} 1 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 3 \\ 6 \end{bmatrix}
       = \begin{bmatrix} 3 - 3 \\ 6 - 6 \end{bmatrix}
       = \begin{bmatrix} 0 \\ 0 \end{bmatrix} \quad ✓ $$
 
-    <p>In words: <b>three of the first column minus one of the second gives the zero column</b>. And \(x = 0\) would always work, so the whole point is that this \(x\) is <b>not</b> zero.</p>
+    <p>In words: <b>three of the first column minus one of the second gives nothing at all</b>. And note that \(x = 0\) would always work for any matrix — the whole point is that <b>this \(x\) is not zero</b>.</p>
 
-    <div class="box pitfall"><span class="label">Why that spells disaster ★</span>
-      <p>Suppose \(A^{-1}\) existed. Multiply \(Ax = 0\) by it on the left:</p>
-      $$ A^{-1}(Ax) = A^{-1}0 \;\Longrightarrow\; (A^{-1}A)x = 0 \;\Longrightarrow\; Ix = 0 \;\Longrightarrow\; x = 0 $$
-      <p>But \(x\) is \((3,-1)\), which is not zero. Contradiction — so no such \(A^{-1}\) can exist.</p>
-      <p>Said without algebra: \(A\) takes this non-zero vector <b>to zero</b>, and once you are at zero there is nothing left to tell you where you came from. No matrix can recover it, because \(A^{-1}0\) must be \(0\).</p>
-    </div>
+    <h4>Why that kills the inverse</h4>
 
-    <div class="box theorem"><span class="label">The conclusion to carry</span>
+    <p>Every matrix sends the zero vector to zero — multiply by nothing, get nothing. So \(A\) sends <b>two different vectors to the same place</b>:</p>
+
+    $$ \begin{bmatrix} 0 \\ 0 \end{bmatrix} \;\xrightarrow{\ A\ }\; \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+      \qquad\text{and}\qquad
+      \begin{bmatrix} 3 \\ -1 \end{bmatrix} \;\xrightarrow{\ A\ }\; \begin{bmatrix} 0 \\ 0 \end{bmatrix} $$
+
+    <p>Now ask \(A^{-1}\) to undo it. Handed \(\begin{bmatrix} 0 \\ 0\end{bmatrix}\), where should it go back to — \(\begin{bmatrix} 0 \\ 0\end{bmatrix}\) or \(\begin{bmatrix} 3 \\ -1\end{bmatrix}\)? A matrix gives <b>one</b> answer, not two. <b>There is nothing it could do.</b></p>
+
+    <figure class="fig" style="max-width:560px;margin:22px auto">
+      <svg viewBox="0 0 560 230" role="img" aria-label="Two different vectors are both sent to zero, so undoing is impossible">
+        <defs>
+          <marker id="sq1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="sq3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <text class="tick" x="34" y="26" font-size="12.5">two different inputs</text>
+        <text class="tick" x="430" y="26" font-size="12.5">one output</text>
+        <!-- inputs -->
+        <circle class="pt" cx="76" cy="74" r="5"/><text class="lbl ci" x="30" y="66">(0, 0)</text>
+        <circle class="pt" cx="76" cy="150" r="5"/><text class="lbl ci" x="22" y="170">(3, −1)</text>
+        <!-- forward arrows -->
+        <path class="l1" d="M92 74 C 220 74, 300 100, 440 108" fill="none" marker-end="url(#sq1)"/>
+        <path class="l1" d="M92 150 C 220 150, 300 124, 440 114" fill="none" marker-end="url(#sq1)"/>
+        <text class="lbl c1" x="210" y="62">A</text><text class="lbl c1" x="210" y="172">A</text>
+        <!-- output -->
+        <circle class="hit" cx="458" cy="111" r="6"/><text class="lbl c3" x="470" y="106">(0, 0)</text>
+        <!-- backward arrow with question mark -->
+        <path class="l3 dash" d="M446 134 C 300 190, 180 196, 96 176" fill="none" marker-end="url(#sq3)"/>
+        <text class="lbl c3" x="236" y="212">A⁻¹ — back to which one?</text>
+      </svg>
+      <figcaption><b>Information destroyed cannot be restored.</b> The matrix sends both \((0,0)\) and \((3,-1)\) to the same place, \((0,0)\). An undo matrix would have to look at that single output and return two different inputs, which no matrix can do — a matrix hands back exactly one answer. The moment a non-zero vector is flattened to zero, the matrix stops being reversible.</figcaption>
+    </figure>
+
+    <h4>The same argument in algebra</h4>
+    <p>If you prefer it in symbols: suppose \(A^{-1}\) existed, and multiply \(Ax = 0\) by it on the left.</p>
+
+    $$ A^{-1}(Ax) = A^{-1}0 \;\Longrightarrow\; \underbrace{(A^{-1}A)}_{=\,I}x = 0 \;\Longrightarrow\; Ix = 0 \;\Longrightarrow\; x = 0 $$
+
+    <p>So the assumption forces \(x\) to be zero. But \(x = (3,-1)\) is not zero. The assumption was wrong: <b>no such \(A^{-1}\) exists</b>.</p>
+
+    <div class="box theorem"><span class="label">The conclusion to carry ★</span>
       <p>$$ \boxed{\text{A square matrix is singular exactly when some non-zero } x \text{ has } Ax = 0} $$</p>
-      <p>Equivalently: some combination of its columns gives the zero column. The two statements in sections 7 and 8 are the same fact seen from two sides.</p>
+      <p>And sections 7 and 8 are the same fact seen from two sides: a combination of the columns giving zero (section 8) <b>is</b> the columns being stuck on one line (section 7). Finding such an \(x\) is often the quickest way to prove a matrix has no inverse.</p>
     </div>
 
     <!-- ====================================================== -->
