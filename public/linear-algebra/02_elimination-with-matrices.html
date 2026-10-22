@@ -336,27 +336,50 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t10">10. Rows times a matrix</h3>
 
-    <p>Now the second half of the lecture: writing these operations as matrices. One point must come first, because every operation in these two weeks is a <b>row</b> operation.</p>
+    <p>Here begins the second half of the lecture: everything done so far was arithmetic on rows, and now it gets written in matrix language. One fact has to come first, because <b>every operation in these two weeks is a row operation</b>.</p>
 
-    <p>From Lesson 1, multiplying a matrix by a column vector gives a <b>combination of the columns</b>:</p>
+    <h4>The shapes decide what you get</h4>
+    <p>Multiplication is only defined when the inner dimensions match, and the outer dimensions tell you the shape of the answer:</p>
 
-    $$ A\begin{bmatrix} 3 \\ 4 \\ 5 \end{bmatrix} = 3(\text{column}_1) + 4(\text{column}_2) + 5(\text{column}_3) $$
+    $$ \underbrace{(3 \times 3)}_{\text{matrix}}\underbrace{(3 \times 1)}_{\text{column}} = \underbrace{(3 \times 1)}_{\textbf{a column}}
+      \qquad\qquad
+      \underbrace{(1 \times 3)}_{\text{row}}\underbrace{(3 \times 3)}_{\text{matrix}} = \underbrace{(1 \times 3)}_{\textbf{a row}} $$
 
-    <p>Now the parallel fact on the other side. Put the vector on the <b>left</b>, as a row:</p>
+    <p>A matrix times a column is a column; a row times a matrix is a row. And in each case something whole is being combined.</p>
 
-    $$ \begin{bmatrix} 1 & 2 & 7 \end{bmatrix} A = 1(\text{row}_1) + 2(\text{row}_2) + 7(\text{row}_3) $$
+    <h4>On the right: columns get combined (Lesson 1)</h4>
+    <p>The numbers in the column are the amounts of each column of \(A\):</p>
 
-    <p>With our \(A\), entry by entry:</p>
+    $$ A\begin{bmatrix} 3 \\ 4 \\ 5 \end{bmatrix} = 3\,(\text{column}_1) + 4\,(\text{column}_2) + 5\,(\text{column}_3) $$
+
+    <h4>On the left: rows get combined (this lecture)</h4>
+    <p>Put the vector on the left as a row, and the numbers become the amounts of each <b>row</b> of \(A\):</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 7 \end{bmatrix} A = 1\,(\text{row}_1) + 2\,(\text{row}_2) + 7\,(\text{row}_3) $$
+
+    <p>With our \(A = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}\), carried out in full:</p>
 
     $$ \begin{aligned}
-      1\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + 2\begin{bmatrix} 3 & 8 & 1 \end{bmatrix} + 7\begin{bmatrix} 0 & 4 & 1 \end{bmatrix}
-      &= \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + \begin{bmatrix} 6 & 16 & 2 \end{bmatrix} + \begin{bmatrix} 0 & 28 & 7 \end{bmatrix} \\[4pt]
-      &= \begin{bmatrix} 7 & 46 & 10 \end{bmatrix}
+      1\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} &= \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} \\
+      2\begin{bmatrix} 3 & 8 & 1 \end{bmatrix} &= \begin{bmatrix} 6 & 16 & 2 \end{bmatrix} \\
+      7\begin{bmatrix} 0 & 4 & 1 \end{bmatrix} &= \begin{bmatrix} 0 & 28 & 7 \end{bmatrix} \\[4pt] \hline \\[-6pt]
+      \text{add down the columns:} &\quad \begin{bmatrix} 1+6+0 & \ \ 2+16+28 & \ \ 1+2+7 \end{bmatrix} = \begin{bmatrix} 7 & 46 & 10 \end{bmatrix}
     \end{aligned} $$
+
+    <h4>The third view: one entry at a time</h4>
+    <p>The same answer arrives if you take dot products — the row against each column of \(A\) in turn:</p>
+
+    $$ \begin{aligned}
+      \text{entry 1:} &\quad \begin{bmatrix} 1 & 2 & 7 \end{bmatrix}\cdot\begin{bmatrix} 1 \\ 3 \\ 0 \end{bmatrix} = 1 + 6 + 0 = 7 \quad ✓ \\
+      \text{entry 2:} &\quad \begin{bmatrix} 1 & 2 & 7 \end{bmatrix}\cdot\begin{bmatrix} 2 \\ 8 \\ 4 \end{bmatrix} = 2 + 16 + 28 = 46 \quad ✓ \\
+      \text{entry 3:} &\quad \begin{bmatrix} 1 & 2 & 7 \end{bmatrix}\cdot\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = 1 + 2 + 7 = 10 \quad ✓
+    \end{aligned} $$
+
+    <p>Three ways of organising the same multiplications: by columns, by rows, by single entries. They always agree — but they are not equally useful. Keep your eye on <b>whole vectors</b>, because that is what shows you <i>why</i> a step works.</p>
 
     <div class="box theorem"><span class="label">The two directions ★</span>
       <p>$$ \boxed{\begin{aligned} \text{matrix} \times \text{column} &= \text{a combination of the \textbf{columns}} \\ \text{row} \times \text{matrix} &= \text{a combination of the \textbf{rows}} \end{aligned}} $$</p>
-      <p>Keep your eye on what multiplication is doing with <b>whole vectors</b>, not with individual numbers. That is the central idea: matrices work by rows as well as by columns.</p>
+      <p>Elimination changes rows. Therefore <b>every elimination matrix multiplies from the left</b> — that single sentence is what the rest of this lecture is built on.</p>
     </div>
 
     <figure class="fig" style="max-width:560px;margin:22px auto">
@@ -365,7 +388,6 @@
           <text x="18" y="22">matrix × column → combination of COLUMNS</text>
           <text x="312" y="22">row × matrix → combination of ROWS</text>
         </g>
-        <!-- left: columns highlighted -->
         <g>
           <rect x="24" y="40" width="26" height="86" class="l1" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
           <rect x="54" y="40" width="26" height="86" class="l2" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
@@ -374,148 +396,276 @@
           <text class="tick" x="114" y="90" font-size="16">×</text>
           <text class="tick" x="166" y="90" font-size="16">=</text>
           <rect x="182" y="40" width="26" height="86" class="axis" fill="none" stroke-width="1.5"/>
-          <text class="tick" x="24" y="148">each number in the column</text>
-          <text class="tick" x="24" y="164">scales one whole column</text>
-          <text class="tick" x="24" y="186">3·col₁ + 4·col₂ + 5·col₃</text>
+          <text class="tick" x="24" y="150">each number in the column</text>
+          <text class="tick" x="24" y="166">scales one whole column</text>
+          <text class="tick" x="24" y="188">3·col₁ + 4·col₂ + 5·col₃</text>
         </g>
-        <!-- right: rows highlighted -->
         <g>
           <rect x="318" y="40" width="86" height="18" class="axis" fill="none" stroke-width="1.5"/>
           <text class="tick" x="410" y="54" font-size="16">×</text>
           <rect x="428" y="40" width="86" height="26" class="l1" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
           <rect x="428" y="70" width="86" height="26" class="l2" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
           <rect x="428" y="100" width="86" height="26" class="l3" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
-          <text class="tick" x="318" y="148">each number in the row</text>
-          <text class="tick" x="318" y="164">scales one whole row</text>
-          <text class="tick" x="318" y="186">1·row₁ + 2·row₂ + 7·row₃</text>
+          <text class="tick" x="318" y="150">each number in the row</text>
+          <text class="tick" x="318" y="166">scales one whole row</text>
+          <text class="tick" x="318" y="188">1·row₁ + 2·row₂ + 7·row₃</text>
         </g>
       </svg>
-      <figcaption><b>Which side you multiply on decides what gets combined.</b> On the left the vector arrives as a column and picks out columns; on the right it arrives as a row and picks out rows. Elimination changes rows, so from here on the elimination matrices will always sit on the <b>left</b> — and that single fact is what the rest of the lecture is built on.</figcaption>
+      <figcaption><b>Which side you multiply on decides what gets combined.</b> On the left the vector arrives as a column and picks out columns; on the right it arrives as a row and picks out rows. Since elimination rewrites rows as combinations of other rows, its matrices always sit on the left — and reading a product this way means you can often see the answer without computing a single dot product.</figcaption>
     </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t11">11. The elimination matrices</h3>
 
-    <p>Which matrix performs step one — subtract 3 times row one from row two, leaving the other rows alone?</p>
+    <p>Which matrix performs step one — subtract 3 times row one from row two, leaving the other rows alone? Build it <b>one row at a time</b>, using the rule just established: <i>row \(i\) of the multiplying matrix says which combination of rows of \(A\) becomes row \(i\) of the answer</i>.</p>
 
-    <p>Build it row by row, using the rule just established (each row of the multiplying matrix says which combination of rows of \(A\) to take):</p>
-
-    <ul>
-      <li><b>First row</b> must leave row one unchanged: take one of row one, none of the others → \(\begin{bmatrix} 1 & 0 & 0\end{bmatrix}\).</li>
-      <li><b>Third row</b> must leave row three unchanged: → \(\begin{bmatrix} 0 & 0 & 1\end{bmatrix}\).</li>
-      <li><b>Second row</b> must produce \(\text{row}_2 - 3\,\text{row}_1\): take \(-3\) of row one, one of row two, none of row three → \(\begin{bmatrix} -3 & 1 & 0\end{bmatrix}\).</li>
-    </ul>
+    <table class="sl-table">
+      <tr><th>Row of the answer</th><th>What it must be</th><th>So that row of the matrix is</th></tr>
+      <tr><td>row 1</td><td>row 1 of \(A\), untouched</td><td>\(\begin{bmatrix} 1 & 0 & 0\end{bmatrix}\) — one of row 1, none of the rest</td></tr>
+      <tr><td>row 2</td><td>\(\text{row}_2 - 3\,\text{row}_1\)</td><td>\(\begin{bmatrix} -3 & 1 & 0\end{bmatrix}\) — minus three of row 1, one of row 2</td></tr>
+      <tr><td>row 3</td><td>row 3 of \(A\), untouched</td><td>\(\begin{bmatrix} 0 & 0 & 1\end{bmatrix}\) — one of row 3, none of the rest</td></tr>
+    </table>
 
     <div class="box intuition"><span class="label">The matrix that does nothing</span>
-      <p>Had the middle row been \(\begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), the whole matrix would be the <b>identity</b> \(I\) — it multiplies everything and leaves it exactly where it was. It is the number one, for matrices.</p>
+      <p>Had the middle row been \(\begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), every row would be copied unchanged and the matrix would be the <b>identity</b>:</p>
+      $$ I = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+      <p>It multiplies everything and leaves it exactly where it was — the number one, for matrices. Notice what this makes an elimination matrix: <b>the identity with a single extra number</b>, and that number is minus the multiplier.</p>
     </div>
 
-    <p>So the first elimination matrix, named for the position it fixes, is:</p>
+    <p>Stacking the three rows gives the first elimination matrix, named for the position it fixes:</p>
 
-    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
-      E_{21}A = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
-      = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
+    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
 
-    <p><b>Check one entry</b>, the one in row 2, column 3. Take row two of \(E_{21}\) against column three of \(A\):</p>
+    <h4>Multiply it out in full — row by row</h4>
+    <p>Each row of \(E_{21}\) picks its combination of the rows of \(A\):</p>
+
+    $$ \begin{aligned}
+      \text{row 1:} &\quad 1\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + 0 + 0 && = \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} \\[4pt]
+      \text{row 2:} &\quad -3\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + 1\begin{bmatrix} 3 & 8 & 1 \end{bmatrix}
+        && = \begin{bmatrix} -3 & -6 & -3 \end{bmatrix} + \begin{bmatrix} 3 & 8 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 2 & -2 \end{bmatrix} \\[4pt]
+      \text{row 3:} &\quad 0 + 0 + 1\begin{bmatrix} 0 & 4 & 1 \end{bmatrix} && = \begin{bmatrix} 0 & 4 & 1 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ E_{21}A = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} \quad ✓ \quad \text{exactly the result of the 2,1 step} $$
+
+    <p><b>Spot-check one entry the other way</b>, to see the views agree. The entry in row 2, column 3 is row two of \(E_{21}\) dotted with column three of \(A\):</p>
 
     $$ \begin{bmatrix} -3 & 1 & 0 \end{bmatrix} \cdot \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = -3(1) + 1(1) + 0(1) = -2 \quad ✓ $$
 
-    <p>Step three — subtract 2 times row two from row three — works the same way. Rows one and two are left alone; the third row takes \(-2\) of row two and one of row three:</p>
+    <h4>The second elimination matrix</h4>
+    <p>Step three subtracts 2 times row two from row three. Rows one and two are copied; row three takes \(-2\) of row two plus one of row three:</p>
 
-    $$ E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -2 & 1 \end{bmatrix}, \qquad
-      E_{32}\!\begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix}
-      = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} = U $$
+    $$ E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -2 & 1 \end{bmatrix} $$
+
+    $$ \begin{aligned}
+      \text{row 1:} &\quad \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} \\
+      \text{row 2:} &\quad \begin{bmatrix} 0 & 2 & -2 \end{bmatrix} \\
+      \text{row 3:} &\quad -2\begin{bmatrix} 0 & 2 & -2 \end{bmatrix} + 1\begin{bmatrix} 0 & 4 & 1 \end{bmatrix}
+        = \begin{bmatrix} 0 & -4 & 4 \end{bmatrix} + \begin{bmatrix} 0 & 4 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 5 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ E_{32}\big(E_{21}A\big) = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} = U \quad ✓ $$
 
     <div class="box method"><span class="label">Method · building \(E_{mn}\)</span>
-      <p>Start from the identity \(I\). In the position <b>row \(m\), column \(n\)</b>, put <b>minus the multiplier</b>. Everything else stays as in \(I\). That matrix performs exactly one elimination step, clearing the \(m,n\) entry.</p>
+      <p>Start from the identity \(I\). Put <b>minus the multiplier</b> in position <b>row \(m\), column \(n\)</b>. Change nothing else.</p>
+      <p>That matrix performs exactly one elimination step, clearing the \(m,n\) entry. Note two things about its shape: it is <b>lower triangular</b> (the extra number sits below the diagonal, because elimination only ever subtracts an upper row from a lower one), and its diagonal is all \(1\)s (every row keeps one copy of itself).</p>
     </div>
+
+    <figure class="fig" style="max-width:600px;margin:22px auto">
+      <svg viewBox="0 0 600 250" role="img" aria-label="An elimination matrix is the identity with minus the multiplier in one position">
+        <text class="tick" x="30" y="24" font-size="13">identity — does nothing</text>
+        <text class="tick" x="250" y="24" font-size="13">E₂₁ — one step</text>
+        <text class="tick" x="440" y="24" font-size="13">E₃₂ — one step</text>
+        <g font-family="var(--mono)" font-size="16" fill="currentColor">
+          <text x="40" y="66">1   0   0</text><text x="40" y="100">0   1   0</text><text x="40" y="134">0   0   1</text>
+          <text x="250" y="66">1   0   0</text><text x="250" y="100">−3  1   0</text><text x="250" y="134">0   0   1</text>
+          <text x="440" y="66">1   0   0</text><text x="440" y="100">0   1   0</text><text x="440" y="134">0  −2   1</text>
+        </g>
+        <!-- diagonals -->
+        <g class="axis" stroke-dasharray="4 4"><line x1="36" y1="52" x2="128" y2="144"/><line x1="246" y1="52" x2="338" y2="144"/><line x1="436" y1="52" x2="528" y2="144"/></g>
+        <!-- highlight the one changed entry -->
+        <rect x="244" y="84" width="26" height="24" class="l3" fill="none" stroke-width="2" rx="3"/>
+        <rect x="464" y="118" width="26" height="24" class="l3" fill="none" stroke-width="2" rx="3"/>
+        <text class="lbl c3" x="236" y="172">position 2,1</text>
+        <text class="lbl c3" x="438" y="172">position 3,2</text>
+        <text class="tick" x="236" y="190">−(multiplier 3)</text>
+        <text class="tick" x="438" y="190">−(multiplier 2)</text>
+        <text class="tick" x="30" y="222">Diagonal of 1s: every row keeps a copy of itself.  Below the diagonal: the single subtraction.</text>
+        <text class="tick" x="30" y="240">Above the diagonal: always zero — elimination never subtracts a lower row from a higher one.</text>
+      </svg>
+      <figcaption><b>An elimination matrix is the identity, plus one number.</b> The dashed line marks the diagonal. Everything on it is \(1\), which is what copies each row through untouched; the single entry below it is minus the multiplier, which performs the subtraction. Because that entry always sits <i>below</i> the diagonal, every elimination matrix is lower triangular — a fact that returns with force when these matrices are inverted and multiplied in the next lesson.</figcaption>
+    </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t12">12. All steps in one matrix</h3>
 
-    <p>Everything done to \(A\) so far, in order: multiply by \(E_{21}\), then multiply that result by \(E_{32}\). The 3,1 step needed nothing, so \(E_{31} = I\) and we can leave it out:</p>
+    <p>Everything done to \(A\), in order: multiply by \(E_{21}\), then multiply the result by \(E_{32}\). The 3,1 step needed nothing, so \(E_{31} = I\) and it can be dropped from the chain:</p>
 
     $$ E_{32}\big(E_{21}A\big) = U $$
 
-    <p>Now the important question: <b>what single matrix takes \(A\) all the way to \(U\)?</b> Simply put the two together — but carefully. The matrices must stay <b>in their order</b>; what we are allowed to move are the <b>parentheses</b>:</p>
+    <p>Now the question worth asking: <b>what single matrix carries \(A\) all the way to \(U\)?</b> Put the two \(E\)s together — but carefully. The matrices must stay <b>in their order</b>; what may move are the <b>parentheses</b>:</p>
 
     $$ \boxed{E_{32}\big(E_{21}A\big) = \big(E_{32}E_{21}\big)A = U} $$
 
-    <p>Multiplying the two \(E\)s first gives one matrix that does the whole job at once:</p>
+    <h4>Multiplying the two E's</h4>
+    <p>Each row of \(E_{32}\) takes its combination of the rows of \(E_{21}\):</p>
 
-    $$ E_{32}E_{21}
-      = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -2 & 1 \end{bmatrix}
-        \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 6 & -2 & 1 \end{bmatrix} $$
+    $$ \begin{aligned}
+      \text{row 1:} &\quad 1\begin{bmatrix} 1 & 0 & 0 \end{bmatrix} && = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \\[4pt]
+      \text{row 2:} &\quad 1\begin{bmatrix} -3 & 1 & 0 \end{bmatrix} && = \begin{bmatrix} -3 & 1 & 0 \end{bmatrix} \\[4pt]
+      \text{row 3:} &\quad -2\begin{bmatrix} -3 & 1 & 0 \end{bmatrix} + 1\begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+        && = \begin{bmatrix} 6 & -2 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 6 & -2 & 1 \end{bmatrix}
+    \end{aligned} $$
 
-    <p>Where did that bottom row come from? Row three of \(E_{32}\) is \(\begin{bmatrix} 0 & -2 & 1\end{bmatrix}\), so it takes \(-2\) of row two of \(E_{21}\) plus one of row three:</p>
+    $$ E_{32}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 6 & -2 & 1 \end{bmatrix} $$
 
-    $$ -2\begin{bmatrix} -3 & 1 & 0 \end{bmatrix} + 1\begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 6 & -2 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 6 & -2 & 1 \end{bmatrix} \quad ✓ $$
+    <h4>Check that it really does the whole job</h4>
+    <p>Apply it straight to \(A\), row by row, and \(U\) must come out in one shot:</p>
+
+    $$ \begin{aligned}
+      \text{row 1:} &\quad 1\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} = \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} \\[4pt]
+      \text{row 2:} &\quad -3\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + \begin{bmatrix} 3 & 8 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 2 & -2 \end{bmatrix} \\[4pt]
+      \text{row 3:} &\quad 6\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} - 2\begin{bmatrix} 3 & 8 & 1 \end{bmatrix} + \begin{bmatrix} 0 & 4 & 1 \end{bmatrix} \\
+        &\quad = \begin{bmatrix} 6 & 12 & 6 \end{bmatrix} + \begin{bmatrix} -6 & -16 & -2 \end{bmatrix} + \begin{bmatrix} 0 & 4 & 1 \end{bmatrix}
+         = \begin{bmatrix} 0 & 0 & 5 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ \big(E_{32}E_{21}\big)A = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} = U \quad ✓ $$
 
     <div class="box theorem"><span class="label">The associative law ★</span>
       <p>$$ \boxed{(AB)C = A(BC)} $$</p>
-      <p>You may move the parentheses; you may <b>not</b> change the order. Forget the word "associative" if you like — but never forget the law. An astonishing number of proofs in linear algebra are nothing but moving parentheses.</p>
+      <p>You may move the parentheses; you may <b>not</b> change the order. Forget the word "associative" if you like — never forget the law. A remarkable number of proofs in linear algebra are nothing but moving parentheses: here it turns a <i>sequence of steps</i> into a <i>single matrix</i>.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">Notice the stray 6</span>
+      <p>The multipliers used were \(3\) and \(2\). They appear in \(E_{32}E_{21}\) as \(-3\) and \(-2\) — but a \(6\) has also appeared in the corner, a number that was never a multiplier. It comes from the second step acting on a row the first step had already changed.</p>
+      <p>So the forward product \(E_{32}E_{21}\) is <b>not</b> simply "the multipliers in their places". That is the first hint that the backwards direction — from \(U\) to \(A\) — is the better one to work with, which is exactly where section 14 and the next lesson go.</p>
     </div>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t13">13. Permutation matrices</h3>
 
-    <p>There is one more elementary matrix, the one promised in section 7: the matrix that <b>exchanges two rows</b>. It is called a <b>permutation matrix</b>.</p>
+    <p>One elementary matrix is still missing: the one that <b>exchanges two rows</b>, promised back in section 7 for when a zero lands in a pivot position. It is called a <b>permutation matrix</b>.</p>
 
-    <p>Take a two by two example and ask for the matrix that swaps the rows of \(\begin{bmatrix} a & b \\ c & d\end{bmatrix}\). The row we want on top is \(\begin{bmatrix} c & d\end{bmatrix}\), so take one of row two and none of row one; underneath, the reverse:</p>
+    <h4>Finding it in two dimensions</h4>
+    <p>Which matrix swaps the rows of \(\begin{bmatrix} a & b \\ c & d\end{bmatrix}\)? The row we want on top is \(\begin{bmatrix} c & d\end{bmatrix}\) — so take none of row one and one of row two. Underneath, the reverse:</p>
 
     $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
       PA = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} a & b \\ c & d \end{bmatrix}
-      = \begin{bmatrix} c & d \\ a & b \end{bmatrix} $$
+      = \begin{bmatrix} c & d \\ a & b \end{bmatrix} \quad ✓ $$
 
     <div class="box method"><span class="label">Method · building a permutation matrix</span>
-      <p>Do the exchange you want <b>to the identity matrix</b>. The result is the matrix that performs that exchange on any matrix.</p>
+      <p>Perform the exchange you want <b>on the identity matrix</b>. The result is the matrix that performs that same exchange on any matrix.</p>
     </div>
 
-    <p>Now the same idea for <b>columns</b>. Can a matrix on the left exchange columns? <b>No</b> — multiplying on the left does row operations, always. To exchange columns, the permutation must multiply on the <b>right</b>:</p>
+    <h4>Columns need the other side</h4>
+    <p>Can a matrix on the left exchange <b>columns</b>? No — multiplying on the left does row operations, always. For a column operation the permutation goes on the <b>right</b>, where it combines columns instead:</p>
 
     $$ AP = \begin{bmatrix} a & b \\ c & d \end{bmatrix}\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
-      = \begin{bmatrix} b & a \\ d & c \end{bmatrix} $$
+      = \begin{bmatrix} b & a \\ d & c \end{bmatrix} \quad ✓ $$
 
     <div class="box theorem"><span class="label">Left and right</span>
       <p>$$ \boxed{\begin{aligned} \text{row operations} &\;\longrightarrow\; \text{multiply on the \textbf{left}} \\ \text{column operations} &\;\longrightarrow\; \text{multiply on the \textbf{right}} \end{aligned}} $$</p>
-      <p>And it is row operations we are really doing.</p>
+      <p>And it is row operations we are really doing — columns have hardly entered this lecture, though they certainly will.</p>
     </div>
 
-    <div class="box pitfall"><span class="label">Order matters: \(AB \ne BA\)</span>
-      <p>The two results above are different matrices, which proves the point: you cannot swap the order of matrices. The <b>commutative law is false</b> for matrices. Keep them in their Gauss-given order — you may only move the parentheses.</p>
+    <h4>The same thing on our 3 × 3</h4>
+    <p>To swap rows one and two, swap those rows of the identity:</p>
+
+    $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+
+    $$ PA = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      = \begin{bmatrix} 3 & 8 & 1 \\ 1 & 2 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      \qquad \text{\footnotesize rows 1 and 2 traded} $$
+
+    $$ AP = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 2 & 1 & 1 \\ 8 & 3 & 1 \\ 4 & 0 & 1 \end{bmatrix}
+      \qquad \text{\footnotesize columns 1 and 2 traded} $$
+
+    <div class="box pitfall"><span class="label">Order matters: \(AB \ne BA\) ★</span>
+      <p>The same \(P\) and the same \(A\) gave two completely different matrices depending on the side. That settles it: <b>the commutative law is false for matrices</b>. Keep them in their Gauss-given order — only the parentheses are free to move.</p>
     </div>
 
-    <p>In three dimensions the row-exchange matrix for rows one and two is the identity with those rows swapped:</p>
-
-    $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
-      PA = \begin{bmatrix} 3 & 8 & 1 \\ 1 & 2 & 1 \\ 0 & 4 & 1 \end{bmatrix} $$
+    <figure class="fig" style="max-width:620px;margin:22px auto">
+      <svg viewBox="0 0 620 250" role="img" aria-label="P A swaps rows while A P swaps columns, so they are different">
+        <text class="tick" x="40" y="24" font-size="13">A</text>
+        <text class="tick" x="238" y="24" font-size="13">PA — rows 1,2 traded</text>
+        <text class="tick" x="452" y="24" font-size="13">AP — columns 1,2 traded</text>
+        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+          <text x="30" y="66">1   2   1</text><text x="30" y="98">3   8   1</text><text x="30" y="130">0   4   1</text>
+          <text x="240" y="66">3   8   1</text><text x="240" y="98">1   2   1</text><text x="240" y="130">0   4   1</text>
+          <text x="452" y="66">2   1   1</text><text x="452" y="98">8   3   1</text><text x="452" y="130">4   0   1</text>
+        </g>
+        <!-- row highlight on PA -->
+        <rect x="232" y="50" width="96" height="22" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <rect x="232" y="82" width="96" height="22" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <!-- column highlight on AP -->
+        <rect x="444" y="50" width="26" height="86" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <rect x="476" y="50" width="26" height="86" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <g class="tick">
+          <text x="166" y="94" font-size="15">P ·</text>
+          <text x="404" y="94" font-size="15">· P</text>
+        </g>
+        <text class="lbl c3" x="236" y="176">multiply on the LEFT</text>
+        <text class="lbl c3" x="448" y="176">multiply on the RIGHT</text>
+        <text class="tick" x="30" y="212">Same P, same A, two different answers — the order of a matrix product cannot be swapped.</text>
+        <text class="tick" x="30" y="232">Swapping twice returns the original: P·P = I, so a permutation is its own inverse.</text>
+      </svg>
+      <figcaption><b>Left swaps rows, right swaps columns.</b> The shaded bands show what moved: on the left two <i>rows</i> traded places, on the right two <i>columns</i> did. Since \(PA\) and \(AP\) are visibly different matrices, this one picture is a proof that matrix multiplication is not commutative. One extra fact falls out for free: performing the same swap twice puts everything back, so \(P^2 = I\) and a row-exchange matrix is its own inverse.</figcaption>
+    </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t14">14. The first inverse</h3>
 
-    <p>A better way to think about \(E_{32}E_{21}\) is coming next lecture, and it starts here: instead of asking how to get from \(A\) to \(U\), ask <b>how to get from \(U\) back to \(A\)</b>. Reversing steps is the idea of the <b>inverse</b>.</p>
+    <p>There is a better way to handle \(E_{32}E_{21}\) — and it starts by turning the question around. Instead of asking how to get from \(A\) to \(U\), ask <b>how to get from \(U\) back to \(A\)</b>. Reversing a step is the idea of the <b>inverse</b>.</p>
 
-    <p>Take the one step we know. \(E_{21}\) subtracted 3 times row one from row two. What undoes it? In words, before any matrix: <b>add 3 times row one back to row two</b>. What was subtracted is added back.</p>
+    <h4>Say it in words first</h4>
+    <p>\(E_{21}\) subtracted 3 times row one from row two. What undoes that? <b>Add 3 times row one back to row two.</b> What was subtracted is added back — the words are obvious, and the matrix just writes them down:</p>
 
     $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
       \qquad\Longrightarrow\qquad
-      E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+      E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \ \ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
 
-    <p>Multiply them and the steps cancel. The middle row of the product takes 3 of row one of \(E_{21}\) plus one of row two:</p>
+    <p>Same shape, one sign flipped. That is all an inverse is here.</p>
 
-    $$ E_{21}^{-1}E_{21}
-      = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 1 & 0 & 0 \\ 3(1) + (-3) & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-      = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad ✓ $$
+    <h4>Multiply them and watch the steps cancel</h4>
 
-    <p>Numerically: the first step turned \(b = (2, 12, 2)\) into \((2, 6, 2)\); the inverse step turns \((2, 6, 2)\) back into \((2, 12, 2)\), since \(6 + 3(2) = 12\).</p>
+    $$ \begin{aligned}
+      \text{row 1:} &\quad 1\begin{bmatrix} 1 & 0 & 0 \end{bmatrix} && = \begin{bmatrix} 1 & 0 & 0 \end{bmatrix} \\[4pt]
+      \text{row 2:} &\quad 3\begin{bmatrix} 1 & 0 & 0 \end{bmatrix} + 1\begin{bmatrix} -3 & 1 & 0 \end{bmatrix}
+        && = \begin{bmatrix} 3 & 0 & 0 \end{bmatrix} + \begin{bmatrix} -3 & 1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & 1 & 0 \end{bmatrix} \\[4pt]
+      \text{row 3:} &\quad 1\begin{bmatrix} 0 & 0 & 1 \end{bmatrix} && = \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ E_{21}^{-1}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad ✓ $$
+
+    <p>And in the other order it also collapses — row two of \(E_{21}\) against \(E_{21}^{-1}\) gives \(-3\begin{bmatrix} 1 & 0 & 0\end{bmatrix} + \begin{bmatrix} 3 & 1 & 0\end{bmatrix} = \begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), so \(E_{21}E_{21}^{-1} = I\) as well.</p>
+
+    <div class="box definition"><span class="label">Notation</span>
+      <p>If \(E\) is the matrix and \(I\) the identity, the matrix undoing \(E\) is written \(E^{-1}\) — "\(E\) inverse" — and is defined by</p>
+      $$ \boxed{E^{-1}E = I} $$
+    </div>
+
+    <h4>The same thing in numbers</h4>
+    <p>Watch it on the right-hand side of our system. The first step turned \(b\) into a new vector; the inverse step turns it straight back:</p>
+
+    $$ \begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix}
+      \;\xrightarrow{\ E_{21}:\ 12 - 3(2) = 6\ }\;
+      \begin{bmatrix} 2 \\ 6 \\ 2 \end{bmatrix}
+      \;\xrightarrow{\ E_{21}^{-1}:\ 6 + 3(2) = 12\ }\;
+      \begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix} \quad ✓ $$
 
     <div class="box theorem"><span class="label">Why elimination is legitimate</span>
-      <p>Every elimination step has an inverse, so <b>all the steps can be reversed</b>. Solving \(Ux = c\) — that is, \(EAx = Eb\) — therefore gives exactly the solutions of \(Ax = b\). Nothing was gained or lost on the way; only the shape of the system changed.</p>
+      <p>Every elimination step has an inverse, so <b>every step can be reversed</b>. Solving the easy system \(Ux = c\) — that is, \(EAx = Eb\) — therefore produces exactly the solutions of the original \(Ax = b\). Nothing was created or destroyed on the way; only the shape of the system changed.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">A look ahead — why the backwards direction is nicer</span>
+      <p>Undo the steps in reverse order and you get the matrix taking \(U\) back to \(A\):</p>
+      $$ A = E_{21}^{-1}E_{32}^{-1}\,U = LU, \qquad
+         L = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 2 & 1 \end{bmatrix} $$
+      <p>Look at what \(L\) contains: the multipliers \(3\) and \(2\), sitting <b>exactly in the positions they cleared</b>, with no stray \(6\) anywhere. The forward product \(E_{32}E_{21}\) mixed the steps together; the backward product keeps them separate. That is the whole reason the next lessons prefer \(A = LU\) to \(EA = U\).</p>
     </div>
 
     <!-- ====================================================== -->
