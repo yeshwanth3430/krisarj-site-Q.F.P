@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elimination with Matrices · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 2: Elimination with Matrices — pivots, forward elimination to U, back substitution, elimination matrices, permutations and the first inverse.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-02">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Elimination with Matrices</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 2</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+    <button role="tab" data-tab="explanation" aria-selected="false">Explanation</button>
+    <button role="tab" data-tab="examples" aria-selected="false">Examples</button>
+    <button role="tab" data-tab="problems" aria-selected="false">Problems</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 2 (MIT 18.06, Lecture 2)</p>
+  <h1>Elimination with Matrices</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Given } Ax = b, \text{ actually } \textbf{find } x \text{ — by a method, not by spotting it.}} $$</p>
+      <p>Lesson 1 showed the solution in two pictures, but both times we <i>saw</i> it because the example was cooked. This lecture gives the method that always works: <b>elimination</b>, followed by <b>back substitution</b>. It is how every software package solves equations — and then the same steps are rewritten in matrix language, because the whole course expresses ideas as matrix operations rather than words.</p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The plan</a></li>
+        <li><a href="#t2">The system and its matrix</a></li>
+        <li><a href="#t3">Step one: the 2,1 position</a></li>
+        <li><a href="#t4">Step two: the 3,1 position</a></li>
+        <li><a href="#t5">Step three: the 3,2 position</a></li>
+        <li><a href="#t6">Pivots — and the determinant</a></li>
+        <li><a href="#t7">How elimination fails</a></li>
+        <li><a href="#t8">The augmented matrix</a></li>
+        <li><a href="#t9">Back substitution</a></li>
+        <li><a href="#t10">Rows times a matrix</a></li>
+        <li><a href="#t11">The elimination matrices</a></li>
+        <li><a href="#t12">All steps in one matrix</a></li>
+        <li><a href="#t13">Permutation matrices</a></li>
+        <li><a href="#t14">The first inverse</a></li>
+        <li><a href="#t15">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The topics, in the order he teaches them. Click one to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">The plan</a><span>Solve by elimination — not by determinants — and ask how it could fail.</span></li>
+      <li><a href="#t2">The system and its matrix</a><span>Three equations, three unknowns, and why we stop writing the \(x\)s and \(y\)s.</span></li>
+      <li><a href="#t3">Step one: the 2,1 position</a><span>The first pivot, the multiplier, and the subtraction that kills the \(x\) in equation two.</span></li>
+      <li><a href="#t4">Step two: the 3,1 position</a><span>The step that is already done for us — and why the software still looks.</span></li>
+      <li><a href="#t5">Step three: the 3,2 position</a><span>The second pivot, the last subtraction, and the upper triangular \(U\).</span></li>
+      <li><a href="#t6">Pivots — and the determinant</a><span>Three pivots, never zero, and their product is the determinant.</span></li>
+      <li><a href="#t7">How elimination fails</a><span>Temporary failure fixed by a row exchange, and complete failure with nothing below.</span></li>
+      <li><a href="#t8">The augmented matrix</a><span>Tack \(b\) on as an extra column so the right-hand side travels with the rows.</span></li>
+      <li><a href="#t9">Back substitution</a><span>Solve the triangular system upwards: \(z\), then \(y\), then \(x\).</span></li>
+      <li><a href="#t10">Rows times a matrix</a><span>A matrix times a column combines columns; a row times a matrix combines rows.</span></li>
+      <li><a href="#t11">The elimination matrices</a><span>\(E_{21}\) and \(E_{32}\): the matrices that perform each elimination step.</span></li>
+      <li><a href="#t12">All steps in one matrix</a><span>\((E_{32}E_{21})A = U\), and the law that lets you move the parentheses.</span></li>
+      <li><a href="#t13">Permutation matrices</a><span>Exchanging rows from the left, columns from the right — and why \(AB \ne BA\).</span></li>
+      <li><a href="#t14">The first inverse</a><span>The matrix that undoes a step, and why elimination is reversible.</span></li>
+      <li><a href="#t15">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The plan</h3>
+
+    <p>We have a system and we are going to solve it. <b>The method will not be determinants</b> — those come later. The method is called <b>elimination</b>, and it is the way every software package solves equations. If the matrix coming in is a good one, elimination succeeds and gets the answer efficiently.</p>
+
+    <p>Two more things to do along the way. First, ask the honest question: <b>how could it fail?</b> The same procedure that solves a good system also tells us when a matrix has problems. Second, once the arithmetic is understood, <b>write it in matrix language</b> — because all the key ideas of this course get expressed as matrix operations, not as sentences. That forces us to say what matrix multiplication is and why.</p>
+
+    <p>The idea itself is natural — you would have thought of it. Gauss only got there first because he was born earlier.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The system and its matrix</h3>
+
+    <p>Three equations, three unknowns:</p>
+
+    $$ \begin{aligned} x + 2y + \ \ z &= \ \ 2 \\ 3x + 8y + \ \ z &= 12 \\ \ \ \ \ \ \ \ 4y + \ \ z &= \ \ 2 \end{aligned} $$
+
+    <p>In matrix form \(Ax = b\):</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}, \qquad b = \begin{bmatrix} 2 \\ 12 \\ 2 \end{bmatrix} $$
+
+    <p>When describing elimination it becomes a pain to keep writing the equal signs and the plus signs. <b>It is the matrix that totally matters</b> — everything is in that matrix — but behind it stand the equations, and every row operation we do to the matrix is really being done to an equation.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Step one: the 2,1 position</h3>
+
+    <p><b>We accept the first equation</b> — it is fine, and its row will not change. It is the <b>pivot row</b>. The key number at its front is the <b>first pivot</b>:</p>
+
+    $$ \text{first pivot} = \boxed{1} \quad \text{(the entry in row 1, column 1)} $$
+
+    <p>Purpose of the step: <b>knock the \(x\) out of equation two</b>. Equation two starts with a \(3\), the pivot is \(1\), so we need three of row one taken away from row two. That number is the <b>multiplier</b>:</p>
+
+    $$ \text{multiplier} = \frac{\text{entry to kill}}{\text{pivot}} = \frac{3}{1} = 3 $$
+
+    <p>Now subtract, entry by entry — note the word <b>subtract</b>; we will stick to that convention throughout:</p>
+
+    $$ \begin{aligned}
+      \text{new row 2} &= \text{row 2} - 3 \times \text{row 1} \\[4pt]
+      &= \begin{bmatrix} 3 & 8 & 1 \end{bmatrix} - 3\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} \\[4pt]
+      &= \begin{bmatrix} 3 - 3 & \ \ 8 - 6 & \ \ 1 - 3 \end{bmatrix}
+       = \begin{bmatrix} 0 & \ \ 2 & -2 \end{bmatrix}
+    \end{aligned} $$
+
+    <p>Three \(2\)s away from the \(8\) leaves a \(2\); three \(1\)s away from the \(1\) leaves \(-2\). Rows one and three are untouched:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      \;\xrightarrow{\ \text{row}_2 - 3\,\text{row}_1\ }\;
+      \begin{bmatrix} \boxed{1} & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
+
+    <p>That position — row 2, column 1 — is the <b>2,1 position</b>, and this is called the <b>2,1 step</b>. Forward elimination has begun.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Step two: the 3,1 position</h3>
+
+    <p>Finish the first column: we want a zero in the <b>3,1 position</b> as well. Look at it — the entry is already \(0\). So the multiplier is \(0\), we take none of row one away from row three, and nothing happens.</p>
+
+    <div class="box intuition"><span class="label">Why mention a step that does nothing</span>
+      <p>Because the software still performs it. MATLAB looks at that entry and runs the 3,1 step unless it has been told in advance that it is zero. Elimination is an algorithm marching down the columns, not a person noticing a convenient zero.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Step three: the 3,2 position</h3>
+
+    <p>The \(x\) is now gone from equations two and three — we are down to two equations in \(y\) and \(z\) — so do it all again, one column further in. The <b>second pivot</b> is the entry now sitting in row 2, column 2:</p>
+
+    $$ \text{second pivot} = \boxed{2} $$
+
+    <p>The entry to kill is the \(4\) in the 3,2 position, so:</p>
+
+    $$ \text{multiplier} = \frac{4}{2} = 2 $$
+
+    $$ \begin{aligned}
+      \text{new row 3} &= \text{row 3} - 2 \times \text{row 2} \\[4pt]
+      &= \begin{bmatrix} 0 & 4 & 1 \end{bmatrix} - 2\begin{bmatrix} 0 & 2 & -2 \end{bmatrix} \\[4pt]
+      &= \begin{bmatrix} 0 - 0 & \ \ 4 - 4 & \ \ 1 - (-4) \end{bmatrix}
+       = \begin{bmatrix} 0 & \ \ 0 & \ \ 5 \end{bmatrix}
+    \end{aligned} $$
+
+    <p>Watch the last entry: we subtract twice \(-2\), which is subtracting \(-4\), which <b>adds</b> \(4\) to the \(1\) and gives \(5\). That is the <b>third pivot</b>.</p>
+
+    $$ \begin{bmatrix} \boxed{1} & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix}
+      \;\xrightarrow{\ \text{row}_3 - 2\,\text{row}_2\ }\;
+      U = \begin{bmatrix} \boxed{1} & 2 & 1 \\ 0 & \boxed{2} & -2 \\ 0 & 0 & \boxed{5} \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">From A to U</span>
+      <p>Elimination has turned \(A\) into \(U\) — <b>U for upper triangular</b>, everything below the diagonal is zero. <b>Getting from \(A\) to \(U\) was the whole purpose</b>, and it is literally the most common calculation in scientific computing.</p>
+    </div>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <svg viewBox="0 0 640 230" role="img" aria-label="The elimination march from A to U, with pivots boxed and multipliers on the arrows">
+        <g class="tick" font-size="13">
+          <text x="14" y="26">A</text><text x="246" y="26">after the 2,1 step</text><text x="516" y="26">U</text>
+        </g>
+        <!-- A -->
+        <g font-family="var(--mono)" font-size="15" class="ci" fill="currentColor">
+          <text x="30" y="70">1   2   1</text><text x="30" y="100">3   8   1</text><text x="30" y="130">0   4   1</text>
+        </g>
+        <rect x="22" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
+        <!-- arrow 1 -->
+        <line class="axis" x1="150" y1="98" x2="230" y2="98" stroke-width="2"/>
+        <polygon points="230,98 222,93 222,103" class="ci" fill="currentColor"/>
+        <text class="lbl c1" x="146" y="86">row₂ − 3 row₁</text>
+        <text class="tick" x="152" y="118">multiplier 3</text>
+        <!-- middle -->
+        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+          <text x="258" y="70">1   2   1</text><text x="258" y="100">0   2  −2</text><text x="258" y="130">0   4   1</text>
+        </g>
+        <rect x="250" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
+        <!-- arrow 2 -->
+        <line class="axis" x1="380" y1="98" x2="460" y2="98" stroke-width="2"/>
+        <polygon points="460,98 452,93 452,103" class="ci" fill="currentColor"/>
+        <text class="lbl c2" x="374" y="86">row₃ − 2 row₂</text>
+        <text class="tick" x="384" y="118">multiplier 2</text>
+        <!-- U -->
+        <g font-family="var(--mono)" font-size="15" fill="currentColor">
+          <text x="490" y="70">1   2   1</text><text x="490" y="100">0   2  −2</text><text x="490" y="130">0   0   5</text>
+        </g>
+        <rect x="482" y="54" width="22" height="22" fill="none" class="l1" rx="3"/>
+        <rect x="518" y="84" width="22" height="22" fill="none" class="l1" rx="3"/>
+        <rect x="556" y="114" width="22" height="22" fill="none" class="l1" rx="3"/>
+        <text class="lbl c3" x="486" y="166">pivots 1, 2, 5 — never zero</text>
+        <text class="tick" x="30" y="196">The first row never changes; each step clears one entry below a pivot,</text>
+        <text class="tick" x="30" y="214">marching down the columns until everything under the diagonal is zero.</text>
+      </svg>
+      <figcaption><b>The elimination march.</b> Two subtractions carry \(A\) to \(U\). The boxed entries are the pivots: the \(1\) was there from the start, the \(2\) appeared after the first step, and the \(5\) appeared after the second. Each arrow is one row operation, labelled with its multiplier — and the multiplier is always <i>entry to kill ÷ pivot above it</i>. Notice that the pivot row itself is never altered; only the rows below it change.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Pivots — and the determinant</h3>
+
+    <p>Three pivots appeared: \(1\), \(2\), \(5\), sitting on the diagonal of \(U\). From them we already know a great deal about this matrix.</p>
+
+    <div class="box pitfall"><span class="label">Pivots can never be zero</span>
+      <p>Zero is not accepted as a pivot. The phrase "zero pivot" will never be uttered — if a zero turns up in a pivot position, something must be done about it (section 7).</p>
+    </div>
+
+    <p>Here nothing special was needed: following the rules gave three non-zero pivots, so <b>this matrix is a good one</b>.</p>
+
+    <div class="box theorem"><span class="label">A look ahead: the determinant</span>
+      <p>The determinant of \(A\) is the <b>product of the pivots</b>:</p>
+      $$ \det A = 1 \times 2 \times 5 = \boxed{10} $$
+      <p>Even that is already sitting inside elimination.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. How elimination fails</h3>
+
+    <p>Having seen it succeed, ask how it could fail — meaning fail to produce a full set of pivots.</p>
+
+    <h4>Trouble you can escape: a row exchange</h4>
+    <p><b>Case one — a zero at the very start.</b> Suppose the top-left entry had been \(0\): no \(x\) at all in the first equation. Do we quit? No — <b>exchange rows</b>. Trade the first equation for a lower one that does have an \(x\), and carry on.</p>
+
+    <p><b>Case two — a zero appearing later.</b> Change the \(8\) in our matrix to a \(6\) and watch what the first step does:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 1 \\ 3 & \mathbf{6} & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      \;\xrightarrow{\ \text{row}_2 - 3\,\text{row}_1\ }\;
+      \begin{bmatrix} 1 & 2 & 1 \\ 0 & \mathbf{0} & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
+
+    <p>A zero has landed in the second pivot position. But below it sits a \(4\), so exchange rows two and three and the elimination is rescued:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 1 \\ 0 & \boxed{4} & 1 \\ 0 & 0 & \boxed{-2} \end{bmatrix} \qquad \text{pivots } 1,\, 4,\, -2 $$
+
+    <div class="box method"><span class="label">Rule · zero in the pivot position</span>
+      <p>Exchange that row with a row <b>below</b> it that has a non-zero entry in the pivot column, then continue.</p>
+    </div>
+
+    <h4>Trouble you cannot escape</h4>
+    <p>Complete failure means a zero in the pivot position <b>with nothing non-zero below it to exchange with</b>. In our matrix, change the bottom-right \(1\) to \(-4\) and follow the same two steps:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & \mathbf{-4} \end{bmatrix}
+      \;\xrightarrow{\ \text{row}_2 - 3\,\text{row}_1\ }\;
+      \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & \mathbf{-4} \end{bmatrix}
+      \;\xrightarrow{\ \text{row}_3 - 2\,\text{row}_2\ }\;
+      \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & \mathbf{0} \end{bmatrix} $$
+
+    <p>Entry by entry in that last step: \(4 - 2(2) = 0\), and \(-4 - 2(-2) = -4 + 4 = 0\). The third row has vanished entirely, there is <b>no third pivot</b>, and there is no row below to exchange with.</p>
+
+    <div class="box pitfall"><span class="label">Two kinds of failure</span>
+      <p><b>Temporary failure</b> — a zero in the pivot position, but a non-zero below it. Fix with a row exchange and continue.</p>
+      <p><b>Complete failure</b> — a zero in the pivot position and only zeros below. The matrix is <b>not invertible</b>, and elimination cannot produce a unique solution, because there is none to find.</p>
+    </div>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-fail" style="width:100%;height:440px"></div>
+      <figcaption><b>Complete failure, seen in 3D — drag to rotate.</b> This is the broken system, with \(-4\) in the corner: \(x+2y+z=2\), \(3x+8y+z=12\), \(4y-4z=2\). Each equation is still a plane, and any <b>two</b> of them still cut along a line — but rotate until you are looking down those lines and you will see they are <b>three parallel lines</b>, never meeting. The planes enclose an infinite triangular tunnel rather than crossing at a point. That is what "no third pivot" looks like geometrically: the row that elimination flattened to \(0\ 0\ 0\) left the system with nowhere to land.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The augmented matrix</h3>
+
+    <p>So far only the left side has been touched. The right-hand side has to come along, because whatever we do to an equation we must do to both sides. Tack \(b\) on as an extra column — that is the <b>augmented matrix</b> ("augment" means you have tacked something on):</p>
+
+    $$ \left[\begin{array}{ccc|c} 1 & 2 & 1 & 2 \\ 3 & 8 & 1 & 12 \\ 0 & 4 & 1 & 2 \end{array}\right] $$
+
+    <p><b>First step</b>, \(\text{row}_2 - 3\,\text{row}_1\), now also acts on the last column: three \(2\)s taken away from \(12\),</p>
+
+    $$ 12 - 3(2) = 12 - 6 = 6 $$
+
+    $$ \left[\begin{array}{ccc|c} 1 & 2 & 1 & 2 \\ 0 & 2 & -2 & 6 \\ 0 & 4 & 1 & 2 \end{array}\right] $$
+
+    <p><b>Second step</b>, \(\text{row}_3 - 2\,\text{row}_2\): take two \(6\)s away from the \(2\),</p>
+
+    $$ 2 - 2(6) = 2 - 12 = -10 $$
+
+    $$ \left[\begin{array}{ccc|c} 1 & 2 & 1 & 2 \\ 0 & 2 & -2 & 6 \\ 0 & 0 & 5 & -10 \end{array}\right] $$
+
+    <div class="box definition"><span class="label">What elimination produced</span>
+      <p>$$ Ax = b \qquad\text{became}\qquad \boxed{Ux = c} $$</p>
+      <p>with \(U\) what happened to \(A\), and \(c = (2,\,6,\,-10)\) what happened to \(b\). Same solutions, easier system.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Back substitution</h3>
+
+    <p>Write out the equations that \(U\) and \(c\) are telling us about:</p>
+
+    $$ \begin{aligned} x + 2y + z &= \ \ 2 \\ 2y - 2z &= \ \ 6 \\ 5z &= -10 \end{aligned} $$
+
+    <p>Solve them <b>in reverse order</b>, because the system is triangular — that is the whole point of \(U\).</p>
+
+    $$ \begin{aligned}
+      \text{last equation:} \quad 5z &= -10 &&\Rightarrow\; z = -2 \\[6pt]
+      \text{middle equation:} \quad 2y - 2(-2) &= 6 &&\Rightarrow\; 2y + 4 = 6 \;\Rightarrow\; 2y = 2 \;\Rightarrow\; y = 1 \\[6pt]
+      \text{first equation:} \quad x + 2(1) + (-2) &= 2 &&\Rightarrow\; x + 0 = 2 \;\Rightarrow\; x = 2
+    \end{aligned} $$
+
+    <div class="box theorem"><span class="label">The solution</span>
+      $$ \boxed{x = 2, \qquad y = 1, \qquad z = -2} $$
+      <p>Check it in the <b>original</b> equations, not the eliminated ones:</p>
+      $$ \begin{aligned}
+        1(2) + 2(1) + 1(-2) &= 2 + 2 - 2 = 2 \quad ✓ \\
+        3(2) + 8(1) + 1(-2) &= 6 + 8 - 2 = 12 \quad ✓ \\
+        0(2) + 4(1) + 1(-2) &= 0 + 4 - 2 = 2 \quad ✓
+      \end{aligned} $$
+    </div>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-elim" style="width:100%;height:440px"></div>
+      <figcaption><b>What elimination does to the picture — drag to rotate.</b> The three solid sheets are the original equations; the three outlined sheets are the eliminated ones, \(x+2y+z=2\), \(2y-2z=6\) and \(5z=-10\). Rotate and compare: the eliminated planes are <b>simpler</b> — the last one is perfectly horizontal (it says only \(z=-2\)), the middle one has lost its \(x\) and so runs straight through the \(x\) direction — yet the red meeting point has <b>not moved</b>. That is the whole justification for elimination: every step was reversible, so the solution set never changed while the geometry got easier. Back substitution is simply reading the planes from the flattest one upward.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Rows times a matrix</h3>
+
+    <p>Now the second half of the lecture: writing these operations as matrices. One point must come first, because every operation in these two weeks is a <b>row</b> operation.</p>
+
+    <p>From Lesson 1, multiplying a matrix by a column vector gives a <b>combination of the columns</b>:</p>
+
+    $$ A\begin{bmatrix} 3 \\ 4 \\ 5 \end{bmatrix} = 3(\text{column}_1) + 4(\text{column}_2) + 5(\text{column}_3) $$
+
+    <p>Now the parallel fact on the other side. Put the vector on the <b>left</b>, as a row:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 7 \end{bmatrix} A = 1(\text{row}_1) + 2(\text{row}_2) + 7(\text{row}_3) $$
+
+    <p>With our \(A\), entry by entry:</p>
+
+    $$ \begin{aligned}
+      1\begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + 2\begin{bmatrix} 3 & 8 & 1 \end{bmatrix} + 7\begin{bmatrix} 0 & 4 & 1 \end{bmatrix}
+      &= \begin{bmatrix} 1 & 2 & 1 \end{bmatrix} + \begin{bmatrix} 6 & 16 & 2 \end{bmatrix} + \begin{bmatrix} 0 & 28 & 7 \end{bmatrix} \\[4pt]
+      &= \begin{bmatrix} 7 & 46 & 10 \end{bmatrix}
+    \end{aligned} $$
+
+    <div class="box theorem"><span class="label">The two directions ★</span>
+      <p>$$ \boxed{\begin{aligned} \text{matrix} \times \text{column} &= \text{a combination of the \textbf{columns}} \\ \text{row} \times \text{matrix} &= \text{a combination of the \textbf{rows}} \end{aligned}} $$</p>
+      <p>Keep your eye on what multiplication is doing with <b>whole vectors</b>, not with individual numbers. That is the central idea: matrices work by rows as well as by columns.</p>
+    </div>
+
+    <figure class="fig" style="max-width:560px;margin:22px auto">
+      <svg viewBox="0 0 560 210" role="img" aria-label="A matrix times a column combines columns; a row times a matrix combines rows">
+        <g class="tick" font-size="12">
+          <text x="18" y="22">matrix × column → combination of COLUMNS</text>
+          <text x="312" y="22">row × matrix → combination of ROWS</text>
+        </g>
+        <!-- left: columns highlighted -->
+        <g>
+          <rect x="24" y="40" width="26" height="86" class="l1" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <rect x="54" y="40" width="26" height="86" class="l2" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <rect x="84" y="40" width="26" height="86" class="l3" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <rect x="128" y="40" width="26" height="86" class="axis" fill="none" stroke-width="1.5"/>
+          <text class="tick" x="114" y="90" font-size="16">×</text>
+          <text class="tick" x="166" y="90" font-size="16">=</text>
+          <rect x="182" y="40" width="26" height="86" class="axis" fill="none" stroke-width="1.5"/>
+          <text class="tick" x="24" y="148">each number in the column</text>
+          <text class="tick" x="24" y="164">scales one whole column</text>
+          <text class="tick" x="24" y="186">3·col₁ + 4·col₂ + 5·col₃</text>
+        </g>
+        <!-- right: rows highlighted -->
+        <g>
+          <rect x="318" y="40" width="86" height="18" class="axis" fill="none" stroke-width="1.5"/>
+          <text class="tick" x="410" y="54" font-size="16">×</text>
+          <rect x="428" y="40" width="86" height="26" class="l1" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <rect x="428" y="70" width="86" height="26" class="l2" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <rect x="428" y="100" width="86" height="26" class="l3" fill="currentColor" fill-opacity=".16" stroke-width="1.5"/>
+          <text class="tick" x="318" y="148">each number in the row</text>
+          <text class="tick" x="318" y="164">scales one whole row</text>
+          <text class="tick" x="318" y="186">1·row₁ + 2·row₂ + 7·row₃</text>
+        </g>
+      </svg>
+      <figcaption><b>Which side you multiply on decides what gets combined.</b> On the left the vector arrives as a column and picks out columns; on the right it arrives as a row and picks out rows. Elimination changes rows, so from here on the elimination matrices will always sit on the <b>left</b> — and that single fact is what the rest of the lecture is built on.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. The elimination matrices</h3>
+
+    <p>Which matrix performs step one — subtract 3 times row one from row two, leaving the other rows alone?</p>
+
+    <p>Build it row by row, using the rule just established (each row of the multiplying matrix says which combination of rows of \(A\) to take):</p>
+
+    <ul>
+      <li><b>First row</b> must leave row one unchanged: take one of row one, none of the others → \(\begin{bmatrix} 1 & 0 & 0\end{bmatrix}\).</li>
+      <li><b>Third row</b> must leave row three unchanged: → \(\begin{bmatrix} 0 & 0 & 1\end{bmatrix}\).</li>
+      <li><b>Second row</b> must produce \(\text{row}_2 - 3\,\text{row}_1\): take \(-3\) of row one, one of row two, none of row three → \(\begin{bmatrix} -3 & 1 & 0\end{bmatrix}\).</li>
+    </ul>
+
+    <div class="box intuition"><span class="label">The matrix that does nothing</span>
+      <p>Had the middle row been \(\begin{bmatrix} 0 & 1 & 0\end{bmatrix}\), the whole matrix would be the <b>identity</b> \(I\) — it multiplies everything and leaves it exactly where it was. It is the number one, for matrices.</p>
+    </div>
+
+    <p>So the first elimination matrix, named for the position it fixes, is:</p>
+
+    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
+      E_{21}A = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \begin{bmatrix} 1 & 2 & 1 \\ 3 & 8 & 1 \\ 0 & 4 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix} $$
+
+    <p><b>Check one entry</b>, the one in row 2, column 3. Take row two of \(E_{21}\) against column three of \(A\):</p>
+
+    $$ \begin{bmatrix} -3 & 1 & 0 \end{bmatrix} \cdot \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = -3(1) + 1(1) + 0(1) = -2 \quad ✓ $$
+
+    <p>Step three — subtract 2 times row two from row three — works the same way. Rows one and two are left alone; the third row takes \(-2\) of row two and one of row three:</p>
+
+    $$ E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -2 & 1 \end{bmatrix}, \qquad
+      E_{32}\!\begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 4 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1 & 2 & 1 \\ 0 & 2 & -2 \\ 0 & 0 & 5 \end{bmatrix} = U $$
+
+    <div class="box method"><span class="label">Method · building \(E_{mn}\)</span>
+      <p>Start from the identity \(I\). In the position <b>row \(m\), column \(n\)</b>, put <b>minus the multiplier</b>. Everything else stays as in \(I\). That matrix performs exactly one elimination step, clearing the \(m,n\) entry.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t12">12. All steps in one matrix</h3>
+
+    <p>Everything done to \(A\) so far, in order: multiply by \(E_{21}\), then multiply that result by \(E_{32}\). The 3,1 step needed nothing, so \(E_{31} = I\) and we can leave it out:</p>
+
+    $$ E_{32}\big(E_{21}A\big) = U $$
+
+    <p>Now the important question: <b>what single matrix takes \(A\) all the way to \(U\)?</b> Simply put the two together — but carefully. The matrices must stay <b>in their order</b>; what we are allowed to move are the <b>parentheses</b>:</p>
+
+    $$ \boxed{E_{32}\big(E_{21}A\big) = \big(E_{32}E_{21}\big)A = U} $$
+
+    <p>Multiplying the two \(E\)s first gives one matrix that does the whole job at once:</p>
+
+    $$ E_{32}E_{21}
+      = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -2 & 1 \end{bmatrix}
+        \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 6 & -2 & 1 \end{bmatrix} $$
+
+    <p>Where did that bottom row come from? Row three of \(E_{32}\) is \(\begin{bmatrix} 0 & -2 & 1\end{bmatrix}\), so it takes \(-2\) of row two of \(E_{21}\) plus one of row three:</p>
+
+    $$ -2\begin{bmatrix} -3 & 1 & 0 \end{bmatrix} + 1\begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 6 & -2 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 6 & -2 & 1 \end{bmatrix} \quad ✓ $$
+
+    <div class="box theorem"><span class="label">The associative law ★</span>
+      <p>$$ \boxed{(AB)C = A(BC)} $$</p>
+      <p>You may move the parentheses; you may <b>not</b> change the order. Forget the word "associative" if you like — but never forget the law. An astonishing number of proofs in linear algebra are nothing but moving parentheses.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t13">13. Permutation matrices</h3>
+
+    <p>There is one more elementary matrix, the one promised in section 7: the matrix that <b>exchanges two rows</b>. It is called a <b>permutation matrix</b>.</p>
+
+    <p>Take a two by two example and ask for the matrix that swaps the rows of \(\begin{bmatrix} a & b \\ c & d\end{bmatrix}\). The row we want on top is \(\begin{bmatrix} c & d\end{bmatrix}\), so take one of row two and none of row one; underneath, the reverse:</p>
+
+    $$ P = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}, \qquad
+      PA = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} a & b \\ c & d \end{bmatrix}
+      = \begin{bmatrix} c & d \\ a & b \end{bmatrix} $$
+
+    <div class="box method"><span class="label">Method · building a permutation matrix</span>
+      <p>Do the exchange you want <b>to the identity matrix</b>. The result is the matrix that performs that exchange on any matrix.</p>
+    </div>
+
+    <p>Now the same idea for <b>columns</b>. Can a matrix on the left exchange columns? <b>No</b> — multiplying on the left does row operations, always. To exchange columns, the permutation must multiply on the <b>right</b>:</p>
+
+    $$ AP = \begin{bmatrix} a & b \\ c & d \end{bmatrix}\begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix}
+      = \begin{bmatrix} b & a \\ d & c \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">Left and right</span>
+      <p>$$ \boxed{\begin{aligned} \text{row operations} &\;\longrightarrow\; \text{multiply on the \textbf{left}} \\ \text{column operations} &\;\longrightarrow\; \text{multiply on the \textbf{right}} \end{aligned}} $$</p>
+      <p>And it is row operations we are really doing.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">Order matters: \(AB \ne BA\)</span>
+      <p>The two results above are different matrices, which proves the point: you cannot swap the order of matrices. The <b>commutative law is false</b> for matrices. Keep them in their Gauss-given order — you may only move the parentheses.</p>
+    </div>
+
+    <p>In three dimensions the row-exchange matrix for rows one and two is the identity with those rows swapped:</p>
+
+    $$ P = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}, \qquad
+      PA = \begin{bmatrix} 3 & 8 & 1 \\ 1 & 2 & 1 \\ 0 & 4 & 1 \end{bmatrix} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t14">14. The first inverse</h3>
+
+    <p>A better way to think about \(E_{32}E_{21}\) is coming next lecture, and it starts here: instead of asking how to get from \(A\) to \(U\), ask <b>how to get from \(U\) back to \(A\)</b>. Reversing steps is the idea of the <b>inverse</b>.</p>
+
+    <p>Take the one step we know. \(E_{21}\) subtracted 3 times row one from row two. What undoes it? In words, before any matrix: <b>add 3 times row one back to row two</b>. What was subtracted is added back.</p>
+
+    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} $$
+
+    <p>Multiply them and the steps cancel. The middle row of the product takes 3 of row one of \(E_{21}\) plus one of row two:</p>
+
+    $$ E_{21}^{-1}E_{21}
+      = \begin{bmatrix} 1 & 0 & 0 \\ 3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}\begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1 & 0 & 0 \\ 3(1) + (-3) & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad ✓ $$
+
+    <p>Numerically: the first step turned \(b = (2, 12, 2)\) into \((2, 6, 2)\); the inverse step turns \((2, 6, 2)\) back into \((2, 12, 2)\), since \(6 + 3(2) = 12\).</p>
+
+    <div class="box theorem"><span class="label">Why elimination is legitimate</span>
+      <p>Every elimination step has an inverse, so <b>all the steps can be reversed</b>. Solving \(Ux = c\) — that is, \(EAx = Eb\) — therefore gives exactly the solutions of \(Ax = b\). Nothing was gained or lost on the way; only the shape of the system changed.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t15"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Goal</b></td><td>Turn \(Ax=b\) into the triangular \(Ux=c\), then solve upwards.</td></tr>
+      <tr><td><b>Pivot</b></td><td>The key entry of the pivot row; it is never allowed to be zero.</td></tr>
+      <tr><td><b>Multiplier</b></td><td>Entry to kill ÷ pivot above it. Then subtract that many pivot rows.</td></tr>
+      <tr><td><b>Forward elimination</b></td><td>Clear column one below the first pivot, then column two, and so on, down the diagonal.</td></tr>
+      <tr><td><b>\(U\)</b></td><td>Upper triangular, pivots \(1, 2, 5\) on the diagonal; zeros below.</td></tr>
+      <tr><td><b>Determinant</b></td><td>The product of the pivots: \(1 \times 2 \times 5 = 10\).</td></tr>
+      <tr><td><b>Augmented matrix</b></td><td>\([A \mid b]\) — carry \(b\) as an extra column so both sides change together; \(b \to c = (2,6,-10)\).</td></tr>
+      <tr><td><b>Back substitution</b></td><td>Last equation first: \(z=-2\), then \(y=1\), then \(x=2\).</td></tr>
+      <tr><td><b>Temporary failure</b></td><td>Zero in a pivot position, non-zero below → exchange rows and continue.</td></tr>
+      <tr><td><b>Complete failure</b></td><td>Zero in a pivot position, only zeros below → not invertible, no unique solution.</td></tr>
+      <tr><td><b>Two multiplications</b></td><td>Matrix × column combines columns; row × matrix combines rows.</td></tr>
+      <tr><td><b>\(E_{mn}\)</b></td><td>Identity with minus the multiplier in position \(m,n\); it performs one elimination step.</td></tr>
+      <tr><td><b>Whole process</b></td><td>\(E_{32}(E_{21}A) = (E_{32}E_{21})A = U\), with \(E_{32}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -3 & 1 & 0 \\ 6 & -2 & 1\end{bmatrix}\).</td></tr>
+      <tr><td><b>Associative law</b></td><td>Parentheses may move; order may not.</td></tr>
+      <tr><td><b>Permutation \(P\)</b></td><td>Identity with rows swapped. \(PA\) swaps rows, \(AP\) swaps columns, and \(PA \ne AP\).</td></tr>
+      <tr><td><b>Inverse</b></td><td>\(E_{21}^{-1}\) adds back what \(E_{21}\) subtracted; \(E_{21}^{-1}E_{21} = I\).</td></tr>
+      <tr><td><b>Answer</b></td><td>\(x = 2,\ y = 1,\ z = -2\).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Elimination is the method, not determinants</b>
+        <span>It is what every software package actually runs, and it is the most common calculation in scientific computing.</span></li>
+      <li><b>Pivots can never be zero ★</b>
+        <span>A zero in a pivot position is the signal to exchange rows — or, if nothing lies below, the signal that the matrix is not invertible.</span></li>
+      <li><b>Row times matrix combines rows; matrix times column combines columns ★</b>
+        <span>Watch whole vectors, not individual numbers. Elimination works on rows, which is why its matrices multiply from the left.</span></li>
+      <li><b>You may move the parentheses, never the order</b>
+        <span>\((E_{32}E_{21})A = E_{32}(E_{21}A)\) is what lets many steps collapse into one matrix — and \(AB \ne BA\) stays true throughout.</span></li>
+      <li><b>Every step is reversible</b>
+        <span>That is why solving the easy system \(Ux=c\) is a legitimate way to solve the original \(Ax=b\).</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We now have \(E_{32}E_{21}\), the single matrix that carries \(A\) to \(U\) — but multiplying \(E\)s together is the clumsy direction. The better question is the reverse one: the matrix that carries \(U\) back to \(A\). That is <b>inverses</b>, and it leads straight to the factorisation \(A = LU\), which is where the next lessons go.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+
+  <section class="tab-panel" data-panel="explanation" hidden></section>
+  <section class="tab-panel" data-panel="examples" hidden></section>
+  <section class="tab-panel" data-panel="problems" hidden></section>
+  </div>
+</main>
+
+<script>
+// 3D figures for Lesson 2. notebook.js wraps Plotly and adds the cube frame, axis lines and corner coordinates.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), orange = c("--int-b"), red = c("--warn-b"),
+      purple = c("--thm-b"), ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+
+  function axis(t, lo, hi, dt) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: dt || 2, tickfont: { size: 11, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  function scene(r, eye, dt) {
+    return { xaxis: axis("x", r[0][0], r[0][1], dt), yaxis: axis("y", r[1][0], r[1][1], dt), zaxis: axis("z", r[2][0], r[2][1], dt),
+      aspectmode: "cube", dragmode: "turntable", camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var base = { margin: { l: 0, r: 0, t: 0, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 11 }, bgcolor: "rgba(0,0,0,0)" } };
+  var config = { responsive: true, displaylogo: false, displayModeBar: false };
+
+  function planeInBox(n, d, box, color, name, opacity, outline) {
+    var f = function (p) { return n[0]*p[0] + n[1]*p[1] + n[2]*p[2] - d; }, pts = [];
+    for (var m = 0; m < 8; m++) {
+      var p = [box[0][m & 1], box[1][(m >> 1) & 1], box[2][(m >> 2) & 1]];
+      for (var a = 0; a < 3; a++) {
+        if ((m >> a) & 1) continue;
+        var q = p.slice(); q[a] = box[a][1];
+        var fp = f(p), fq = f(q);
+        if (fp === fq || fp * fq > 0) continue;
+        var t = fp / (fp - fq), r = [p[0] + t*(q[0]-p[0]), p[1] + t*(q[1]-p[1]), p[2] + t*(q[2]-p[2])];
+        if (!pts.some(function (u) { return Math.abs(u[0]-r[0]) + Math.abs(u[1]-r[1]) + Math.abs(u[2]-r[2]) < 1e-9; })) pts.push(r);
+      }
+    }
+    if (pts.length < 3) return { type: "scatter3d", x: [], y: [], z: [], name: name, showlegend: false };
+    var ctr = [0,1,2].map(function (k) { return pts.reduce(function (s, p) { return s + p[k]; }, 0) / pts.length; });
+    var u = Math.abs(n[0]) < 0.9 * Math.hypot(n[0], n[1], n[2]) ? [0, -n[2], n[1]] : [-n[2], 0, n[0]];
+    var v = [n[1]*u[2]-n[2]*u[1], n[2]*u[0]-n[0]*u[2], n[0]*u[1]-n[1]*u[0]];
+    function dot(x, y) { return x[0]*y[0] + x[1]*y[1] + x[2]*y[2]; }
+    pts.sort(function (p, q) {
+      var dp = [p[0]-ctr[0], p[1]-ctr[1], p[2]-ctr[2]], dq = [q[0]-ctr[0], q[1]-ctr[1], q[2]-ctr[2]];
+      return Math.atan2(dot(dp, v), dot(dp, u)) - Math.atan2(dot(dq, v), dot(dq, u));
+    });
+    if (outline) {
+      var loop = pts.concat([pts[0]]);
+      return { type: "scatter3d", mode: "lines", name: name, hoverinfo: "name",
+        line: { color: color, width: 5, dash: "dash" },
+        x: loop.map(function (p) { return p[0]; }), y: loop.map(function (p) { return p[1]; }), z: loop.map(function (p) { return p[2]; }) };
+    }
+    var I = [], J = [], K = [];
+    for (var k = 1; k < pts.length - 1; k++) { I.push(0); J.push(k); K.push(k + 1); }
+    return { type: "mesh3d", name: name, showlegend: true, opacity: opacity || 0.4, color: color, flatshading: true, hoverinfo: "name",
+      x: pts.map(function (p) { return p[0]; }), y: pts.map(function (p) { return p[1]; }), z: pts.map(function (p) { return p[2]; }), i: I, j: J, k: K };
+  }
+  function dot3(p, color, label, size) {
+    return { type: "scatter3d", mode: "markers+text", name: label, hoverinfo: "name",
+      marker: { color: color, size: size || 8 }, x: [p[0]], y: [p[1]], z: [p[2]],
+      text: [label], textposition: "top center", textfont: { color: color, size: 13 } };
+  }
+
+  // ---- A -> U : same solution, simpler planes ----
+  if (document.getElementById("fig3d-elim")) {
+    var box = [[-2, 6], [-3, 5], [-6, 2]];
+    var L = JSON.parse(JSON.stringify(base)); L.scene = scene(box, { x: 1.8, y: -1.55, z: 0.75 });
+    Plotly.newPlot("fig3d-elim", [
+      planeInBox([1, 2, 1], 2, box, blue, "x + 2y + z = 2  (unchanged)", 0.40),
+      planeInBox([3, 8, 1], 12, box, green, "3x + 8y + z = 12  (original)", 0.32),
+      planeInBox([0, 4, 1], 2, box, orange, "4y + z = 2  (original)", 0.32),
+      planeInBox([0, 2, -2], 6, box, green, "2y − 2z = 6  (after elimination)", 1, true),
+      planeInBox([0, 0, 5], -10, box, orange, "5z = −10  (after elimination)", 1, true),
+      dot3([2, 1, -2], red, "(2, 1, −2)")
+    ], L, config);
+  }
+
+  // ---- complete failure: three planes, no common point ----
+  if (document.getElementById("fig3d-fail")) {
+    var box2 = [[-4, 8], [-3, 5], [-5, 5]];
+    var L2 = JSON.parse(JSON.stringify(base)); L2.scene = scene(box2, { x: 1.35, y: -1.9, z: 0.55 });
+    Plotly.newPlot("fig3d-fail", [
+      planeInBox([1, 2, 1], 2, box2, blue, "x + 2y + z = 2", 0.42),
+      planeInBox([3, 8, 1], 12, box2, green, "3x + 8y + z = 12", 0.42),
+      planeInBox([0, 4, -4], 2, box2, orange, "4y − 4z = 2   (the broken row)", 0.42)
+    ], L2, config);
+  }
+});
+</script>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
