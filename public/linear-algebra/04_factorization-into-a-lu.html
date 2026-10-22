@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factorization into A = LU · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 4: inverse and transpose of a product, A = LU with the multipliers sitting inside L, the cost of elimination, and permutation matrices.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-04">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Factorization into A = LU</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 4</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 4 (MIT 18.06, Lecture 4)</p>
+  <h1>Factorization into A = LU</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Write elimination itself as a factorisation: } A = LU.} $$</p>
+      <p>We already know how to get from \(A\) to \(U\) by elimination, and Lesson 2 wrote those steps as \(EA = U\). But \(E\) turned out to be an ugly matrix. This lecture finds <b>the right way to look at Gaussian elimination</b> — the same steps rearranged so that \(A\) sits alone on one side and the multipliers appear, untouched, inside a lower triangular \(L\). <b>That is the high point of the day.</b></p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Inverse of a product</a></li>
+        <li><a href="#t2">Transpose of a product</a></li>
+        <li><a href="#t3">A = LU, two by two</a></li>
+        <li><a href="#t4">Splitting out the pivots: LDU</a></li>
+        <li><a href="#t5">Three by three: why L wins</a></li>
+        <li><a href="#t6">The multipliers sit in L</a></li>
+        <li><a href="#t7">How expensive is elimination?</a></li>
+        <li><a href="#t8">The cost of the right-hand side</a></li>
+        <li><a href="#t9">Permutation matrices</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The topics, in the order he teaches them. Click one to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">Inverse of a product</a><span>\((AB)^{-1} = B^{-1}A^{-1}\) — undo in the reverse order, like socks and shoes.</span></li>
+      <li><a href="#t2">Transpose of a product</a><span>\((AB)^{T} = B^{T}A^{T}\), and transposing and inverting can be done in either order.</span></li>
+      <li><a href="#t3">A = LU, two by two</a><span>Move the elimination matrix to the other side and watch \(L\) appear.</span></li>
+      <li><a href="#t4">Splitting out the pivots: LDU</a><span>Pull the pivots into a diagonal matrix so both triangles have ones on the diagonal.</span></li>
+      <li><a href="#t5">Three by three: why L wins</a><span>The forward product grows a number nobody chose; the inverse product does not.</span></li>
+      <li><a href="#t6">The multipliers sit in L</a><span>No work at all: just record the multipliers as you eliminate, and \(L\) is built.</span></li>
+      <li><a href="#t7">How expensive is elimination?</a><span>Counting the operations for an \(n \times n\) matrix: about \(\tfrac13 n^3\).</span></li>
+      <li><a href="#t8">The cost of the right-hand side</a><span>Only \(n^2\) per right-hand side — which is why we factor once and reuse.</span></li>
+      <li><a href="#t9">Permutation matrices</a><span>What to do when a zero reaches a pivot: all \(n!\) of them, and \(P^{-1} = P^{T}\).</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Inverse of a product</h3>
+
+    <p>One piece of business left over from last time. If \(A\) and \(B\) are both invertible, what is the inverse of \(AB\)?</p>
+
+    <p>We do multiply the separate inverses — but <b>in the reverse order</b>:</p>
+
+    $$ \boxed{(AB)^{-1} = B^{-1}A^{-1}} $$
+
+    <p>Check it, using the one move we are always allowed: parentheses may be moved, so erase them and multiply in whichever order is convenient:</p>
+
+    $$ (AB)(B^{-1}A^{-1}) = A\underbrace{(BB^{-1})}_{=\,I}A^{-1} = A\,I\,A^{-1} = AA^{-1} = I \quad ✓ $$
+
+    <p>And from the other side it works too, with the middle pair cancelling first:</p>
+
+    $$ (B^{-1}A^{-1})(AB) = B^{-1}\underbrace{(A^{-1}A)}_{=\,I}B = B^{-1}B = I \quad ✓ $$
+
+    <div class="box intuition"><span class="label">Why reverse order</span>
+      <p>You take off your shoes, then your socks. To undo that you put the <b>socks back on first</b>, then the shoes. The last thing done is the first thing undone.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Transpose of a product</h3>
+
+    <p>The next lecture is full of transposes, so take them now. The <b>transpose</b> exchanges rows and columns: the entry in row \(i\), column \(j\) of \(A\) is the entry in row \(j\), column \(i\) of \(A^{T}\).</p>
+
+    <p>Products behave exactly as inverses did — <b>transpose each one, then reverse the order</b>:</p>
+
+    $$ \boxed{(AB)^{T} = B^{T}A^{T}} $$
+
+    <p>Now put the two facts together. Start from the definition of the inverse and transpose both sides:</p>
+
+    $$ AA^{-1} = I \;\xrightarrow{\ \text{transpose}\ }\; (AA^{-1})^{T} = I^{T} $$
+
+    <p>The identity does not notice: exchanging its rows and columns gives the identity back, since it is symmetric. The left side reverses:</p>
+
+    $$ (A^{-1})^{T}A^{T} = I $$
+
+    <p>Read that last line carefully — it says precisely which matrix undoes \(A^{T}\):</p>
+
+    $$ \boxed{\big(A^{T}\big)^{-1} = \big(A^{-1}\big)^{T}} $$
+
+    <div class="box theorem"><span class="label">Best answer we could hope for</span>
+      <p>For a single matrix, <b>transposing and inverting can be done in either order</b>. If you know \(A^{-1}\) and you want the inverse of \(A^{T}\), just transpose what you already have.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. A = LU, two by two</h3>
+
+    <p>Now to the real business. Assume a good matrix: elimination runs with <b>no row exchanges</b> and no zero ever reaches a pivot position. Take</p>
+
+    $$ A = \begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix} $$
+
+    <p>First pivot \(2\), entry to kill \(8\), so the multiplier is \(8/2 = 4\) and one step finishes the job:</p>
+
+    $$ \underbrace{\begin{bmatrix} 1 & 0 \\ -4 & 1 \end{bmatrix}}_{E_{21}}
+      \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A}
+      = \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
+
+    <p>checking the new second row: \(8 - 4(2) = 0\) and \(7 - 4(1) = 3\) ✓.</p>
+
+    <p>But we want \(A\) <b>alone on one side</b>. So cancel \(E_{21}\) by multiplying both sides by its inverse — and from Lesson 2 that inverse is the same matrix with a plus sign, because it adds back what was removed:</p>
+
+    $$ E_{21}^{-1}E_{21}A = E_{21}^{-1}U \;\Longrightarrow\; A = E_{21}^{-1}U $$
+
+    $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A}
+      = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L}
+        \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U} $$
+
+    <p>Verify by rows: row one of \(L\) takes one of row one of \(U\) and gives \(\begin{bmatrix} 2 & 1\end{bmatrix}\) ✓; row two takes <b>four</b> of row one plus one of row two, \(4\begin{bmatrix} 2 & 1\end{bmatrix} + \begin{bmatrix} 0 & 3\end{bmatrix} = \begin{bmatrix} 8 & 7\end{bmatrix}\) ✓.</p>
+
+    <div class="box definition"><span class="label">What the letters mean</span>
+      <p>$$ \boxed{A = LU} $$</p>
+      <p><b>\(U\)</b> is <b>upper</b> triangular, carrying the <b>pivots</b> on its diagonal. <b>\(L\)</b> is <b>lower</b> triangular, carrying <b>ones</b> on its diagonal and the <b>multiplier</b> \(4\) below it. This is the most basic factorisation of a matrix.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Splitting out the pivots: LDU</h3>
+
+    <p>The two triangles are lopsided — \(L\) has ones on its diagonal, \(U\) has the pivots. Sometimes we want them balanced, so pull the pivots out into a <b>diagonal matrix \(D\)</b>.</p>
+
+    <p>Divide row one of \(U\) by its pivot \(2\), giving \(\begin{bmatrix} 1 & \tfrac12 \end{bmatrix}\), and row two by its pivot \(3\), giving \(\begin{bmatrix} 0 & 1\end{bmatrix}\):</p>
+
+    $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A}
+      = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L}
+        \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D \ \text{— the pivots}}
+        \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{U' \ \text{— ones on the diagonal}} $$
+
+    <p>Now it is balanced: ones on the diagonal on <b>both</b> sides, and every pivot gathered in the middle. Software will hand you either form; we will mostly stay with \(A = LU\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Three by three: why L wins</h3>
+
+    <p>Two by two had only one elimination matrix, so the only difference between \(E\) and \(L\) was a sign. <b>Three by three shows the real difference.</b></p>
+
+    <p>Elimination takes three steps — clear the 2,1 position, then 3,1, then 3,2 — so</p>
+
+    $$ E_{32}E_{31}E_{21}A = U
+      \qquad\Longrightarrow\qquad
+      A = E_{21}^{-1}E_{31}^{-1}E_{32}^{-1}\,U = LU $$
+
+    <p>using section 1: to move three matrices across, take their separate inverses <b>in the opposite order</b>.</p>
+
+    <h4>A typical case</h4>
+    <p>Suppose the 3,1 entry was already zero, so \(E_{31} = I\) and only two steps do anything — multiplier \(2\) in the first, multiplier \(5\) in the second:</p>
+
+    $$ E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix},
+      \qquad
+      E_{32} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & -5 & 1 \end{bmatrix} $$
+
+    <h4>The forward product</h4>
+    <p>Multiply them in the order elimination applies them. Row three of \(E_{32}\) is \(\begin{bmatrix} 0 & -5 & 1\end{bmatrix}\), so it takes \(-5\) of row two of \(E_{21}\) plus one of row three:</p>
+
+    $$ -5\begin{bmatrix} -2 & 1 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 10 & -5 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 & 1 \end{bmatrix}
+      = \begin{bmatrix} 10 & -5 & 1 \end{bmatrix} $$
+
+    $$ E = E_{32}E_{21} = \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ \mathbf{10} & -5 & 1 \end{bmatrix} $$
+
+    <div class="box pitfall"><span class="label">Where that 10 came from — and why it is unwelcome</span>
+      <p>Nobody chose a multiplier of \(10\). It appeared because we subtracted <b>two</b> of row one from row two, and then subtracted <b>five</b> of that <i>new</i> row two from row three. So \(5 \times 2 = 10\) of row one got pushed into row three along the way.</p>
+      <p>The number is correct — but it is not one of our multipliers, so \(E\) no longer tells us what elimination did.</p>
+    </div>
+
+    <h4>The inverse product</h4>
+    <p>Now the other direction. Each inverse just flips a sign, and they come in the opposite order:</p>
+
+    $$ E_{21}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix},
+      \qquad
+      E_{32}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 5 & 1 \end{bmatrix} $$
+
+    <p>Multiply row by row. Row three of \(E_{21}^{-1}\) is \(\begin{bmatrix} 0 & 0 & 1\end{bmatrix}\) — it touches nothing but row three — so it simply copies \(E_{32}^{-1}\)'s own row:</p>
+
+    $$ L = E_{21}^{-1}E_{32}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ \mathbf{2} & 1 & 0 \\ 0 & \mathbf{5} & 1 \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">The point of the whole lecture ★</span>
+      <p>$$ \begin{array}{ccc}
+        EA = U & \qquad\text{vs}\qquad & A = LU \\[4pt]
+        \begin{bmatrix} 1 & 0 & 0 \\ -2 & 1 & 0 \\ 10 & -5 & 1 \end{bmatrix}
+        & &
+        \begin{bmatrix} 1 & 0 & 0 \\ 2 & 1 & 0 \\ 0 & 5 & 1 \end{bmatrix}
+        \end{array} $$</p>
+      <p>Where \(E\) grew a \(10\), \(L\) has a clean \(0\). <b>In the right order the multipliers do not interfere</b> — they simply sit in \(L\), each in the position it cleared.</p>
+    </div>
+
+    <figure class="fig" style="max-width:620px;margin:22px auto">
+      <svg viewBox="0 0 620 290" role="img" aria-label="The forward product grows a ten; the inverse product keeps the multipliers in place">
+        <text class="tick" x="26" y="24" font-size="13">E = E₃₂E₂₁ — the steps, forwards</text>
+        <text class="tick" x="368" y="24" font-size="13">L = E₂₁⁻¹E₃₂⁻¹ — the undos, backwards</text>
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="17" fill="currentColor">
+          <text x="60" y="74" text-anchor="middle">1</text><text x="116" y="74" text-anchor="middle">0</text><text x="172" y="74" text-anchor="middle">0</text>
+          <text x="60" y="112" text-anchor="middle">−2</text><text x="116" y="112" text-anchor="middle">1</text><text x="172" y="112" text-anchor="middle">0</text>
+          <text x="60" y="150" text-anchor="middle">10</text><text x="116" y="150" text-anchor="middle">−5</text><text x="172" y="150" text-anchor="middle">1</text>
+
+          <text x="400" y="74" text-anchor="middle">1</text><text x="456" y="74" text-anchor="middle">0</text><text x="512" y="74" text-anchor="middle">0</text>
+          <text x="400" y="112" text-anchor="middle">2</text><text x="456" y="112" text-anchor="middle">1</text><text x="512" y="112" text-anchor="middle">0</text>
+          <text x="400" y="150" text-anchor="middle">0</text><text x="456" y="150" text-anchor="middle">5</text><text x="512" y="150" text-anchor="middle">1</text>
+        </g>
+        <rect x="42" y="132" width="36" height="24" class="l3" fill="none" stroke-width="2" rx="4"/>
+        <text class="lbl c3" x="26" y="184">nobody chose a 10</text>
+        <text class="tick" x="26" y="204">5 × 2 of row one leaked into row three</text>
+        <rect x="382" y="132" width="36" height="24" class="l2" fill="none" stroke-width="2" rx="4"/>
+        <rect x="382" y="94" width="36" height="24" class="l2" fill="none" stroke-width="2" rx="4"/>
+        <rect x="438" y="132" width="36" height="24" class="l2" fill="none" stroke-width="2" rx="4"/>
+        <text class="lbl c2" x="368" y="184">the multipliers 2 and 5, in place</text>
+        <text class="tick" x="368" y="204">and a clean 0 where E had the 10</text>
+        <text class="tick" x="26" y="246">Forwards, step two acts on a row step one already rewrote, so the steps mix.</text>
+        <text class="tick" x="26" y="268">Backwards, each undo lands on a row the previous undo never touched — nothing mixes.</text>
+      </svg>
+      <figcaption><b>Same two steps, two directions, two very different matrices.</b> On the left the elimination matrices are multiplied in the order they are applied, and the \(10\) appears from nowhere. On the right their inverses are multiplied in the reverse order, and every entry is either a \(1\), a \(0\), or one of the multipliers we actually used. This is the entire reason the factorisation is written \(A = LU\) rather than \(EA = U\).</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The multipliers sit in L</h3>
+
+    <div class="box theorem"><span class="label">The rule ★</span>
+      <p>$$ \boxed{\text{If there are no row exchanges, the multipliers go straight into } L} $$</p>
+      <p>The multiplier used to clear position \(m,n\) is the entry in position \(m,n\) of \(L\). Nothing else is needed.</p>
+    </div>
+
+    <p>So <b>finding \(L\) is no work at all</b>. You do not multiply any matrices together; you simply <b>keep a record of the multipliers as you eliminate</b>, and when elimination finishes, \(L\) is already written down.</p>
+
+    <div class="box intuition"><span class="label">You can throw A away</span>
+      <p>Think about what the computer needs. Once you have finished with row two of \(A\), you have produced the new row two of \(U\) — which must be saved — and the multipliers you used — which must also be saved. <b>Nothing else about row two of \(A\) matters.</b></p>
+      <p>So elimination can build \(L\) and \(U\) in place and discard \(A\) as it goes. It never needs to store the \(E_{ij}\) at all. This is the practical insight that comes from writing elimination in matrix form.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. How expensive is elimination?</h3>
+
+    <p>A practical question, and a fair one: can we solve a system of order one thousand in a second, a minute, a week? If a matrix is \(n \times n\) and we double \(n\), does the work double, quadruple, or worse?</p>
+
+    <p>Count <b>operations</b>, where one operation is a multiply together with a subtract — the thing that happens when you scale a row and take it away from another. Assume no helpful zeros.</p>
+
+    <h4>The first column</h4>
+    <p>Take \(n = 100\). Clearing the first column changes essentially <b>every entry</b> of the matrix — all except the untouched first row — and there are \(100^2\) entries in total. So the first stage costs about</p>
+
+    $$ n^2 = 100^2 \ \text{operations} $$
+
+    <h4>Then the problem shrinks</h4>
+    <p>After that stage the first row and first column are finished, and what remains is a \(99 \times 99\) matrix. So the next stage costs about \(99^2\), the one after that \(98^2\), and so on down to the last tiny steps:</p>
+
+    $$ \text{total} \approx n^2 + (n-1)^2 + (n-2)^2 + \cdots + 2^2 + 1^2 = \sum_{i=1}^{n} i^2 $$
+
+    <h4>Adding it up</h4>
+    <p>Which of the candidates is this — \(n\), \(n^2\), \(n^3\), or \(n!\)? There are \(n\) terms and the largest is \(n^2\), so the worst it could be is \(n^3\) — and because the terms shrink, it lands somewhat below that. Calculus gives the constant, by replacing the sum with an integral:</p>
+
+    $$ \sum_{i=1}^{n} i^2 \;\approx\; \int_0^n x^2\,dx = \boxed{\tfrac13 n^3} $$
+
+    <p>Check it for \(n = 100\): the exact sum is \(338{,}350\) and \(\tfrac13 n^3 = 333{,}333\) — close, as promised.</p>
+
+    <div class="box intuition"><span class="label">What \(\tfrac13 n^3\) means in practice</span>
+      <p>Doubling \(n\) multiplies the work by about <b>eight</b>. And note the comparison he draws: computing a determinant the classical way costs \(n!\) operations, which is catastrophically worse — a mark against determinants as a method for solving systems.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The cost of the right-hand side</h3>
+
+    <p>That \(\tfrac13 n^3\) was the price of working on \(A\). What about the extra column \(b\) carried along beside it?</p>
+
+    <p>It is only one column, so it costs far less — carrying it through elimination and then doing back substitution comes to about</p>
+
+    $$ \boxed{n^2 \ \text{operations per right-hand side}} $$
+
+    <p>which is hardly worth counting next to \(\tfrac13 n^3\).</p>
+
+    <div class="box theorem"><span class="label">Why this matters ★</span>
+      <p>When one matrix \(A\) must be solved against <b>many</b> right-hand sides, <b>pay the high price once</b> — factor \(A\) into \(L\) and \(U\) — and then process every new \(b\) at the cheap \(n^2\) rate. That is exactly why the factorisation is stored and reused rather than recomputed.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Permutation matrices</h3>
+
+    <p>Everything so far assumed <b>no row exchanges</b>. What if a zero turns up in a pivot position? Then we exchange rows, and from Lesson 2 that means multiplying on the left by a <b>permutation matrix</b> — the identity with its rows rearranged.</p>
+
+    $$ P_{12} = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+      \qquad \text{\footnotesize swaps rows 1 and 2} $$
+
+    <h4>All six of them, for 3 × 3</h4>
+    <p>List every way to rearrange three rows of the identity — including leaving them alone:</p>
+
+    $$ \underbrace{\begin{bmatrix} 1&0&0 \\ 0&1&0 \\ 0&0&1 \end{bmatrix}}_{\text{no change}}
+      \ \underbrace{\begin{bmatrix} 0&1&0 \\ 1&0&0 \\ 0&0&1 \end{bmatrix}}_{\text{swap 1,2}}
+      \ \underbrace{\begin{bmatrix} 0&0&1 \\ 0&1&0 \\ 1&0&0 \end{bmatrix}}_{\text{swap 1,3}}
+      \ \underbrace{\begin{bmatrix} 1&0&0 \\ 0&0&1 \\ 0&1&0 \end{bmatrix}}_{\text{swap 2,3}}
+      \ \underbrace{\begin{bmatrix} 0&1&0 \\ 0&0&1 \\ 1&0&0 \end{bmatrix}}_{\text{cycle}}
+      \ \underbrace{\begin{bmatrix} 0&0&1 \\ 1&0&0 \\ 0&1&0 \end{bmatrix}}_{\text{the other cycle}} $$
+
+    <p>Six of them — and in general there are <b>\(n!\)</b>, because that is how many orderings \(n\) rows have. For \(4 \times 4\) there are \(4! = 24\).</p>
+
+    <div class="box theorem"><span class="label">A little family that stays closed</span>
+      <p>Multiply two permutations and you get a permutation — do some row exchanges, then some more, and the total is still just row exchanges. Invert one and you get a permutation — undoing row exchanges is row exchanges. A set that is closed under multiplication and inverses like this is called a <b>group</b>.</p>
+    </div>
+
+    <h4>The inverse is the transpose</h4>
+    <p>What undoes a swap of rows one and two? <b>The same swap.</b> So that matrix is its own inverse, and for the cycles the inverse is the other cycle. In every case the answer is the same curious fact:</p>
+
+    $$ \boxed{P^{-1} = P^{T}} $$
+
+    <p>Check it on the cycle \(P = \begin{bmatrix} 0&1&0 \\ 0&0&1 \\ 1&0&0\end{bmatrix}\): its transpose is \(\begin{bmatrix} 0&0&1 \\ 1&0&0 \\ 0&1&0\end{bmatrix}\), and multiplying the two gives \(I\) ✓ — which is why \(P^{T}\) appears on the list as the other cycle.</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Inverse of a product</b></td><td>\((AB)^{-1} = B^{-1}A^{-1}\) — socks and shoes: last on, first off.</td></tr>
+      <tr><td><b>Transpose</b></td><td>Exchange rows and columns: entry \(i,j\) of \(A\) is entry \(j,i\) of \(A^{T}\).</td></tr>
+      <tr><td><b>Transpose of a product</b></td><td>\((AB)^{T} = B^{T}A^{T}\), also reversed.</td></tr>
+      <tr><td><b>Transpose and inverse</b></td><td>\((A^{T})^{-1} = (A^{-1})^{T}\) — either order works.</td></tr>
+      <tr><td><b>The factorisation</b></td><td>\(A = LU\): \(L\) lower triangular with ones on the diagonal, \(U\) upper triangular with the pivots.</td></tr>
+      <tr><td><b>Two by two example</b></td><td>\(\begin{bmatrix} 2&1 \\ 8&7\end{bmatrix} = \begin{bmatrix} 1&0 \\ 4&1\end{bmatrix}\begin{bmatrix} 2&1 \\ 0&3\end{bmatrix}\), multiplier \(4\).</td></tr>
+      <tr><td><b>LDU</b></td><td>Pull the pivots into a diagonal \(D\) so both triangles have ones on the diagonal.</td></tr>
+      <tr><td><b>Why not \(EA = U\)</b></td><td>The forward product mixes the steps (the stray \(10\)); the reverse product does not.</td></tr>
+      <tr><td><b>Building \(L\)</b></td><td>No work: with no row exchanges, each multiplier goes straight into the position it cleared.</td></tr>
+      <tr><td><b>Storage</b></td><td>Build \(L\) and \(U\) as you go and discard \(A\); the \(E_{ij}\) are never stored.</td></tr>
+      <tr><td><b>Cost of elimination</b></td><td>\(n^2 + (n-1)^2 + \cdots \approx \tfrac13 n^3\) operations. Double \(n\) and the work is eight times larger.</td></tr>
+      <tr><td><b>Cost per \(b\)</b></td><td>About \(n^2\) — so factor once, reuse for every right-hand side.</td></tr>
+      <tr><td><b>Permutations</b></td><td>The identity with rows rearranged; \(n!\) of them; closed under multiplication and inverses.</td></tr>
+      <tr><td><b>Permutation inverse</b></td><td>\(P^{-1} = P^{T}\).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>\(A = LU\) is the right way to look at elimination ★</b>
+        <span>The high point of the lecture, and the most basic factorisation of a matrix — though the course is not only elimination.</span></li>
+      <li><b>Undo in the reverse order</b>
+        <span>Both for inverses and transposes of products. It is what makes \(L\) come out clean while \(E\) does not.</span></li>
+      <li><b>The multipliers sit directly in \(L\) ★</b>
+        <span>No multiplication needed — just record them. That is the practical payoff of the matrix form.</span></li>
+      <li><b>Know what things cost</b>
+        <span>\(\tfrac13 n^3\) for the factorisation, \(n^2\) for each right-hand side — and \(n!\) for determinants, which is why nobody solves systems that way.</span></li>
+      <li><b>Permutations handle the exceptions</b>
+        <span>All \(n!\) of them, forming a group, with the pleasing fact that \(P^{-1} = P^{T}\).</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>With \(P\) in hand, elimination works for <b>every</b> invertible matrix, not just the convenient ones — the general statement becomes \(PA = LU\). The next lesson finishes this chapter with <b>transposes and permutations</b>, and then turns to the real subject underneath it all: <b>vector spaces</b>.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
