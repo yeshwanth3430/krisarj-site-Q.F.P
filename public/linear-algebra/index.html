@@ -20,6 +20,9 @@
 .tabs .ch.off { color: var(--ink-soft); opacity: .62; }
 .tabs .ch .soon { margin-left: auto; font: 600 9px/1 var(--mono); letter-spacing: .08em; color: var(--ink-soft);
   border: 1px solid var(--rule); border-radius: 999px; padding: 3px 6px; flex: none; }
+.tabs .chsub { margin: 2px 0 8px 22px; padding-left: 10px; border-left: 1px solid var(--rule); }
+.tabs .chsub .sb { display: block; font: 400 12px/1.4 var(--sans); color: var(--ink-soft);
+  padding: 5px 8px; border-radius: 6px; }
 @media (min-width: 861px) {
   .tabs { overflow-y: auto; max-height: calc(100vh - 92px); }
   main.page.tabbed { min-height: calc(100vh - 215px); }
@@ -50,6 +53,12 @@
   <nav class="tabs" aria-label="Lessons">
     <span class="tabs-title">Lessons · MIT OCW 18.06</span>
     <span class="ch off"><span class="cn">01</span>The Geometry of Linear Equations<span class="soon">SOON</span></span>
+    <div class="chsub">
+      <span class="sb">Notes</span>
+      <span class="sb">Explanation</span>
+      <span class="sb">Examples</span>
+      <span class="sb">Problems</span>
+    </div>
     <span class="ch off"><span class="cn">02</span>Elimination with Matrices<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">03</span>Multiplication and Inverse Matrices<span class="soon">SOON</span></span>
     <span class="ch off"><span class="cn">04</span>Factorization into A = LU<span class="soon">SOON</span></span>
