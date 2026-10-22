@@ -4,10 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Geometry of Linear Equations · Linear Algebra · Quant from First Principles</title>
-<meta name="description" content="Linear Algebra, Lesson 1: The Geometry of Linear Equations.">
+<meta name="description" content="Linear Algebra, Lesson 1: The Geometry of Linear Equations — the row picture, the column picture and the matrix form of Ax = b.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
 <link rel="stylesheet" href="../assets/notebook.css?v=10">
 <link rel="stylesheet" href="../assets/site.css?v=5">
 <script src="../assets/notebook.js?v=4"></script>
@@ -36,7 +39,234 @@
   <p class="meta">Linear Algebra · Lesson 1 (MIT 18.06, Lecture 1)</p>
   <h1>The Geometry of Linear Equations</h1>
 
-  <section class="tab-panel" data-panel="notes"></section>
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The fundamental problem</a></li>
+        <li><a href="#t2">The example, and its matrix form</a></li>
+        <li><a href="#t3">The row picture</a></li>
+        <li><a href="#t4">The column picture ★</a></li>
+        <li><a href="#t5">All the combinations</a></li>
+        <li><a href="#t6">Three equations: the row picture</a></li>
+        <li><a href="#t7">Three equations: the column picture</a></li>
+        <li><a href="#t8">A different right-hand side</a></li>
+        <li><a href="#t9">Can we solve Ax = b for every b?</a></li>
+        <li><a href="#t10">When the answer is no: singular</a></li>
+        <li><a href="#t11">Nine dimensions</a></li>
+        <li><a href="#t12">How to multiply a matrix by a vector</a></li>
+        <li><a href="#t13">What comes next</a></li>
+      </ol>
+    </nav>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The fundamental problem</h3>
+
+    <p>The fundamental problem of linear algebra is to <b>solve a system of linear equations</b>. Start with the normal, nice case: <b>\(n\) equations and \(n\) unknowns</b> — an equal number of each.</p>
+
+    <p>There are three ways to look at the same system, and the whole lecture is these three:</p>
+
+    <ol class="index-list">
+      <li><b>The row picture</b> — one equation at a time. Lines meeting, in the picture you have seen before.</li>
+      <li><b>The column picture ★</b> — one column at a time. This one is starred, because it is the key point and it may be new to you.</li>
+      <li><b>The matrix form</b> — the algebra way: the whole system written as one equation, \(Ax = b\), using a matrix \(A\).</li>
+    </ol>
+
+    <p>The rows and the columns being looked at are the rows and columns of a matrix. The semester will be examples, and then seeing what is going on in the example.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The example, and its matrix form</h3>
+
+    <p>Two equations, two unknowns:</p>
+
+    $$ \begin{aligned} 2x - y &= 0 \\ -x + 2y &= 3 \end{aligned} $$
+
+    <p>Write the matrix before the pictures. A matrix is just a rectangular array of numbers; the <b>coefficient matrix</b> holds the numbers multiplying the unknowns — two rows and two columns:</p>
+
+    $$ A = \begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}, \qquad x = \begin{bmatrix} x \\ y \end{bmatrix}, \qquad b = \begin{bmatrix} 0 \\ 3 \end{bmatrix} $$
+
+    <div class="box definition"><span class="label">The matrix form</span>
+      <p>$$ \boxed{Ax = b} $$</p>
+      <p>\(A\) is the matrix of coefficients, \(x\) is the vector of unknowns (here two of them; later any number), and \(b\) is the right-hand side. Linear equations are \(Ax = b\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The row picture</h3>
+
+    <p>Take <b>one row at a time</b>. In the \(xy\) plane, plot all the points that satisfy that equation.</p>
+
+    <h4>First equation: \(2x - y = 0\)</h4>
+    <p>A good place to start is: which point is on the horizontal axis? There \(y = 0\), and in this case that forces \(x = 0\) too — so the <b>origin \((0,0)\) is on this line</b>. It is always important to ask: do we go through the origin or not? Here yes, because there is a zero on the right-hand side.</p>
+    <p>Another point: take \(x = 1\), then \(y\) should be \(2\) — the point \((1,2)\). And \(x = \tfrac12,\ y = 1\) works too. All these points lie on a straight line — the equation is <b>linear</b>, and the word linear has the word line in it.</p>
+
+    <h4>Second equation: \(-x + 2y = 3\)</h4>
+    <p>This one does <b>not</b> go through the origin: if \(x\) and \(y\) are zero we do not get \(3\). If \(y = 0\) then \(x = -3\), so \((-3, 0)\) is on it. If \(x = -1\), then \(-(-1) + 2y = 3\) gives \(y = 1\), so \((-1, 1)\) is on it. Draw the line through those two points.</p>
+
+    <div class="box theorem"><span class="label">The solution</span>
+      <p>The two lines meet at the all-important point</p>
+      $$ \boxed{x = 1, \qquad y = 2} $$
+      <p>Check it in both equations: \(2(1) - 2 = 0\) ✓ and \(-1 + 2(2) = 3\) ✓.</p>
+    </div>
+
+    <p>For \(n = 2\) — two equations, two unknowns — the row picture is the right place to start: <b>the solution is the point that lies on both lines</b>.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. The column picture ★</h3>
+
+    <p>Now look at the <b>columns</b> of the matrix. Pay attention — this is the key point.</p>
+
+    <p>Take the \(x\) parts of both equations together, and the \(y\) parts of both equations together. The system becomes one vector equation:</p>
+
+    $$ x \begin{bmatrix} 2 \\ -1 \end{bmatrix} + y \begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix} $$
+
+    <p>The columns of \(A\) are on the left; the right-hand side \(b\) is on the right. What is the equation asking for? It is asking us to <b>combine those two vectors in the right amounts</b> to produce \(b\).</p>
+
+    <div class="box definition"><span class="label">Linear combination</span>
+      <p>Multiply vectors by numbers and add. That is a <b>linear combination</b> of the columns.</p>
+      <p>It is <b>the most fundamental operation in the whole course</b>.</p>
+    </div>
+
+    <h4>Finding the right combination</h4>
+    <p>Take <b>one</b> of column one and <b>two</b> of column two:</p>
+
+    $$ 1\begin{bmatrix} 2 \\ -1 \end{bmatrix} + 2\begin{bmatrix} -1 \\ 2 \end{bmatrix} = \begin{bmatrix} 2 - 2 \\ -1 + 4 \end{bmatrix} = \begin{bmatrix} 0 \\ 3 \end{bmatrix} = b \quad ✓ $$
+
+    <p>Component by component: in the first component a \(2\) and a \(-2\) produce the zero; in the second component a \(-1\) and a \(4\) combine to give the three. Geometrically: lay down one copy of the first column, then add two copies of the second column onto the end of it, and you land exactly on \(b\).</p>
+
+    <p>The answer \(x = 1,\ y = 2\) is the same answer as the row picture. Same system, same solution — a different way of seeing it.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. All the combinations</h3>
+
+    <p>A question that will come up over and over, so see it once now: if I take <b>all</b> the \(x\)s and <b>all</b> the \(y\)s — all the combinations — what are all the possible results?</p>
+
+    <div class="box theorem"><span class="label">For this example</span>
+      <p>The combinations of \(\begin{bmatrix} 2 \\ -1 \end{bmatrix}\) and \(\begin{bmatrix} -1 \\ 2 \end{bmatrix}\) <b>fill the whole plane</b>. Any right-hand side at all can be reached.</p>
+    </div>
+
+    <p>Two questions, then, and both are basic: <b>which</b> linear combination gives \(b\), and <b>what do all the linear combinations give</b> — what are all the achievable right-hand sides?</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Three equations: the row picture</h3>
+
+    <p>Move to three equations and three unknowns:</p>
+
+    $$ \begin{aligned} 2x - y + 0z &= 0 \\ -x + 2y - z &= -1 \\ 0x - 3y + 4z &= 4 \end{aligned} $$
+
+    $$ A = \begin{bmatrix} 2 & -1 & 0 \\ -1 & 2 & -1 \\ 0 & -3 & 4 \end{bmatrix}, \qquad b = \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} $$
+
+    <p>That is the shorthand for the three equations. Now the picture.</p>
+
+    <p>Take one equation at a time and plot all the \((x,y,z)\) points that satisfy it. Take the second equation, \(-x + 2y - z = -1\). The origin is not one of them: \((0,0,0)\) does not solve it. But \((1,0,0)\) works, and \((0,0,1)\) works, and \(\left(0, -\tfrac12, 0\right)\) works. Those three points determine a plane.</p>
+
+    <div class="box theorem"><span class="label">Each row is a plane</span>
+      <p>If we have a linear equation, then — fortunately — the plot of all the points that solve it is a <b>plane</b>. Each row in a three-by-three problem gives a plane in three dimensions.</p>
+    </div>
+
+    <p>So: the first two planes <b>meet in a line</b>. The third plane cuts that line, and the three planes <b>meet in one point</b> — because they are not parallel, not special. That point is the solution.</p>
+
+    <p>But notice what is happening. The row picture was a cinch for two lines meeting. For three planes meeting it is already not so clear, and in four dimensions it is less clear still. All we really need from the row picture is this: three planes, and if everything works right they meet in one point.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Three equations: the column picture</h3>
+
+    <p>Now the columns — and this one we prefer:</p>
+
+    $$ x \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} + y \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix} + z \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} = \begin{bmatrix} 0 \\ -1 \\ 4 \end{bmatrix} $$
+
+    <p>A linear combination again — now of three vectors, each with three components. Which combination produces \(b\)?</p>
+
+    <p>In this specially chosen example you can see it: the right-hand side <b>is</b> the third column. So take one of column three and none of the others:</p>
+
+    $$ \boxed{x = 0, \quad y = 0, \quad z = 1} $$
+
+    <p>That is the point where the three planes met — the point we could not see in the row picture. Of course we will not always be able to see it from the column picture either; that is what elimination is for.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. A different right-hand side</h3>
+
+    <p>Keep the same matrix on the left and change \(b\). Take a right-hand side cooked up by <b>adding column one to column two</b>:</p>
+
+    $$ \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} + \begin{bmatrix} -1 \\ 2 \\ -3 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \\ -3 \end{bmatrix} = b_{\text{new}} $$
+
+    <p>Then the solution is clear — one of each of the first two columns, none of the third:</p>
+
+    $$ x = 1, \quad y = 1, \quad z = 0 $$
+
+    <p>In the row picture these are three different planes, meeting at a new point. In the column picture the three columns are unchanged — only the target moved.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Can we solve Ax = b for every b?</h3>
+
+    <p>Now think about <b>all</b> right-hand sides. That is the algebra question:</p>
+
+    <div class="box definition"><span class="label">The question</span>
+      <p>$$ \boxed{\text{Can we solve } Ax = b \text{ for every right-hand side } b\,?} $$</p>
+      <p>In the language of columns, the same question is:</p>
+      <p>$$ \boxed{\text{Do the linear combinations of the columns fill three-dimensional space?}} $$</p>
+    </div>
+
+    <p>Those are the same question in different words. Every \(b\) means all the \(b\)s in three-dimensional space; taking combinations of the three columns and trying to land on \(b\) is exactly what the column picture does.</p>
+
+    <p>For this matrix the answer is <b>yes</b>. It is a good matrix — <b>non-singular</b>, <b>invertible</b>. Those are the matrices we like best.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. When the answer is no: singular</h3>
+
+    <p>What could go wrong? Out of three columns and all their combinations, when would some \(b\) be unreachable?</p>
+
+    <div class="box pitfall"><span class="label">The singular case</span>
+      <p>If the three columns all <b>lie in the same plane</b>, then all their combinations lie in that same plane — and we are in trouble.</p>
+      <p>For example, if column three is just the sum of column one and column two, it contributes <b>nothing new</b>. Then only right-hand sides lying in that plane can be produced; most \(b\)s are out of the plane and unreachable.</p>
+      <p>That is a <b>singular</b> matrix: not invertible, and there is not a solution for every \(b\).</p>
+    </div>
+
+    <p>So the answer is yes for some \(b\) — the ones in the plane — but no in general.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. Nine dimensions</h3>
+
+    <p>Take a shot at thinking about nine dimensions. Nine equations and nine unknowns: nine columns, each a vector in nine-dimensional space, and we look at their linear combinations and ask which one hits the right-hand side \(b\). And again: can we always do it?</p>
+
+    <p>It depends on those nine columns. A random nine-by-nine matrix would be fine — non-singular, invertible, all beautiful. But if the ninth column is chosen to be the same as the eighth, it contributes nothing new, and there would be right-hand sides we could not reach. What the combinations fill out is then a sort of eight-dimensional plane inside nine-dimensional space — and it is those planes inside spaces that we have to work with eventually.</p>
+
+    <p>You cannot really visualize it, but you sort of think you can after a while. That is the central thought you get used to in linear algebra.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t12">12. How to multiply a matrix by a vector</h3>
+
+    <p>One step was said in words; now write it in letters. In \(Ax = b\), the left side is a multiplication: matrix times vector. How is it done? Two ways — take:</p>
+
+    $$ \begin{bmatrix} 2 & 5 \\ 1 & 3 \end{bmatrix} \begin{bmatrix} 1 \\ 2 \end{bmatrix} $$
+
+    <div class="box method"><span class="label">Way 1 (the favourite) · a column at a time</span>
+      <p>Take the entries of \(x\) as the coefficients of a combination of the columns — one of the first column and two of the second:</p>
+      $$ 1\begin{bmatrix} 2 \\ 1 \end{bmatrix} + 2\begin{bmatrix} 5 \\ 3 \end{bmatrix} = \begin{bmatrix} 2 + 10 \\ 1 + 6 \end{bmatrix} = \begin{bmatrix} 12 \\ 7 \end{bmatrix} $$
+    </div>
+
+    <div class="box method"><span class="label">Way 2 · a row at a time</span>
+      <p>Take each row of \(A\) against \(x\) — what will later be called a <b>dot product</b>:</p>
+      $$ \begin{bmatrix} 2\cdot 1 + 5\cdot 2 \\ 1\cdot 1 + 3\cdot 2 \end{bmatrix} = \begin{bmatrix} 12 \\ 7 \end{bmatrix} $$
+    </div>
+
+    <div class="box theorem"><span class="label">The point to carry forward</span>
+      <p>$$ \boxed{Ax \text{ is a linear combination of the columns of } A} $$</p>
+      <p>With small matrices you can always do it either way — but later, think of it that way.</p>
+    </div>
+
+    <p>And so, if the right-hand side happened to be \(\begin{bmatrix} 12 \\ 7 \end{bmatrix}\), the solution would of course be \(x = \begin{bmatrix} 1 \\ 2 \end{bmatrix}\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t13">13. What comes next</h3>
+
+    <p>We have seen the solution in two pictures, but both times it was <b>spotted</b>, not computed — the examples were chosen so the answer could be seen. That will not last.</p>
+
+    <p>Next comes <b>elimination</b>: the systematic way that everybody — and every piece of production, large-scale software — actually solves the equations, for a system of any size, and that finds \(x\) in all cases.</p>
+
+  </div>
+  </section>
+
   <section class="tab-panel" data-panel="explanation" hidden></section>
   <section class="tab-panel" data-panel="examples" hidden></section>
   <section class="tab-panel" data-panel="problems" hidden></section>
