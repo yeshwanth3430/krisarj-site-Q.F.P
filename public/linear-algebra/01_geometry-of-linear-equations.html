@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
 <link rel="stylesheet" href="../assets/notebook.css?v=10">
 <link rel="stylesheet" href="../assets/site.css?v=5">
 <script src="../assets/notebook.js?v=4"></script>
@@ -169,6 +170,46 @@
       $$ \begin{aligned} 2(1) - 2 &= 2 - 2 = 0 \quad ✓ \\ -(1) + 2(2) &= -1 + 4 = 3 \quad ✓ \end{aligned} $$
     </div>
 
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 330" role="img" aria-label="The lines 2x minus y equals 0 and minus x plus 2y equals 3 crossing at the point (1, 2)">
+        <defs>
+          <marker id="ar1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ci" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <!-- grid: 1 unit = 60px, origin at (220, 230) -->
+        <g class="grid">
+          <line x1="40" y1="290" x2="400" y2="290"/><line x1="40" y1="230" x2="400" y2="230"/>
+          <line x1="40" y1="170" x2="400" y2="170"/><line x1="40" y1="110" x2="400" y2="110"/><line x1="40" y1="50" x2="400" y2="50"/>
+          <line x1="40"  y1="20" x2="40"  y2="310"/><line x1="100" y1="20" x2="100" y2="310"/>
+          <line x1="160" y1="20" x2="160" y2="310"/><line x1="220" y1="20" x2="220" y2="310"/>
+          <line x1="280" y1="20" x2="280" y2="310"/><line x1="340" y1="20" x2="340" y2="310"/><line x1="400" y1="20" x2="400" y2="310"/>
+        </g>
+        <line class="axis" x1="30" y1="230" x2="410" y2="230" marker-end="url(#ar1)"/>
+        <line class="axis" x1="220" y1="320" x2="220" y2="15" marker-end="url(#ar1)"/>
+        <text class="tick" x="404" y="248">x</text><text class="tick" x="228" y="24">y</text>
+        <text class="tick" x="96"  y="248">−2</text><text class="tick" x="156" y="248">−1</text>
+        <text class="tick" x="276" y="248">1</text><text class="tick" x="336" y="248">2</text>
+        <text class="tick" x="204" y="174">1</text><text class="tick" x="204" y="114">2</text><text class="tick" x="204" y="54">3</text>
+        <!-- line 1: 2x - y = 0  → y = 2x : through (-1,-2) and (2,4) -->
+        <line class="l1" x1="160" y1="350" x2="330" y2="10"/>
+        <!-- line 2: -x + 2y = 3 → y = (3+x)/2 : through (-3,0) and (3,3) -->
+        <line class="l2" x1="40" y1="230" x2="400" y2="50"/>
+        <!-- the two points used to build line 2 -->
+        <circle class="pt" cx="40" cy="230" r="4"/><text class="lbl c2" x="26" y="222">(−3, 0)</text>
+        <circle class="pt" cx="160" cy="170" r="4"/><text class="lbl c2" x="96" y="162">(−1, 1)</text>
+        <!-- the two points used to build line 1 -->
+        <circle class="pt" cx="220" cy="230" r="4"/><text class="lbl c1" x="168" y="252">(0, 0)</text>
+        <circle class="pt" cx="250" cy="170" r="4"/><text class="lbl c1" x="248" y="186">(½, 1)</text>
+        <!-- the crossing -->
+        <line class="dash axis" x1="280" y1="110" x2="220" y2="110"/><line class="dash axis" x1="280" y1="110" x2="280" y2="230"/>
+        <circle class="hit" cx="280" cy="110" r="6"/>
+        <text class="lbl c3" x="292" y="96">(1, 2) — the solution</text>
+        <text class="lbl c1" x="330" y="34">2x − y = 0</text>
+        <text class="lbl c2" x="286" y="64">−x + 2y = 3</text>
+      </svg>
+      <figcaption><b>The row picture.</b> Each equation is drawn as the set of every point satisfying it — a straight line. The blue line <i>2x − y = 0</i> passes through the origin, because \(x=0,\ y=0\) makes the left side zero and the right side is zero too; the dot at \((\tfrac12, 1)\) is one of the points checked above. The green line <i>−x + 2y = 3</i> misses the origin, and was drawn through the two points worked out above, \((-3,0)\) and \((-1,1)\). Everything on the blue line solves equation one; everything on the green line solves equation two; <b>only the single crossing point solves both</b>, and the dashed guides read off its coordinates: \(x=1\), \(y=2\).</figcaption>
+    </figure>
+
     <p>For \(n = 2\) the row picture is the right place to start: <b>the solution is the point that lies on both lines</b>.</p>
 
     <!-- ====================================================== -->
@@ -199,6 +240,44 @@
 
     <p>Geometrically: lay down one copy of the first column, then add two copies of the second column onto the end of it — and you arrive exactly at \(b\).</p>
 
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 330" role="img" aria-label="One copy of column one plus two copies of column two reaching the vector b equals (0, 3)">
+        <defs>
+          <marker id="ar2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ar2b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ar2c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ar2i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="ci" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <g class="grid">
+          <line x1="40" y1="290" x2="400" y2="290"/><line x1="40" y1="230" x2="400" y2="230"/><line x1="40" y1="170" x2="400" y2="170"/>
+          <line x1="40" y1="110" x2="400" y2="110"/><line x1="40" y1="50" x2="400" y2="50"/>
+          <line x1="40" y1="20" x2="40" y2="310"/><line x1="100" y1="20" x2="100" y2="310"/><line x1="160" y1="20" x2="160" y2="310"/>
+          <line x1="220" y1="20" x2="220" y2="310"/><line x1="280" y1="20" x2="280" y2="310"/><line x1="340" y1="20" x2="340" y2="310"/>
+        </g>
+        <line class="axis" x1="30" y1="230" x2="410" y2="230" marker-end="url(#ar2i)"/>
+        <line class="axis" x1="220" y1="320" x2="220" y2="15" marker-end="url(#ar2i)"/>
+        <text class="tick" x="404" y="248">first component</text><text class="tick" x="228" y="24">second component</text>
+        <text class="tick" x="156" y="248">−1</text><text class="tick" x="276" y="248">1</text><text class="tick" x="336" y="248">2</text>
+        <text class="tick" x="204" y="174">1</text><text class="tick" x="204" y="114">2</text><text class="tick" x="204" y="54">3</text>
+        <text class="tick" x="198" y="296">−1</text>
+        <!-- column 1 = (2,-1): origin (220,230) -> (340,290) -->
+        <line class="l1" x1="220" y1="230" x2="340" y2="290" marker-end="url(#ar2a)"/>
+        <text class="lbl c1" x="268" y="308">column 1 = (2, −1)</text>
+        <!-- 2 x column 2 = (-2,4): from (340,290) -> (220,50) -->
+        <line class="l2" x1="340" y1="290" x2="220" y2="50" marker-end="url(#ar2b)"/>
+        <text class="lbl c2" x="296" y="180">+ 2 × column 2</text>
+        <text class="lbl c2" x="316" y="196">= (−2, 4)</text>
+        <!-- resulting b = (0,3) -->
+        <line class="l3 dash" x1="220" y1="230" x2="220" y2="50" marker-end="url(#ar2c)"/>
+        <circle class="hit" cx="220" cy="50" r="6"/>
+        <text class="lbl c3" x="118" y="44">b = (0, 3)</text>
+        <circle class="pt" cx="340" cy="290" r="4"/>
+        <text class="lbl ci" x="344" y="282">after 1 × col 1</text>
+      </svg>
+      <figcaption><b>The column picture.</b> Nothing here is a line of solutions — these arrows <i>are</i> the columns of \(A\). Start at the origin and lay down <b>one</b> copy of column one, \((2,-1)\): you land at the dot on the right, two steps across and one step down. From there lay down <b>two</b> copies of column two, \((-1,2)\), which together move you \(-2\) across and \(+4\) up. You arrive exactly at \(b=(0,3)\), the dashed red arrow. The amounts used — one and two — <b>are</b> the solution \(x=1,\ y=2\). The arithmetic matches the picture component by component: across, \(2-2=0\); up, \(-1+4=3\).</figcaption>
+    </figure>
+
     <div class="box theorem"><span class="label">Same answer, different picture</span>
       <p>The amounts that work are \(x = 1\) and \(y = 2\) — the same numbers the row picture gave. One system, one solution, two ways of seeing it.</p>
     </div>
@@ -211,6 +290,34 @@
     <div class="box theorem"><span class="label">For this example</span>
       <p>The combinations of \(\begin{bmatrix} 2 \\ -1 \end{bmatrix}\) and \(\begin{bmatrix} -1 \\ 2 \end{bmatrix}\) <b>fill the whole plane</b>. Any right-hand side at all can be produced.</p>
     </div>
+
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 300" role="img" aria-label="Many combinations of the two columns landing all over the plane">
+        <g class="grid">
+          <line x1="30" y1="250" x2="400" y2="250"/><line x1="30" y1="190" x2="400" y2="190"/><line x1="30" y1="130" x2="400" y2="130"/>
+          <line x1="30" y1="70" x2="400" y2="70"/>
+          <line x1="70" y1="20" x2="70" y2="280"/><line x1="130" y1="20" x2="130" y2="280"/><line x1="190" y1="20" x2="190" y2="280"/>
+          <line x1="250" y1="20" x2="250" y2="280"/><line x1="310" y1="20" x2="310" y2="280"/><line x1="370" y1="20" x2="370" y2="280"/>
+        </g>
+        <line class="axis" x1="30" y1="190" x2="410" y2="190"/><line class="axis" x1="190" y1="285" x2="190" y2="15"/>
+        <g class="pt" opacity=".45">
+          <circle cx="70" cy="70" r="3"/><circle cx="130" cy="70" r="3"/><circle cx="190" cy="70" r="3"/><circle cx="250" cy="70" r="3"/><circle cx="310" cy="70" r="3"/><circle cx="370" cy="70" r="3"/>
+          <circle cx="70" cy="130" r="3"/><circle cx="130" cy="130" r="3"/><circle cx="190" cy="130" r="3"/><circle cx="250" cy="130" r="3"/><circle cx="310" cy="130" r="3"/><circle cx="370" cy="130" r="3"/>
+          <circle cx="70" cy="190" r="3"/><circle cx="130" cy="190" r="3"/><circle cx="250" cy="190" r="3"/><circle cx="310" cy="190" r="3"/><circle cx="370" cy="190" r="3"/>
+          <circle cx="70" cy="250" r="3"/><circle cx="130" cy="250" r="3"/><circle cx="190" cy="250" r="3"/><circle cx="250" cy="250" r="3"/><circle cx="310" cy="250" r="3"/><circle cx="370" cy="250" r="3"/>
+          <circle cx="100" cy="100" r="3"/><circle cx="160" cy="100" r="3"/><circle cx="220" cy="100" r="3"/><circle cx="280" cy="100" r="3"/><circle cx="340" cy="100" r="3"/>
+          <circle cx="100" cy="160" r="3"/><circle cx="160" cy="160" r="3"/><circle cx="220" cy="160" r="3"/><circle cx="280" cy="160" r="3"/><circle cx="340" cy="160" r="3"/>
+          <circle cx="100" cy="220" r="3"/><circle cx="160" cy="220" r="3"/><circle cx="220" cy="220" r="3"/><circle cx="280" cy="220" r="3"/><circle cx="340" cy="220" r="3"/>
+          <circle cx="100" cy="40" r="3"/><circle cx="220" cy="40" r="3"/><circle cx="340" cy="40" r="3"/>
+          <circle cx="160" cy="276" r="3"/><circle cx="280" cy="276" r="3"/>
+        </g>
+        <circle class="hit" cx="190" cy="70" r="6"/><text class="lbl c3" x="200" y="62">b = (0, 3)</text>
+        <circle class="pt" cx="190" cy="190" r="4"/><text class="lbl ci" x="150" y="208">origin</text>
+        <text class="lbl ci" x="36" y="32">every point is some x·col 1 + y·col 2</text>
+      </svg>
+      <figcaption><b>All the combinations.</b> Each dot is where one choice of \((x,y)\) lands when you form \(x\,(2,-1) + y\,(-1,2)\). Sweeping \(x\) and \(y\) over all numbers, the dots do not stay on a line or crowd into a corner — they <b>cover the whole plane</b>. That is why this system is solvable for <i>any</i> right-hand side, not just the \(b=(0,3)\) we were given: whatever target you name, some combination reaches it. Section 10 shows the opposite case, where the reachable points collapse onto a single line or plane and most targets become unreachable.</figcaption>
+    </figure>
 
     <p>So there are two questions, and both are basic: <b>which</b> combination gives this \(b\), and <b>what do all the combinations give</b> — what are all the achievable right-hand sides?</p>
 
@@ -243,6 +350,12 @@
 
     <p>So the first two planes <b>meet in a line</b>; the third plane cuts that line, and the three planes <b>meet in one point</b> — they are not parallel, not special. That point is the solution.</p>
 
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-rows" style="width:100%;height:440px"></div>
+      <figcaption><b>The row picture in 3D — drag to rotate.</b> Each of the three equations is drawn as the flat sheet of every \((x,y,z)\) satisfying it. Blue is \(2x-y=0\), green is \(-x+2y-z=-1\), orange is \(-3y+4z=4\). Watch what happens as you turn it: <b>any two</b> of the sheets cut each other along a straight line, and the third sheet crosses that line at exactly one place. That single red point, \((0,0,1)\), is the only \((x,y,z)\) lying on all three sheets at once — the solution. This is also why the row picture stops being useful: with three planes you must already hunt for the meeting point, and in four unknowns there is no picture left to look at.</figcaption>
+    </figure>
+
     <p>But notice the difficulty. Two lines crossing was a cinch. Three planes meeting is already hard to see, and in four dimensions it is harder still. All the row picture really needs to give us is: three planes, and if everything works right they meet in a single point.</p>
 
     <!-- ====================================================== -->
@@ -265,6 +378,12 @@
       -(0) + 2(0) - 1 &= -1 \quad ✓ \\
       0 - 3(0) + 4(1) &= 4 \quad ✓
     \end{aligned} $$
+
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-cols" style="width:100%;height:440px"></div>
+      <figcaption><b>The column picture in 3D — drag to rotate.</b> The three arrows from the origin are the columns of \(A\): blue \((2,-1,0)\), green \((-1,2,-3)\), orange \((0,-1,4)\). The thick red arrow is the target \(b=(0,-1,4)\). Rotate it and you will see the orange column and the red target lie exactly on top of one another — <b>\(b\) is the third column</b>. So no blue and no green are needed: take one orange and you are there, which is precisely \(x=0,\ y=0,\ z=1\). The dashed grey arrows show a different combination, one blue plus one green, which lands at \((1,1,-3)\) instead — the alternative right-hand side of section 8.</figcaption>
+    </figure>
 
     <p>That is the point where the three planes met — the one we could not locate in the row picture. Of course we will not always be able to read it off the column picture either; that is what elimination is for.</p>
 
@@ -316,6 +435,12 @@
       <p>For example, if column three happens to be column one plus column two, it contributes <b>nothing new</b>. The reachable right-hand sides are only those lying in that plane; most \(b\)s are off the plane and unreachable.</p>
       <p>That matrix is <b>singular</b> — not invertible, and there is <b>not</b> a solution for every \(b\).</p>
     </div>
+
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-sing" style="width:100%;height:440px"></div>
+      <figcaption><b>The singular case in 3D — drag to rotate.</b> Here the third column has been replaced by the sum of the first two, \((2,-1,0)+(-1,2,-3) = (1,1,-3)\), so it brings nothing new. Turn the figure until the shaded sheet is edge-on and the point becomes obvious: <b>all three arrows lie flat inside one plane</b>. Every combination of them — any amounts at all — stays trapped in that sheet. The green target sitting inside the sheet is reachable; the red target floating above it never is, no matter what \(x,y,z\) you choose. That is what singular means: the columns fail to fill space, so \(Ax=b\) has no solution for most \(b\).</figcaption>
+    </figure>
 
     <p>So for a singular matrix the answer is: solvable for some \(b\) — the ones inside the plane — but not for every \(b\).</p>
 
@@ -401,6 +526,113 @@
   <section class="tab-panel" data-panel="problems" hidden></section>
   </div>
 </main>
+
+<script>
+// 3D figures for Lesson 1. notebook.js wraps Plotly and adds the cube frame, axis lines and corner coordinates.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), orange = c("--int-b"), red = c("--warn-b"),
+      ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+
+  function axis(t, lo, hi, dt) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: dt || 1, tickfont: { size: 11, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  function scene(r, eye) {
+    return { xaxis: axis("x", r[0][0], r[0][1]), yaxis: axis("y", r[1][0], r[1][1]), zaxis: axis("z", r[2][0], r[2][1]),
+      aspectmode: "cube", dragmode: "turntable", camera: { eye: eye, up: { x: 0, y: 0, z: 1 } } };
+  }
+  var base = { margin: { l: 0, r: 0, t: 0, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 12 }, bgcolor: "rgba(0,0,0,0)" } };
+  var config = { responsive: true, displaylogo: false, displayModeBar: false };
+
+  // the part of the plane n.p = d inside the box, as a filled polygon
+  function planeInBox(n, d, box, color, name) {
+    var f = function (p) { return n[0]*p[0] + n[1]*p[1] + n[2]*p[2] - d; }, pts = [];
+    for (var m = 0; m < 8; m++) {
+      var p = [box[0][m & 1], box[1][(m >> 1) & 1], box[2][(m >> 2) & 1]];
+      for (var a = 0; a < 3; a++) {
+        if ((m >> a) & 1) continue;
+        var q = p.slice(); q[a] = box[a][1];
+        var fp = f(p), fq = f(q);
+        if (fp === fq || fp * fq > 0) continue;
+        var t = fp / (fp - fq), r = [p[0] + t*(q[0]-p[0]), p[1] + t*(q[1]-p[1]), p[2] + t*(q[2]-p[2])];
+        if (!pts.some(function (u) { return Math.abs(u[0]-r[0]) + Math.abs(u[1]-r[1]) + Math.abs(u[2]-r[2]) < 1e-9; })) pts.push(r);
+      }
+    }
+    if (pts.length < 3) return { type: "scatter3d", x: [], y: [], z: [], name: name };
+    var ctr = [0,1,2].map(function (k) { return pts.reduce(function (s, p) { return s + p[k]; }, 0) / pts.length; });
+    var u = Math.abs(n[0]) < 0.9 * Math.hypot(n[0], n[1], n[2]) ? [0, -n[2], n[1]] : [-n[2], 0, n[0]];
+    var v = [n[1]*u[2]-n[2]*u[1], n[2]*u[0]-n[0]*u[2], n[0]*u[1]-n[1]*u[0]];
+    function dot(x, y) { return x[0]*y[0] + x[1]*y[1] + x[2]*y[2]; }
+    pts.sort(function (p, q) {
+      var dp = [p[0]-ctr[0], p[1]-ctr[1], p[2]-ctr[2]], dq = [q[0]-ctr[0], q[1]-ctr[1], q[2]-ctr[2]];
+      return Math.atan2(dot(dp, v), dot(dp, u)) - Math.atan2(dot(dq, v), dot(dq, u));
+    });
+    var I = [], J = [], K = [];
+    for (var k = 1; k < pts.length - 1; k++) { I.push(0); J.push(k); K.push(k + 1); }
+    return { type: "mesh3d", name: name, showlegend: true, opacity: 0.42, color: color, flatshading: true, hoverinfo: "name",
+      x: pts.map(function (p) { return p[0]; }), y: pts.map(function (p) { return p[1]; }), z: pts.map(function (p) { return p[2]; }), i: I, j: J, k: K };
+  }
+  function seg(a, b, color, name, dash, w) {
+    return { type: "scatter3d", mode: "lines", name: name, hoverinfo: "name",
+      line: { color: color, width: w || 8, dash: dash ? "dash" : "solid" },
+      x: [a[0], b[0]], y: [a[1], b[1]], z: [a[2], b[2]] };
+  }
+  function dot3(p, color, label, size) {
+    return { type: "scatter3d", mode: "markers+text", name: label, hoverinfo: "name",
+      marker: { color: color, size: size || 7 }, x: [p[0]], y: [p[1]], z: [p[2]],
+      text: [label], textposition: "top center", textfont: { color: color, size: 13 } };
+  }
+
+  // ---- 1. three planes meeting at (0,0,1) ----
+  if (document.getElementById("fig3d-rows")) {
+    var box = [[-2, 2], [-2, 2], [-1, 3]];
+    var L = JSON.parse(JSON.stringify(base)); L.scene = scene(box, { x: 1.75, y: -1.6, z: 0.75 });
+    Plotly.newPlot("fig3d-rows", [
+      planeInBox([2, -1, 0], 0, box, blue, "2x − y = 0"),
+      planeInBox([-1, 2, -1], -1, box, green, "−x + 2y − z = −1"),
+      planeInBox([0, -3, 4], 4, box, orange, "−3y + 4z = 4"),
+      dot3([0, 0, 1], red, "(0, 0, 1)")
+    ], L, config);
+  }
+
+  // ---- 2. three columns reaching b ----
+  if (document.getElementById("fig3d-cols")) {
+    var box2 = [[-2, 3], [-4, 3], [-4, 5]];
+    var L2 = JSON.parse(JSON.stringify(base)); L2.scene = scene(box2, { x: 1.8, y: -1.5, z: 0.7 });
+    Plotly.newPlot("fig3d-cols", [
+      seg([0,0,0], [2,-1,0], blue, "column 1 = (2, −1, 0)"),
+      seg([0,0,0], [-1,2,-3], green, "column 2 = (−1, 2, −3)"),
+      seg([0,0,0], [0,-1,4], orange, "column 3 = (0, −1, 4)"),
+      seg([0,0,0], [0,-1,4], red, "b = (0, −1, 4)  →  take 1 × column 3", true, 5),
+      seg([2,-1,0], [1,1,-3], soft, "then + column 2 …", true, 4),
+      dot3([1, 1, -3], soft, "(1, 1, −3)", 6),
+      dot3([0, -1, 4], red, "b", 7)
+    ], L2, config);
+  }
+
+  // ---- 3. singular: all three columns in one plane ----
+  if (document.getElementById("fig3d-sing")) {
+    var box3 = [[-2, 3], [-3, 3], [-4, 3]];
+    var L3 = JSON.parse(JSON.stringify(base)); L3.scene = scene(box3, { x: 1.9, y: -1.3, z: 0.6 });
+    // columns (2,-1,0), (-1,2,-3), (1,1,-3): the third is the sum of the first two.
+    // their common plane has normal (2,-1,0) x (-1,2,-3) = (3, 6, 3) → x + 2y + z = 0
+    Plotly.newPlot("fig3d-sing", [
+      planeInBox([1, 2, 1], 0, box3, c("--thm-b"), "every combination lies in this plane: x + 2y + z = 0"),
+      seg([0,0,0], [2,-1,0], blue, "column 1 = (2, −1, 0)"),
+      seg([0,0,0], [-1,2,-3], green, "column 2 = (−1, 2, −3)"),
+      seg([0,0,0], [1,1,-3], orange, "column 3 = col 1 + col 2 = (1, 1, −3)"),
+      dot3([1, 1, -3], green, "reachable", 7),
+      dot3([1, 1, 2], red, "unreachable", 7)
+    ], L3, config);
+  }
+});
+</script>
 <script src="../assets/tracker.js?v=14"></script>
 </body>
 </html>
