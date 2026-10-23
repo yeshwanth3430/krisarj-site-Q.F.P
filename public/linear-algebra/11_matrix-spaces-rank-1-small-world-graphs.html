@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matrix Spaces; Rank 1; Small World Graphs · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Matrices and functions as vectors: the space of 3x3 matrices, symmetric and upper triangular subspaces, the dim S + dim U rule, solutions of a differential equation as a nullspace, rank-one matrices A = uv-transpose, and small world graphs.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="11_matrix-spaces-rank-1-small-world-graphs">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Matrix Spaces; Rank 1</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 11</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 11 (MIT 18.06, Lecture 11)</p>
+  <h1>Matrix Spaces; Rank 1; Small World Graphs</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{A vector is anything you can add and scale. Matrices qualify. So do functions.}} $$</p>
+      <p>Everything we built — subspace, basis, dimension — never once looked at what the vectors were made of. So it all still works when the "vectors" are matrices, or solutions of an equation. This lecture tries it out, then meets the simplest matrices of all: rank one.</p>
+    </div>
+
+    <div class="box method"><span class="label">The spaces in this lecture ★</span>
+      <table class="sl-table">
+        <tr><th>Space</th><th>What is in it</th><th>Dimension</th></tr>
+        <tr><td>\(M\)</td><td>all \(3 \times 3\) matrices</td><td>9</td></tr>
+        <tr><td>\(S\)</td><td>the symmetric ones</td><td>6</td></tr>
+        <tr><td>\(U\)</td><td>the upper triangular ones</td><td>6</td></tr>
+        <tr><td>\(D = S \cap U\)</td><td>the diagonal ones</td><td>3</td></tr>
+        <tr><td>\(S + U\)</td><td>every sum of one from each</td><td>9 — all of \(M\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">What a vector really has to do</a></li>
+        <li><a href="#t2">The space of 3 × 3 matrices</a></li>
+        <li><a href="#t3">Two subspaces: symmetric and upper triangular</a></li>
+        <li><a href="#t4">Union is not a subspace — sum is</a></li>
+        <li><a href="#t5">A space made of functions</a></li>
+        <li><a href="#t6">A set that is not a subspace: rank 4</a></li>
+        <li><a href="#t7">A condition that is a subspace</a></li>
+        <li><a href="#t8">Rank one matrices</a></li>
+        <li><a href="#t9">Small world graphs</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">What a vector really has to do</a><span>Add and scale. That is the whole list.</span></li>
+      <li><a href="#t2">The space of 3 × 3 matrices</a><span>Nine free entries, so dimension 9 — it is \(\mathbb{R}^9\) in disguise.</span></li>
+      <li><a href="#t3">Two subspaces: symmetric and upper triangular</a><span>Six each, and their overlap is the diagonal.</span></li>
+      <li><a href="#t4">Union is not a subspace — sum is</a><span>And the four dimensions obey one tidy rule.</span></li>
+      <li><a href="#t5">A space made of functions</a><span>The solutions of \(y'' + y = 0\) form a plane with basis \(\cos x, \sin x\).</span></li>
+      <li><a href="#t6">A set that is not a subspace: rank 4</a><span>Add two and the rank goes up. Closure fails.</span></li>
+      <li><a href="#t7">A condition that is a subspace</a><span>\(v_1+v_2+v_3+v_4=0\) is a nullspace wearing a disguise.</span></li>
+      <li><a href="#t8">Rank one matrices</a><span>\(A = uv^T\) — the atoms every other matrix is built from.</span></li>
+      <li><a href="#t9">Small world graphs</a><span>Nodes and edges, six degrees of separation, and a matrix coming next.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. What a vector really has to do</h3>
+
+    <p>Go back and read the definition of a vector space. It asks for two things:</p>
+
+    <ul>
+      <li>you can <b>add</b> two of them and stay inside;</li>
+      <li>you can <b>multiply one by a number</b> and stay inside.</li>
+    </ul>
+
+    <p>It never says the thing has to be a column of numbers.</p>
+
+    <div class="box intuition"><span class="label">The idea in one line</span>
+      <p>If you can add it and scale it sensibly, it is a vector — whatever it looks like.</p>
+    </div>
+
+    <p>So let us try two objects that do not look like vectors at all: <b>matrices</b>, and <b>functions</b>.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The space of 3 × 3 matrices</h3>
+
+    <p>Let \(M\) be <b>all</b> \(3 \times 3\) matrices. Check the two rules:</p>
+
+    <ul>
+      <li>add two \(3 \times 3\) matrices → a \(3 \times 3\) matrix ✓</li>
+      <li>multiply one by 7 → a \(3 \times 3\) matrix ✓</li>
+      <li>the zero matrix is there ✓</li>
+    </ul>
+
+    <div class="box pitfall"><span class="label">Deliberately forget one thing</span>
+      <p>Matrices can also be <b>multiplied together</b>, and inverted. For this lecture, <b>ignore that</b>. A vector space knows nothing about matrix multiplication. Use only addition and scaling, and \(M\) is a vector space like any other.</p>
+    </div>
+
+    <h4>How big is it?</h4>
+
+    <p>Dimension means: how many numbers do you have to choose? A \(3 \times 3\) matrix has nine entries, all free. So</p>
+
+    $$ \boxed{\dim M = 9} $$
+
+    <p>A basis is the obvious one — nine matrices, each with a single 1:</p>
+
+    $$ \begin{bmatrix} 1&0&0 \\ 0&0&0 \\ 0&0&0 \end{bmatrix}, \quad
+       \begin{bmatrix} 0&1&0 \\ 0&0&0 \\ 0&0&0 \end{bmatrix}, \quad
+       \begin{bmatrix} 0&0&1 \\ 0&0&0 \\ 0&0&0 \end{bmatrix}, \quad \dots, \quad
+       \begin{bmatrix} 0&0&0 \\ 0&0&0 \\ 0&0&1 \end{bmatrix} $$
+
+    <p>Nine of them. They are independent (no one of them can be built from the others — each owns a different slot) and every \(3 \times 3\) matrix is a combination of them. That is a basis, so the dimension is 9.</p>
+
+    <div class="box intuition"><span class="label">Why that feels right</span>
+      <p>Unstack the nine entries into a column and \(M\) <i>is</i> \(\mathbb{R}^9\). The square shape is only how we write it down.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Two subspaces: symmetric and upper triangular</h3>
+
+    <p>Inside \(M\) sit smaller spaces.</p>
+
+    <h4>\(S\) — the symmetric ones</h4>
+
+    <p>Symmetric means \(A^T = A\): the matrix is a mirror image across the diagonal.</p>
+
+    $$ S: \quad \begin{bmatrix} a & b & c \\ b & d & e \\ c & e & f \end{bmatrix} $$
+
+    <p>Count the free choices: three on the diagonal \((a,d,f)\) and three above it \((b,c,e)\). The three below are copies — no choice at all.</p>
+
+    $$ \boxed{\dim S = 6} $$
+
+    <p>It is a subspace: add two symmetric matrices and the result is still symmetric; scale one and it is still symmetric.</p>
+
+    <h4>\(U\) — the upper triangular ones</h4>
+
+    <p>Zeros below the diagonal.</p>
+
+    $$ U: \quad \begin{bmatrix} a & b & c \\ 0 & d & e \\ 0 & 0 & f \end{bmatrix} $$
+
+    <p>Again six free entries, three on the diagonal and three above:</p>
+
+    $$ \boxed{\dim U = 6} $$
+
+    <h4>\(D = S \cap U\) — the diagonal ones</h4>
+
+    <p>What is in <b>both</b>? Upper triangular forces the entries below the diagonal to be zero; symmetric then forces the matching entries above to be zero too. Only the diagonal survives:</p>
+
+    $$ D: \quad \begin{bmatrix} a & 0 & 0 \\ 0 & d & 0 \\ 0 & 0 & f \end{bmatrix} \qquad\Longrightarrow\qquad \boxed{\dim D = 3} $$
+
+    <div class="box theorem"><span class="label">Intersections are always subspaces</span>
+      <p>If \(A\) and \(B\) are both subspaces, so is \(A \cap B\). Reason: take two things in both. Their sum stays in \(A\) (because \(A\) is a subspace) and stays in \(B\) (same reason), so it is in both. Scaling works the same way.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Union is not a subspace — sum is</h3>
+
+    <p>Natural next question: is \(S \cup U\) — matrices that are symmetric <b>or</b> upper triangular — a subspace?</p>
+
+    <p><b>No.</b> Take one from each and add:</p>
+
+    $$ \underbrace{\begin{bmatrix} 0&1&0 \\ 1&0&0 \\ 0&0&0 \end{bmatrix}}_{\text{symmetric}} \;+\;
+       \underbrace{\begin{bmatrix} 0&0&1 \\ 0&0&0 \\ 0&0&0 \end{bmatrix}}_{\text{upper triangular}} \;=\;
+       \begin{bmatrix} 0&1&1 \\ 1&0&0 \\ 0&0&0 \end{bmatrix} $$
+
+    <p>The answer is <b>not symmetric</b> (top right is 1, bottom left is 0) and <b>not upper triangular</b> (there is a 1 below the diagonal). It left the set. Closure fails.</p>
+
+    <div class="box intuition"><span class="label">The picture</span>
+      <p>Two lines through the origin in \(\mathbb{R}^2\). Each line is a subspace. Their union is just the two lines — and a vector from one plus a vector from the other lands <b>off both lines</b>. To repair it you have to fill in everything between, which gives the whole plane.</p>
+    </div>
+
+    <h4>The repair: \(S + U\)</h4>
+
+    <div class="box definition"><span class="label">Definition · the sum of two subspaces</span>
+      <p>\(S + U\) is <b>every</b> matrix you can write as (something in \(S\)) + (something in \(U\)). Not just the ones already in one of them — all the sums.</p>
+    </div>
+
+    <p>That <i>is</i> a subspace. And here it is the whole thing:</p>
+
+    $$ \boxed{S + U = M} $$
+
+    <p>Why: given any \(3 \times 3\) matrix, you can always split it into a symmetric part plus an upper triangular part. Nothing is out of reach, so the sum has dimension 9.</p>
+
+    <h4>The rule the four dimensions obey</h4>
+
+    $$ \boxed{\dim S + \dim U \;=\; \dim(S+U) \;+\; \dim(S \cap U)} $$
+
+    <p>Check it:</p>
+
+    $$ 6 + 6 \;=\; 9 + 3 \qquad\checkmark $$
+
+    <figure class="fig" style="max-width:580px;margin:22px auto">
+      <svg viewBox="0 0 580 250" role="img" aria-label="Two overlapping subspaces S and U inside M, with their intersection D">
+        <rect x="14" y="14" width="552" height="222" rx="12" class="axis" fill="none" stroke-width="1.2" stroke-dasharray="5 4"/>
+        <text class="tick" x="28" y="36" font-size="12.5">M — all 3 × 3 matrices, dim 9</text>
+        <ellipse cx="228" cy="138" rx="130" ry="76" class="l1" fill="currentColor" fill-opacity=".13" stroke-width="2"/>
+        <ellipse cx="358" cy="138" rx="130" ry="76" class="l2" fill="currentColor" fill-opacity=".13" stroke-width="2"/>
+        <text class="lbl c1" x="118" y="134">S — symmetric</text>
+        <text class="tick" x="142" y="154">dim 6</text>
+        <text class="lbl c2" x="400" y="134">U — upper △</text>
+        <text class="tick" x="424" y="154">dim 6</text>
+        <text class="lbl ci" x="266" y="128" font-size="12.5">D = S ∩ U</text>
+        <text class="tick" x="268" y="146">diagonal</text>
+        <text class="tick" x="276" y="162">dim 3</text>
+        <text class="tick" x="256" y="231" font-size="12.5">6 + 6 = 9 + 3</text>
+      </svg>
+      <figcaption><b>The overlap is counted twice.</b> Adding \(\dim S\) and \(\dim U\) counts the diagonal matrices in both totals. Subtract that double count and you are left with the dimension of everything the two can build together — which here is all of \(M\).</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. A space made of functions</h3>
+
+    <p>Now something with no matrix in sight. Consider the differential equation</p>
+
+    $$ \frac{d^2y}{dx^2} + y = 0 $$
+
+    <p>In words: <b>find every function whose second derivative is minus itself</b>. Three that work:</p>
+
+    $$ y = \cos x, \qquad y = \sin x, \qquad y = e^{ix} $$
+
+    <p>Check the first: \((\cos x)'' = -\cos x\), so \((\cos x)'' + \cos x = 0\) ✓.</p>
+
+    <h4>Why the solutions form a space</h4>
+
+    <ul>
+      <li>Add two solutions → still a solution (differentiating is linear).</li>
+      <li>Multiply a solution by 7 → still a solution.</li>
+      <li>\(y = 0\) is a solution.</li>
+    </ul>
+
+    <p>Those are exactly the subspace rules. So the solution set is a vector space, and every solution is</p>
+
+    $$ y = c_1 \cos x + c_2 \sin x $$
+
+    <p>Two free constants, so a basis of two:</p>
+
+    $$ \boxed{\text{basis } \{\cos x,\ \sin x\} \qquad \dim = 2} $$
+
+    <div class="box intuition"><span class="label">It is a nullspace</span>
+      <p>Write the operation "differentiate twice and add the function back" as a box. Feed in \(\cos x\) and out comes 0. The solution set is everything that box sends to zero — exactly what \(N(A)\) means for a matrix. Same idea, different input.</p>
+    </div>
+
+    <p>And notice what we <b>did not</b> do: nobody asked what \(e^{ix}\) looks like as a column of numbers. It has no length we needed, no entries. Being addable and scalable was enough.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. A set that is not a subspace: rank 4</h3>
+
+    <p>One honest warning. Let \(M\) now be the \(5 \times 17\) matrices, and take the subset of those with <b>rank exactly 4</b>. Is it a subspace?</p>
+
+    <p><b>No</b> — and throwing in the zero matrix does not save it. Add two rank-4 matrices and the rank can jump.</p>
+
+    <p>A small version shows it. Both of these have rank 1:</p>
+
+    $$ \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}
+       = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix} \quad \text{— rank 2.} $$
+
+    <p>The sum left the set, so it is not closed under addition.</p>
+
+    <div class="box pitfall"><span class="label">Rank does not add up</span>
+      <p>There is no rule \(\text{rank}(A+B) = \text{rank}(A) + \text{rank}(B)\), and no rule that it stays the same either. "All matrices of rank \(r\)" is never a subspace for \(r \ge 1\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. A condition that is a subspace</h3>
+
+    <p>Compare with one that works. In \(\mathbb{R}^4\), take every vector whose entries add to zero:</p>
+
+    $$ v_1 + v_2 + v_3 + v_4 = 0 $$
+
+    <ul>
+      <li>Add two such vectors → the entries still add to \(0 + 0 = 0\) ✓</li>
+      <li>Scale one by 7 → the sum becomes \(7 \times 0 = 0\) ✓</li>
+      <li>\((0,0,0,0)\) qualifies ✓</li>
+    </ul>
+
+    <p>A subspace. But it is not a new kind of object — it is a <b>nullspace</b>. Write the condition as a matrix times \(v\):</p>
+
+    $$ A = \begin{bmatrix} 1 & 1 & 1 & 1 \end{bmatrix}, \qquad Av = v_1+v_2+v_3+v_4 = 0 $$
+
+    <p>So the set is \(N(A)\), and everything from Lesson 7 applies. \(A\) is \(1 \times 4\) with one pivot, so \(r = 1\) and</p>
+
+    $$ \dim N(A) = n - r = 4 - 1 = \boxed{3} $$
+
+    <p>Three free columns, three special solutions — set each free variable to 1 in turn:</p>
+
+    $$ \begin{bmatrix} -1 \\ 1 \\ 0 \\ 0 \end{bmatrix}, \qquad
+       \begin{bmatrix} -1 \\ 0 \\ 1 \\ 0 \end{bmatrix}, \qquad
+       \begin{bmatrix} -1 \\ 0 \\ 0 \\ 1 \end{bmatrix} $$
+
+    <p>Each one does add to zero ✓. They are a basis for the subspace.</p>
+
+    <h4>The other three subspaces of this \(A\)</h4>
+
+    <table class="sl-table">
+      <tr><th>Subspace</th><th>What it is</th><th>Dimension</th></tr>
+      <tr><td>\(C(A)\)</td><td>all of \(\mathbb{R}^1\) — a \(1 \times 4\) matrix outputs single numbers, and it can produce any of them</td><td>1</td></tr>
+      <tr><td>\(C(A^T)\)</td><td>multiples of \((1,1,1,1)\)</td><td>1</td></tr>
+      <tr><td>\(N(A)\)</td><td>the three special solutions above</td><td>3</td></tr>
+      <tr><td>\(N(A^T)\)</td><td>only the zero vector — basis is the <b>empty set</b></td><td>\(m - r = 1 - 1 = 0\)</td></tr>
+    </table>
+
+    <div class="box pitfall"><span class="label">A zero-dimensional space still exists</span>
+      <p>\(N(A^T) = \{0\}\) here. It is not "no space" — it is the space containing only the zero vector, with dimension 0 and the empty set as its basis. (Empty basis, not a basis containing the zero vector: \(0\) is never independent.)</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Rank one matrices</h3>
+
+    <p>Rank 1 is as small as a matrix gets without being zero. Here is one:</p>
+
+    $$ A = \begin{bmatrix} 1 & 4 & 5 \\ 2 & 8 & 10 \end{bmatrix} $$
+
+    <p>Look at the columns: \((1,2)\), then \(4 \times (1,2)\), then \(5 \times (1,2)\). Every column is a multiple of the first, so the column space is a single line and \(r = 1\).</p>
+
+    <p>Which means it factors — one column times one row:</p>
+
+    $$ A = \begin{bmatrix} 1 \\ 2 \end{bmatrix} \begin{bmatrix} 1 & 4 & 5 \end{bmatrix} $$
+
+    <p>Multiply it out to check: the first row is \(1 \times (1,4,5) = (1,4,5)\) ✓ and the second is \(2 \times (1,4,5) = (2,8,10)\) ✓.</p>
+
+    <div class="box theorem"><span class="label">Rank one, in one line ★</span>
+      $$ \boxed{\text{rank}(A) = 1 \iff A = uv^T \ \text{for some column } u \text{ and column } v} $$
+      <p>The column \(u\) sets the one direction every column points in; the row \(v^T\) sets how much of it each column takes.</p>
+    </div>
+
+    <p>Notice the rows obey the same thing: \((2,8,10) = 2 \times (1,4,5)\). Of course — row rank equals column rank, and both are 1.</p>
+
+    <div class="box intuition"><span class="label">Why he cares</span>
+      <p>Rank-one matrices are the <b>building blocks</b>. A matrix of rank \(r\) can be written as a sum of \(r\) rank-one pieces, and no fewer. So "rank \(r\)" really means "takes \(r\) atoms to build". That idea comes back as the biggest result of the course, the singular value decomposition.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Small world graphs</h3>
+
+    <p>Last, a new object that the next lecture turns into a matrix.</p>
+
+    <div class="box definition"><span class="label">Definition · graph</span>
+      $$ \boxed{G = \{\text{nodes},\ \text{edges}\}} $$
+      <p><b>Nodes</b> are dots. <b>Edges</b> are lines joining pairs of them. That is all a graph is — no geometry, no distances, just who is connected to whom.</p>
+    </div>
+
+    <figure class="fig" style="max-width:420px;margin:22px auto">
+      <svg viewBox="0 0 420 220" role="img" aria-label="A small graph with five nodes and six edges">
+        <line class="l1" x1="90" y1="60" x2="210" y2="40"/>
+        <line class="l1" x1="210" y1="40" x2="330" y2="80"/>
+        <line class="l1" x1="90" y1="60" x2="140" y2="160"/>
+        <line class="l1" x1="140" y1="160" x2="270" y2="170"/>
+        <line class="l1" x1="270" y1="170" x2="330" y2="80"/>
+        <line class="l1" x1="210" y1="40" x2="270" y2="170"/>
+        <circle class="pt" cx="90" cy="60" r="7"/>
+        <circle class="pt" cx="210" cy="40" r="7"/>
+        <circle class="pt" cx="330" cy="80" r="7"/>
+        <circle class="pt" cx="140" cy="160" r="7"/>
+        <circle class="pt" cx="270" cy="170" r="7"/>
+        <text class="tick" x="62" y="50">a</text>
+        <text class="tick" x="206" y="26">b</text>
+        <text class="tick" x="346" y="76">c</text>
+        <text class="tick" x="112" y="176">d</text>
+        <text class="tick" x="286" y="188">e</text>
+      </svg>
+      <figcaption>Five nodes, six edges. The distance from \(a\) to \(c\) is 2 — the fewest edges you can walk, \(a \to b \to c\). Walking \(a \to d \to e \to c\) also works but takes 3.</figcaption>
+    </figure>
+
+    <h4>Why "small world"</h4>
+
+    <p>Let each node be a person, and join two people by an edge when they are friends. Then you can ask: <b>how many friend-of-a-friend steps separate two people?</b> That is the distance in the graph.</p>
+
+    <p>The surprising answer in real friendship graphs is: very few. That is the claim behind <b>six degrees of separation</b> and the phrase <i>it's a small world</i>. The same question on the web — nodes are pages, edges are links — asks how many clicks apart two pages are.</p>
+
+    <div class="box intuition"><span class="label">Where this is going</span>
+      <p>Counting paths by eye stops working at about ten nodes. So we turn the graph into a matrix, and then powers of that matrix, its rank and its nullspace answer the questions for us. That is the whole of the next lesson.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Space</th><th>Basis</th><th>Dimension</th></tr>
+      <tr><td>\(M\) — all \(3\times3\) matrices</td><td>nine matrices with a single 1</td><td>9</td></tr>
+      <tr><td>\(S\) — symmetric</td><td>3 diagonal + 3 mirrored pairs</td><td>6</td></tr>
+      <tr><td>\(U\) — upper triangular</td><td>3 diagonal + 3 above</td><td>6</td></tr>
+      <tr><td>\(D = S \cap U\) — diagonal</td><td>3 matrices with one diagonal 1</td><td>3</td></tr>
+      <tr><td>\(S + U\)</td><td>all of \(M\)</td><td>9</td></tr>
+      <tr><td>solutions of \(y''+y=0\)</td><td>\(\cos x,\ \sin x\)</td><td>2</td></tr>
+      <tr><td>\(v_1+v_2+v_3+v_4=0\) in \(\mathbb{R}^4\)</td><td>\((-1,1,0,0),(-1,0,1,0),(-1,0,0,1)\)</td><td>3</td></tr>
+    </table>
+
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>What a vector is ★</b></td><td>Anything you can add and scale. Matrices and functions qualify.</td></tr>
+      <tr><td><b>Union vs sum</b></td><td>\(S \cup U\) is not a subspace; \(S + U\) is. Fill in the sums.</td></tr>
+      <tr><td><b>The dimension rule ★</b></td><td>\(\dim S + \dim U = \dim(S+U) + \dim(S \cap U)\). Here \(6+6=9+3\).</td></tr>
+      <tr><td><b>Intersections</b></td><td>\(A \cap B\) is always a subspace. Unions almost never are.</td></tr>
+      <tr><td><b>Rank is not additive</b></td><td>"All rank 4 matrices" is not a subspace — two rank-1 matrices can sum to rank 2.</td></tr>
+      <tr><td><b>Rank one ★</b></td><td>\(r = 1\) exactly when \(A = uv^T\). These are the atoms; rank \(r\) means \(r\) of them.</td></tr>
+      <tr><td><b>Graphs</b></td><td>\(G = \{\text{nodes, edges}\}\). Distance = fewest edges. Matrix version next.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Nothing in the theory ever used columns of numbers ★</b><span>Subspace, basis and dimension were defined by behaviour, so they transfer for free.</span></li>
+      <li><b>Forget matrix multiplication here</b><span>Inside a vector space of matrices you are only allowed to add and scale.</span></li>
+      <li><b>Dimension is "how many numbers do I choose"</b><span>Nine entries → 9. Three diagonal plus three above → 6. Count the free choices.</span></li>
+      <li><b>Check closure before calling something a subspace</b><span>Rank 4 fails it, \(v_1+\dots+v_4=0\) passes it, and a one-line test told you which.</span></li>
+      <li><b>Rank one is the building block</b><span>Everything later — least squares, eigenvalues, the SVD — decomposes matrices into rank-one pieces.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>The graph at the end gets a matrix: the <b>incidence matrix</b>, one row per edge and one column per node. Then its four subspaces turn out to mean something physical — the nullspace is voltage, the left nullspace is current round a loop, and the rank counts a tree. That is Lesson 12.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
