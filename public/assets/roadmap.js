@@ -6,7 +6,7 @@
   // status: "live" (published, linked), "next" (being written), "soon" (planned)
   var SUBJECTS = [
     { id: "la", n: "01", name: "Linear Algebra", tag: "Portfolios as vectors, hedges as equations", state: "now", col: 0, row: 0, url: "linear-algebra/index.html",
-      lessons: [7, 31],   // live, total — shown on the map node
+      lessons: [10, 31],   // live, total — shown on the map node
       about: "Vectors, matrices, elimination, vector spaces, orthogonality, determinants, eigenvalues and the SVD. The language every portfolio, hedge and factor model is written in.",
       groups: [
         { name: "Solving equations", topics: [

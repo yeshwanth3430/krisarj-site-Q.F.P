@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving Ax = b: Row Reduced Form R · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 8: when Ax = b is solvable, a particular solution, and the complete solution as particular plus nullspace.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-08">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Solving Ax = b</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 8</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 8 (MIT 18.06, Lecture 8)</p>
+  <h1>Solving Ax = b: Row Reduced Form R</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{When does } Ax = b \text{ have a solution — and what are \textbf{all} of them?}} $$</p>
+      <p>Lesson 7 did the case \(b = 0\). Now the right-hand side is non-zero, and two things change: a solution might not <b>exist</b>, and if it does there may be <b>many</b>. Both are answered by the same elimination.</p>
+    </div>
+
+    <div class="box method"><span class="label">Method · the complete solution in four steps ★</span>
+      <ol>
+        <li><b>Augment and eliminate.</b> Run elimination on \([\,A \mid b\,]\) all the way to \(R\), carrying \(b\) along.</li>
+        <li><b>Check it is solvable.</b> Every zero row of \(R\) must have a <b>zero</b> beside it in the \(b\) column. If one does not, stop — no solution.</li>
+        <li><b>One particular solution.</b> Set every free variable to \(0\) and read the pivot variables off.</li>
+        <li><b>Add the nullspace.</b> The complete answer is that one solution plus <b>everything</b> in \(N(A)\).</li>
+      </ol>
+      <p>$$ \boxed{x_{\text{complete}} = x_p + x_n} $$</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Why some b fail</a></li>
+        <li><a href="#t2">Eliminate with b attached</a></li>
+        <li><a href="#t3">A particular solution</a></li>
+        <li><a href="#t4">The complete solution</a></li>
+        <li><a href="#t5">The picture</a></li>
+        <li><a href="#t6">What rank tells you</a></li>
+        <li><a href="#t7">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The method, step by step, on the same matrix as Lesson 7.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">Why some b fail</a><span>A dependency among the rows puts a condition on \(b\).</span></li>
+      <li><a href="#t2">Eliminate with b attached</a><span>Carry \(b\) as an extra column and the condition appears on its own.</span></li>
+      <li><a href="#t3">A particular solution</a><span>Free variables to zero, then read off the pivots.</span></li>
+      <li><a href="#t4">The complete solution</a><span>Particular plus nullspace — and why that is everything.</span></li>
+      <li><a href="#t5">The picture</a><span>The solutions form the nullspace, shifted off the origin.</span></li>
+      <li><a href="#t6">What rank tells you</a><span>Four shapes of \(R\), four answers to "how many solutions".</span></li>
+      <li><a href="#t7">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The method</h2>
+
+    <p>Same matrix as last lesson:</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 2 & 2 \\ 2 & 4 & 6 & 8 \\ 3 & 6 & 8 & 10 \end{bmatrix} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Why some b fail</h3>
+
+    <p>Look at the rows. Row 1 plus row 2 gives row 3:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 2 & 2 \end{bmatrix} + \begin{bmatrix} 2 & 4 & 6 & 8 \end{bmatrix} = \begin{bmatrix} 3 & 6 & 8 & 10 \end{bmatrix} \quad ✓ $$
+
+    <p>So equation 3 is just equation 1 plus equation 2. Whatever \(x\) is, the same must be true of the right-hand side:</p>
+
+    $$ \boxed{b_3 = b_1 + b_2} $$
+
+    <p>If your \(b\) does not satisfy that, the equations contradict each other and <b>there is no solution</b>.</p>
+
+    <div class="box theorem"><span class="label">The general rule</span>
+      <p>If a combination of the rows of \(A\) gives a <b>zero row</b>, the same combination of the entries of \(b\) must give <b>zero</b>.</p>
+    </div>
+
+    <p>A \(b\) that works: \(b = (1, 5, 6)\), since \(1 + 5 = 6\) ✓.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Eliminate with b attached</h3>
+
+    <p>You do not have to spot the dependency. <b>Carry \(b\) along and it reveals itself.</b> Keep \(b\) general for a moment:</p>
+
+    $$ \left[\begin{array}{cccc|c} 1 & 2 & 2 & 2 & b_1 \\ 2 & 4 & 6 & 8 & b_2 \\ 3 & 6 & 8 & 10 & b_3 \end{array}\right]
+      \;\longrightarrow\;
+      \left[\begin{array}{cccc|c} 1 & 2 & 2 & 2 & b_1 \\ 0 & 0 & 2 & 4 & b_2 - 2b_1 \\ 0 & 0 & 0 & 0 & b_3 - b_2 - b_1 \end{array}\right] $$
+
+    <p>The third row of \(A\) was eliminated completely — and look what sits beside it. For the equation \(0 = b_3 - b_2 - b_1\) to hold:</p>
+
+    $$ b_3 - b_2 - b_1 = 0 \qquad\text{i.e.}\qquad b_3 = b_1 + b_2 $$
+
+    <p>— the same condition, found automatically.</p>
+
+    <div class="box intuition"><span class="label">Two conditions, one meaning</span>
+      <p>Lesson 6 said \(Ax = b\) is solvable when \(b\) is in \(C(A)\). This lesson says it is solvable when the zero rows come with zeros. <b>They are the same statement</b>, one about columns and one about rows.</p>
+    </div>
+
+    <p>Now put in \(b = (1,5,6)\) and finish to \(R\):</p>
+
+    $$ \left[\begin{array}{cccc|c} 1 & 2 & 0 & -2 & -2 \\ 0 & 0 & 1 & 2 & 3/2 \\ 0 & 0 & 0 & 0 & 0 \end{array}\right] $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. A particular solution</h3>
+
+    <div class="box method"><span class="label">Method · set the free variables to zero</span>
+      <p>Free variables are \(x_2\) and \(x_4\) (the columns with no pivot). Set both to \(0\), and the pivot variables are whatever is left.</p>
+    </div>
+
+    <p>With \(x_2 = x_4 = 0\) the equations read:</p>
+
+    $$ \begin{aligned}
+      x_1 + 2x_3 &= 1 \\
+      2x_3 &= 3
+    \end{aligned} $$
+
+    <p>So \(x_3 = \tfrac32\), and then \(x_1 + 2(\tfrac32) = 1\) gives \(x_1 = -2\):</p>
+
+    $$ x_p = \begin{bmatrix} -2 \\ 0 \\ 3/2 \\ 0 \end{bmatrix} $$
+
+    <p>Check it:</p>
+
+    $$ Ax_p = -2\begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} + \tfrac32\begin{bmatrix} 2 \\ 6 \\ 8 \end{bmatrix} = \begin{bmatrix} -2+3 \\ -4+9 \\ -6+12 \end{bmatrix} = \begin{bmatrix} 1 \\ 5 \\ 6 \end{bmatrix} \quad ✓ $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. The complete solution</h3>
+
+    <p>One solution is not all of them. Add anything from the nullspace and it still works:</p>
+
+    $$ A(x_p + x_n) = \underbrace{Ax_p}_{=\,b} + \underbrace{Ax_n}_{=\,0} = b \quad ✓ $$
+
+    <p>And nothing else works — if \(Ax = b\) and \(Ax_p = b\), then \(A(x - x_p) = 0\), so \(x - x_p\) is in the nullspace. <b>Every solution is \(x_p\) plus a nullspace vector.</b></p>
+
+    <p>From Lesson 7 the nullspace of this \(A\) is all combinations of \((-2,1,0,0)\) and \((2,0,-2,1)\). So:</p>
+
+    $$ \boxed{\;x = \begin{bmatrix} -2 \\ 0 \\ 3/2 \\ 0 \end{bmatrix}
+      + c_1\begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix}
+      + c_2\begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix}\;} $$
+
+    <p>for any numbers \(c_1, c_2\). That is <b>every</b> solution.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The picture</h3>
+
+    <p>The nullspace is a plane through the origin (two special solutions, two directions). The solutions of \(Ax = b\) are that same plane <b>pushed off the origin</b> so it passes through \(x_p\).</p>
+
+    <div class="box pitfall"><span class="label">So it is not a subspace</span>
+      <p>It does not contain \(0\), because \(A \cdot 0 = 0 \ne b\). It is a plane <b>parallel</b> to the nullspace — same directions, different position.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. What rank tells you</h3>
+
+    <p>The number of pivots \(r\) decides everything. It can never exceed either dimension: \(r \le m\) and \(r \le n\).</p>
+
+    <h4>Full column rank, \(r = n\)</h4>
+    <p>Every column has a pivot, so there are <b>no free variables</b> and the nullspace is just \(\{0\}\). Nothing can be added to a solution — so there is <b>0 or 1</b> solution, never more.</p>
+
+    <h4>Full row rank, \(r = m\)</h4>
+    <p>Every row has a pivot, so \(R\) has <b>no zero rows</b> — and therefore no conditions on \(b\). <b>Every \(b\) is solvable</b>, with \(n - m\) free variables giving infinitely many solutions.</p>
+
+    <h4>Both, \(r = m = n\)</h4>
+    <p>\(R\) is the identity, \(A\) is invertible, and there is <b>exactly one</b> solution for every \(b\).</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>\(r = m = n\)</th><th>\(r = n < m\)</th><th>\(r = m < n\)</th><th>\(r < m,\ r < n\)</th></tr>
+      <tr><td><b>\(R\)</b></td><td>\(I\)</td><td>\(\begin{bmatrix} I \\ 0\end{bmatrix}\)</td><td>\(\begin{bmatrix} I & F\end{bmatrix}\)</td><td>\(\begin{bmatrix} I & F \\ 0 & 0\end{bmatrix}\)</td></tr>
+      <tr><td><b>solutions</b></td><td>exactly 1</td><td>0 or 1</td><td>infinitely many</td><td>0 or infinitely many</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t7"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Solvable?</b></td><td>A zero row of \(R\) must have \(0\) beside it. Equivalently \(b\) is in \(C(A)\).</td></tr>
+      <tr><td><b>Row dependency</b></td><td>Row 1 + row 2 = row 3 in \(A\) forces \(b_3 = b_1 + b_2\).</td></tr>
+      <tr><td><b>Particular solution</b></td><td>All free variables \(= 0\), then read the pivot variables.</td></tr>
+      <tr><td><b>Complete solution ★</b></td><td>\(x = x_p + x_n\) — one particular solution plus the whole nullspace.</td></tr>
+      <tr><td><b>Why that is all</b></td><td>Two solutions differ by a nullspace vector: \(A(x - x_p) = 0\).</td></tr>
+      <tr><td><b>Shape</b></td><td>A copy of the nullspace, shifted to pass through \(x_p\). Not a subspace.</td></tr>
+      <tr><td><b>Our answer</b></td><td>\(x = (-2, 0, \tfrac32, 0) + c_1(-2,1,0,0) + c_2(2,0,-2,1)\).</td></tr>
+      <tr><td><b>\(r = n\)</b></td><td>No free variables → 0 or 1 solution.</td></tr>
+      <tr><td><b>\(r = m\)</b></td><td>No zero rows → solvable for every \(b\).</td></tr>
+      <tr><td><b>\(r = m = n\)</b></td><td>\(R = I\), invertible, exactly one solution.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Carry \(b\) through elimination ★</b><span>The solvability condition then appears by itself, beside the zero rows.</span></li>
+      <li><b>Particular plus nullspace is the whole answer</b><span>One solution gives the position; the nullspace gives all the freedom.</span></li>
+      <li><b>Free variables to zero is just a choice</b><span>Any particular solution works — this one is simply the easiest to read.</span></li>
+      <li><b>Rank decides the number of solutions</b><span>\(r\) against \(m\) and \(n\) gives the four cases in the table.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Rank has quietly become the most important number about a matrix. The next lesson asks what it really counts — leading to <b>independence, basis and dimension</b>.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

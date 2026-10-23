@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Four Fundamental Subspaces · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 10: column space, nullspace, row space and left nullspace — where each lives, its dimension, and a basis for it.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-10">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>The Four Fundamental Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 10</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 10 (MIT 18.06, Lecture 10)</p>
+  <h1>The Four Fundamental Subspaces</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{One matrix, four subspaces — what they are, how big, and a basis for each.}} $$</p>
+      <p>We have met two of them. Transpose the matrix and two more appear. Their four dimensions turn out to fit together with no slack at all.</p>
+    </div>
+
+    <div class="box method"><span class="label">The four, at a glance ★</span>
+      <table class="sl-table">
+        <tr><th>Subspace</th><th>Made of</th><th>Lives in</th><th>Dimension</th><th>Basis</th></tr>
+        <tr><td><b>Column space</b> \(C(A)\)</td><td>combinations of columns</td><td>\(\mathbb{R}^m\)</td><td>\(r\)</td><td>the pivot columns</td></tr>
+        <tr><td><b>Nullspace</b> \(N(A)\)</td><td>solutions of \(Ax = 0\)</td><td>\(\mathbb{R}^n\)</td><td>\(n - r\)</td><td>the special solutions</td></tr>
+        <tr><td><b>Row space</b> \(C(A^T)\)</td><td>combinations of rows</td><td>\(\mathbb{R}^n\)</td><td>\(r\)</td><td>the non-zero rows of \(R\)</td></tr>
+        <tr><td><b>Left nullspace</b> \(N(A^T)\)</td><td>solutions of \(A^Ty = 0\)</td><td>\(\mathbb{R}^m\)</td><td>\(m - r\)</td><td>the bottom rows of \(E\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The four subspaces</a></li>
+        <li><a href="#t2">Column space and nullspace</a></li>
+        <li><a href="#t3">The row space</a></li>
+        <li><a href="#t4">The left nullspace</a></li>
+        <li><a href="#t5">Finding it: EA = R</a></li>
+        <li><a href="#t6">How the dimensions fit</a></li>
+        <li><a href="#t7">A space of matrices</a></li>
+        <li><a href="#t8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The four subspaces</a><span>Two from \(A\), two from \(A^T\).</span></li>
+      <li><a href="#t2">Column space and nullspace</a><span>The two we already know, with their bases and dimensions.</span></li>
+      <li><a href="#t3">The row space</a><span>Read it off \(R\), not \(A\) — and why that is allowed.</span></li>
+      <li><a href="#t4">The left nullspace</a><span>What \(A^Ty = 0\) means, and why "left".</span></li>
+      <li><a href="#t5">Finding it: EA = R</a><span>Augment with \(I\), and \(E\) hands you the answer.</span></li>
+      <li><a href="#t6">How the dimensions fit</a><span>\(r\), \(n-r\), \(r\), \(m-r\) — adding to \(n\) and to \(m\).</span></li>
+      <li><a href="#t7">A space of matrices</a><span>Vectors need not look like vectors.</span></li>
+      <li><a href="#t8">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <p>The example throughout:</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 3 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 2 & 3 & 1 \end{bmatrix}
+      \qquad\longrightarrow\qquad
+      R = \begin{bmatrix} 1 & 0 & 1 & 1 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+
+    <p>Here \(m = 3\), \(n = 4\), and \(r = 2\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The four subspaces</h3>
+
+    <p>Every \(m \times n\) matrix comes with four:</p>
+
+    <ul>
+      <li><b>\(C(A)\)</b> — combinations of the <b>columns</b>. In \(\mathbb{R}^m\).</li>
+      <li><b>\(N(A)\)</b> — solutions of \(Ax = 0\). In \(\mathbb{R}^n\).</li>
+      <li><b>\(C(A^T)\)</b> — combinations of the <b>rows</b>. In \(\mathbb{R}^n\).</li>
+      <li><b>\(N(A^T)\)</b> — solutions of \(A^Ty = 0\). In \(\mathbb{R}^m\).</li>
+    </ul>
+
+    <p>The last two are just the first two applied to \(A^T\). Transposing turns rows into columns, which is why the row space is written \(C(A^T)\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Column space and nullspace</h3>
+
+    <p>Nothing new here — collecting Lessons 7 and 9:</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Basis</th><th>Dimension</th></tr>
+      <tr><td>\(C(A)\)</td><td>the \(r\) pivot columns</td><td>\(r = 2\)</td></tr>
+      <tr><td>\(N(A)\)</td><td>the \(n - r\) special solutions</td><td>\(4 - 2 = 2\)</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The row space</h3>
+
+    <p>To get a basis for the rows, you could transpose and start again. <b>Do not.</b> Use the \(R\) you already have.</p>
+
+    <div class="box theorem"><span class="label">Why R may be used ★</span>
+      <p>Elimination takes combinations of rows, so <b>every row of \(R\) is a combination of rows of \(A\)</b>. And elimination is reversible, so every row of \(A\) is a combination of rows of \(R\). Each can build the other:</p>
+      $$ \boxed{\text{row space of } A = \text{row space of } R} $$
+      <p>Contrast with the column space, where \(C(A) \ne C(R)\) in general — row operations move the columns around.</p>
+    </div>
+
+    <p>So a basis is simply <b>the non-zero rows of \(R\)</b>:</p>
+
+    $$ \begin{bmatrix} 1 & 0 & 1 & 1 \end{bmatrix}, \qquad \begin{bmatrix} 0 & 1 & 1 & 0 \end{bmatrix}
+      \qquad\Longrightarrow\qquad \boxed{\dim C(A^T) = r} $$
+
+    <div class="box intuition"><span class="label">The same \(r\) twice</span>
+      <p>The row space and the column space have <b>the same dimension</b>, \(r\) — even though one lives in \(\mathbb{R}^n\) and the other in \(\mathbb{R}^m\). The number of independent rows equals the number of independent columns. That is what rank really counts.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. The left nullspace</h3>
+
+    <p>\(N(A^T)\) is everything killed by \(A^T\):</p>
+
+    $$ A^Ty = 0 $$
+
+    <p>Transpose both sides and it reads \(y^TA = 0\) — with \(y^T\) sitting on the <b>left</b> of \(A\). Hence the name.</p>
+
+    <p>Dimension: \(A^T\) has \(m\) columns and the same rank \(r\), so its free columns number \(m - r\):</p>
+
+    $$ \boxed{\dim N(A^T) = m - r} $$
+
+    <p>Here \(3 - 2 = 1\) — a single direction.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Finding it: EA = R</h3>
+
+    <p>You can find it without transposing anything. Run elimination on \(A\) with the <b>identity attached</b>, exactly as in Gauss–Jordan:</p>
+
+    $$ [\,A \mid I\,] \;\longrightarrow\; [\,R \mid E\,] $$
+
+    <p>Whatever \(E\) comes out, it is the matrix of all the row operations — so \(EA = R\). (If \(A\) were square and invertible, \(R = I\) and \(E = A^{-1}\).) For our matrix:</p>
+
+    $$ \underbrace{\begin{bmatrix} -1 & 2 & 0 \\ 1 & -1 & 0 \\ -1 & 0 & 1 \end{bmatrix}}_{E}
+      \underbrace{\begin{bmatrix} 1 & 2 & 3 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 2 & 3 & 1 \end{bmatrix}}_{A}
+      = \underbrace{\begin{bmatrix} 1 & 0 & 1 & 1 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix}}_{R} $$
+
+    <div class="box method"><span class="label">Method · reading off the left nullspace</span>
+      <p>\(R\) has \(m - r\) <b>zero rows</b>. The matching <b>bottom rows of \(E\)</b> are the combinations of rows of \(A\) that produced those zeros — so they satisfy \(y^TA = 0\) and form a basis for \(N(A^T)\).</p>
+    </div>
+
+    <p>Here one zero row, so one basis vector — the last row of \(E\):</p>
+
+    $$ y^T = \begin{bmatrix} -1 & 0 & 1 \end{bmatrix} $$
+
+    <p>Check it against the rows of \(A\): \(-1(\text{row 1}) + 1(\text{row 3}) = (0,0,0,0)\) ✓ — which is true because rows 1 and 3 of \(A\) are identical.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. How the dimensions fit</h3>
+
+    <p>Line the four up and nothing is left over:</p>
+
+    <table class="sl-table">
+      <tr><th>In \(\mathbb{R}^n\) (one per column)</th><th>In \(\mathbb{R}^m\) (one per row)</th></tr>
+      <tr><td>row space \(C(A^T)\): \(r\)</td><td>column space \(C(A)\): \(r\)</td></tr>
+      <tr><td>nullspace \(N(A)\): \(n - r\)</td><td>left nullspace \(N(A^T)\): \(m - r\)</td></tr>
+      <tr><td><b>total \(n\)</b></td><td><b>total \(m\)</b></td></tr>
+    </table>
+
+    <p>For our matrix: \(2 + 2 = 4 = n\) on one side, and \(2 + 1 = 3 = m\) on the other.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. A space of matrices</h3>
+
+    <p>One last idea, to loosen the word <i>vector</i>. Take all \(3 \times 3\) matrices and call the collection \(M\). You can add two of them and multiply one by a number, and there is a zero matrix. <b>Ignore that matrices can be multiplied together, and they behave exactly like vectors.</b> So \(M\) is a vector space.</p>
+
+    <p>It has subspaces of its own:</p>
+
+    <ul>
+      <li>all <b>upper triangular</b> matrices</li>
+      <li>all <b>symmetric</b> matrices</li>
+      <li>all <b>diagonal</b> matrices, \(D\) — which is the intersection of the first two</li>
+    </ul>
+
+    <p>And \(D\) has a dimension like any other space. A basis:</p>
+
+    $$ \begin{bmatrix} 1&0&0 \\ 0&0&0 \\ 0&0&0 \end{bmatrix}, \quad
+      \begin{bmatrix} 0&0&0 \\ 0&1&0 \\ 0&0&0 \end{bmatrix}, \quad
+      \begin{bmatrix} 0&0&0 \\ 0&0&0 \\ 0&0&1 \end{bmatrix}
+      \qquad\Longrightarrow\qquad \dim D = 3 $$
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t8"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Subspace</th><th>Lives in</th><th>Dimension</th><th>Basis</th></tr>
+      <tr><td>\(C(A)\) — columns</td><td>\(\mathbb{R}^m\)</td><td>\(r\)</td><td>pivot columns of \(A\)</td></tr>
+      <tr><td>\(N(A)\) — \(Ax = 0\)</td><td>\(\mathbb{R}^n\)</td><td>\(n - r\)</td><td>special solutions</td></tr>
+      <tr><td>\(C(A^T)\) — rows</td><td>\(\mathbb{R}^n\)</td><td>\(r\)</td><td>non-zero rows of \(R\)</td></tr>
+      <tr><td>\(N(A^T)\) — \(A^Ty = 0\)</td><td>\(\mathbb{R}^m\)</td><td>\(m - r\)</td><td>bottom rows of \(E\)</td></tr>
+    </table>
+
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Row space from \(R\) ★</b></td><td>Row operations do not change the row space, so use \(R\). They <b>do</b> change the column space.</td></tr>
+      <tr><td><b>Rank twice</b></td><td>Independent rows = independent columns = \(r\).</td></tr>
+      <tr><td><b>Why "left"</b></td><td>\(A^Ty = 0\) is the same as \(y^TA = 0\), with \(y^T\) on the left.</td></tr>
+      <tr><td><b>Getting \(E\)</b></td><td>\([A \mid I] \to [R \mid E]\), so \(EA = R\). Zero rows of \(R\) point at the basis rows of \(E\).</td></tr>
+      <tr><td><b>The fit</b></td><td>\(r + (n-r) = n\) and \(r + (m-r) = m\).</td></tr>
+      <tr><td><b>Matrices are vectors too</b></td><td>\(3 \times 3\) matrices form a space; the diagonal ones are a subspace of dimension 3.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Use \(R\) for the row space, never for the column space ★</b><span>One is preserved by elimination and the other is not.</span></li>
+      <li><b>Row rank equals column rank</b><span>The same \(r\) counts both, which is the quiet surprise of the lecture.</span></li>
+      <li><b>\(E\) is free information</b><span>The matrix that produced the zero rows is exactly the basis of the left nullspace.</span></li>
+      <li><b>"Vector" is about behaviour, not shape</b><span>Anything you can add and scale sensibly makes a space — matrices included.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Four subspaces, four dimensions, and they pair off: the row space with the nullspace in \(\mathbb{R}^n\), the column space with the left nullspace in \(\mathbb{R}^m\). The next lessons show those pairs are <b>perpendicular</b> — which is where orthogonality begins.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

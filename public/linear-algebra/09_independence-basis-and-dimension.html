@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Independence, Basis and Dimension · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 9: linear independence as a statement about the nullspace, spanning, basis, dimension, and bases for C(A) and N(A).">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-09">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Independence, Basis and Dimension</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 9</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 9 (MIT 18.06, Lecture 9)</p>
+  <h1>Independence, Basis and Dimension</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{How few vectors do you need to describe a space — and which ones?}} $$</p>
+      <p>Three words do the work. <b>Independent</b>: nobody is repeating anybody. <b>Spanning</b>: between them they reach everything. A <b>basis</b> is both at once, and the number of vectors in it is the <b>dimension</b>.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Independence</a></li>
+        <li><a href="#t2">Independence and the nullspace</a></li>
+        <li><a href="#t3">Too many vectors</a></li>
+        <li><a href="#t4">Spanning a space</a></li>
+        <li><a href="#t5">Basis</a></li>
+        <li><a href="#t6">Dimension</a></li>
+        <li><a href="#t7">Basis for C(A) and N(A)</a></li>
+        <li><a href="#t8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Independence</a><span>What it means for vectors not to repeat each other.</span></li>
+      <li><a href="#t2">Independence and the nullspace</a><span>The columns are independent exactly when \(N(A) = \{0\}\).</span></li>
+      <li><a href="#t3">Too many vectors</a><span>More columns than rows guarantees dependence.</span></li>
+      <li><a href="#t4">Spanning a space</a><span>Reaching everything — the other half of the idea.</span></li>
+      <li><a href="#t5">Basis</a><span>Independent <i>and</i> spanning: enough, and not one vector more.</span></li>
+      <li><a href="#t6">Dimension</a><span>Every basis of a space has the same size, and that size is the dimension.</span></li>
+      <li><a href="#t7">Basis for C(A) and N(A)</a><span>Pivot columns for one, special solutions for the other.</span></li>
+      <li><a href="#t8">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Independence</h3>
+
+    <p>Vectors are <b>independent</b> if no combination of them gives zero — except the boring one where every coefficient is zero.</p>
+
+    <div class="box definition"><span class="label">Independent</span>
+      <p>$$ \boxed{c_1x_1 + c_2x_2 + \cdots + c_nx_n = 0 \ \text{ only when all } c_i = 0} $$</p>
+      <p>If some <b>non-zero</b> set of coefficients gives zero, they are <b>dependent</b>.</p>
+    </div>
+
+    <p>In pictures:</p>
+
+    <ul>
+      <li>Two vectors are independent if they <b>do not lie on the same line</b>.</li>
+      <li>Three vectors are independent if they <b>do not lie in the same plane</b>.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Independence and the nullspace</h3>
+
+    <p>Put the vectors in as the columns of \(A\). Then \(c_1x_1 + \cdots + c_nx_n\) is exactly \(Ac\) — a combination of columns. So asking "does some non-zero combination give zero?" is asking "<b>is there a non-zero vector in the nullspace?</b>"</p>
+
+    <div class="box theorem"><span class="label">The test ★</span>
+      <p>$$ \boxed{\text{columns independent} \iff N(A) = \{0\} \iff r = n} $$</p>
+    </div>
+
+    <table class="sl-table">
+      <tr><th>Columns independent</th><th>Columns dependent</th></tr>
+      <tr><td>every column is a pivot column</td><td>some column is free</td></tr>
+      <tr><td>rank \(r = n\)</td><td>rank \(r < n\)</td></tr>
+      <tr><td>no free variables</td><td>free variables exist</td></tr>
+      <tr><td>\(N(A)\) is only the zero vector</td><td>\(N(A)\) contains more</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Too many vectors</h3>
+
+    <p>Suppose \(A\) is \(m \times n\) with \(m < n\) — <b>more unknowns than equations</b>.</p>
+
+    <p>Then \(r \le m < n\), so at least one column has no pivot: there is a free variable, so \(Ax = 0\) has a non-zero solution.</p>
+
+    <div class="box theorem"><span class="label">So</span>
+      <p>$$ \boxed{\text{More vectors than components} \;\Rightarrow\; \text{always dependent.}} $$</p>
+      <p>Three vectors in \(\mathbb{R}^2\) can never be independent. Neither can five in \(\mathbb{R}^4\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Spanning a space</h3>
+
+    <p>Independence is about not having <b>too many</b>. Spanning is about having <b>enough</b>.</p>
+
+    <div class="box definition"><span class="label">Span</span>
+      <p>Vectors \(v_1, \dots, v_k\) <b>span</b> a space if the space is exactly all their combinations.</p>
+    </div>
+
+    <p>Example already in hand: <b>the columns of \(A\) span \(C(A)\)</b> — that is what the column space was defined to be.</p>
+
+    <p>Note that spanning says nothing about waste. A spanning set may contain repeats and still span.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Basis</h3>
+
+    <div class="box definition"><span class="label">Basis ★</span>
+      <p>A <b>basis</b> for a space is a list of vectors that are:</p>
+      <ol>
+        <li><b>independent</b> — nothing wasted, and</li>
+        <li><b>spanning</b> — nothing missing.</li>
+      </ol>
+      <p>Enough to reach everything, with not one vector to spare.</p>
+    </div>
+
+    <h4>A basis for \(\mathbb{R}^3\)</h4>
+
+    $$ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} $$
+
+    <p>Independent, because \(c_1(1,0,0) + c_2(0,1,0) + c_3(0,0,1) = (c_1, c_2, c_3)\), which is zero only when all three \(c\)s are. And they clearly span \(\mathbb{R}^3\).</p>
+
+    <div class="box method"><span class="label">Test for \(n\) vectors in \(\mathbb{R}^n\)</span>
+      <p>Put them in as columns. They form a basis <b>exactly when that matrix is invertible</b>.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">One that fails</span>
+      <p>\((1,1,2)\), \((2,2,5)\), \((3,3,8)\) do <b>not</b> form a basis for \(\mathbb{R}^3\): the third is the sum of the first two, so they are dependent. Notice the matrix they form has two identical rows.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Dimension</h3>
+
+    <p>A space has many different bases — but here is the fact that makes the idea work:</p>
+
+    <div class="box theorem"><span class="label">Dimension ★</span>
+      <p>$$ \boxed{\text{Every basis for a given space has the \textbf{same number} of vectors.}} $$</p>
+      <p>That number is the <b>dimension</b> of the space.</p>
+    </div>
+
+    <p>So \(\dim \mathbb{R}^n = n\), and every basis for \(\mathbb{R}^n\) has exactly \(n\) vectors.</p>
+
+    <div class="box pitfall"><span class="label">Rank and dimension are different words</span>
+      <p><b>Matrices have a rank. Spaces have a dimension.</b> Do not say the dimension of a matrix or the rank of a subspace.</p>
+    </div>
+
+    <p>\((1,1,2)\) and \((2,2,5)\) span a <b>plane</b> in \(\mathbb{R}^3\). They are a basis for that plane — dimension 2 — but not for \(\mathbb{R}^3\), which needs three.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Basis for C(A) and N(A)</h3>
+
+    <p>Now the payoff. Take</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 3 & 1 \\ 1 & 1 & 2 & 1 \\ 1 & 2 & 3 & 1 \end{bmatrix} $$
+
+    <p>Columns 1 and 2 are independent. Column 3 is column 1 plus column 2; column 4 <b>is</b> column 1. So two columns do all the work.</p>
+
+    <div class="box method"><span class="label">Basis for the column space</span>
+      <p>The <b>pivot columns</b> of \(A\) are a basis for \(C(A)\). Here that is columns 1 and 2, so</p>
+      $$ \boxed{\operatorname{rank}(A) = \text{number of pivot columns} = \dim C(A) = 2} $$
+    </div>
+
+    <div class="box method"><span class="label">Basis for the nullspace</span>
+      <p>The <b>special solutions</b> from Lesson 7 are a basis for \(N(A)\) — one per free column, so</p>
+      $$ \boxed{\dim N(A) = n - r} $$
+      <p>Here \(4 - 2 = 2\). The free columns are 3 and 4, giving</p>
+      $$ \begin{bmatrix} -1 \\ -1 \\ 1 \\ 0 \end{bmatrix} \quad\text{and}\quad \begin{bmatrix} -1 \\ 0 \\ 0 \\ 1 \end{bmatrix} $$
+      <p>(the first says column 3 = column 1 + column 2; the second says column 4 = column 1). Check: \(A\) times either one gives \((0,0,0)\) ✓.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t8"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Independent</b></td><td>\(c_1x_1 + \cdots + c_nx_n = 0\) only when all \(c_i = 0\).</td></tr>
+      <tr><td><b>Test ★</b></td><td>Columns independent \(\iff N(A) = \{0\} \iff r = n\) \(\iff\) no free variables.</td></tr>
+      <tr><td><b>Too many</b></td><td>More vectors than components → always dependent.</td></tr>
+      <tr><td><b>Span</b></td><td>The space is exactly all their combinations. The columns of \(A\) span \(C(A)\).</td></tr>
+      <tr><td><b>Basis</b></td><td>Independent <b>and</b> spanning. Nothing wasted, nothing missing.</td></tr>
+      <tr><td><b>\(n\) vectors in \(\mathbb{R}^n\)</b></td><td>A basis exactly when the matrix they form is invertible.</td></tr>
+      <tr><td><b>Dimension</b></td><td>Every basis of a space has the same size; that size is the dimension.</td></tr>
+      <tr><td><b>Careful</b></td><td>Matrices have rank. Spaces have dimension.</td></tr>
+      <tr><td><b>Basis of \(C(A)\)</b></td><td>The pivot columns. \(\dim C(A) = r\).</td></tr>
+      <tr><td><b>Basis of \(N(A)\)</b></td><td>The special solutions. \(\dim N(A) = n - r\).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Independence is a statement about the nullspace ★</b><span>Only the zero vector in \(N(A)\) means no column repeats what the others can already do.</span></li>
+      <li><b>A basis is the efficient description</b><span>Spanning alone can be wasteful; independence alone can be incomplete. You want both.</span></li>
+      <li><b>Dimension is well defined</b><span>Different bases, always the same count — which is what lets us speak of <i>the</i> dimension at all.</span></li>
+      <li><b>Pivot columns and special solutions are the two bases you can compute</b><span>Elimination hands you both.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We now have dimensions for two subspaces, \(r\) and \(n - r\). The next lesson finds <b>two more subspaces</b> hiding in the same matrix, and the four dimensions fit together exactly.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
