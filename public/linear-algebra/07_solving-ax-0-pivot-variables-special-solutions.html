@@ -65,8 +65,9 @@
         <li><a href="#t4">Step 4 — read off the solutions</a></li>
         <li><a href="#t5">The even shorter version</a></li>
         <li><a href="#t6">How many solutions?</a></li>
-        <li><a href="#t7">Why it works</a></li>
-        <li><a href="#t8">Summary</a></li>
+        <li><a href="#t7">When is x = 0 the only answer?</a></li>
+        <li><a href="#t8">Why it works</a></li>
+        <li><a href="#t9">Summary</a></li>
       </ol>
     </nav>
 
@@ -80,8 +81,9 @@
       <li><a href="#t4">Step 4 — read off the solutions</a><span>One special solution per free column, taken straight from \(R\).</span></li>
       <li><a href="#t5">The even shorter version</a><span>\(R = [\,I \ F\,]\) gives \(N = \begin{bmatrix} -F \\ I\end{bmatrix}\) — no arithmetic at all.</span></li>
       <li><a href="#t6">How many solutions?</a><span>\(n - r\) free columns means \(n - r\) special solutions.</span></li>
-      <li><a href="#t7">Why it works</a><span>Elimination never changes the nullspace, and \(R\) makes the answer visible.</span></li>
-      <li><a href="#t8">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+      <li><a href="#t7">When is x = 0 the only answer?</a><span>Read it off the matrix: free columns mean non-zero solutions.</span></li>
+      <li><a href="#t8">Why it works</a><span>Elimination never changes the nullspace, and \(R\) makes the answer visible.</span></li>
+      <li><a href="#t9">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
     </ol>
 
     <h2 class="part" id="body"><span class="part-n">Part 2</span> The method, on one example</h2>
@@ -319,7 +321,40 @@
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t7">7. Why it works</h3>
+    <h3 class="topic" id="t7">7. When is x = 0 the only answer?</h3>
+
+    <p>For \(Ax = 0\) a solution <b>always exists</b> — \(x = 0\) works for every matrix there has ever been. So existence is never the question here. The real question is:</p>
+
+    $$ \boxed{\text{Is } x = 0 \text{ the \textbf{only} solution, or are there others?}} $$
+
+    <p>And you can answer it by looking at the matrix, before solving anything.</p>
+
+    <table class="sl-table">
+      <tr><th>Look at the matrix</th><th>Answer</th></tr>
+      <tr><td><b>Every column has a pivot</b> (\(r = n\), no free columns)</td><td>Only \(x = 0\). \(N(A) = \{0\}\).</td></tr>
+      <tr><td><b>Some column has no pivot</b> (\(r < n\), free columns exist)</td><td>Infinitely many solutions — one special solution per free column, and all their combinations.</td></tr>
+    </table>
+
+    <p>The reason is the whole method: <b>a free column is a variable nobody constrains</b>. Set it to anything non-zero and the pivots follow — giving a non-zero \(x\) with \(Ax = 0\).</p>
+
+    <h4>A case you can call instantly</h4>
+
+    <p>Sometimes you do not even need the pivots. The rank can never exceed either dimension, so \(r \le m\). Therefore:</p>
+
+    $$ \boxed{n > m \;\Rightarrow\; r \le m < n \;\Rightarrow\; \text{free columns exist} \;\Rightarrow\; \text{non-zero solutions}} $$
+
+    <p>In words: <b>more columns than rows means more unknowns than equations</b>, so there is always something non-zero in the nullspace. A wide matrix can never have independent columns.</p>
+
+    <div class="box intuition"><span class="label">Our example</span>
+      <p>\(A\) is \(3 \times 4\), so \(n = 4 > 3 = m\) — non-zero solutions were guaranteed before we started. Elimination then told us exactly how many directions: \(n - r = 4 - 2 = 2\).</p>
+    </div>
+
+    <div class="box method"><span class="label">And for \(Ax = b\)</span>
+      <p>With a non-zero right-hand side the <b>existence</b> question comes back — a solution may not exist at all. That is the next lesson, and the deciding number there is \(r\) against \(m\) rather than \(r\) against \(n\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Why it works</h3>
 
     <p>Two facts hold the whole method up, and both are short.</p>
 
@@ -340,7 +375,7 @@
     <p>so each pivot variable is <b>already solved for</b> in terms of the free ones. There is nothing left to substitute. That is the entire reason we push past \(U\).</p>
 
     <!-- ====================================================== -->
-    <h2 class="part" id="t8"><span class="part-n">Part 3</span> Summary</h2>
+    <h2 class="part" id="t9"><span class="part-n">Part 3</span> Summary</h2>
 
     <h4>Everything on one screen</h4>
     <table class="sl-table">
@@ -354,7 +389,8 @@
       <tr><td><b>Count</b></td><td>\(n - r\) free columns, so \(n - r\) special solutions, so \(\dim N(A) = n - r\).</td></tr>
       <tr><td><b>Our example</b></td><td>\(r = 2\), \(n = 4\), two specials: \((-2,1,0,0)\) and \((2,0,-2,1)\).</td></tr>
       <tr><td><b>Safe / unsafe</b></td><td>Elimination preserves \(N(A)\); it does <b>not</b> preserve \(C(A)\).</td></tr>
-      <tr><td><b>No free columns</b></td><td>\(r = n\) means \(N(A) = \{0\}\) — independent columns.</td></tr>
+      <tr><td><b>Only \(x=0\)? ★</b></td><td>\(r = n\) → yes, nullspace is just \(\{0\}\). \(r < n\) → no, infinitely many.</td></tr>
+      <tr><td><b>Instant call</b></td><td>\(n > m\) (wide matrix) → free columns guaranteed → non-zero solutions guaranteed.</td></tr>
     </table>
 
     <h4>What he emphasised</h4>

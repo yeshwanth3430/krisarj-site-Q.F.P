@@ -60,8 +60,9 @@
         <li><a href="#t3">A particular solution</a></li>
         <li><a href="#t4">The complete solution</a></li>
         <li><a href="#t5">The picture</a></li>
-        <li><a href="#t6">What rank tells you</a></li>
-        <li><a href="#t7">Summary</a></li>
+        <li><a href="#t6">Does a solution exist?</a></li>
+        <li><a href="#t7">How many — both questions</a></li>
+        <li><a href="#t8">Summary</a></li>
       </ol>
     </nav>
 
@@ -74,8 +75,9 @@
       <li><a href="#t3">A particular solution</a><span>Free variables to zero, then read off the pivots.</span></li>
       <li><a href="#t4">The complete solution</a><span>Particular plus nullspace — and why that is everything.</span></li>
       <li><a href="#t5">The picture</a><span>The solutions form the nullspace, shifted off the origin.</span></li>
-      <li><a href="#t6">What rank tells you</a><span>Four shapes of \(R\), four answers to "how many solutions".</span></li>
-      <li><a href="#t7">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+      <li><a href="#t6">Does a solution exist?</a><span>Decided by \(r\) against \(m\) — the rows.</span></li>
+      <li><a href="#t7">How many — both questions</a><span>Uniqueness is decided by \(r\) against \(n\) — the columns.</span></li>
+      <li><a href="#t8">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
     </ol>
 
     <h2 class="part" id="body"><span class="part-n">Part 2</span> The method</h2>
@@ -175,27 +177,61 @@
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t6">6. What rank tells you</h3>
+    <h3 class="topic" id="t6">6. Does a solution exist?</h3>
 
-    <p>The number of pivots \(r\) decides everything. It can never exceed either dimension: \(r \le m\) and \(r \le n\).</p>
+    <p>With \(b = 0\) a solution always existed. With \(b \ne 0\) it may not. <b>Existence is now a real question — and the matrix answers it.</b></p>
 
-    <h4>Full column rank, \(r = n\)</h4>
-    <p>Every column has a pivot, so there are <b>no free variables</b> and the nullspace is just \(\{0\}\). Nothing can be added to a solution — so there is <b>0 or 1</b> solution, never more.</p>
+    $$ \boxed{\text{A solution exists} \iff \text{every zero row of } R \text{ has a zero beside it} \iff b \text{ is in } C(A)} $$
 
-    <h4>Full row rank, \(r = m\)</h4>
-    <p>Every row has a pivot, so \(R\) has <b>no zero rows</b> — and therefore no conditions on \(b\). <b>Every \(b\) is solvable</b>, with \(n - m\) free variables giving infinitely many solutions.</p>
+    <p>So whether <i>some</i> \(b\) can fail depends on whether \(R\) has zero rows at all — and that is decided by \(r\) against \(m\), the number of <b>rows</b>:</p>
 
-    <h4>Both, \(r = m = n\)</h4>
-    <p>\(R\) is the identity, \(A\) is invertible, and there is <b>exactly one</b> solution for every \(b\).</p>
+    <table class="sl-table">
+      <tr><th>Look at the matrix</th><th>Existence</th></tr>
+      <tr><td><b>Every row has a pivot</b> (\(r = m\))</td><td>\(R\) has <b>no zero rows</b>, so there are no conditions to satisfy. <b>Solvable for every \(b\).</b></td></tr>
+      <tr><td><b>Some row has no pivot</b> (\(r < m\))</td><td>\(R\) has zero rows, each imposing a condition. <b>Only some \(b\) work</b> — the ones in \(C(A)\).</td></tr>
+    </table>
+
+    <p>Our matrix is \(3 \times 4\) with \(r = 2 < 3 = m\), so one zero row appeared and gave one condition: \(b_3 = b_1 + b_2\). Choose a \(b\) breaking it and <b>no solution exists at all</b>.</p>
+
+    <div class="box intuition"><span class="label">Another way to see the same thing</span>
+      <p>\(r = m\) means the \(m\) rows are independent — nothing in \(A\) is repeating itself, so no combination of equations can contradict \(b\). The moment rows depend on one another, \(b\) has to respect that dependency.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. How many — and the two questions together</h3>
+
+    <p>Existence was about rows. <b>Uniqueness is about columns</b> — exactly the question Lesson 7 answered for \(Ax = 0\):</p>
+
+    <table class="sl-table">
+      <tr><th>Look at the matrix</th><th>Uniqueness</th></tr>
+      <tr><td><b>Every column has a pivot</b> (\(r = n\))</td><td>No free variables, \(N(A) = \{0\}\), nothing can be added. <b>At most one</b> solution.</td></tr>
+      <tr><td><b>Some column has no pivot</b> (\(r < n\))</td><td>Free variables exist, so if there is one solution there are <b>infinitely many</b> — a whole shifted nullspace.</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">The two questions ★</span>
+      <p>$$ \boxed{\begin{aligned}
+        \textbf{Does a solution exist?} &\quad \text{compare } r \text{ with } m \ \text{(rows)} \\
+        \textbf{Is it unique?} &\quad \text{compare } r \text{ with } n \ \text{(columns)}
+      \end{aligned}} $$</p>
+      <p>Two independent questions, two different comparisons. Answer both and you know everything about the solution set without solving anything.</p>
+    </div>
+
+    <h4>All four combinations</h4>
 
     <table class="sl-table">
       <tr><th></th><th>\(r = m = n\)</th><th>\(r = n < m\)</th><th>\(r = m < n\)</th><th>\(r < m,\ r < n\)</th></tr>
       <tr><td><b>\(R\)</b></td><td>\(I\)</td><td>\(\begin{bmatrix} I \\ 0\end{bmatrix}\)</td><td>\(\begin{bmatrix} I & F\end{bmatrix}\)</td><td>\(\begin{bmatrix} I & F \\ 0 & 0\end{bmatrix}\)</td></tr>
+      <tr><td><b>exists?</b></td><td>always</td><td>only some \(b\)</td><td>always</td><td>only some \(b\)</td></tr>
+      <tr><td><b>unique?</b></td><td>yes</td><td>yes</td><td>no</td><td>no</td></tr>
       <tr><td><b>solutions</b></td><td>exactly 1</td><td>0 or 1</td><td>infinitely many</td><td>0 or infinitely many</td></tr>
     </table>
 
+    <div class="box intuition"><span class="label">The square invertible case</span>
+      <p>\(r = m = n\) is the comfortable one from the early lessons: \(R = I\), \(A\) is invertible, existence is guaranteed and uniqueness with it — <b>exactly one solution for every \(b\)</b>.</p>
+    </div>
+
     <!-- ====================================================== -->
-    <h2 class="part" id="t7"><span class="part-n">Part 3</span> Summary</h2>
+    <h2 class="part" id="t8"><span class="part-n">Part 3</span> Summary</h2>
 
     <h4>Everything on one screen</h4>
     <table class="sl-table">
@@ -207,9 +243,9 @@
       <tr><td><b>Why that is all</b></td><td>Two solutions differ by a nullspace vector: \(A(x - x_p) = 0\).</td></tr>
       <tr><td><b>Shape</b></td><td>A copy of the nullspace, shifted to pass through \(x_p\). Not a subspace.</td></tr>
       <tr><td><b>Our answer</b></td><td>\(x = (-2, 0, \tfrac32, 0) + c_1(-2,1,0,0) + c_2(2,0,-2,1)\).</td></tr>
-      <tr><td><b>\(r = n\)</b></td><td>No free variables → 0 or 1 solution.</td></tr>
-      <tr><td><b>\(r = m\)</b></td><td>No zero rows → solvable for every \(b\).</td></tr>
-      <tr><td><b>\(r = m = n\)</b></td><td>\(R = I\), invertible, exactly one solution.</td></tr>
+      <tr><td><b>Existence ★</b></td><td>Compare \(r\) with \(m\). \(r = m\) → solvable for every \(b\); \(r < m\) → conditions on \(b\), some fail.</td></tr>
+      <tr><td><b>Uniqueness ★</b></td><td>Compare \(r\) with \(n\). \(r = n\) → at most one; \(r < n\) → infinitely many if any.</td></tr>
+      <tr><td><b>\(r = m = n\)</b></td><td>\(R = I\), invertible, exactly one solution for every \(b\).</td></tr>
     </table>
 
     <h4>What he emphasised</h4>
