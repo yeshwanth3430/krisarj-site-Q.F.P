@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projection Matrices and Least Squares · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Why the projection is the best answer: P and I minus P split every b, least squares minimises the sum of squared residuals, calculus gives the same normal equations as the right angle, and A transpose A is invertible exactly when A has independent columns.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="15_projection-matrices-and-least-squares">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Projection Matrices and Least Squares</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 15</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 15 (MIT 18.06, Lecture 15)</p>
+  <h1>Projection Matrices and Least Squares</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Why the projection really is the } \textbf{best} \text{ answer, and why } A^TA \text{ can be trusted.}} $$</p>
+      <p>Lesson 14 built \(P\) from a right angle. This lesson earns the name <b>least squares</b>: it shows what quantity is being minimised, gets the same equations a second way using calculus, and finishes the one loose end — proving \(A^TA\) is invertible whenever \(A\) has independent columns.</p>
+    </div>
+
+    <div class="box method"><span class="label">The two halves of every b ★</span>
+      <table class="sl-table">
+        <tr><th></th><th>\(P\)</th><th>\(I - P\)</th></tr>
+        <tr><td>sends \(b\) to</td><td>\(p\), the part inside \(C(A)\)</td><td>\(e\), the part inside \(N(A^T)\)</td></tr>
+        <tr><td>formula</td><td>\(A(A^TA)^{-1}A^T\)</td><td>\(I - A(A^TA)^{-1}A^T\)</td></tr>
+        <tr><td>symmetric?</td><td>yes</td><td>yes</td></tr>
+        <tr><td>squares to itself?</td><td>yes</td><td>yes</td></tr>
+      </table>
+      <p>\(b = Pb + (I-P)b = p + e\), always, with the two pieces at right angles.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">P and I − P</a></li>
+        <li><a href="#t2">The three cases</a></li>
+        <li><a href="#t3">What "least squares" minimises</a></li>
+        <li><a href="#t4">Two pictures of the same problem</a></li>
+        <li><a href="#t5">The system and the normal equations</a></li>
+        <li><a href="#t6">Solving, and the two orthogonality checks</a></li>
+        <li><a href="#t7">The calculus route to the same equations</a></li>
+        <li><a href="#t8">Is it really the minimum?</a></li>
+        <li><a href="#t9">Proving A transpose A is invertible</a></li>
+        <li><a href="#t10">The best case: orthonormal columns</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">P and I − P</a><span>Two projection matrices, onto perpendicular spaces, adding to the identity.</span></li>
+      <li><a href="#t2">The three cases</a><span>\(b\) inside, \(b\) perpendicular, \(b\) typical.</span></li>
+      <li><a href="#t3">What "least squares" minimises ★</a><span>The sum of the squared vertical distances — and why squares, not absolute values.</span></li>
+      <li><a href="#t4">Two pictures of the same problem</a><span>The \(\mathbb{R}^2\) scatter plot and the \(\mathbb{R}^3\) projection are one calculation.</span></li>
+      <li><a href="#t5">The system and the normal equations</a><span>Three equations, two unknowns, no solution — and the repair.</span></li>
+      <li><a href="#t6">Solving, and the two orthogonality checks</a><span>Every number, every residual, both checks.</span></li>
+      <li><a href="#t7">The calculus route to the same equations ★</a><span>Differentiate the error, set both partials to zero, and the normal equations appear.</span></li>
+      <li><a href="#t8">Is it really the minimum?</a><span>Try nearby lines and watch the error go up.</span></li>
+      <li><a href="#t9">Proving A transpose A is invertible ★</a><span>Four lines, and it rests on independent columns.</span></li>
+      <li><a href="#t10">The best case: orthonormal columns</a><span>Independence guaranteed, and a preview of Lesson 16.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. P and I − P</h3>
+
+    <p>From last lesson:</p>
+
+    $$ P = A(A^TA)^{-1}A^T \qquad\text{projects onto } C(A) $$
+
+    <p>The error is whatever is left:</p>
+
+    $$ e = b - p = b - Pb = (I - P)b $$
+
+    <p>So \(I - P\) is a projection matrix in its own right — onto \(N(A^T)\), the space perpendicular to \(C(A)\).</p>
+
+    <div class="box theorem"><span class="label">\(I - P\) is a projection too</span>
+      <ul>
+        <li><b>Symmetric:</b> \((I-P)^T = I^T - P^T = I - P\) ✓</li>
+        <li><b>Idempotent:</b> \((I-P)^2 = I - 2P + P^2 = I - 2P + P = I - P\) ✓, using \(P^2 = P\)</li>
+      </ul>
+      <p>Everything true of \(P\) is true of \(I - P\), with the roles of the two perpendicular subspaces swapped.</p>
+    </div>
+
+    <p>Together they take \(\mathbb{R}^m\) apart and put it back:</p>
+
+    $$ \boxed{b = \underbrace{Pb}_{\text{in } C(A)} + \underbrace{(I-P)b}_{\text{in } N(A^T)}} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The three cases</h3>
+
+    <table class="sl-table">
+      <tr><th>Where \(b\) is</th><th>\(Pb\)</th><th>\((I-P)b\)</th><th>Why</th></tr>
+      <tr><td><b>in</b> \(C(A)\)</td><td>\(b\)</td><td>\(0\)</td><td>\(b = Ax\), and \(PAx = Ax\) — the middle of the formula cancels</td></tr>
+      <tr><td><b>perpendicular</b> to \(C(A)\) — i.e. in \(N(A^T)\)</td><td>\(0\)</td><td>\(b\)</td><td>\(A^Tb = 0\) kills the last factor of \(P\)</td></tr>
+      <tr><td><b>typical</b> — neither</td><td>\(p \ne 0, \ne b\)</td><td>\(e \ne 0\)</td><td>\(b\) has a component in each, and \(P\) keeps only the first</td></tr>
+    </table>
+
+    <p>The third row is the real case, and it is the one with content: <b>a typical \(b\) has a piece you can explain and a piece you cannot</b>, and the projection keeps the first and discards the second.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. What "least squares" minimises</h3>
+
+    <p>The name is a promise about a particular quantity. Here it is.</p>
+
+    <div class="box definition"><span class="label">The quantity being minimised ★</span>
+      $$ \boxed{\|Ax - b\|^2 = \|e\|^2 = e_1^2 + e_2^2 + \dots + e_m^2} $$
+      <p>Each \(e_i\) is the gap between the measured value and the value the line predicts. Square each, add them up, and make the total as small as possible. That is <b>least squares</b>, and the process of doing it to fit a line is called <b>linear regression</b>.</p>
+    </div>
+
+    <h4>Why squares?</h4>
+
+    <table class="sl-table">
+      <tr><th>Possible measure of error</th><th>Problem</th></tr>
+      <tr><td>\(\sum e_i\)</td><td>positive and negative gaps cancel — a terrible line can score zero</td></tr>
+      <tr><td>\(\sum |e_i|\)</td><td>a genuine measure, but absolute value has a corner, so there is no clean derivative and no linear equation to solve</td></tr>
+      <tr><td>\(\sum e_i^2\)</td><td>always positive, smooth, and differentiating gives <b>linear</b> equations — which is why linear algebra can answer it</td></tr>
+    </table>
+
+    <div class="box pitfall"><span class="label">Squares punish outliers hard</span>
+      <p>Doubling a residual quadruples its contribution. One wild data point can drag the whole line towards itself. Least squares is the right tool when the errors are small and scattered; it is the wrong tool when one measurement is simply wrong.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Two pictures of the same problem</h3>
+
+    <p>The same three numbers \(e_1, e_2, e_3\) can be looked at two completely different ways, and it is worth holding both.</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Picture 1 — the scatter plot</th><th>Picture 2 — the vector space</th></tr>
+      <tr><td>lives in</td><td>the \(t\)–\(b\) plane</td><td>\(\mathbb{R}^3\) — one axis per measurement</td></tr>
+      <tr><td>you see</td><td>3 dots and a line</td><td>a vector \(b\), a plane \(C(A)\), and a perpendicular</td></tr>
+      <tr><td>\(e_i\) is</td><td>the vertical gap from dot \(i\) to the line</td><td>the \(i\)th entry of one vector \(e\)</td></tr>
+      <tr><td>\(p_i\) is</td><td>the height of the line at \(t_i\)</td><td>the \(i\)th entry of the projection \(p\)</td></tr>
+      <tr><td>the goal</td><td>make the gaps small</td><td>drop a perpendicular from \(b\) to the plane</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">Why they are the same</span>
+      <p>A straight line \(C + Dt\) has two free numbers. Evaluating it at the three \(t\) values gives the vector \(C(1,1,1) + D(1,2,3)\) — a combination of two fixed vectors, which is a <b>plane</b> in \(\mathbb{R}^3\). Choosing the best line and choosing the nearest point of that plane are literally the same choice.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The system and the normal equations</h3>
+
+    <p>The data: \((t, b) = (1,1),\ (2,2),\ (3,2)\). Demand that \(b = C + Dt\) pass through all three:</p>
+
+    $$ \begin{aligned} C + 1D &= 1 \\ C + 2D &= 2 \\ C + 3D &= 2 \end{aligned}
+       \qquad\Longleftrightarrow\qquad
+       \underbrace{\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}}_{A}
+       \begin{bmatrix} C \\ D \end{bmatrix} = \underbrace{\begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}}_{b} $$
+
+    <p>Unsolvable — the three points are not on a line. The first two want slope 1, the last two want slope 0.</p>
+
+    <p>Multiply both sides by \(A^T\):</p>
+
+    $$ \boxed{A^TA\hat{x} = A^Tb} $$
+
+    <p>Build the pieces from dot products of the columns \(a_1 = (1,1,1)\) and \(a_2 = (1,2,3)\):</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\(a_1 \cdot a_1\)</td><td>\(1+1+1\)</td><td>3</td></tr>
+      <tr><td>\(a_1 \cdot a_2\)</td><td>\(1+2+3\)</td><td>6</td></tr>
+      <tr><td>\(a_2 \cdot a_2\)</td><td>\(1+4+9\)</td><td>14</td></tr>
+      <tr><td>\(a_1 \cdot b\)</td><td>\(1+2+2\)</td><td>5</td></tr>
+      <tr><td>\(a_2 \cdot b\)</td><td>\((1)(1)+(2)(2)+(3)(2)\)</td><td>11</td></tr>
+    </table>
+
+    $$ \begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix}\begin{bmatrix} \hat{C} \\ \hat{D} \end{bmatrix} = \begin{bmatrix} 5 \\ 11 \end{bmatrix}
+       \qquad\text{i.e.}\qquad
+       \begin{aligned} 3\hat{C} + 6\hat{D} &= 5 \\ 6\hat{C} + 14\hat{D} &= 11 \end{aligned} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Solving, and the two orthogonality checks</h3>
+
+    <p>Eliminate: row 2 minus 2 × row 1.</p>
+
+    $$ (6 - 6)\hat{C} + (14 - 12)\hat{D} = 11 - 10 \qquad\Longrightarrow\qquad 2\hat{D} = 1 \qquad\Longrightarrow\qquad \hat{D} = \tfrac12 $$
+
+    <p>Back-substitute: \(3\hat{C} + 3 = 5\), so \(\hat{C} = \tfrac23\).</p>
+
+    $$ \boxed{b = \tfrac23 + \tfrac12 t} $$
+
+    <table class="sl-table">
+      <tr><th>\(i\)</th><th>\(t_i\)</th><th>\(b_i\)</th><th>\(p_i = \tfrac23 + \tfrac12 t_i\)</th><th>\(e_i = b_i - p_i\)</th></tr>
+      <tr><td>1</td><td>1</td><td>1</td><td>\(\tfrac76\)</td><td>\(-\tfrac16\)</td></tr>
+      <tr><td>2</td><td>2</td><td>2</td><td>\(\tfrac53\)</td><td>\(+\tfrac13\)</td></tr>
+      <tr><td>3</td><td>3</td><td>2</td><td>\(\tfrac{13}{6}\)</td><td>\(-\tfrac16\)</td></tr>
+    </table>
+
+    <h4>Check 1 · \(e\) is perpendicular to both columns</h4>
+
+    <table class="sl-table">
+      <tr><th>Condition</th><th>Arithmetic</th><th></th></tr>
+      <tr><td>\(a_1 \cdot e\)</td><td>\(-\tfrac16 + \tfrac13 - \tfrac16 = \tfrac{-1+2-1}{6}\)</td><td>\(=0\) ✓</td></tr>
+      <tr><td>\(a_2 \cdot e\)</td><td>\((1)(-\tfrac16) + (2)(\tfrac13) + (3)(-\tfrac16) = \tfrac{-1+4-3}{6}\)</td><td>\(=0\) ✓</td></tr>
+    </table>
+
+    <h4>Check 2 · \(p\) is perpendicular to \(e\)</h4>
+
+    $$ p \cdot e = \left(\tfrac76\right)\left(-\tfrac16\right) + \left(\tfrac53\right)\left(\tfrac13\right) + \left(\tfrac{13}{6}\right)\left(-\tfrac16\right)
+       = -\tfrac{7}{36} + \tfrac{20}{36} - \tfrac{13}{36} = 0 \qquad\checkmark $$
+
+    <p>It had to be: \(p\) is in \(C(A)\), \(e\) is in \(N(A^T)\), and Lesson 13 proved those two spaces are perpendicular.</p>
+
+    <h4>The error itself</h4>
+
+    $$ \|e\|^2 = \tfrac{1}{36} + \tfrac{4}{36} + \tfrac{1}{36} = \tfrac{6}{36} = \boxed{\tfrac16} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The calculus route to the same equations</h3>
+
+    <p>You could have reached the same answer without any linear algebra. Write the total squared error as a function of the two unknowns:</p>
+
+    $$ f(C,D) = (C + D - 1)^2 + (C + 2D - 2)^2 + (C + 3D - 2)^2 $$
+
+    <p>Minimise it: set both partial derivatives to zero.</p>
+
+    <h4>With respect to \(C\)</h4>
+
+    <p>Each bracket has \(C\) with coefficient 1, so each term differentiates to \(2(\text{bracket})\):</p>
+
+    $$ \frac{\partial f}{\partial C} = 2(C+D-1) + 2(C+2D-2) + 2(C+3D-2) = 2\big(3C + 6D - 5\big) $$
+
+    <p>Set to zero:</p>
+
+    $$ 3C + 6D = 5 $$
+
+    <h4>With respect to \(D\)</h4>
+
+    <p>Now the coefficients of \(D\) in the brackets are 1, 2, 3, and the chain rule brings each one down:</p>
+
+    $$ \frac{\partial f}{\partial D} = 2(C+D-1)(1) + 2(C+2D-2)(2) + 2(C+3D-2)(3) $$
+
+    <p>Expand inside: \((C+D-1) + (2C+4D-4) + (3C+9D-6) = 6C + 14D - 11\). So</p>
+
+    $$ 6C + 14D = 11 $$
+
+    <div class="box theorem"><span class="label">The same two equations ★</span>
+      $$ \begin{aligned} 3C + 6D &= 5 \\ 6C + 14D &= 11 \end{aligned} $$
+      <p>Identical to the normal equations of §5, to the last digit. Calculus and the right angle are two descriptions of one fact: <b>the error is smallest exactly when it is perpendicular to everything you could have used to reduce it.</b></p>
+    </div>
+
+    <p>Notice also what the calculus confirms about shape: \(f\) is a sum of squares of linear expressions, so it is a bowl. A bowl has one bottom, and setting the derivatives to zero finds it. There is no second candidate to worry about.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Is it really the minimum?</h3>
+
+    <p>Test it. Compute \(\|e\|^2\) for the winner and three nearby lines.</p>
+
+    <table class="sl-table">
+      <tr><th>\(C\)</th><th>\(D\)</th><th>\(\|e\|^2\)</th><th>Decimal</th></tr>
+      <tr><td>\(\tfrac23\)</td><td>\(\tfrac12\)</td><td>\(\tfrac16\)</td><td><b>0.1667</b> ← the least squares line</td></tr>
+      <tr><td>\(1\)</td><td>\(\tfrac13\)</td><td>\(\tfrac29\)</td><td>0.2222</td></tr>
+      <tr><td>\(\tfrac12\)</td><td>\(\tfrac12\)</td><td>\(\tfrac14\)</td><td>0.2500</td></tr>
+      <tr><td>\(\tfrac23\)</td><td>\(\tfrac25\)</td><td>\(\tfrac{23}{75}\)</td><td>0.3067</td></tr>
+    </table>
+
+    <p>Move either parameter in any direction and the error rises. The third row is instructive: it keeps the correct slope and only shifts the intercept by \(\tfrac16\), and the error still goes up by half.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Proving A transpose A is invertible</h3>
+
+    <p>Everything above divided by \(A^TA\) in one form or another. Time to justify it.</p>
+
+    <div class="box theorem"><span class="label">The theorem ★</span>
+      $$ \boxed{\text{If } A \text{ has independent columns, then } A^TA \text{ is invertible.}} $$
+    </div>
+
+    <p>\(A^TA\) is square (\(n \times n\)), so invertible means its nullspace is only \(\{0\}\). So assume \(A^TA x = 0\) and force \(x = 0\).</p>
+
+    <table class="sl-table">
+      <tr><th>Step</th><th>Line</th><th>Reason</th></tr>
+      <tr><td>1</td><td>\(A^TAx = 0\)</td><td>the assumption</td></tr>
+      <tr><td>2</td><td>\(x^TA^TAx = x^T0 = 0\)</td><td>multiply on the left by \(x^T\); zero stays zero</td></tr>
+      <tr><td>3</td><td>\((Ax)^T(Ax) = 0\)</td><td>regroup — \(x^TA^T\) is \((Ax)^T\)</td></tr>
+      <tr><td>4</td><td>\(\|Ax\|^2 = 0\), so \(Ax = 0\)</td><td>a sum of squares of real numbers is zero only if every one is</td></tr>
+      <tr><td>5</td><td>\(x = 0\)</td><td>the columns of \(A\) are independent, so only \(x=0\) gives \(Ax=0\)</td></tr>
+    </table>
+
+    <p>Nullspace is \(\{0\}\), so \(A^TA\) is invertible ✓</p>
+
+    <div class="box pitfall"><span class="label">Step 5 is where the hypothesis is spent</span>
+      <p>Steps 1–4 hold for <b>every</b> matrix — they prove \(N(A^TA) = N(A)\), the Lesson 13 result. Only step 5 uses independence. If the columns are dependent, step 4 still gives \(Ax = 0\), but now a non-zero \(x\) does that, so \(A^TA\) has a non-trivial nullspace and is singular.</p>
+    </div>
+
+    <p>For our example, \(A^TA = \begin{bmatrix} 3&6 \\ 6&14 \end{bmatrix}\) with determinant \(42 - 36 = 6 \ne 0\) ✓ — and indeed \((1,1,1)\) and \((1,2,3)\) are independent, since neither is a multiple of the other.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. The best case: orthonormal columns</h3>
+
+    <p>So everything rests on the columns of \(A\) being independent. Is there a class of columns guaranteed to be?</p>
+
+    <p>Yes — <b>perpendicular unit vectors</b>. Two examples:</p>
+
+    $$ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix},\ \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix},\ \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}
+      \qquad\text{and}\qquad
+      \begin{bmatrix} \cos\theta \\ \sin\theta \end{bmatrix},\ \begin{bmatrix} -\sin\theta \\ \cos\theta \end{bmatrix} $$
+
+    <p>Check the second pair. Perpendicular:</p>
+
+    $$ \cos\theta(-\sin\theta) + \sin\theta\cos\theta = 0 \qquad\checkmark $$
+
+    <p>Unit length:</p>
+
+    $$ \cos^2\theta + \sin^2\theta = 1 \qquad\checkmark $$
+
+    <p>Mutually perpendicular non-zero vectors are always independent — and the one-line reason is worth seeing. Suppose a combination vanishes:</p>
+
+    $$ c_1q_1 + c_2q_2 + \dots + c_nq_n = 0 $$
+
+    <p>Dot both sides with \(q_1\). Every term with \(q_2, q_3, \dots\) dies because those are perpendicular to \(q_1\), leaving \(c_1(q_1 \cdot q_1) = 0\). Since \(q_1 \ne 0\), that forces \(c_1 = 0\). Repeat with each \(q_i\): all the coefficients are zero, so the vectors are independent ✓</p>
+
+    <div class="box intuition"><span class="label">Where this is going</span>
+      <p>If the columns are perpendicular unit vectors, \(A^TA\) is not merely invertible — it is the <b>identity</b>, and the whole machinery collapses to \(\hat{x} = A^Tb\) with no inverse to compute at all. The next lesson builds such columns from any starting basis.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The split ★</b></td><td>\(b = Pb + (I-P)b\). \(P\) keeps the explainable part, \(I-P\) keeps the leftover.</td></tr>
+      <tr><td><b>\(I-P\)</b></td><td>A projection matrix too — symmetric, idempotent, onto \(N(A^T)\).</td></tr>
+      <tr><td><b>Three cases</b></td><td>\(b\) in \(C(A)\) → \(Pb=b\); \(b \perp C(A)\) → \(Pb=0\); typical \(b\) → some of each.</td></tr>
+      <tr><td><b>Least squares ★</b></td><td>Minimise \(\|Ax - b\|^2 = e_1^2 + \dots + e_m^2\). Squares because they are positive and differentiable.</td></tr>
+      <tr><td><b>Two pictures</b></td><td>Vertical gaps on a scatter plot = entries of one vector in \(\mathbb{R}^m\). Same numbers.</td></tr>
+      <tr><td><b>Normal equations</b></td><td>\(A^TA\hat{x} = A^Tb\). Here \(3C+6D=5\) and \(6C+14D=11\).</td></tr>
+      <tr><td><b>The answer</b></td><td>\(b = \tfrac23 + \tfrac12 t\), \(p = \left(\tfrac76,\tfrac53,\tfrac{13}{6}\right)\), \(e = \left(-\tfrac16,\tfrac13,-\tfrac16\right)\), \(\|e\|^2 = \tfrac16\).</td></tr>
+      <tr><td><b>Calculus agrees ★</b></td><td>\(\partial f/\partial C = 0\) and \(\partial f/\partial D = 0\) give exactly the normal equations.</td></tr>
+      <tr><td><b>\(A^TA\) invertible ★</b></td><td>\(A^TAx=0 \Rightarrow \|Ax\|^2=0 \Rightarrow Ax=0 \Rightarrow x=0\), the last step needing independent columns.</td></tr>
+      <tr><td><b>Guaranteed independence</b></td><td>Perpendicular unit vectors. Dot the combination with each in turn and every coefficient dies.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Perpendicular and minimal are the same condition ★</b><span>Calculus and geometry produce identical equations, which is why the right angle was the correct instinct.</span></li>
+      <li><b>Hold both pictures</b><span>Vertical gaps on a graph and a perpendicular in \(\mathbb{R}^3\) are one object seen twice.</span></li>
+      <li><b>Squares, not absolute values</b><span>Squares differentiate cleanly, so the minimisation turns into a <i>linear</i> system.</span></li>
+      <li><b>Watch for outliers</b><span>A squared penalty means one bad point pulls hard. Regression assumes no single measurement is simply wrong.</span></li>
+      <li><b>Everything rests on independent columns</b><span>Without them \(A^TA\) is singular and there is no unique best fit.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>The whole method needed \((A^TA)^{-1}\), and the only reason it was any work is that the columns of \(A\) were not perpendicular. The next lesson takes any independent set and manufactures perpendicular unit vectors spanning the same space — <b>Gram-Schmidt</b>. After that, \(A^TA = I\), the inverse disappears, and \(\hat{x} = Q^Tb\) in one step.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

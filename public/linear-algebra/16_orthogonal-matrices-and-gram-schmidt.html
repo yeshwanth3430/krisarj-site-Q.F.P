@@ -1,0 +1,410 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orthogonal Matrices and Gram-Schmidt · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Orthonormal vectors and the matrix equation Q transpose Q = I, why a square Q has its transpose as inverse, permutation rotation and Hadamard examples, projection as Q Q transpose, and the Gram-Schmidt process with the factorisation A = QR.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="16_orthogonal-matrices-and-gram-schmidt">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Orthogonal Matrices and Gram-Schmidt</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 16</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 16 (MIT 18.06, Lecture 16)</p>
+  <h1>Orthogonal Matrices and Gram-Schmidt</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Perpendicular unit vectors make every formula collapse. Here is how to build them.}} $$</p>
+      <p>Last lesson ended on a promise: if the columns of a matrix are perpendicular and of length 1, then \(A^TA = I\) and the inverse vanishes from every formula. This lesson defines those matrices, shows why they are so pleasant, and gives the procedure — <b>Gram-Schmidt</b> — that turns any independent set into one.</p>
+    </div>
+
+    <div class="box method"><span class="label">What orthonormal buys you ★</span>
+      <table class="sl-table">
+        <tr><th>Quantity</th><th>General \(A\)</th><th>Orthonormal \(Q\)</th></tr>
+        <tr><td>\(A^TA\)</td><td>some invertible matrix</td><td>\(I\)</td></tr>
+        <tr><td>\(\hat{x}\)</td><td>\((A^TA)^{-1}A^Tb\)</td><td>\(Q^Tb\)</td></tr>
+        <tr><td>each coefficient</td><td>solve a system</td><td>\(\hat{x}_i = q_i^Tb\) — one dot product</td></tr>
+        <tr><td>\(P\)</td><td>\(A(A^TA)^{-1}A^T\)</td><td>\(QQ^T\)</td></tr>
+        <tr><td>inverse (if square)</td><td>elimination</td><td>\(Q^{-1} = Q^T\) — just transpose it</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Orthonormal vectors</a></li>
+        <li><a href="#t2">The matrix Q and Q transpose Q = I</a></li>
+        <li><a href="#t3">Square Q: the inverse is the transpose</a></li>
+        <li><a href="#t4">Examples</a></li>
+        <li><a href="#t5">Why orthonormal columns are good</a></li>
+        <li><a href="#t6">Gram-Schmidt: the idea</a></li>
+        <li><a href="#t7">Two vectors, worked</a></li>
+        <li><a href="#t8">Three vectors</a></li>
+        <li><a href="#t9">A = QR</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Orthonormal vectors</a><span>Perpendicular (ortho) and unit length (normal). One formula covers both.</span></li>
+      <li><a href="#t2">The matrix Q and Q transpose Q = I ★</a><span>The whole definition, packed into one matrix product.</span></li>
+      <li><a href="#t3">Square Q: the inverse is the transpose</a><span>The cheapest inverse in mathematics.</span></li>
+      <li><a href="#t4">Examples</a><span>Permutations, rotations, Hadamard matrices, and one with no square roots.</span></li>
+      <li><a href="#t5">Why orthonormal columns are good ★</a><span>\(P = QQ^T\), \(\hat{x} = Q^Tb\), and each coefficient is one dot product.</span></li>
+      <li><a href="#t6">Gram-Schmidt: the idea</a><span>Keep the first vector; subtract from each later one everything already accounted for.</span></li>
+      <li><a href="#t7">Two vectors, worked</a><span>Real numbers, the perpendicularity checked.</span></li>
+      <li><a href="#t8">Three vectors</a><span>Subtract two components instead of one. The pattern continues forever.</span></li>
+      <li><a href="#t9">A = QR ★</a><span>Gram-Schmidt written as a factorisation, the way elimination gave \(A = LU\).</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Orthonormal vectors</h3>
+
+    <p>The word is two words stuck together:</p>
+
+    <ul>
+      <li><b>ortho</b> — perpendicular to each other;</li>
+      <li><b>normal</b> — each of length 1.</li>
+    </ul>
+
+    <div class="box definition"><span class="label">Definition · orthonormal ★</span>
+      <p>Vectors \(q_1, q_2, \dots, q_n\) are <b>orthonormal</b> when</p>
+      $$ \boxed{q_i^Tq_j = \begin{cases} 0 & \text{if } i \ne j \\ 1 & \text{if } i = j \end{cases}} $$
+      <p>The top line is "perpendicular", the bottom line is "length 1" — because \(q_i^Tq_i = \|q_i\|^2\).</p>
+    </div>
+
+    <p>Getting the length right is the easy half: take any non-zero vector and divide by its length. The vector \((1,2,2)\) has length \(\sqrt{1+4+4} = 3\), so \(\tfrac13(1,2,2)\) is a unit vector pointing the same way. Getting them perpendicular is the work, and that is §6.</p>
+
+    <div class="box theorem"><span class="label">Orthonormal vectors are always independent</span>
+      <p>Suppose \(c_1q_1 + c_2q_2 + \dots + c_nq_n = 0\). Dot both sides with \(q_1\):</p>
+      $$ c_1\underbrace{q_1^Tq_1}_{1} + c_2\underbrace{q_1^Tq_2}_{0} + \dots + c_n\underbrace{q_1^Tq_n}_{0} = 0 \qquad\Longrightarrow\qquad c_1 = 0 $$
+      <p>Dot with \(q_2\) and \(c_2 = 0\), and so on. Every coefficient is zero, so no non-trivial combination vanishes ✓</p>
+      <p>This is why §10 of the last lesson called them the safe choice: independence is automatic, so \(A^TA\) is never singular.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The matrix Q and Q transpose Q = I</h3>
+
+    <p>Put the orthonormal vectors in as columns:</p>
+
+    $$ Q = \begin{bmatrix} q_1 & q_2 & \cdots & q_n \end{bmatrix} $$
+
+    <p>Now compute \(Q^TQ\). The rows of \(Q^T\) are the \(q_i\), the columns of \(Q\) are the \(q_j\), so entry \((i,j)\) of the product is \(q_i^Tq_j\):</p>
+
+    $$ Q^TQ = \begin{bmatrix} q_1^Tq_1 & q_1^Tq_2 & \cdots \\ q_2^Tq_1 & q_2^Tq_2 & \cdots \\ \vdots & \vdots & \ddots \end{bmatrix}
+      = \begin{bmatrix} 1 & 0 & \cdots \\ 0 & 1 & \cdots \\ \vdots & \vdots & \ddots \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">The definition in one equation ★</span>
+      $$ \boxed{Q^TQ = I} $$
+      <p>Ones on the diagonal (each vector dotted with itself, length 1), zeros off it (different vectors, perpendicular). The matrix equation says exactly what the two-case formula said.</p>
+    </div>
+
+    <p>This adds a new family to the list of special matrices built up over the course: triangular, diagonal, permutation, symmetric, row reduced echelon, projection — and now <b>matrices with orthonormal columns</b>.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Square Q: the inverse is the transpose</h3>
+
+    <div class="box definition"><span class="label">Definition · orthogonal matrix</span>
+      <p>A <b>square</b> matrix with orthonormal columns is called an <b>orthogonal matrix</b>.</p>
+    </div>
+
+    <p>For a square matrix, a one-sided inverse is a two-sided inverse. So \(Q^TQ = I\) upgrades:</p>
+
+    $$ \boxed{Q^T = Q^{-1}} $$
+
+    <p>Finding an inverse normally costs a full elimination. For an orthogonal matrix it costs nothing at all — flip the matrix about its diagonal and you are done.</p>
+
+    <div class="box pitfall"><span class="label">The name is unfortunate</span>
+      <p>"Orthogonal matrix" means <b>orthonormal</b> columns — unit length included — and only applies to square matrices. A rectangular matrix can have orthonormal columns and still satisfy \(Q^TQ = I\), but \(QQ^T\) will not be \(I\), and it is not called orthogonal. Everyone agrees the terminology is bad; everyone uses it anyway.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Examples</h3>
+
+    <h4>A permutation matrix</h4>
+
+    $$ Q = \begin{bmatrix} 0&0&1 \\ 1&0&0 \\ 0&1&0 \end{bmatrix} \qquad
+       Q^T = \begin{bmatrix} 0&1&0 \\ 0&0&1 \\ 1&0&0 \end{bmatrix} $$
+
+    <p>Each column is a standard basis vector: length 1, and no two share a non-zero row, so every cross dot product is 0. Permutations just reorder the axes, and reordering cannot change lengths or angles. \(Q^TQ = I\) ✓, and both \(Q\) and \(Q^T\) are orthogonal.</p>
+
+    <h4>A rotation</h4>
+
+    $$ Q = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} $$
+
+    <p>Columns: \((\cos\theta, \sin\theta)\) and \((-\sin\theta, \cos\theta)\).</p>
+
+    <table class="sl-table">
+      <tr><th>Check</th><th>Arithmetic</th><th></th></tr>
+      <tr><td>column 1 length</td><td>\(\cos^2\theta + \sin^2\theta\)</td><td>\(=1\) ✓</td></tr>
+      <tr><td>column 2 length</td><td>\(\sin^2\theta + \cos^2\theta\)</td><td>\(=1\) ✓</td></tr>
+      <tr><td>perpendicular</td><td>\(-\cos\theta\sin\theta + \sin\theta\cos\theta\)</td><td>\(=0\) ✓</td></tr>
+    </table>
+
+    <p>Which is as it should be: rotating the plane preserves every length and every angle.</p>
+
+    <h4>Fixing a matrix that is not orthonormal</h4>
+
+    <p>Take</p>
+
+    $$ \begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix} $$
+
+    <p>The columns \((1,1)\) and \((1,-1)\) <i>are</i> perpendicular: \(1 - 1 = 0\) ✓. But each has length \(\sqrt{2}\), not 1. So divide the whole matrix by \(\sqrt2\):</p>
+
+    $$ Q = \frac{1}{\sqrt2}\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix} $$
+
+    <p>Now both columns have length \(\sqrt{\tfrac12 + \tfrac12} = 1\) and \(Q\) is orthogonal. <b>Perpendicular was the hard part; scaling is bookkeeping.</b></p>
+
+    <h4>Hadamard matrices</h4>
+
+    <p>The same trick scales up. Here is the \(4 \times 4\) version, with columns of \(\pm1\) that happen to be mutually perpendicular:</p>
+
+    $$ Q = \frac12\begin{bmatrix} 1&1&1&1 \\ 1&-1&1&-1 \\ 1&1&-1&-1 \\ 1&-1&-1&1 \end{bmatrix} $$
+
+    <p>Each column has four entries of \(\pm1\), so length \(\sqrt{4} = 2\), and dividing by 2 normalises. Check one cross product — columns 1 and 2:</p>
+
+    $$ (1)(1) + (1)(-1) + (1)(1) + (1)(-1) = 1 - 1 + 1 - 1 = 0 \qquad\checkmark $$
+
+    <h4>A rectangular example with no square roots</h4>
+
+    $$ Q = \frac13\begin{bmatrix} 1 & -2 \\ 2 & -1 \\ 2 & 2 \end{bmatrix} $$
+
+    <table class="sl-table">
+      <tr><th>Check</th><th>Arithmetic</th><th></th></tr>
+      <tr><td>column 1 length²</td><td>\(\tfrac19(1 + 4 + 4) = \tfrac99\)</td><td>\(=1\) ✓</td></tr>
+      <tr><td>column 2 length²</td><td>\(\tfrac19(4 + 1 + 4) = \tfrac99\)</td><td>\(=1\) ✓</td></tr>
+      <tr><td>perpendicular</td><td>\(\tfrac19\big((1)(-2) + (2)(-1) + (2)(2)\big) = \tfrac19(-2-2+4)\)</td><td>\(=0\) ✓</td></tr>
+    </table>
+
+    <p>So \(Q^TQ = I\) (a \(2 \times 2\) identity), even though \(Q\) is \(3 \times 2\). Add a third column to make it square and orthogonal:</p>
+
+    $$ \frac13\begin{bmatrix} 1 & -2 & 2 \\ 2 & -1 & -2 \\ 2 & 2 & 1 \end{bmatrix} $$
+
+    <p>Check the new column against the first: \(\tfrac19\big((1)(2) + (2)(-2) + (2)(1)\big) = \tfrac19(2 - 4 + 2) = 0\) ✓, and its length² is \(\tfrac19(4+4+1) = 1\) ✓.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Why orthonormal columns are good</h3>
+
+    <p>Take every formula from the last two lessons and substitute \(Q^TQ = I\).</p>
+
+    <h4>The projection matrix</h4>
+
+    $$ P = Q(Q^TQ)^{-1}Q^T = Q\,I^{-1}Q^T = \boxed{QQ^T} $$
+
+    <p>The inverse is gone. And if \(Q\) is square, its columns span the whole space, nothing needs projecting, and indeed \(QQ^T = QQ^{-1} = I\) ✓.</p>
+
+    <h4>The normal equations</h4>
+
+    $$ Q^TQ\hat{x} = Q^Tb \qquad\Longrightarrow\qquad I\hat{x} = Q^Tb \qquad\Longrightarrow\qquad \boxed{\hat{x} = Q^Tb} $$
+
+    <p>No system to solve. And reading it one entry at a time:</p>
+
+    $$ \boxed{\hat{x}_i = q_i^Tb} $$
+
+    <div class="box intuition"><span class="label">What that actually means</span>
+      <p>Each coefficient is found <b>independently of all the others</b>, by a single dot product. With a general basis, changing one basis vector changes every coefficient, because the system is coupled. With an orthonormal basis, each \(q_i\) asks "how much of \(b\) points along me?" and nothing else is involved.</p>
+      <p>This is why orthonormal bases are worth the trouble of constructing, and why the rest of the course keeps reaching for them.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Gram-Schmidt: the idea</h3>
+
+    <p>You are handed independent vectors \(a, b, c, \dots\) which are not perpendicular. Produce orthonormal \(q_1, q_2, q_3, \dots\) spanning <b>the same space</b>.</p>
+
+    <div class="box method"><span class="label">The idea in one line ★</span>
+      <p>Keep the first vector. For each later one, <b>subtract off the part that points in directions already taken</b>, and keep what is left.</p>
+      <p>What is left is the error \(e\) from a projection — and Lesson 14 proved that error is perpendicular to what you projected onto. That is the entire mechanism.</p>
+    </div>
+
+    <p>Compare with elimination:</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Elimination</th><th>Gram-Schmidt</th></tr>
+      <tr><td>goal</td><td>make the matrix triangular</td><td>make the columns orthonormal</td></tr>
+      <tr><td>method</td><td>subtract multiples of rows</td><td>subtract projections of columns</td></tr>
+      <tr><td>factorisation</td><td>\(A = LU\), \(L\) lower triangular</td><td>\(A = QR\), \(R\) upper triangular</td></tr>
+    </table>
+
+    <p>The procedure comes in two stages. First make the vectors <b>perpendicular</b> (call them \(A, B, C\) — capitals, not yet unit length). Then divide each by its length to get \(q_1, q_2, q_3\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Two vectors, worked</h3>
+
+    <p>Start with</p>
+
+    $$ a = \begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}, \qquad b = \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix} $$
+
+    <p>They are independent but not perpendicular: \(a^Tb = 1 + 0 + 2 = 3 \ne 0\).</p>
+
+    <h4>Step 1 · keep the first</h4>
+
+    $$ A = a = (1,1,1) $$
+
+    <h4>Step 2 · subtract b's component along A</h4>
+
+    <p>Project \(b\) onto \(A\) using the Lesson 14 formula, and keep the error:</p>
+
+    $$ \boxed{B = b - \frac{A^Tb}{A^TA}A} $$
+
+    <p>The two numbers:</p>
+
+    $$ A^TA = 1 + 1 + 1 = 3, \qquad A^Tb = 1 + 0 + 2 = 3, \qquad \frac{A^Tb}{A^TA} = \frac33 = 1 $$
+
+    <p>So subtract exactly one copy of \(A\):</p>
+
+    $$ B = \begin{bmatrix} 1 \\ 0 \\ 2 \end{bmatrix} - 1\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 0 \\ -1 \\ 1 \end{bmatrix} $$
+
+    <h4>Step 3 · check</h4>
+
+    $$ A^TB = (1)(0) + (1)(-1) + (1)(1) = 0 - 1 + 1 = 0 \qquad\checkmark $$
+
+    <p>It had to work. Multiply the defining formula by \(A^T\) and see why:</p>
+
+    $$ A^TB = A^Tb - \frac{A^Tb}{A^TA}\underbrace{A^TA}_{\text{cancels}} = A^Tb - A^Tb = 0 $$
+
+    <p>The subtraction was built to kill exactly the overlap.</p>
+
+    <h4>Step 4 · normalise</h4>
+
+    $$ \|A\| = \sqrt{1+1+1} = \sqrt3, \qquad \|B\| = \sqrt{0+1+1} = \sqrt2 $$
+
+    $$ q_1 = \frac{1}{\sqrt3}\begin{bmatrix} 1 \\ 1 \\ 1 \end{bmatrix}, \qquad
+       q_2 = \frac{1}{\sqrt2}\begin{bmatrix} 0 \\ -1 \\ 1 \end{bmatrix}, \qquad
+       Q = \begin{bmatrix} 1/\sqrt3 & 0 \\ 1/\sqrt3 & -1/\sqrt2 \\ 1/\sqrt3 & 1/\sqrt2 \end{bmatrix} $$
+
+    <div class="box intuition"><span class="label">Same plane, better basis</span>
+      <p>\(C(Q) = C(A)\): the two columns of \(Q\) span exactly the plane that \(a\) and \(b\) spanned. Nothing was added and nothing was lost — \(B\) is \(b\) minus a multiple of \(a\), so it was in the plane all along. Only the <i>description</i> of the plane improved.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Three vectors</h3>
+
+    <p>With a third independent vector \(c\), the same move — now subtract <b>two</b> components, one for each direction already fixed:</p>
+
+    $$ \boxed{C = c - \frac{A^Tc}{A^TA}A - \frac{B^Tc}{B^TB}B} $$
+
+    <p>Check that it works, one factor at a time. Multiply by \(A^T\):</p>
+
+    $$ A^TC = A^Tc - \frac{A^Tc}{A^TA}A^TA - \frac{B^Tc}{B^TB}\underbrace{A^TB}_{= 0} = A^Tc - A^Tc - 0 = 0 \qquad\checkmark $$
+
+    <p>The last term vanished because \(A\) and \(B\) were already made perpendicular in step 2. Multiplying by \(B^T\) works the same way, with the roles swapped. Then normalise: \(q_3 = C/\|C\|\).</p>
+
+    <p>And the pattern simply continues. For the \(k\)th vector, subtract one projection for each of the \(k-1\) directions already built.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. A = QR</h3>
+
+    <p>Elimination had a matrix form, \(A = LU\). Gram-Schmidt has one too.</p>
+
+    <p>Put the originals in \(A\) and the orthonormal result in \(Q\). Every original column is a combination of the \(q\)'s, and the coefficients are dot products:</p>
+
+    $$ \boxed{A = QR \qquad\text{where}\qquad R = Q^TA} $$
+
+    <h4>Why \(R\) is upper triangular</h4>
+
+    <p>Entry \((i,j)\) of \(R\) is \(q_i^Ta_j\). Now think about what Gram-Schmidt built: \(q_1\) came from \(a_1\) alone, \(q_2\) from \(a_1\) and \(a_2\), and so on. So \(a_j\) is a combination of \(q_1, \dots, q_j\) only — it has no component along any later \(q\). That makes</p>
+
+    $$ q_i^Ta_j = 0 \qquad\text{whenever } i > j $$
+
+    <p>which is exactly "zeros below the diagonal" ✓</p>
+
+    <h4>Work it out for the example</h4>
+
+    <p>With \(a_1 = (1,1,1)\), \(a_2 = (1,0,2)\) and the \(q\)'s from §7:</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Dot product</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\(R_{11}\)</td><td>\(q_1^Ta_1\)</td><td>\(\tfrac{1}{\sqrt3}(1+1+1) = \tfrac{3}{\sqrt3}\)</td><td>\(\sqrt3\)</td></tr>
+      <tr><td>\(R_{12}\)</td><td>\(q_1^Ta_2\)</td><td>\(\tfrac{1}{\sqrt3}(1+0+2) = \tfrac{3}{\sqrt3}\)</td><td>\(\sqrt3\)</td></tr>
+      <tr><td>\(R_{21}\)</td><td>\(q_2^Ta_1\)</td><td>\(\tfrac{1}{\sqrt2}(0 - 1 + 1)\)</td><td>\(0\) — as promised</td></tr>
+      <tr><td>\(R_{22}\)</td><td>\(q_2^Ta_2\)</td><td>\(\tfrac{1}{\sqrt2}(0 - 0 + 2) = \tfrac{2}{\sqrt2}\)</td><td>\(\sqrt2\)</td></tr>
+    </table>
+
+    $$ A = \begin{bmatrix} 1 & 1 \\ 1 & 0 \\ 1 & 2 \end{bmatrix}
+       = \underbrace{\begin{bmatrix} 1/\sqrt3 & 0 \\ 1/\sqrt3 & -1/\sqrt2 \\ 1/\sqrt3 & 1/\sqrt2 \end{bmatrix}}_{Q}
+         \underbrace{\begin{bmatrix} \sqrt3 & \sqrt3 \\ 0 & \sqrt2 \end{bmatrix}}_{R} $$
+
+    <p>Multiply back to check. Column 1 of \(QR\) is \(\sqrt3 \cdot q_1 = \sqrt3 \cdot \tfrac{1}{\sqrt3}(1,1,1) = (1,1,1)\) ✓. Column 2 is \(\sqrt3\,q_1 + \sqrt2\,q_2 = (1,1,1) + (0,-1,1) = (1,0,2)\) ✓.</p>
+
+    <div class="box intuition"><span class="label">What \(QR\) is for</span>
+      <p>Substitute \(A = QR\) into the normal equations and watch them simplify:</p>
+      $$ A^TA\hat{x} = A^Tb \;\longrightarrow\; R^T\underbrace{Q^TQ}_{I}R\hat{x} = R^TQ^Tb \;\longrightarrow\; R\hat{x} = Q^Tb $$
+      <p>\(R\) is triangular, so that last system is solved by back-substitution alone — no inverse, no \(A^TA\), and far less sensitivity to rounding error. This is how least squares is actually computed in practice.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The Gram-Schmidt procedure</h4>
+    <ol class="index-list">
+      <li><b>Keep the first vector</b><span>\(A = a\). Nothing to subtract yet.</span></li>
+      <li><b>For each later vector, subtract its projection onto all the previous ones</b><span>\(B = b - \dfrac{A^Tb}{A^TA}A\), then \(C = c - \dfrac{A^Tc}{A^TA}A - \dfrac{B^Tc}{B^TB}B\), and so on.</span></li>
+      <li><b>Check each new one is perpendicular to all the earlier ones</b><span>The subtraction was designed to make it so, but check anyway — it catches arithmetic slips immediately.</span></li>
+      <li><b>Divide each by its own length</b><span>\(q_i = A_i/\|A_i\|\). This is the easy step.</span></li>
+      <li><b>Read off \(R = Q^TA\) if you want the factorisation</b><span>It comes out upper triangular for free.</span></li>
+    </ol>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Orthonormal ★</b></td><td>\(q_i^Tq_j = 0\) for \(i \ne j\), \(= 1\) for \(i = j\). Perpendicular and unit length.</td></tr>
+      <tr><td><b>In one equation ★</b></td><td>\(Q^TQ = I\).</td></tr>
+      <tr><td><b>Always independent</b></td><td>Dot a vanishing combination with each \(q_i\) and every coefficient dies.</td></tr>
+      <tr><td><b>Square \(Q\)</b></td><td>\(Q^{-1} = Q^T\). Called an <i>orthogonal matrix</i>, confusingly.</td></tr>
+      <tr><td><b>Examples</b></td><td>Permutations, rotations, \(\tfrac{1}{\sqrt2}\begin{bmatrix}1&1\\1&-1\end{bmatrix}\), Hadamard, \(\tfrac13\begin{bmatrix}1&-2\\2&-1\\2&2\end{bmatrix}\).</td></tr>
+      <tr><td><b>Projection ★</b></td><td>\(P = QQ^T\). If \(Q\) is square, \(P = I\).</td></tr>
+      <tr><td><b>Coefficients ★</b></td><td>\(\hat{x} = Q^Tb\), so \(\hat{x}_i = q_i^Tb\) — one dot product each, independent of the others.</td></tr>
+      <tr><td><b>Gram-Schmidt ★</b></td><td>Subtract from each vector its projection onto everything already built. What is left is perpendicular, because errors always are.</td></tr>
+      <tr><td><b>The worked pair</b></td><td>\((1,1,1)\) and \((1,0,2)\) give \(B = (0,-1,1)\), then \(q_1 = (1,1,1)/\sqrt3\), \(q_2 = (0,-1,1)/\sqrt2\).</td></tr>
+      <tr><td><b>\(A = QR\) ★</b></td><td>\(R = Q^TA\) is upper triangular because \(a_j\) has no component along any later \(q\).</td></tr>
+      <tr><td><b>Why bother</b></td><td>\(R\hat{x} = Q^Tb\) replaces \(A^TA\hat{x} = A^Tb\). Triangular, no inverse, numerically far safer.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Perpendicular is the hard part, unit length is bookkeeping ★</b><span>Every example got the angles right first, then divided by a length at the end.</span></li>
+      <li><b>\(Q^TQ = I\) packs the whole definition into one product</b><span>Diagonal ones are the lengths, off-diagonal zeros are the angles.</span></li>
+      <li><b>Gram-Schmidt is projection, reused</b><span>\(B\) is the error vector \(e\) from Lesson 14, and errors are perpendicular by construction.</span></li>
+      <li><b>Orthonormal decouples the coefficients</b><span>\(\hat{x}_i = q_i^Tb\) is computed without reference to any other coefficient.</span></li>
+      <li><b>\(A = QR\) is the orthogonal twin of \(A = LU\)</b><span>Elimination makes things triangular; Gram-Schmidt makes them perpendicular. Both end as a factorisation.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Orthogonality is finished: Lesson 13 found the perpendicular pairs, 14 and 15 used them to project and fit, and this lesson built the bases that make it all cheap. The course now turns to a new question entirely — a single number computed from a square matrix that says whether it is invertible, how much it scales volume, and ultimately where its eigenvalues are. That number is the <b>determinant</b>.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
