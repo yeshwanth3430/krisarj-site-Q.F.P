@@ -293,52 +293,35 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t7">7. Subspaces</h3>
 
-    <p>A <b>subspace</b> is a vector space that lives inside a bigger one. Both the small collection and the big one have to pass the same two tests — you just happen to be looking at part of the larger space.</p>
+    <p>A <b>subspace</b> is a vector space that sits inside a bigger one.</p>
 
-    <h4>Why one arrow drags a whole line in with it</h4>
+    <h4>Put in one arrow and see what follows</h4>
 
-    <p>Suppose you want to build a subspace of \(\mathbb{R}^2\), and you decide it will contain the arrow \(v = (1,2)\). That single decision forces an enormous amount.</p>
+    <p>Say you want a subspace of \(\mathbb{R}^2\) containing \(v = (1,2)\). You are allowed to multiply by any number, so all of these must be in too:</p>
 
-    <p>The reason is the scaling rule. Being a space means <b>you can multiply any vector in it by any number and still be inside</b>. So once \(v\) is in:</p>
+    $$ 2v = (2,4), \qquad \tfrac12 v = (\tfrac12, 1), \qquad -v = (-1,-2), \qquad 0v = (0,0) $$
 
-    <table class="sl-table">
-      <tr><th>Multiply \(v\) by…</th><th>You get…</th><th>…which must also be in</th></tr>
-      <tr><td>\(2\)</td><td>\((2,4)\)</td><td>yes, or the scaling rule is broken</td></tr>
-      <tr><td>\(\tfrac12\)</td><td>\((\tfrac12,1)\)</td><td>yes</td></tr>
-      <tr><td>\(-1\)</td><td>\((-1,-2)\)</td><td>yes</td></tr>
-      <tr><td>\(0\)</td><td>\((0,0)\)</td><td>yes</td></tr>
-    </table>
+    <p>Every number gives another one. Together they make <b>the whole line through \(v\)</b>.</p>
 
-    <p>Every number gives another vector that has to be included. All those vectors point along the same direction as \(v\), just at different lengths and both ways round — and together they are <b>the whole line through \(v\) and the origin</b>. There is no way to stop partway.</p>
+    <p>Is adding a problem? No. Two vectors on the line are \(cv\) and \(dv\), and</p>
 
-    <h4>Why the line is already enough</h4>
+    $$ cv + dv = (c+d)v $$
 
-    <p>We have satisfied scaling. What about adding? Take any two arrows on that line, say \((2,4)\) and \((-1,-2)\), and add them:</p>
+    <p>— still a multiple of \(v\), still on the line.</p>
 
-    $$ (2,4) + (-1,-2) = (1,2) $$
-
-    <p>Still on the line. And that is not luck. Every vector on the line is some multiple of \(v\), so adding two of them is</p>
-
-    $$ c\,v + d\,v = (c+d)\,v $$
-
-    <p>which is just <b>another multiple of \(v\)</b> — still on the line. Addition can never get you off it.</p>
-
-    <div class="box theorem"><span class="label">So a line through the origin is a subspace</span>
-      <p>Scaling forced the whole line to exist; adding never leaves it. Both tests pass, so that line is a genuine vector space sitting inside \(\mathbb{R}^2\).</p>
+    <div class="box theorem"><span class="label">So</span>
+      <p>$$ \boxed{\text{A line through the origin is a subspace.}} $$</p>
     </div>
 
-    <h4>Why the origin can never be missing</h4>
+    <h4>Zero is always in</h4>
 
-    <p>Look again at the last row of the table. Multiplying by \(0\) is allowed — \(0\) is a perfectly ordinary number — and \(0 \times v\) is the zero vector, whatever \(v\) was. So <b>every subspace, without exception, contains the origin</b>.</p>
+    <p>You can always multiply by \(0\), and \(0v\) is the zero vector. So every subspace contains the origin.</p>
 
-    <div class="box method"><span class="label">The fastest check there is ★</span>
+    <div class="box method"><span class="label">Fastest check ★</span>
       <p>$$ \boxed{\text{No origin} \;\Rightarrow\; \text{not a subspace.}} $$</p>
-      <p>Before testing anything else, look for \((0,0)\). If it is not there, you can stop — nothing else needs checking.</p>
     </div>
 
-    <p>This is exactly what kills a line that misses the origin. Pick any arrow sitting on such a line and multiply it by \(0\). The result is the origin, and the origin is not on that line — so the scaling rule is broken and it cannot be a subspace. The shape looks right; the position is wrong.</p>
-
-    <p>The same reasoning rules out stranger ideas. Take the whole plane \(\mathbb{R}^2\) and remove only the single point \((0,0)\). That tiny puncture destroys it: \(0 \times (3,2)\) now has nowhere to land, and so does \((3,2) + (-3,-2)\).</p>
+    <p>So a line that <b>misses</b> the origin fails. Multiply any arrow on it by \(0\) and you land at the origin — which is not on that line.</p>
 
     <figure class="fig" style="max-width:520px;margin:22px auto">
       <svg viewBox="0 0 420 300" role="img" aria-label="A line through the origin is a subspace; a parallel line that misses the origin is not">
@@ -366,7 +349,6 @@
       </svg>
       <figcaption><b>Through the origin, or not a subspace at all.</b> The solid line passes through \((0,0)\): every multiple of a vector on it stays on it, and every sum of two of its vectors stays on it, so it is a genuine subspace of \(\mathbb{R}^2\). The dashed line is parallel and misses the origin — scaling any of its vectors by \(0\) sends you to the origin, which is not on that line, so closure fails immediately.</figcaption>
     </figure>
-
     <!-- ====================================================== -->
     <h3 class="topic" id="t8">8. All subspaces of R² and R³</h3>
 
