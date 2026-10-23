@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transposes, Permutations, Vector Spaces · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 5: PA = LU, transposes and symmetric matrices, R-transpose-R, and the first real vector spaces — subspaces and the column space.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-05">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Transposes, Permutations, Vector Spaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 5</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 5 (MIT 18.06, Lecture 5)</p>
+  <h1>Transposes, Permutations, Vector Spaces</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Finish elimination — then stop looking at vectors and start looking at \textbf{spaces} of them.}} $$</p>
+      <p>Two halves. The first tidies up the loose ends of the last chapter: row exchanges turn \(A = LU\) into \(PA = LU\), and transposes give us <b>symmetric</b> matrices. The second half is <b>the beginning of real linear algebra</b> — vector spaces, subspaces, and the first one built from a matrix: the <b>column space</b>.</p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Row exchanges: PA = LU</a></li>
+        <li><a href="#t2">Permutations recalled</a></li>
+        <li><a href="#t3">The transpose</a></li>
+        <li><a href="#t4">Symmetric matrices</a></li>
+        <li><a href="#t5">RᵀR is always symmetric</a></li>
+        <li><a href="#t6">What a vector space is</a></li>
+        <li><a href="#t7">Closure: an example that fails</a></li>
+        <li><a href="#t8">Subspaces</a></li>
+        <li><a href="#t9">All subspaces of R² and R³</a></li>
+        <li><a href="#t10">The column space</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The topics, in the order he teaches them. Click one to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">Row exchanges: PA = LU</a><span>What the factorisation becomes once we allow ourselves to move rows around.</span></li>
+      <li><a href="#t2">Permutations recalled</a><span>\(n!\) of them, all invertible, and \(P^{T}P = I\).</span></li>
+      <li><a href="#t3">The transpose</a><span>Flip across the diagonal: \((A^{T})_{ij} = A_{ji}\).</span></li>
+      <li><a href="#t4">Symmetric matrices</a><span>The matrices transposing cannot change — the best ones.</span></li>
+      <li><a href="#t5">RᵀR is always symmetric</a><span>Where symmetric matrices come from in practice, proved in two lines.</span></li>
+      <li><a href="#t6">What a vector space is</a><span>A set of vectors you can add and scale without ever leaving it.</span></li>
+      <li><a href="#t7">Closure: an example that fails</a><span>The quarter plane survives addition and dies on multiplication.</span></li>
+      <li><a href="#t8">Subspaces</a><span>A vector space living inside a bigger one — and why it must contain zero.</span></li>
+      <li><a href="#t9">All subspaces of R² and R³</a><span>The complete lists, from the whole space down to the single zero vector.</span></li>
+      <li><a href="#t10">The column space</a><span>Take the columns of a matrix, take every combination, and a subspace appears.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Row exchanges: PA = LU</h3>
+
+    <p>Lesson 4 gave \(A = LU\) with one assumption attached: <b>no row exchanges</b>. That description quietly assumes the rows arrived in a good order, so that no zero ever appeared in a pivot position.</p>
+
+    <p>But a perfectly good invertible matrix may still need rows moved. If a zero shows up in a pivot position we take a non-zero entry from a row below — and in principle we might have to do that twice, or more.</p>
+
+    <div class="box theorem"><span class="label">Elimination, in general ★</span>
+      <p>$$ \boxed{PA = LU} $$</p>
+      <p>\(P\) is the permutation that puts the rows into the <b>right order first</b> — the order in which no zero reaches a pivot — and then \(L\) and \(U\) come out exactly as before. This covers <b>every</b> invertible \(A\). For almost all matrices \(P\) is just the identity; for the handful that need exchanges, there it is.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">A note on what software actually does</span>
+      <p>MATLAB does not only check whether a pivot is zero, as a human would. It checks whether the pivot is <b>big enough</b>, because pivots close to zero are numerically bad. So in practice it performs row exchanges that algebra says are unnecessary — accuracy says they are not. We are doing algebra here, so we exchange only when forced.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Permutations recalled</h3>
+
+    <p>A permutation matrix \(P\) is <b>the identity with its rows reordered</b> — including the reordering that leaves them alone, which is the identity itself, the do-nothing permutation.</p>
+
+    <p>How many are there? Counting the orderings of \(n\) rows:</p>
+
+    $$ \boxed{n! = n(n-1)(n-2)\cdots(3)(2)(1)} $$
+
+    <p>so \(3! = 6\) for three by three, \(4! = 24\) for four by four, and \(5! = 120\) — listing all the five by five permutations would be no fun at all. With four rows the possibilities get more interesting: you might exchange two rows, or send them round in one big cycle, \(1 \to 2 \to 3 \to 4 \to 1\).</p>
+
+    <p>All of them are invertible, because the rows can always be put back in order. And the matrix that puts them back is simply the <b>transpose</b>:</p>
+
+    $$ \boxed{P^{-1} = P^{T}}, \qquad\text{equivalently}\qquad P^{T}P = I $$
+
+    <p>Multiply a permutation by its transpose and the ones hit the ones, producing the identity. Check it on a cycle:</p>
+
+    $$ P = \begin{bmatrix} 0&1&0 \\ 0&0&1 \\ 1&0&0 \end{bmatrix}, \quad
+      P^{T} = \begin{bmatrix} 0&0&1 \\ 1&0&0 \\ 0&1&0 \end{bmatrix}, \quad
+      P^{T}P = \begin{bmatrix} 1&0&0 \\ 0&1&0 \\ 0&0&1 \end{bmatrix} \quad ✓ $$
+
+    <div class="box intuition"><span class="label">A hint of things to come</span>
+      <p>Matrices with \(P^{T}P = I\) are a family we will care about a great deal. There are more of them than just permutations — the permutations sit like a little group in the centre of that larger family, which later gets the name <b>orthogonal matrices</b>.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The transpose</h3>
+
+    <p>Transposing turns <b>rows into columns and columns into rows</b> — a flip across the main diagonal. The numbers make it clearest:</p>
+
+    $$ R = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      R^{T} = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix} $$
+
+    <p>Column one of \(R\), namely \((1,2,4)\), has become row one of \(R^{T}\); column two has become row two. The shape flips with it: a tall \(3 \times 2\) matrix becomes a short, wide \(2 \times 3\) one.</p>
+
+    <p>In symbols — ask which number sits in row \(i\), column \(j\) of the transpose. It came from \(A\) by the flip, so it was the entry in row \(j\), column \(i\):</p>
+
+    $$ \boxed{\big(A^{T}\big)_{ij} = A_{ji}} $$
+
+    <p>The row number and the column number simply swap places.</p>
+
+    <figure class="fig" style="max-width:560px;margin:22px auto">
+      <svg viewBox="0 0 560 250" role="img" aria-label="Transposing flips a matrix across its diagonal, turning columns into rows">
+        <text class="tick" x="40" y="24" font-size="13">R — three rows, two columns</text>
+        <text class="tick" x="330" y="24" font-size="13">Rᵀ — two rows, three columns</text>
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="17" fill="currentColor">
+          <text x="62" y="72" text-anchor="middle">1</text><text x="110" y="72" text-anchor="middle">3</text>
+          <text x="62" y="110" text-anchor="middle">2</text><text x="110" y="110" text-anchor="middle">3</text>
+          <text x="62" y="148" text-anchor="middle">4</text><text x="110" y="148" text-anchor="middle">1</text>
+          <text x="360" y="86" text-anchor="middle">1</text><text x="408" y="86" text-anchor="middle">2</text><text x="456" y="86" text-anchor="middle">4</text>
+          <text x="360" y="124" text-anchor="middle">3</text><text x="408" y="124" text-anchor="middle">3</text><text x="456" y="124" text-anchor="middle">1</text>
+        </g>
+        <!-- highlight column 1 of R and row 1 of RT -->
+        <rect x="44" y="54" width="36" height="110" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <rect x="92" y="54" width="36" height="110" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <rect x="340" y="68" width="134" height="26" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <rect x="340" y="104" width="134" height="26" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+        <!-- diagonal of the original -->
+        <line class="axis" x1="44" y1="54" x2="128" y2="138" stroke-dasharray="4 4"/>
+        <path class="axis" d="M150 104 C 230 104, 250 100, 320 100" fill="none" stroke-width="2"/>
+        <polygon points="326,100 316,95 316,105" fill="currentColor"/>
+        <text class="tick" x="178" y="92">flip across</text><text class="tick" x="178" y="108">the diagonal</text>
+        <text class="tick" x="40" y="196">Column 1 of R  (1, 2, 4)  becomes row 1 of Rᵀ.</text>
+        <text class="tick" x="40" y="218">Column 2 of R  (3, 3, 1)  becomes row 2 of Rᵀ.</text>
+        <text class="tick" x="40" y="240">The entry in row i, column j lands in row j, column i.</text>
+      </svg>
+      <figcaption><b>Transposing is one flip.</b> The shaded first column of \(R\) lies down and becomes the shaded first row of \(R^{T}\); the second column does the same. Nothing is reordered or rescaled — every number keeps its value and only swaps which index is which, which is exactly what \((A^{T})_{ij} = A_{ji}\) says. Note the shape flips too, so a tall matrix becomes a wide one.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Symmetric matrices</h3>
+
+    <p>Now the best matrices of all. A matrix is <b>symmetric</b> when transposing does not change it:</p>
+
+    $$ \boxed{A^{T} = A} $$
+
+    <p>Whatever sits above the diagonal must be mirrored below it. If there is a \(1\) above, there must be a \(1\) opposite; a \(7\) above needs a \(7\) opposite:</p>
+
+    $$ A = \begin{bmatrix} 3 & 1 & 7 \\ 1 & 2 & 9 \\ 7 & 9 & 4 \end{bmatrix}
+      \qquad A^{T} = \begin{bmatrix} 3 & 1 & 7 \\ 1 & 2 & 9 \\ 7 & 9 & 4 \end{bmatrix} = A \quad ✓ $$
+
+    <div class="box intuition"><span class="label">Two families, two difficulties</span>
+      <p>We have now met two special families. Matrices where <b>the transpose is the inverse</b> (\(P^{T}P = I\)) — highly important, but not simple to spot. And matrices where <b>the transpose is the matrix itself</b> — totally simple to spot. Symmetric matrices are the easy ones to recognise and, as the course goes on, the best behaved.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. RᵀR is always symmetric</h3>
+
+    <p>Our rectangular \(R\) is about as far from symmetric as possible — its transpose is not even the same shape. But here is a way to <b>manufacture</b> a symmetric matrix from any matrix at all: <b>multiply it by its own transpose</b>.</p>
+
+    <p>Do it with the numbers first, taking \(R\) times \(R^{T}\) as he does on the board:</p>
+
+    $$ RR^{T} = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}\begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix}
+      = \begin{bmatrix} 10 & 11 & 7 \\ 11 & 13 & 11 \\ 7 & 11 & 17 \end{bmatrix} $$
+
+    <p>Look at the \(11\) in row one, column two. It came from \(\begin{bmatrix} 1 & 3\end{bmatrix}\) against \(\begin{bmatrix} 2 \\ 3\end{bmatrix}\), giving \(2 + 9 = 11\). Now the entry in row two, column one: \(\begin{bmatrix} 2 & 3\end{bmatrix}\) against \(\begin{bmatrix} 1 \\ 3\end{bmatrix}\), giving \(2 + 9 = 11\). <b>Same two numbers, multiplied in the other order — no difference.</b> That is the symmetry, and the \(7\)s appear twice for the same reason.</p>
+
+    <p>The other product is symmetric too, and smaller:</p>
+
+    $$ R^{T}R = \begin{bmatrix} 1 & 2 & 4 \\ 3 & 3 & 1 \end{bmatrix}\begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix}
+      = \begin{bmatrix} 21 & 13 \\ 13 & 19 \end{bmatrix} $$
+
+    <h4>Why it always happens</h4>
+    <p>The numbers are convincing, but here is the two-line proof. To show a matrix is symmetric, <b>take its transpose and see that nothing changed</b>. Use the rule from Lesson 4 — transpose a product by reversing the order:</p>
+
+    $$ \big(R^{T}R\big)^{T} = R^{T}\big(R^{T}\big)^{T} = R^{T}R \quad ✓ $$
+
+    <p>the last step because transposing twice returns the original: flip across the diagonal, flip back, and you have \(R\) again.</p>
+
+    <div class="box theorem"><span class="label">Where symmetric matrices come from</span>
+      <p>$$ \boxed{R^{T}R \text{ is symmetric for every matrix } R} $$</p>
+      <p>And this is exactly how they arise in practical applications — covariance matrices, least squares, and much else later in the course are all of this form.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. What a vector space is</h3>
+
+    <p>Now the second half, and the real beginning of linear algebra: not just vectors, but <b>spaces</b> of vectors.</p>
+
+    <p>What do we actually do with vectors? Exactly two things. We <b>add</b> them, and we <b>multiply them by numbers</b> (called scalars). Put the two together and we take <b>linear combinations</b> — the operation this whole course is built on.</p>
+
+    <div class="box definition"><span class="label">A vector space</span>
+      <p>A <b>space</b> is not just any bunch of vectors. It must allow the operations vectors are for: <b>you can add any two of them, and multiply any of them by any number, and never leave the collection</b>. (The addition and multiplication also have to behave reasonably — the textbook lists eight such rules — but those are rarely what is in doubt.)</p>
+    </div>
+
+    <h4>The basic examples</h4>
+    <p>\(\mathbb{R}^2\) is all vectors with exactly two real components:</p>
+
+    $$ \begin{bmatrix} 3 \\ 2 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} \pi \\ e \end{bmatrix}, \quad \dots $$
+
+    <p>Addition is component by component, so \(\begin{bmatrix} 3 \\ 2\end{bmatrix} + \begin{bmatrix} \pi \\ e\end{bmatrix} = \begin{bmatrix} 3+\pi \\ 2+e\end{bmatrix}\), and the picture is the familiar one: the vector \((a,b)\) is an arrow from the origin to the point \(a\) across and \(b\) up. <b>\(\mathbb{R}^2\) is the whole \(xy\) plane.</b></p>
+
+    <p>Likewise \(\mathbb{R}^3\) is all vectors with three real components, and in general:</p>
+
+    $$ \mathbb{R}^n = \text{all column vectors with } n \text{ real components} $$
+
+    <div class="box pitfall"><span class="label">Keep the spaces straight</span>
+      <p>Is \(\begin{bmatrix} 3 \\ 2 \\ 0\end{bmatrix}\) in \(\mathbb{R}^2\) or \(\mathbb{R}^3\)? Definitely \(\mathbb{R}^3\) — it has three components. One of them happens to be zero, but zero is a perfectly good number.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Closure: an example that fails</h3>
+
+    <p>To see what the requirement really demands, watch a collection fail it. Take just the <b>first quarter</b> of the plane — all vectors whose two components are both non-negative.</p>
+
+    <p><b>Adding is fine.</b> Add \((3,2)\) to \((5,6)\) and you get \((8,8)\), still in the quarter. No amount of adding will ever take you out.</p>
+
+    <p><b>Multiplying breaks it.</b> Multiply \((3,2)\) by \(-5\) and you land at \((-15,-10)\), far outside the quarter.</p>
+
+    <div class="box definition"><span class="label">Closed</span>
+      <p>The quarter plane is <b>closed under addition</b> but <b>not closed under multiplication</b> by all real numbers — so it is <b>not a vector space</b>. A vector space must be closed under both, which is to say closed under all <b>linear combinations</b>.</p>
+    </div>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 320" role="img" aria-label="The quarter plane is closed under addition but not under multiplication by negative numbers">
+        <defs>
+          <marker id="qa1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="qa3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <rect x="210" y="40" width="190" height="140" class="l2" fill="currentColor" fill-opacity=".1" stroke="none"/>
+        <text class="lbl c2" x="246" y="60">the quarter: both parts ≥ 0</text>
+        <g class="grid">
+          <line x1="20" y1="100" x2="400" y2="100"/><line x1="20" y1="140" x2="400" y2="140"/>
+          <line x1="20" y1="220" x2="400" y2="220"/><line x1="20" y1="260" x2="400" y2="260"/>
+          <line x1="100" y1="30" x2="100" y2="300"/><line x1="140" y1="30" x2="140" y2="300"/>
+          <line x1="270" y1="30" x2="270" y2="300"/><line x1="330" y1="30" x2="330" y2="300"/>
+        </g>
+        <line class="axis" x1="20" y1="180" x2="410" y2="180"/><line class="axis" x1="210" y1="310" x2="210" y2="30"/>
+        <line class="l2" x1="210" y1="180" x2="270" y2="140" marker-end="url(#qa1)"/>
+        <circle class="pt" cx="270" cy="140" r="4"/><text class="lbl c2" x="278" y="134">(3, 2)</text>
+        <line class="l2" x1="210" y1="180" x2="330" y2="100" marker-end="url(#qa1)"/>
+        <text class="lbl c2" x="300" y="94">(5, 6)-ish — still inside</text>
+        <line class="l3 dash" x1="210" y1="180" x2="90" y2="260" marker-end="url(#qa3)"/>
+        <circle class="hit" cx="90" cy="260" r="5"/>
+        <text class="lbl c3" x="26" y="282">−5 × (3, 2) — outside</text>
+        <text class="tick" x="26" y="306">adding keeps you in · multiplying by a negative does not</text>
+      </svg>
+      <figcaption><b>Closed under addition, not under multiplication.</b> Every sum of two arrows from the shaded quarter stays in the shaded quarter — addition alone never causes trouble. But scaling is also required, by <i>any</i> real number, and multiplying \((3,2)\) by \(-5\) throws you into the opposite quarter. One escape is enough: the collection is not a vector space.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Subspaces</h3>
+
+    <p>The quarter plane was a bad way to take part of \(\mathbb{R}^2\). Here is a good one. A vector space sitting <b>inside</b> another vector space is called a <b>subspace</b>.</p>
+
+    <p>Start with a single non-zero vector \(v\) and ask what else must come with it:</p>
+
+    <ol class="index-list">
+      <li><b>All its multiples.</b>
+        <span>We must be allowed to multiply by \(2\), by \(\tfrac12\), by \(\tfrac34\), by \(-\tfrac12\), by \(-1\) — by anything. So the entire <b>line</b> through \(v\) has to be included.</span></li>
+      <li><b>And that is already enough.</b>
+        <span>Adding two vectors on the line keeps you on the line, so the line is closed under addition too. Nothing more needs to be added.</span></li>
+    </ol>
+
+    <div class="box theorem"><span class="label">Every subspace contains zero ★</span>
+      <p>We must be allowed to multiply by \(0\), and \(0\,v\) is the zero vector — so <b>the zero vector is in every subspace, with no exceptions</b>.</p>
+      <p>This is why a line that <b>misses</b> the origin is not a subspace: multiply any vector on it by \(0\) and you land somewhere the line does not reach.</p>
+    </div>
+
+    <p>The same reasoning shows why the whole plane cannot do without the origin either. Puncture \(\mathbb{R}^2\) by removing the single point \((0,0)\) and it stops being a vector space — because \(0 \times (3,2)\) must land somewhere, and because \((3,2) + (-3,-2)\) is the origin as well.</p>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 420 300" role="img" aria-label="A line through the origin is a subspace; a parallel line that misses the origin is not">
+        <defs>
+          <marker id="sa3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <g class="grid">
+          <line x1="20" y1="80" x2="400" y2="80"/><line x1="20" y1="120" x2="400" y2="120"/>
+          <line x1="20" y1="200" x2="400" y2="200"/><line x1="20" y1="240" x2="400" y2="240"/>
+          <line x1="100" y1="20" x2="100" y2="280"/><line x1="140" y1="20" x2="140" y2="280"/>
+          <line x1="260" y1="20" x2="260" y2="280"/><line x1="300" y1="20" x2="300" y2="280"/>
+        </g>
+        <line class="axis" x1="20" y1="160" x2="410" y2="160"/><line class="axis" x1="210" y1="290" x2="210" y2="20"/>
+        <!-- subspace line through origin -->
+        <line class="l2" x1="70" y1="254" x2="360" y2="60"/>
+        <circle class="pt" cx="270" cy="120" r="4"/>
+        <circle class="hit" cx="210" cy="160" r="5"/>
+        <text class="lbl c2" x="286" y="112">a subspace: the line through 0</text>
+        <text class="lbl c3" x="150" y="180">0 is on it ✓</text>
+        <!-- parallel line missing origin -->
+        <line class="l3 dash" x1="40" y1="200" x2="330" y2="30"/>
+        <text class="lbl c3" x="40" y="44">not a subspace: parallel, misses 0</text>
+        <line class="l3 dash" x1="250" y1="80" x2="214" y2="152" marker-end="url(#sa3)"/>
+        <text class="tick" x="166" y="276">multiply any vector on the dashed line by 0 and you land at the origin — off the line</text>
+      </svg>
+      <figcaption><b>Through the origin, or not a subspace at all.</b> The solid line passes through \((0,0)\): every multiple of a vector on it stays on it, and every sum of two of its vectors stays on it, so it is a genuine subspace of \(\mathbb{R}^2\). The dashed line is parallel and misses the origin — scaling any of its vectors by \(0\) sends you to the origin, which is not on that line, so closure fails immediately.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. All subspaces of R² and R³</h3>
+
+    <p>\(\mathbb{R}^2\) is small enough that we can list every subspace it has:</p>
+
+    <table class="sl-table">
+      <tr><th>Subspace of \(\mathbb{R}^2\)</th><th>What it looks like</th></tr>
+      <tr><td><b>All of \(\mathbb{R}^2\)</b></td><td>The whole plane. A space always counts as a subspace of itself.</td></tr>
+      <tr><td><b>Any line through \((0,0)\)</b></td><td>Infinite in both directions, passing through the origin.</td></tr>
+      <tr><td><b>\(Z\) — the zero vector alone</b></td><td>Just \(\{(0,0)\}\), and nothing else.</td></tr>
+    </table>
+
+    <div class="box pitfall"><span class="label">A line in \(\mathbb{R}^2\) is not \(\mathbb{R}^1\)</span>
+      <p>It looks a great deal like \(\mathbb{R}^1\), and in a sense behaves like it — but the vectors on that line have <b>two components</b>, while vectors in \(\mathbb{R}^1\) have one. Very close, not the same.</p>
+    </div>
+
+    <p>And why is the zero vector alone a legitimate subspace? Because it passes both tests, dully: add it to itself and you are still there; multiply it by \(17\) and you are still there. It is the <b>smallest</b> subspace, just as the whole space is the largest.</p>
+
+    <p>One dimension up, \(\mathbb{R}^3\) has four kinds:</p>
+
+    <table class="sl-table">
+      <tr><th>Subspace of \(\mathbb{R}^3\)</th><th>What it looks like</th></tr>
+      <tr><td><b>All of \(\mathbb{R}^3\)</b></td><td>The whole of space.</td></tr>
+      <tr><td><b>Any plane through the origin</b></td><td>Flat, infinite, containing \((0,0,0)\).</td></tr>
+      <tr><td><b>Any line through the origin</b></td><td>Infinite in both directions.</td></tr>
+      <tr><td><b>\(Z\) — the zero vector alone</b></td><td>\(\{(0,0,0)\}\).</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. The column space</h3>
+
+    <p>Now the question that matters: <b>where do subspaces come from?</b> They come out of matrices. Take</p>
+
+    $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} $$
+
+    <p>Its two columns, \((1,2,4)\) and \((3,3,1)\), are vectors in \(\mathbb{R}^3\). Put them in a collection — but two vectors do not make a subspace. <b>What else must be thrown in?</b></p>
+
+    <ol class="index-list">
+      <li><b>The zero vector</b><span>because we must be allowed to multiply by \(0\).</span></li>
+      <li><b>Their sum</b><span>\((1,2,4) + (3,3,1) = (4,5,5)\), because we must be allowed to add.</span></li>
+      <li><b>Every other combination</b><span>one of this plus three of that, and so on, for all real amounts.</span></li>
+    </ol>
+
+    <p>Include <b>all</b> the results and the job is done — closure is guaranteed by construction.</p>
+
+    <div class="box definition"><span class="label">The column space ★</span>
+      <p>$$ \boxed{C(A) = \text{all linear combinations of the columns of } A} $$</p>
+      <p>It is a subspace, and the first important one to come out of a matrix.</p>
+    </div>
+
+    <h4>What does it look like here?</h4>
+    <p>Draw the two columns in \(\mathbb{R}^3\). Every multiple of the first fills out one line; every multiple of the second fills out another; and because we may add something from one line to something from the other, <b>everything between the two lines fills in as well</b>.</p>
+
+    <p>The result is more than a line and less than all of space: it is a <b>plane through the origin</b> — the plane containing \((1,2,4)\) and \((3,3,1)\).</p>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-colspace" style="width:100%;height:440px"></div>
+      <figcaption><b>The column space is a plane — drag to rotate.</b> The two solid arrows are the columns of \(A\). The shaded sheet is \(C(A)\): every vector you can build as \(x(1,2,4) + y(3,3,1)\). Rotate until the sheet is edge-on and you can see it really is flat, and that it passes exactly through the origin — as every subspace must. The dashed arrow is the column sum \((4,5,5)\), which of course lands on the sheet. Nothing outside this plane is reachable from these two columns; had they pointed the same way, the column space would have collapsed to a single line.</figcaption>
+    </figure>
+
+    <div class="box intuition"><span class="label">And in ten dimensions</span>
+      <p>The picture has to be learned in \(\mathbb{R}^3\), because we will soon do it in \(\mathbb{R}^{10}\). Take five vectors with ten components each and form all their combinations. We do <b>not</b> get \(\mathbb{R}^5\) — the vectors have ten components, not five. We get some flat five-dimensional thing through the origin, sitting inside \(\mathbb{R}^{10}\).</p>
+      <p>Unless the five vectors overlap, of course — if they all lay on one line, the combinations would only be that line, exactly as two columns on one line would give a line instead of a plane.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>With row exchanges</b></td><td>\(PA = LU\) — \(P\) puts the rows in an order where no zero reaches a pivot. Covers every invertible \(A\).</td></tr>
+      <tr><td><b>Permutations</b></td><td>The identity with rows reordered; \(n!\) of them; all invertible.</td></tr>
+      <tr><td><b>Permutation inverse</b></td><td>\(P^{-1} = P^{T}\), i.e. \(P^{T}P = I\).</td></tr>
+      <tr><td><b>Transpose</b></td><td>Flip across the diagonal: \((A^{T})_{ij} = A_{ji}\); rows become columns and the shape flips.</td></tr>
+      <tr><td><b>Symmetric</b></td><td>\(A^{T} = A\) — whatever is above the diagonal is mirrored below.</td></tr>
+      <tr><td><b>Making symmetry</b></td><td>\(R^{T}R\) is symmetric for any \(R\), because \((R^{T}R)^{T} = R^{T}R\).</td></tr>
+      <tr><td><b>Vector space</b></td><td>A collection closed under addition <b>and</b> scalar multiplication — closed under all linear combinations.</td></tr>
+      <tr><td><b>\(\mathbb{R}^n\)</b></td><td>All column vectors with \(n\) real components. \(\mathbb{R}^2\) is the \(xy\) plane.</td></tr>
+      <tr><td><b>Not a space</b></td><td>The quarter plane: closed under addition, broken by multiplying by \(-5\).</td></tr>
+      <tr><td><b>Subspace</b></td><td>A vector space inside a vector space. <b>Must contain the zero vector.</b></td></tr>
+      <tr><td><b>Subspaces of \(\mathbb{R}^2\)</b></td><td>All of \(\mathbb{R}^2\); any line through \((0,0)\); the zero vector alone.</td></tr>
+      <tr><td><b>Subspaces of \(\mathbb{R}^3\)</b></td><td>All of \(\mathbb{R}^3\); any plane through the origin; any line through the origin; \(Z\).</td></tr>
+      <tr><td><b>Column space</b></td><td>\(C(A)\) = all combinations of the columns of \(A\) — always a subspace.</td></tr>
+      <tr><td><b>Our example</b></td><td>Columns \((1,2,4)\) and \((3,3,1)\) give the plane through the origin containing both.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>This is where real linear algebra begins ★</b>
+        <span>Not just vectors, but spaces of vectors and subspaces inside them — a higher level of looking at the same objects.</span></li>
+      <li><b>Closure is the whole requirement</b>
+        <span>A space must survive both operations. The eight textbook rules are rarely in doubt; whether you stay inside the collection is.</span></li>
+      <li><b>Every subspace contains the zero vector ★</b>
+        <span>Because multiplying by \(0\) is allowed, and the result has to be somewhere. A line that misses the origin fails on the spot.</span></li>
+      <li><b>A few vectors are not enough — take all their combinations</b>
+        <span>That is the central move of the lecture: start with the columns, close them up under addition and scaling, and a subspace appears.</span></li>
+      <li><b>See the picture in \(\mathbb{R}^3\)</b>
+        <span>Two columns generally fill a plane through the origin. Learn it there, because the same thing happens in \(\mathbb{R}^{10}\) where you cannot draw it.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We now have a language for what a matrix can reach. The next lesson puts it to work on the oldest question in the course: <b>what does \(Ax = b\) mean in terms of the column space?</b> The answer — \(Ax = b\) is solvable exactly when \(b\) lies in \(C(A)\) — and then a second subspace appears, the <b>nullspace</b>.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script>
+// 3D figure: the column space of A is a plane through the origin.
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), green = c("--ex-b"), red = c("--warn-b"), purple = c("--thm-b"),
+      ink = c("--ink"), soft = c("--ink-soft"), rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t, lo, hi, dt) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: dt, tickfont: { size: 11, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  if (!document.getElementById("fig3d-colspace")) return;
+  // plane through origin spanned by (1,2,4) and (3,3,1): normal (-10, 11, -3)
+  var S = [], T = [], X = [], Y = [], Z = [], I = [], J = [], K = [];
+  var us = [-1.6, 1.6], vs = [-1.6, 1.6], pts = [];
+  [[-1.6,-1.6],[1.6,-1.6],[1.6,1.6],[-1.6,1.6]].forEach(function (p) {
+    pts.push([p[0]*1 + p[1]*3, p[0]*2 + p[1]*3, p[0]*4 + p[1]*1]);
+  });
+  pts.forEach(function (p) { X.push(p[0]); Y.push(p[1]); Z.push(p[2]); });
+  I = [0, 0]; J = [1, 2]; K = [2, 3];
+  var L = { margin: { l: 0, r: 0, t: 0, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 11 }, bgcolor: "rgba(0,0,0,0)" },
+    scene: { xaxis: axis("x", -8, 8, 4), yaxis: axis("y", -8, 8, 4), zaxis: axis("z", -8, 8, 4),
+      aspectmode: "cube", dragmode: "turntable", camera: { eye: { x: 1.7, y: -1.6, z: 0.8 }, up: { x: 0, y: 0, z: 1 } } } };
+  Plotly.newPlot("fig3d-colspace", [
+    { type: "mesh3d", name: "C(A) — every combination of the two columns", showlegend: true, hoverinfo: "name",
+      opacity: 0.38, color: purple, flatshading: true, x: X, y: Y, z: Z, i: I, j: J, k: K },
+    { type: "scatter3d", mode: "lines", name: "column 1 = (1, 2, 4)", hoverinfo: "name",
+      line: { color: blue, width: 10 }, x: [0, 1], y: [0, 2], z: [0, 4] },
+    { type: "scatter3d", mode: "lines", name: "column 2 = (3, 3, 1)", hoverinfo: "name",
+      line: { color: green, width: 10 }, x: [0, 3], y: [0, 3], z: [0, 1] },
+    { type: "scatter3d", mode: "lines", name: "their sum = (4, 5, 5)", hoverinfo: "name",
+      line: { color: red, width: 6, dash: "dash" }, x: [0, 4], y: [0, 5], z: [0, 5] },
+    { type: "scatter3d", mode: "markers+text", name: "the origin is on it", hoverinfo: "name",
+      marker: { color: ink, size: 5 }, x: [0], y: [0], z: [0], text: ["0"], textposition: "bottom left",
+      textfont: { color: ink, size: 13 } }
+  ], L, { responsive: true, displaylogo: false, displayModeBar: false });
+});
+</script>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
