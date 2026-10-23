@@ -159,16 +159,64 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t4">4. Splitting out the pivots: LDU</h3>
 
-    <p>The two triangles are lopsided — \(L\) has ones on its diagonal, \(U\) has the pivots. Sometimes we want them balanced, so pull the pivots out into a <b>diagonal matrix \(D\)</b>.</p>
+    <p>The two triangles are lopsided. \(L\) has <b>ones</b> down its diagonal; \(U\) has the <b>pivots</b>. We can even things out by pulling those pivots into a matrix of their own — and the whole move rests on one small fact.</p>
 
-    <p>Divide row one of \(U\) by its pivot \(2\), giving \(\begin{bmatrix} 1 & \tfrac12 \end{bmatrix}\), and row two by its pivot \(3\), giving \(\begin{bmatrix} 0 & 1\end{bmatrix}\):</p>
+    <h4>The fact: a diagonal matrix on the left scales rows</h4>
+
+    <p>Remember the rule from Lesson 2 — a matrix on the left builds each row of the answer from the rows of the matrix on the right. Row 1 of \(\begin{bmatrix} 2 & 0 \\ 0 & 3\end{bmatrix}\) is \(\begin{bmatrix} 2 & 0\end{bmatrix}\), so it takes <b>two</b> of row one and none of row two. Row 2 takes <b>three</b> of row two:</p>
+
+    $$ \begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}
+       \begin{bmatrix} \ \ r_1 \longrightarrow \\ \ \ r_2 \longrightarrow \end{bmatrix}
+       = \begin{bmatrix} 2\,r_1 \longrightarrow \\ 3\,r_2 \longrightarrow \end{bmatrix} $$
+
+    <div class="box method"><span class="label">Rule · what a diagonal matrix does</span>
+      <p>A diagonal matrix on the <b>left</b> simply <b>multiplies each row by its own diagonal entry</b>. It changes sizes, never directions or order.</p>
+    </div>
+
+    <h4>So factor each row of U</h4>
+
+    <p>This is ordinary factoring, the kind you do with numbers — \(12 = 3 \times 4\) can be opened up to \(3 \times 2 \times 2\). Take each row of \(U\) and pull its <b>pivot</b> out in front:</p>
+
+    $$ \begin{aligned}
+      \text{row 1 of } U &= \begin{bmatrix} 2 & 1 \end{bmatrix} = \mathbf{2}\begin{bmatrix} 1 & \tfrac12 \end{bmatrix} \\[4pt]
+      \text{row 2 of } U &= \begin{bmatrix} 0 & 3 \end{bmatrix} = \mathbf{3}\begin{bmatrix} 0 & 1 \end{bmatrix}
+    \end{aligned} $$
+
+    <p>Two rows, two scale factors — and we have just seen that scaling rows is exactly a diagonal matrix. So collect the factors into \(D\) and whatever is left into \(U'\):</p>
+
+    $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 0 & 3 \end{bmatrix}}_{U}
+      = \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D \ \text{— the pivots}}
+        \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{U' \ \text{— ones on the diagonal}} $$
+
+    <p>Check it: row one is \(2\begin{bmatrix} 1 & \tfrac12\end{bmatrix} = \begin{bmatrix} 2 & 1\end{bmatrix}\) ✓, row two is \(3\begin{bmatrix} 0 & 1\end{bmatrix} = \begin{bmatrix} 0 & 3\end{bmatrix}\) ✓.</p>
+
+    <h4>Put it back into A = LU</h4>
+
+    <p>We had \(A = LU\), and now \(U\) itself splits into \(DU'\). Substitute:</p>
+
+    $$ A = L\,U = L\,(D\,U') = \boxed{L\,D\,U'} $$
 
     $$ \underbrace{\begin{bmatrix} 2 & 1 \\ 8 & 7 \end{bmatrix}}_{A}
       = \underbrace{\begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}}_{L}
-        \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D \ \text{— the pivots}}
-        \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{U' \ \text{— ones on the diagonal}} $$
+        \underbrace{\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}}_{D}
+        \underbrace{\begin{bmatrix} 1 & \tfrac12 \\ 0 & 1 \end{bmatrix}}_{U'} $$
 
-    <p>Now it is balanced: ones on the diagonal on <b>both</b> sides, and every pivot gathered in the middle. Software will hand you either form; we will mostly stay with \(A = LU\).</p>
+    <p>Multiply it out to be sure. First \(LD\) — \(D\) is on the right here, so it scales <b>columns</b>: column one doubled, column two tripled:</p>
+
+    $$ LD = \begin{bmatrix} 1 & 0 \\ 4 & 1 \end{bmatrix}\begin{bmatrix} 2 & 0 \\ 0 & 3 \end{bmatrix}
+      = \begin{bmatrix} 2 & 0 \\ 8 & 3 \end{bmatrix} $$
+
+    <p>then that times \(U'\), row by row:</p>
+
+    $$ \begin{aligned}
+      \text{row 1:} &\quad 2\begin{bmatrix} 1 & \tfrac12 \end{bmatrix} + 0\begin{bmatrix} 0 & 1 \end{bmatrix} = \begin{bmatrix} 2 & 1 \end{bmatrix} \quad ✓ \\[4pt]
+      \text{row 2:} &\quad 8\begin{bmatrix} 1 & \tfrac12 \end{bmatrix} + 3\begin{bmatrix} 0 & 1 \end{bmatrix} = \begin{bmatrix} 8 & 4 \end{bmatrix} + \begin{bmatrix} 0 & 3 \end{bmatrix} = \begin{bmatrix} 8 & 7 \end{bmatrix} \quad ✓
+    \end{aligned} $$
+
+    <div class="box intuition"><span class="label">Why bother</span>
+      <p>Now the factorisation is <b>balanced</b>: ones on the diagonal of \(L\) <i>and</i> of \(U'\), with every pivot gathered into the middle matrix \(D\) where you can read them off at a glance. The triangles carry the <b>shape</b> of the elimination; \(D\) carries the <b>sizes</b>.</p>
+      <p>Software will hand you either form, and nothing is lost going back — multiply \(D\) into \(U'\) and you have \(U\) again. We will mostly stay with \(A = LU\), but the symmetric version \(LDU\) returns later, when \(A\) is symmetric and the two triangles turn out to be transposes of each other.</p>
+    </div>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t5">5. Three by three: why L wins</h3>
