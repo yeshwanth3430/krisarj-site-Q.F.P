@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Left and Right Inverses; Pseudoinverse · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Inverses by rank: two-sided for square full rank, left inverse for independent columns, right inverse for independent rows, and the pseudoinverse from the SVD for everything else, inverting A on the row space and sending the rest to zero.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="31_left-and-right-inverses-pseudoinverse">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Left and Right Inverses; Pseudoinverse</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 31</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 31 (MIT 18.06, Lecture 31)</p>
+  <h1>Left and Right Inverses; Pseudoinverse</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{What is the best inverse a matrix can have when it has none?}} $$</p>
+      <p>The last lesson of the course, and it closes the first question of the course. A square invertible matrix has \(A^{-1}\). Everything else gets a <b>one-sided</b> inverse, or — when even that fails — the <b>pseudoinverse</b> \(A^+\), which inverts \(A\) on the part of the space where inverting is possible and sends the rest to zero.</p>
+    </div>
+
+    <div class="box method"><span class="label">Four cases, by rank ★</span>
+      <table class="sl-table">
+        <tr><th>Rank</th><th>Nullspaces</th><th>\(Ax = b\)</th><th>Best inverse</th></tr>
+        <tr><td>\(r = m = n\)</td><td>both trivial</td><td>exactly one solution</td><td>\(A^{-1}\), two-sided</td></tr>
+        <tr><td>\(r = n < m\)</td><td>\(N(A) = \{0\}\)</td><td>one solution or none</td><td><b>left</b>: \((A^TA)^{-1}A^T\)</td></tr>
+        <tr><td>\(r = m < n\)</td><td>\(N(A^T) = \{0\}\)</td><td>infinitely many</td><td><b>right</b>: \(A^T(AA^T)^{-1}\)</td></tr>
+        <tr><td>\(r < m,\ r < n\)</td><td>both non-trivial</td><td>none or infinitely many</td><td><b>pseudoinverse</b> \(A^+\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The two-sided inverse</a></li>
+        <li><a href="#t2">Left inverse</a></li>
+        <li><a href="#t3">A worked left inverse</a></li>
+        <li><a href="#t4">Right inverse</a></li>
+        <li><a href="#t5">What goes wrong in the last case</a></li>
+        <li><a href="#t6">Row space to column space, one to one</a></li>
+        <li><a href="#t7">The pseudoinverse</a></li>
+        <li><a href="#t8">Building it from the SVD</a></li>
+        <li><a href="#t9">A worked pseudoinverse</a></li>
+        <li><a href="#t10">Summary, and the course</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The two-sided inverse</a><span>The case we started with, and why it needs \(r = m = n\).</span></li>
+      <li><a href="#t2">Left inverse ★</a><span>Full column rank: \((A^TA)^{-1}A^T\), the least squares matrix again.</span></li>
+      <li><a href="#t3">A worked left inverse</a><span>A 3 by 2 matrix, the inverse computed, both products examined.</span></li>
+      <li><a href="#t4">Right inverse</a><span>Full row rank: \(A^T(AA^T)^{-1}\), the mirror image.</span></li>
+      <li><a href="#t5">What goes wrong in the last case</a><span>A non-trivial nullspace destroys any hope of reversal.</span></li>
+      <li><a href="#t6">Row space to column space, one to one ★</a><span>Restricted to the row space, \(A\) <i>is</i> invertible.</span></li>
+      <li><a href="#t7">The pseudoinverse</a><span>Invert that part, kill the rest.</span></li>
+      <li><a href="#t8">Building it from the SVD ★</a><span>\(A^+ = V\Sigma^+U^T\), with \(\Sigma^+\) holding the reciprocals.</span></li>
+      <li><a href="#t9">A worked pseudoinverse</a><span>A rank-one matrix, both products checked as projections.</span></li>
+      <li><a href="#t10">Summary, and the course</a><span>Everything on one screen, and what the thirty-one lessons add up to.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The two-sided inverse</h3>
+
+    <p>The familiar case from Lesson 3:</p>
+
+    $$ AA^{-1} = I = A^{-1}A $$
+
+    <p>This needs \(A\) square and of full rank, \(r = m = n\). Then both nullspaces are trivial, \(Ax = b\) has exactly one solution for every \(b\), and the inverse undoes \(A\) from either side.</p>
+
+    <div class="box theorem"><span class="label">Why a rectangular matrix can never have one ★</span>
+      <p>If \(m \ne n\), then either \(A\) or \(A^T\) has a non-trivial nullspace — there are more columns than rows, or the reverse. A non-zero \(x\) with \(Ax = 0\) cannot be recovered, since any inverse would have to send \(0\) back to both \(x\) and \(0\).</p>
+      <p>So two-sided inverses are only ever available to square full-rank matrices. Everything else needs weaker notions.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Left inverse</h3>
+
+    <p><b>Full column rank</b>: \(r = n\), the columns are independent, and \(A\) is tall and thin. Then \(N(A) = \{0\}\) and \(Ax = b\) has one solution or none.</p>
+
+    <p>Lesson 15 proved \(A^TA\) is invertible in exactly this situation. So write the obvious thing:</p>
+
+    $$ (A^TA)^{-1}A^TA = I $$
+
+    <p>Read the left side as "(something) times \(A\)":</p>
+
+    <div class="box theorem"><span class="label">The left inverse ★</span>
+      $$ \boxed{A^{-1}_{\text{left}} = (A^TA)^{-1}A^T, \qquad A^{-1}_{\text{left}}A = I_{n}} $$
+      <p>The same matrix that produced \(\hat{x}\) in least squares. All along, the normal equations were applying a left inverse.</p>
+    </div>
+
+    <h4>The other order is not the identity</h4>
+
+    $$ AA^{-1}_{\text{left}} = A(A^TA)^{-1}A^T = P $$
+
+    <p>That is the <b>projection matrix</b> onto \(C(A)\) from Lesson 14. It is \(m \times m\), and it equals \(I\) only when \(m = n\).</p>
+
+    <div class="box intuition"><span class="label">Why a projection is the honest answer ★</span>
+      <p>\(A\) maps \(\mathbb{R}^n\) into an \(n\)-dimensional slice of \(\mathbb{R}^m\). A vector \(b\) outside that slice was never an output of \(A\), so nothing can be mapped back and forth to recover it. The best possible is to land on the nearest point of \(C(A)\) — which is exactly projection.</p>
+      <p>\(P\) is as close to \(I\) as the geometry allows.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. A worked left inverse</h3>
+
+    $$ A = \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 1 & 1 \end{bmatrix} $$
+
+    <p>Columns \((1,0,1)\) and \((0,1,1)\) are independent, so \(r = n = 2 < m = 3\) ✓</p>
+
+    <h4>Step 1 · \(A^TA\)</h4>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\(1 + 0 + 1\)</td><td>2</td></tr>
+      <tr><td>\((1,2)\)</td><td>\(0 + 0 + 1\)</td><td>1</td></tr>
+      <tr><td>\((2,2)\)</td><td>\(0 + 1 + 1\)</td><td>2</td></tr>
+    </table>
+
+    $$ A^TA = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}, \qquad \det = 3 \ne 0 \quad\checkmark $$
+
+    $$ (A^TA)^{-1} = \frac13\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix} $$
+
+    <h4>Step 2 · multiply by \(A^T\)</h4>
+
+    $$ A^{-1}_{\text{left}} = \frac13\begin{bmatrix} 2 & -1 \\ -1 & 2 \end{bmatrix}\begin{bmatrix} 1&0&1 \\ 0&1&1 \end{bmatrix}
+      = \frac13\begin{bmatrix} 2 & -1 & 1 \\ -1 & 2 & 1 \end{bmatrix} $$
+
+    <h4>Step 3 · check both orders</h4>
+
+    <p><b>Left:</b> entry \((1,1)\) of \(A^{-1}_{\text{left}}A\) is \(\tfrac13(2 \cdot 1 + (-1) \cdot 0 + 1 \cdot 1) = \tfrac13(3) = 1\) ✓, and entry \((1,2)\) is \(\tfrac13(0 - 1 + 1) = 0\) ✓</p>
+
+    $$ A^{-1}_{\text{left}}A = \begin{bmatrix} 1&0 \\ 0&1 \end{bmatrix} \qquad\checkmark $$
+
+    <p><b>Right:</b></p>
+
+    $$ AA^{-1}_{\text{left}} = \frac13\begin{bmatrix} 2 & -1 & 1 \\ -1 & 2 & 1 \\ 1 & 1 & 2 \end{bmatrix} = P $$
+
+    <p>Not \(I\) — but symmetric ✓, and \(P^2 = P\) ✓, and its trace is \(\tfrac13(2+2+2) = 2 = r\) ✓, exactly as a projection onto a 2-dimensional space must have.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Right inverse</h3>
+
+    <p>The mirror image. <b>Full row rank</b>: \(r = m\), the rows are independent, \(A\) is short and wide. Now \(N(A^T) = \{0\}\), \(AA^T\) is invertible, and \(Ax = b\) always has solutions — infinitely many, since \(\dim N(A) = n - m > 0\).</p>
+
+    <div class="box theorem"><span class="label">The right inverse ★</span>
+      $$ \boxed{A^{-1}_{\text{right}} = A^T(AA^T)^{-1}, \qquad AA^{-1}_{\text{right}} = I_m} $$
+      <p>Check: \(A\,A^T(AA^T)^{-1} = (AA^T)(AA^T)^{-1} = I\) ✓</p>
+    </div>
+
+    <p>And the other order:</p>
+
+    $$ A^{-1}_{\text{right}}A = A^T(AA^T)^{-1}A $$
+
+    <p>— the projection onto the <b>row space</b> \(C(A^T)\). Same story with the subspaces exchanged.</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Left inverse</th><th>Right inverse</th></tr>
+      <tr><td>needs</td><td>independent columns, \(r = n\)</td><td>independent rows, \(r = m\)</td></tr>
+      <tr><td>formula</td><td>\((A^TA)^{-1}A^T\)</td><td>\(A^T(AA^T)^{-1}\)</td></tr>
+      <tr><td>gives \(I\) on</td><td>the left</td><td>the right</td></tr>
+      <tr><td>other order gives</td><td>projection onto \(C(A)\)</td><td>projection onto \(C(A^T)\)</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. What goes wrong in the last case</h3>
+
+    <p>The remaining case is \(r < m\) <b>and</b> \(r < n\) — both nullspaces non-trivial. Neither one-sided inverse exists.</p>
+
+    <div class="box pitfall"><span class="label">Nullspaces are the obstruction ★</span>
+      <p>Suppose \(Ax = 0\) for some \(x \ne 0\). Also \(A0 = 0\). Any matrix \(M\) with \(MA = I\) would need</p>
+      $$ x = (MA)x = M(Ax) = M0 = 0 $$
+      <p>contradicting \(x \ne 0\). Information destroyed cannot be recovered — by any matrix, ever.</p>
+    </div>
+
+    <p>So a full inverse is impossible. The question becomes: how much <i>can</i> be inverted?</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Row space to column space, one to one</h3>
+
+    <p>Here is the observation that rescues the situation.</p>
+
+    <p>Both the row space and the column space have dimension \(r\). And \(A\), restricted to the row space, maps it onto the column space <b>without collapsing anything</b>.</p>
+
+    <div class="box theorem"><span class="label">The proof ★</span>
+      <p>Take \(x \ne y\), both in the row space, and suppose \(Ax = Ay\). Then</p>
+      $$ A(x - y) = 0 \qquad\Longrightarrow\qquad x - y \in N(A) $$
+      <p>But the row space is a subspace, so it is closed under subtraction, and \(x - y\) is in the row space too.</p>
+      <p>Lesson 13 proved the row space and the nullspace are <b>orthogonal complements</b>, so the only vector in both is \(0\). Hence \(x - y = 0\), i.e. \(x = y\) — contradicting \(x \ne y\).</p>
+      <p>Therefore different inputs in the row space give different outputs ✓</p>
+    </div>
+
+    <div class="box intuition"><span class="label">What this means</span>
+      <p>\(A\) is invertible — just not on all of \(\mathbb{R}^n\). Restricted to the row space, it is a perfect one-to-one correspondence with the column space. Everything \(A\) destroys, it destroys in the nullspace, which is perpendicular to the row space and carries no information that survived anyway.</p>
+      <p>So define an inverse for the part that works, and make a sensible choice for the part that does not.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The pseudoinverse</h3>
+
+    <div class="box definition"><span class="label">Definition · pseudoinverse ★</span>
+      <p>The <b>pseudoinverse</b> \(A^+\) is the matrix with:</p>
+      <ul>
+        <li>\(\boxed{A^+Ax = x}\) for every \(x\) in the <b>row space</b> — it undoes \(A\) where undoing is possible;</li>
+        <li>\(N(A^+) = N(A^T)\) — it sends the left nullspace to zero, since nothing there came from \(A\).</li>
+      </ul>
+      <p>It is also written \(A^\dagger\), and called the Moore–Penrose inverse.</p>
+    </div>
+
+    <p>It generalises everything above:</p>
+
+    <table class="sl-table">
+      <tr><th>If \(A\) is …</th><th>then \(A^+\) is …</th></tr>
+      <tr><td>square and invertible</td><td>\(A^{-1}\)</td></tr>
+      <tr><td>full column rank</td><td>the left inverse \((A^TA)^{-1}A^T\)</td></tr>
+      <tr><td>full row rank</td><td>the right inverse \(A^T(AA^T)^{-1}\)</td></tr>
+      <tr><td>anything else</td><td>something new — and it always exists</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Building it from the SVD</h3>
+
+    <p>The construction is immediate once you have \(A = U\Sigma V^T\).</p>
+
+    <p>\(U\) and \(V\) are orthogonal, so inverting them is free: \(U^{-1} = U^T\) and \(V^{-1} = V^T\). The only awkward factor is \(\Sigma\), which is \(m \times n\) with \(\sigma_1, \dots, \sigma_r > 0\) on the diagonal and zeros after.</p>
+
+    <div class="box method"><span class="label">Inverting \(\Sigma\) as far as possible ★</span>
+      <p>Define \(\Sigma^+\) to be \(n \times m\) — the transposed shape — with the <b>reciprocals</b> \(1/\sigma_1, \dots, 1/\sigma_r\) on its diagonal and zeros elsewhere.</p>
+      <p>You cannot invert a zero, so leave those slots zero. If \(r = m = n\) then \(\Sigma^+ = \Sigma^{-1}\) exactly.</p>
+    </div>
+
+    <p>The product \(\Sigma\Sigma^+\) is square with \(r\) ones on the diagonal and zeros after — the identity on the part that survived.</p>
+
+    <div class="box theorem"><span class="label">The formula ★</span>
+      $$ \boxed{A = U\Sigma V^T \qquad\Longrightarrow\qquad A^+ = V\Sigma^+U^T} $$
+      <p>Reverse the order and invert each factor, exactly as for an ordinary inverse — with \(\Sigma^+\) standing in for \(\Sigma^{-1}\).</p>
+    </div>
+
+    <p>Equivalently, in rank-one form:</p>
+
+    $$ A = \sum_{i=1}^{r}\sigma_iu_iv_i^T \qquad\Longrightarrow\qquad A^+ = \sum_{i=1}^{r}\frac{1}{\sigma_i}v_iu_i^T $$
+
+    <p>Each piece is inverted — \(u\) and \(v\) swap roles and \(\sigma_i\) becomes \(1/\sigma_i\) — and the \(\sigma = 0\) directions are simply absent.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. A worked pseudoinverse</h3>
+
+    $$ A = \begin{bmatrix} 2 & 2 \\ 1 & 1 \end{bmatrix} $$
+
+    <p>Square, but the columns are identical, so \(r = 1\) and \(\det A = 0\). No inverse — and both nullspaces are non-trivial, so no one-sided inverse either. Check: \(A(1,-1) = (2-2, 1-1) = (0,0)\) ✓</p>
+
+    <h4>Step 1 · \(A^TA\)</h4>
+
+    $$ A^TA = \begin{bmatrix} 2&1 \\ 2&1 \end{bmatrix}\begin{bmatrix} 2&2 \\ 1&1 \end{bmatrix} = \begin{bmatrix} 5 & 5 \\ 5 & 5 \end{bmatrix} $$
+
+    <p>Trace 10, determinant 0, so the eigenvalues are \(10\) and \(0\) ✓ — only one non-zero, matching \(r = 1\).</p>
+
+    <h4>Step 2 · \(v_1\) and \(\sigma_1\)</h4>
+
+    <p>The \(\lambda = 10\) eigenvector of \(\begin{bmatrix} 5&5 \\ 5&5 \end{bmatrix}\) is \((1,1)\):</p>
+
+    $$ v_1 = \frac{1}{\sqrt2}\begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad \sigma_1 = \sqrt{10} $$
+
+    <h4>Step 3 · \(u_1 = Av_1/\sigma_1\)</h4>
+
+    $$ Av_1 = \frac{1}{\sqrt2}\begin{bmatrix} 4 \\ 2 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      u_1 = \frac{1}{\sqrt{10}}\cdot\frac{1}{\sqrt2}\begin{bmatrix} 4 \\ 2 \end{bmatrix} = \frac{1}{\sqrt{20}}\begin{bmatrix} 4 \\ 2 \end{bmatrix} $$
+
+    <p>Check its length: \(\tfrac{1}{20}(16 + 4) = 1\) ✓</p>
+
+    <h4>Step 4 · assemble</h4>
+
+    $$ A^+ = \frac{1}{\sigma_1}v_1u_1^T
+      = \frac{1}{\sqrt{10}}\cdot\frac{1}{\sqrt2}\begin{bmatrix} 1 \\ 1 \end{bmatrix}\cdot\frac{1}{\sqrt{20}}\begin{bmatrix} 4 & 2 \end{bmatrix} $$
+
+    <p>The scalars multiply to \(\dfrac{1}{\sqrt{10}\sqrt2\sqrt{20}} = \dfrac{1}{\sqrt{400}} = \dfrac{1}{20}\):</p>
+
+    $$ A^+ = \frac{1}{20}\begin{bmatrix} 4 & 2 \\ 4 & 2 \end{bmatrix} = \begin{bmatrix} 0.2 & 0.1 \\ 0.2 & 0.1 \end{bmatrix} $$
+
+    <h4>Step 5 · check</h4>
+
+    $$ A^+A = \begin{bmatrix} 0.2&0.1 \\ 0.2&0.1 \end{bmatrix}\begin{bmatrix} 2&2 \\ 1&1 \end{bmatrix}
+      = \begin{bmatrix} 0.4+0.1 & 0.4+0.1 \\ 0.4+0.1 & 0.4+0.1 \end{bmatrix}
+      = \begin{bmatrix} 0.5 & 0.5 \\ 0.5 & 0.5 \end{bmatrix} $$
+
+    <p>Not \(I\) — it is the <b>projection onto the row space</b>, the line through \((1,1)\). Check: symmetric ✓, squares to itself ✓ (entry \((1,1)\) is \(0.25 + 0.25 = 0.5\)), and it fixes \((1,1)\) ✓ while killing \((1,-1)\) ✓</p>
+
+    $$ AA^+ = \begin{bmatrix} 2&2 \\ 1&1 \end{bmatrix}\begin{bmatrix} 0.2&0.1 \\ 0.2&0.1 \end{bmatrix}
+      = \begin{bmatrix} 0.8 & 0.4 \\ 0.4 & 0.2 \end{bmatrix} $$
+
+    <p>The <b>projection onto the column space</b>, the line through \((2,1)\). Symmetric ✓, trace \(0.8 + 0.2 = 1 = r\) ✓, and \(P^2 = P\) ✓ (entry \((1,1)\) is \(0.64 + 0.16 = 0.8\)).</p>
+
+    <div class="box theorem"><span class="label">The honest best ★</span>
+      <p>Neither product is the identity, and neither can be. What they are instead is the <b>projection onto the subspace where the information lives</b> — the row space on one side, the column space on the other.</p>
+      <p>Two identities do hold, and they are what defines \(A^+\):</p>
+      $$ AA^+A = A \qquad\text{and}\qquad A^+AA^+ = A^+ $$
+      <p>Both check out here. The pseudoinverse is as much of an inverse as mathematics permits.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">Why statisticians need this</span>
+      <p>Least squares needed independent columns. Real data often fails that — two predictors measure nearly the same thing, and \(A^TA\) is singular or nearly so. Then \(\hat{x} = (A^TA)^{-1}A^Tb\) is unavailable, while \(\hat{x} = A^+b\) always exists and returns the <b>shortest</b> of the best-fitting solutions.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Two-sided</b></td><td>Needs \(r = m = n\). Rectangular matrices can never have one.</td></tr>
+      <tr><td><b>Left ★</b></td><td>\(r = n\): \((A^TA)^{-1}A^T\). The least squares matrix.</td></tr>
+      <tr><td><b>Right</b></td><td>\(r = m\): \(A^T(AA^T)^{-1}\).</td></tr>
+      <tr><td><b>The other order</b></td><td>Gives a projection — onto \(C(A)\) or onto \(C(A^T)\). As close to \(I\) as geometry allows.</td></tr>
+      <tr><td><b>The obstruction ★</b></td><td>\(Ax = 0\) with \(x \ne 0\) means information is destroyed and no matrix can restore it.</td></tr>
+      <tr><td><b>The rescue ★</b></td><td>On the row space, \(A\) is one to one — because row space and nullspace meet only at \(0\).</td></tr>
+      <tr><td><b>Pseudoinverse</b></td><td>\(A^+Ax = x\) on the row space; \(N(A^+) = N(A^T)\).</td></tr>
+      <tr><td><b>From the SVD ★</b></td><td>\(A = U\Sigma V^T \Rightarrow A^+ = V\Sigma^+U^T\), with \(1/\sigma_i\) in \(\Sigma^+\) and zeros left alone.</td></tr>
+      <tr><td><b>Rank-one form</b></td><td>\(A^+ = \sum \tfrac{1}{\sigma_i}v_iu_i^T\).</td></tr>
+      <tr><td><b>The two identities</b></td><td>\(AA^+A = A\) and \(A^+AA^+ = A^+\). \(AA^+\) and \(A^+A\) are projections.</td></tr>
+      <tr><td><b>The worked case</b></td><td>\(\begin{bmatrix} 2&2 \\ 1&1 \end{bmatrix}^+ = \begin{bmatrix} 0.2&0.1 \\ 0.2&0.1 \end{bmatrix}\), with both products projections of trace 1.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Nullspaces are what break invertibility ★</b><span>Every failure in this lesson traces back to a non-zero vector being sent to zero.</span></li>
+      <li><b>The four subspaces answer it</b><span>Which inverse exists, and what the other product is, is decided entirely by which nullspaces are trivial.</span></li>
+      <li><b>Restrict and it works</b><span>\(A\) is genuinely invertible from the row space to the column space. The pseudoinverse is that inverse, extended by zero.</span></li>
+      <li><b>The SVD builds it immediately</b><span>Reverse the factors, invert each; \(\Sigma^+\) takes reciprocals and leaves the zeros alone.</span></li>
+      <li><b>Projections are the honest answer ★</b><span>When \(I\) is impossible, the nearest point of the right subspace is what you get — the theme of Lessons 13 to 15, returning at the end.</span></li>
+    </ol>
+
+    <h4>What the course adds up to</h4>
+    <p>Thirty-one lessons, built on one question: <b>what are the solutions of \(Ax = b\)?</b></p>
+    <table class="sl-table">
+      <tr><th>Lessons</th><th>The question answered</th></tr>
+      <tr><td>1–8</td><td>How do you solve it? Elimination, \(A = LU\), the complete solution \(x_p + x_n\).</td></tr>
+      <tr><td>9–12</td><td>What are the solutions, structurally? Rank, the four subspaces, and what they mean in a real network.</td></tr>
+      <tr><td>13–16</td><td>What if there is no solution? Project onto the column space; least squares; orthonormal bases.</td></tr>
+      <tr><td>17–19</td><td>One number that detects invertibility: the determinant, and the volume it measures.</td></tr>
+      <tr><td>20–23</td><td>What does \(A\) do when applied repeatedly? Eigenvalues, powers, differential equations, steady states.</td></tr>
+      <tr><td>24–28</td><td>Which matrices behave best, and how far does that extend? Symmetry, positive definiteness, and finally the SVD for every matrix at all.</td></tr>
+      <tr><td>29–31</td><td>What is really going on? Transformations, bases, and the best inverse a matrix can have.</td></tr>
+    </table>
+    <p>The four subspaces run through all of it. \(Ax = b\) is solvable when \(b\) is in the column space; the solution is unique when the nullspace is trivial; the error of a best fit lies in the left nullspace; and the pseudoinverse works because the row space and the nullspace meet only at the origin. One picture, thirty-one lessons.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

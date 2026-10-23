@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linear Transformations and their Matrices · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="A linear transformation is a rule satisfying T(cv + dw) = cT(v) + dT(w); knowing it on a basis determines it everywhere, and its matrix has the coordinates of T applied to each basis vector as its columns — with projection worked in two different bases.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="29_linear-transformations-and-their-matrices">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Linear Transformations and their Matrices</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 29</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 29 (MIT 18.06, Lecture 29)</p>
+  <h1>Linear Transformations and their Matrices</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{The transformation comes first. The matrix is only its description in a basis.}} $$</p>
+      <p>Everything so far started from a matrix. This lesson turns that round: start with a geometric rule — rotate, project, reflect — and ask what makes it <b>linear</b>, then build the matrix from it. Choosing a different basis gives a different matrix for the <i>same</i> transformation, and choosing well can make it diagonal.</p>
+    </div>
+
+    <div class="box method"><span class="label">The two requirements ★</span>
+      <p>\(T\) is <b>linear</b> when, for all vectors and all scalars,</p>
+      $$ \boxed{T(v + w) = T(v) + T(w)} \qquad\text{and}\qquad \boxed{T(cv) = cT(v)} $$
+      <p>Combined: \(T(cv + dw) = cT(v) + dT(w)\). An immediate consequence is \(T(0) = 0\).</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">A transformation without coordinates</a></li>
+        <li><a href="#t2">What linear means</a></li>
+        <li><a href="#t3">Two things that are not linear</a></li>
+        <li><a href="#t4">More examples</a></li>
+        <li><a href="#t5">How much do you need to know?</a></li>
+        <li><a href="#t6">Building the matrix</a></li>
+        <li><a href="#t7">The standard basis</a></li>
+        <li><a href="#t8">A better basis</a></li>
+        <li><a href="#t9">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">A transformation without coordinates</a><span>Projection described with no numbers at all.</span></li>
+      <li><a href="#t2">What linear means ★</a><span>Two rules, and why they force \(T(0) = 0\).</span></li>
+      <li><a href="#t3">Two things that are not linear</a><span>Shifting the plane, and taking a length.</span></li>
+      <li><a href="#t4">More examples</a><span>Rotation, reflection, and \(T(v) = Av\) itself.</span></li>
+      <li><a href="#t5">How much do you need to know? ★</a><span>What \(T\) does to a basis determines it everywhere.</span></li>
+      <li><a href="#t6">Building the matrix ★</a><span>Column \(i\) holds the coordinates of \(T(v_i)\).</span></li>
+      <li><a href="#t7">The standard basis</a><span>Worked for projection onto the line \(y = x\).</span></li>
+      <li><a href="#t8">A better basis</a><span>The same projection becomes \(\mathrm{diag}(1,0)\).</span></li>
+      <li><a href="#t9">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. A transformation without coordinates</h3>
+
+    <p>Describe projection onto a line without writing a single number:</p>
+
+    <blockquote style="border-left:3px solid var(--rule);margin:14px 0;padding:2px 0 2px 16px;color:var(--ink-soft)">
+      "Take any vector in the plane. Drop a perpendicular onto the fixed line. The foot of that perpendicular is where the vector goes."
+    </blockquote>
+
+    <p>That is a complete rule. It takes every \(v\) in \(\mathbb{R}^2\) to some \(T(v)\) in \(\mathbb{R}^2\), written</p>
+
+    $$ T : \mathbb{R}^2 \longrightarrow \mathbb{R}^2 $$
+
+    <p>No basis, no coordinates, no matrix — and you can already picture what it does to a whole drawing.</p>
+
+    <div class="box intuition"><span class="label">Why start here</span>
+      <p>A matrix is a grid of numbers that depends on a choice of coordinates. The <b>transformation</b> is the thing itself. Seeing them as separate explains why one transformation has many matrices, and why some of those matrices are much nicer than others.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. What linear means</h3>
+
+    <p>Not every rule deserves a matrix. The ones that do are the <b>linear</b> ones.</p>
+
+    <div class="box definition"><span class="label">Definition · linear transformation ★</span>
+      $$ T(v + w) = T(v) + T(w) \qquad\text{and}\qquad T(cv) = cT(v) $$
+      <p>for all vectors \(v, w\) and all scalars \(c\). Equivalently, in one line:</p>
+      $$ \boxed{T(cv + dw) = cT(v) + dT(w)} $$
+      <p>In words: \(T\) commutes with adding and scaling. Combine first and transform, or transform first and combine — same answer.</p>
+    </div>
+
+    <h4>A consequence to check first</h4>
+
+    <p>Put \(c = 0\) in the second rule:</p>
+
+    $$ T(0) = T(0 \cdot v) = 0 \cdot T(v) = 0 $$
+
+    $$ \boxed{T(0) = 0 \text{ for every linear transformation}} $$
+
+    <p>A quick disqualifier: if a rule moves the origin, it is not linear, and you need check nothing else.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Two things that are not linear</h3>
+
+    <h4>Shifting the whole plane</h4>
+
+    $$ T(v) = v + v_0 \qquad\text{for a fixed non-zero } v_0 $$
+
+    <p>Check the scaling rule with \(c = 2\):</p>
+
+    <table class="sl-table">
+      <tr><th>Expression</th><th>Value</th></tr>
+      <tr><td>\(T(2v)\)</td><td>\(2v + v_0\)</td></tr>
+      <tr><td>\(2T(v)\)</td><td>\(2(v + v_0) = 2v + 2v_0\)</td></tr>
+    </table>
+
+    <p>These differ by \(v_0 \ne 0\). <b>Not linear</b> ✗ — and \(T(0) = v_0 \ne 0\) said so immediately.</p>
+
+    <div class="box pitfall"><span class="label">A shift is "linear" in ordinary speech, not in this subject</span>
+      <p>The map \(x \mapsto 3x + 5\) draws a straight line, and school calls it linear. Here it is <b>affine</b>, not linear, precisely because of the \(+5\). Linear transformations fix the origin; that is the whole difference.</p>
+    </div>
+
+    <h4>Taking a length</h4>
+
+    $$ T(v) = \|v\| $$
+
+    <p>Try \(c = -1\):</p>
+
+    <table class="sl-table">
+      <tr><th>Expression</th><th>Value</th></tr>
+      <tr><td>\(T(-v)\)</td><td>\(\|-v\| = \|v\|\) — length is never negative</td></tr>
+      <tr><td>\(-T(v)\)</td><td>\(-\|v\|\)</td></tr>
+    </table>
+
+    <p>These differ whenever \(v \ne 0\). <b>Not linear</b> ✗ (It also fails addition: \(\|v + w\| \le \|v\| + \|w\|\), with equality only when they point the same way.)</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. More examples</h3>
+
+    <h4>Rotation by 45°</h4>
+
+    <p>\(T\) turns every vector 45° counterclockwise about the origin. Linear: rotating a sum rotates both pieces, and rotating a stretched vector stretches the rotated one. Easy to see, no coordinates needed.</p>
+
+    <div class="box intuition"><span class="label">What the geometric view buys</span>
+      <p>Told "rotate by 45°", you instantly know what happens to a drawing of a house. Handed the matrix</p>
+      $$ \frac{1}{\sqrt2}\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} $$
+      <p>you would have to work it out. Same transformation, and the geometric description is the one you can think with.</p>
+    </div>
+
+    <h4>Reflection</h4>
+
+    $$ T(v) = Av, \qquad A = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix} $$
+
+    <p>This keeps the \(x\) component and flips the sign of \(y\) — a <b>reflection across the \(x\)-axis</b>. Doing it twice returns you to the start, and indeed \(A^2 = I\) ✓</p>
+
+    <h4>Every matrix is a linear transformation</h4>
+
+    <p>Given any \(A\), define \(T(v) = Av\). Both rules are matrix algebra:</p>
+
+    $$ A(v + w) = Av + Aw, \qquad A(cv) = c(Av) $$
+
+    <p>So \(T\) is linear ✓. And a matrix need not be square: a \(2 \times 3\) matrix gives \(T : \mathbb{R}^3 \to \mathbb{R}^2\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. How much do you need to know?</h3>
+
+    <p>To specify \(T\) you would seem to need \(T(v)\) for infinitely many \(v\). You do not.</p>
+
+    <table class="sl-table">
+      <tr><th>If you know</th><th>You can get</th><th>Why</th></tr>
+      <tr><td>\(T(v_1)\)</td><td>\(T(cv_1)\) for every \(c\)</td><td>\(T(cv_1) = cT(v_1)\)</td></tr>
+      <tr><td>\(T(v_1)\) and \(T(v_2)\)</td><td>\(T\) on the whole plane they span</td><td>\(T(cv_1 + dv_2) = cT(v_1) + dT(v_2)\)</td></tr>
+      <tr><td>\(T\) on a <b>basis</b></td><td>\(T\) <b>everywhere</b></td><td>every vector is a unique combination of basis vectors</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">The key fact ★</span>
+      <p>Write \(v = c_1v_1 + \dots + c_nv_n\) in a basis. Then linearity gives</p>
+      $$ \boxed{T(v) = c_1T(v_1) + c_2T(v_2) + \dots + c_nT(v_n)} $$
+      <p>So \(n\) pieces of information determine \(T\) completely. That finiteness is exactly why a matrix can exist.</p>
+    </div>
+
+    <p>The numbers \(c_1, \dots, c_n\) are the <b>coordinates</b> of \(v\) in that basis. Change the basis and the coordinates change — the vector does not.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Building the matrix</h3>
+
+    <div class="box method"><span class="label">Method · the matrix of a transformation ★</span>
+      <p>Choose a basis \(v_1, \dots, v_n\) for the input space and \(w_1, \dots, w_m\) for the output space. Then:</p>
+      <ol>
+        <li>Apply \(T\) to the first basis vector.</li>
+        <li>Write the result in the output basis: \(T(v_1) = a_{11}w_1 + a_{21}w_2 + \dots + a_{m1}w_m\).</li>
+        <li>Those coefficients are <b>column 1</b> of \(A\).</li>
+        <li>Repeat for each \(v_i\) to get column \(i\).</li>
+      </ol>
+      $$ \boxed{\text{column } i \text{ of } A = \text{the coordinates of } T(v_i)} $$
+    </div>
+
+    <p>With \(A\) built this way, \(T(v) = Av\) holds for every \(v\) — it holds on each basis vector by construction, and linearity carries it to all combinations.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The standard basis</h3>
+
+    <p>Take \(T\) = projection onto the line \(y = x\), and use the standard basis \(e_1 = (1,0)\), \(e_2 = (0,1)\) for both input and output.</p>
+
+    <p>The line \(y = x\) has unit direction \(\tfrac{1}{\sqrt2}(1,1)\). From Lesson 14, projecting \(b\) onto a line through \(a\) gives \(\dfrac{a^Tb}{a^Ta}a\). With \(a = (1,1)\) and \(a^Ta = 2\):</p>
+
+    <table class="sl-table">
+      <tr><th>Input</th><th>\(a^Tb\)</th><th>\(T(v) = \tfrac{a^Tb}{2}a\)</th></tr>
+      <tr><td>\(e_1 = (1,0)\)</td><td>\(1 + 0 = 1\)</td><td>\(\tfrac12(1,1) = \left(\tfrac12, \tfrac12\right)\)</td></tr>
+      <tr><td>\(e_2 = (0,1)\)</td><td>\(0 + 1 = 1\)</td><td>\(\tfrac12(1,1) = \left(\tfrac12, \tfrac12\right)\)</td></tr>
+    </table>
+
+    <p>Those are the columns:</p>
+
+    $$ A = \begin{bmatrix} 1/2 & 1/2 \\ 1/2 & 1/2 \end{bmatrix} $$
+
+    <h4>Check</h4>
+
+    <table class="sl-table">
+      <tr><th>Property</th><th>Check</th><th></th></tr>
+      <tr><td>symmetric</td><td>obvious from the entries</td><td>✓</td></tr>
+      <tr><td>\(A^2 = A\)</td><td>\(\begin{bmatrix} 1/2&1/2 \\ 1/2&1/2 \end{bmatrix}^2\): entry \((1,1)\) is \(\tfrac14 + \tfrac14 = \tfrac12\)</td><td>✓</td></tr>
+      <tr><td>fixes the line</td><td>\(A(1,1) = (\tfrac12+\tfrac12,\ \tfrac12+\tfrac12) = (1,1)\)</td><td>✓</td></tr>
+      <tr><td>kills the perpendicular</td><td>\(A(1,-1) = (\tfrac12-\tfrac12,\ \tfrac12-\tfrac12) = (0,0)\)</td><td>✓</td></tr>
+    </table>
+
+    <p>Four fractions, and the structure is a little buried.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. A better basis</h3>
+
+    <p>Nothing forced the standard basis. Choose one fitted to the problem:</p>
+
+    $$ v_1 = \frac{1}{\sqrt2}\begin{bmatrix} 1 \\ 1 \end{bmatrix} \ \text{(along the line)}, \qquad
+       v_2 = \frac{1}{\sqrt2}\begin{bmatrix} 1 \\ -1 \end{bmatrix} \ \text{(perpendicular to it)} $$
+
+    <p>Use the same basis for input and output, and apply \(T\):</p>
+
+    <table class="sl-table">
+      <tr><th>Input</th><th>\(T(v_i)\)</th><th>In the basis</th><th>Column</th></tr>
+      <tr><td>\(v_1\)</td><td>\(v_1\) — already on the line, so unmoved</td><td>\(1 \cdot v_1 + 0 \cdot v_2\)</td><td>\(\begin{bmatrix} 1 \\ 0 \end{bmatrix}\)</td></tr>
+      <tr><td>\(v_2\)</td><td>\(0\) — perpendicular, so entirely error</td><td>\(0 \cdot v_1 + 0 \cdot v_2\)</td><td>\(\begin{bmatrix} 0 \\ 0 \end{bmatrix}\)</td></tr>
+    </table>
+
+    $$ \boxed{A' = \begin{bmatrix} 1 & 0 \\ 0 & 0 \end{bmatrix}} $$
+
+    <div class="box theorem"><span class="label">Same transformation, far better matrix ★</span>
+      <p>\(A = \begin{bmatrix} 1/2&1/2 \\ 1/2&1/2 \end{bmatrix}\) and \(A' = \begin{bmatrix} 1&0 \\ 0&0 \end{bmatrix}\) describe the <b>identical</b> projection. Only the coordinates differ.</p>
+      <p>And \(A'\) says everything at a glance: one direction kept (eigenvalue 1), one direction destroyed (eigenvalue 0). It is diagonal, so \(A'^2 = A'\) needs no computation.</p>
+    </div>
+
+    <p>These two matrices are <b>similar</b> in the exact sense of Lesson 27 — \(A' = S^{-1}AS\) with \(S\) the matrix of the new basis. And the basis that diagonalised it was the basis of <b>eigenvectors</b>, which is what Lesson 21 was doing all along.</p>
+
+    <div class="box intuition"><span class="label">The theme of the whole course</span>
+      <p>Lesson 16 chose orthonormal bases to kill the inverse. Lesson 21 chose eigenvectors to make powers cheap. Lesson 22 chose them to decouple a system. Lesson 28 chose two bases at once for the SVD.</p>
+      <p>Every one of those is this lesson's idea: <b>the transformation is fixed; pick the coordinates that make its matrix simple.</b></p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t9"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Linear ★</b></td><td>\(T(cv + dw) = cT(v) + dT(w)\). Combine then transform = transform then combine.</td></tr>
+      <tr><td><b>First test</b></td><td>\(T(0) = 0\). If the origin moves, stop.</td></tr>
+      <tr><td><b>Not linear</b></td><td>Shifting by \(v_0\) (that is affine); taking \(\|v\|\) (fails for \(c < 0\)).</td></tr>
+      <tr><td><b>Linear</b></td><td>Projection, rotation, reflection, and \(T(v) = Av\) for any \(A\) of any shape.</td></tr>
+      <tr><td><b>A basis is enough ★</b></td><td>\(T(v) = c_1T(v_1) + \dots + c_nT(v_n)\). Know \(T\) on a basis, know \(T\) everywhere.</td></tr>
+      <tr><td><b>Coordinates</b></td><td>The \(c_i\) in \(v = \sum c_iv_i\). They depend on the basis; the vector does not.</td></tr>
+      <tr><td><b>The matrix ★</b></td><td>Column \(i\) = coordinates of \(T(v_i)\) in the output basis.</td></tr>
+      <tr><td><b>Worked</b></td><td>Projection onto \(y = x\): \(\begin{bmatrix} 1/2&1/2 \\ 1/2&1/2 \end{bmatrix}\) in the standard basis, \(\begin{bmatrix} 1&0 \\ 0&0 \end{bmatrix}\) in the eigenvector basis.</td></tr>
+      <tr><td><b>Many matrices, one \(T\)</b></td><td>They are all similar: \(A' = S^{-1}AS\).</td></tr>
+      <tr><td><b>The best basis</b></td><td>Eigenvectors, if they exist — the matrix comes out diagonal.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>The transformation is the object ★</b><span>The matrix is a description that depends on a choice you made.</span></li>
+      <li><b>Linearity is what makes matrices possible</b><span>It is the reason \(n\) pieces of information determine \(T\) on infinitely many vectors.</span></li>
+      <li><b>Check \(T(0) = 0\) first</b><span>One substitution, and it rules out every affine map.</span></li>
+      <li><b>Geometry first, coordinates second</b><span>"Rotate by 45°" is easier to think about than any matrix of it.</span></li>
+      <li><b>Choosing the basis is the whole game ★</b><span>Same projection: four fractions, or a clean \(\mathrm{diag}(1,0)\).</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>If one transformation has many matrices, what exactly is the relation between them? The next lesson answers that — <b>change of basis</b>, where the translation matrix \(S\) makes the \(A' = S^{-1}AS\) of Lesson 27 explicit — and then spends the idea on a real application: compressing an image by moving it out of the pixel basis into a better one.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

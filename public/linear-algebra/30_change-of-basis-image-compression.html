@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Change of Basis; Image Compression · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Changing basis means solving x = Wc, cheap when the basis is orthogonal; applied to image compression where the pixel basis stores nothing efficiently and the Fourier or Haar wavelet basis concentrates an image into a few large coefficients.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="30_change-of-basis-image-compression">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Change of Basis; Image Compression</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 30</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 30 (MIT 18.06, Lecture 30)</p>
+  <h1>Change of Basis; Image Compression</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Change the basis and the same data becomes compressible.}} $$</p>
+      <p>Lesson 29 showed one transformation has many matrices. This lesson makes the translation explicit — and then spends it on something real. A video frame is a vector in a space of a quarter of a million dimensions; in the pixel basis it cannot be compressed, and in the right basis it can be cut to a fraction of its size. That is JPEG.</p>
+    </div>
+
+    <div class="box method"><span class="label">The two formulas ★</span>
+      <table class="sl-table">
+        <tr><th>What changes</th><th>Rule</th></tr>
+        <tr><td>the <b>coordinates</b> of a vector</td><td>\(x = Wc\), so \(c = W^{-1}x\)</td></tr>
+        <tr><td>the <b>matrix</b> of a transformation</td><td>\(A' = W^{-1}AW\) — similar matrices</td></tr>
+      </table>
+      <p>\(W\) holds the new basis vectors as its columns. If they are orthogonal, \(W^{-1}\) costs nothing.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Images as vectors</a></li>
+        <li><a href="#t2">Why the pixel basis is bad</a></li>
+        <li><a href="#t3">What a good basis vector looks like</a></li>
+        <li><a href="#t4">Changing basis</a></li>
+        <li><a href="#t5">A worked change of basis</a></li>
+        <li><a href="#t6">Lossy compression</a></li>
+        <li><a href="#t7">The Fourier and Haar bases</a></li>
+        <li><a href="#t8">The JPEG pipeline</a></li>
+        <li><a href="#t9">Changing the matrix too</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Images as vectors</a><span>A 512 by 512 frame is one vector in 262,144 dimensions.</span></li>
+      <li><a href="#t2">Why the pixel basis is bad ★</a><span>"The whole screen is black" costs a quarter of a million numbers.</span></li>
+      <li><a href="#t3">What a good basis vector looks like</a><span>All ones, half-and-half, alternating — patterns, not points.</span></li>
+      <li><a href="#t4">Changing basis</a><span>Solve \(Wc = x\). Orthogonal columns make it one dot product each.</span></li>
+      <li><a href="#t5">A worked change of basis ★</a><span>Four numbers, four Haar coefficients, exact reconstruction.</span></li>
+      <li><a href="#t6">Lossy compression</a><span>Throw away the small coefficients and see what survives.</span></li>
+      <li><a href="#t7">The Fourier and Haar bases</a><span>The two real contenders, and what each is good at.</span></li>
+      <li><a href="#t8">The JPEG pipeline</a><span>8 by 8 blocks, transform, threshold, store.</span></li>
+      <li><a href="#t9">Changing the matrix too</a><span>\(A' = W^{-1}AW\), closing the loop with Lesson 27.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Images as vectors</h3>
+
+    <p>A black-and-white video frame, 512 pixels by 512. The camera records one brightness number per pixel:</p>
+
+    $$ 512 \times 512 = 262{,}144 \text{ numbers} $$
+
+    <p>Stack them into a column and a frame is a single <b>vector</b> in \(\mathbb{R}^{262144}\). Lesson 11's point again: a vector is anything you can add and scale, and images qualify — brighten one, average two, both make sense.</p>
+
+    <p>The standard basis here has one vector per pixel: all zeros except a single 1. Writing an image in that basis means listing all 262,144 brightnesses, which is what the camera already did.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Why the pixel basis is bad</h3>
+
+    <p>Take the simplest possible frame: <b>the whole screen is black</b>. In the pixel basis you transmit 262,144 zeros — a quarter of a million numbers to say nothing happened.</p>
+
+    <div class="box intuition"><span class="label">The problem in one line ★</span>
+      <p>Real images are not random. Neighbouring pixels are almost always similar — that is what makes an image an image rather than static. The pixel basis stores each pixel <b>independently</b>, so it cannot exploit that at all.</p>
+    </div>
+
+    <p>Now suppose one basis vector were "every pixel at brightness 1". A blank screen is then <b>one coefficient</b> and 262,143 zeros. Nearly blank screens — a dark room, a lecture blackboard — need only a few more.</p>
+
+    <p>Nothing was thrown away. The same image, described in better coordinates.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. What a good basis vector looks like</h3>
+
+    <p>A useful basis vector is a <b>pattern across the whole image</b>, not a single point.</p>
+
+    <table class="sl-table">
+      <tr><th>Basis vector</th><th>Picture</th><th>Captures</th></tr>
+      <tr><td>\((1,1,1,1,\dots)\)</td><td>uniform grey</td><td>the average brightness</td></tr>
+      <tr><td>\((1,1,\dots,-1,-1)\)</td><td>bright left, dark right</td><td>a slow left-to-right gradient</td></tr>
+      <tr><td>\((1,-1,1,-1,\dots)\)</td><td>fine stripes</td><td>the sharpest possible detail</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">Why this compresses ★</span>
+      <p>Real images are dominated by the <b>smooth</b> patterns — large regions of similar brightness. The fine-detail coefficients come out small. Set the small ones to zero and the image barely changes, while the storage collapses.</p>
+      <p>And "best basis" depends on the content: a lecture video of a blackboard and an action film have very different coefficient profiles.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Changing basis</h3>
+
+    <p>Let \(w_1, \dots, w_n\) be the new basis and \(x\) the image in pixel coordinates. We want \(c\) with</p>
+
+    $$ x = c_1w_1 + c_2w_2 + \dots + c_nw_n $$
+
+    <p>Put the basis vectors in the columns of \(W\) and this is a familiar object:</p>
+
+    $$ \boxed{x = Wc \qquad\Longrightarrow\qquad c = W^{-1}x} $$
+
+    <p>That is the whole of "changing basis" — solving one linear system.</p>
+
+    <div class="box method"><span class="label">Choose a basis that makes \(W^{-1}\) free ★</span>
+      <p>Inverting a \(262144 \times 262144\) matrix is out of the question. So pick <b>orthogonal</b> basis vectors. Then each coefficient is a single dot product (Lesson 16):</p>
+      $$ \boxed{c_i = \frac{w_i^Tx}{w_i^Tw_i}} $$
+      <p>With orthonormal vectors the denominator is 1 and \(W^{-1} = W^T\). This is the only reason the whole scheme is practical — and it is why every basis used in real compression is orthogonal.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. A worked change of basis</h3>
+
+    <p>Four pixels instead of 262,144, with the four-dimensional Haar basis:</p>
+
+    $$ w_1 = \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \quad
+       w_2 = \begin{bmatrix} 1 \\ 1 \\ -1 \\ -1 \end{bmatrix}, \quad
+       w_3 = \begin{bmatrix} 1 \\ -1 \\ 0 \\ 0 \end{bmatrix}, \quad
+       w_4 = \begin{bmatrix} 0 \\ 0 \\ 1 \\ -1 \end{bmatrix} $$
+
+    <p>Read them as pictures: <b>average</b>, <b>left half against right half</b>, <b>detail inside the left half</b>, <b>detail inside the right half</b>. Coarse to fine.</p>
+
+    <h4>Check they are orthogonal</h4>
+
+    <table class="sl-table">
+      <tr><th>Pair</th><th>Dot product</th><th></th></tr>
+      <tr><td>\(w_1 \cdot w_2\)</td><td>\(1 + 1 - 1 - 1\)</td><td>\(=0\) ✓</td></tr>
+      <tr><td>\(w_1 \cdot w_3\)</td><td>\(1 - 1 + 0 + 0\)</td><td>\(=0\) ✓</td></tr>
+      <tr><td>\(w_2 \cdot w_3\)</td><td>\(1 - 1 + 0 + 0\)</td><td>\(=0\) ✓</td></tr>
+      <tr><td>\(w_3 \cdot w_4\)</td><td>\(0 + 0 + 0 + 0\)</td><td>\(=0\) ✓ — they do not overlap</td></tr>
+    </table>
+
+    <p>All six pairs give zero, so \(W^TW\) is diagonal:</p>
+
+    $$ W^TW = \begin{bmatrix} 4&&& \\ &4&& \\ &&2& \\ &&&2 \end{bmatrix} $$
+
+    <p>Lengths squared \(4, 4, 2, 2\) — orthogonal but not orthonormal, so keep the denominators.</p>
+
+    <h4>Transform a signal</h4>
+
+    $$ x = \begin{bmatrix} 6 \\ 4 \\ 5 \\ 1 \end{bmatrix} $$
+
+    <table class="sl-table">
+      <tr><th>\(i\)</th><th>\(w_i^Tx\)</th><th>\(w_i^Tw_i\)</th><th>\(c_i\)</th><th>Meaning</th></tr>
+      <tr><td>1</td><td>\(6+4+5+1 = 16\)</td><td>4</td><td><b>4</b></td><td>the average</td></tr>
+      <tr><td>2</td><td>\(6+4-5-1 = 4\)</td><td>4</td><td><b>1</b></td><td>left half brighter by 1</td></tr>
+      <tr><td>3</td><td>\(6-4 = 2\)</td><td>2</td><td><b>1</b></td><td>detail within the left half</td></tr>
+      <tr><td>4</td><td>\(5-1 = 4\)</td><td>2</td><td><b>2</b></td><td>detail within the right half</td></tr>
+    </table>
+
+    <h4>Check by rebuilding</h4>
+
+    $$ 4w_1 + 1w_2 + 1w_3 + 2w_4 = \begin{bmatrix} 4+1+1+0 \\ 4+1-1+0 \\ 4-1+0+2 \\ 4-1+0-2 \end{bmatrix}
+      = \begin{bmatrix} 6 \\ 4 \\ 5 \\ 1 \end{bmatrix} \qquad\checkmark $$
+
+    <p>Four numbers in, four numbers out. <b>Nothing has been lost</b> — this step is exactly reversible. The compression comes next.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Lossy compression</h3>
+
+    <p>Now discard. Keep only the coefficients above some threshold and set the rest to zero. Dropping the two smallest here (\(c_2 = 1\) and \(c_3 = 1\)):</p>
+
+    $$ \hat{c} = (4, 0, 0, 2) \qquad\Longrightarrow\qquad \hat{x} = 4w_1 + 2w_4 = \begin{bmatrix} 4 \\ 4 \\ 6 \\ 2 \end{bmatrix} $$
+
+    <p>Against the original \((6,4,5,1)\): errors of \(-2, 0, +1, +1\). The broad structure — average 4, right side falling off — survives; the fine detail is gone.</p>
+
+    <div class="box intuition"><span class="label">Why it works on real images ★</span>
+      <p>Four pixels is too few for the effect to show. With 64 pixels in a real block, the coefficients fall off steeply: a handful are large and most are near zero. Zeroing the small ones changes almost nothing the eye can detect, and a list that is mostly zeros stores in a tiny fraction of the space.</p>
+      <p>This is the <b>lossy</b> step, and the only one. Everything else in the pipeline is exactly reversible.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The Fourier and Haar bases</h3>
+
+    <h4>The Fourier basis</h4>
+
+    <p>The columns of the Fourier matrix from Lesson 25, built from \(\omega = e^{2\pi i/n}\):</p>
+
+    $$ \begin{bmatrix} 1 \\ 1 \\ \vdots \\ 1 \end{bmatrix},\quad
+       \begin{bmatrix} 1 \\ \omega \\ \vdots \\ \omega^{n-1} \end{bmatrix},\quad
+       \begin{bmatrix} 1 \\ \omega^2 \\ \vdots \\ \omega^{2(n-1)} \end{bmatrix},\quad \dots $$
+
+    <p>Each is a <b>wave</b> at its own frequency: the first constant, then slower-to-faster oscillation. Orthogonal (checked in Lesson 25), and the FFT computes all the coefficients in \(n\log n\).</p>
+
+    <p>JPEG actually uses the real parts — cosines — giving the <b>discrete cosine transform</b>.</p>
+
+    <h4>The Haar wavelet basis</h4>
+
+    <p>In \(\mathbb{R}^8\):</p>
+
+    $$ \begin{bmatrix} 1\\1\\1\\1\\1\\1\\1\\1 \end{bmatrix},\
+       \begin{bmatrix} 1\\1\\1\\1\\-1\\-1\\-1\\-1 \end{bmatrix},\
+       \begin{bmatrix} 1\\1\\-1\\-1\\0\\0\\0\\0 \end{bmatrix},\
+       \begin{bmatrix} 0\\0\\0\\0\\1\\1\\-1\\-1 \end{bmatrix},\
+       \begin{bmatrix} 1\\-1\\0\\0\\0\\0\\0\\0 \end{bmatrix},\ \dots,\
+       \begin{bmatrix} 0\\0\\0\\0\\0\\0\\1\\-1 \end{bmatrix} $$
+
+    <p>Entries are \(1\), \(-1\) and \(0\), and the later vectors are mostly zero — each one looks at a smaller region. They are orthogonal and can be scaled to orthonormal.</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Fourier / cosine</th><th>Haar wavelet</th></tr>
+      <tr><td>each basis vector</td><td>spans the whole signal</td><td><b>localised</b> to a region</td></tr>
+      <tr><td>good at</td><td>smooth, repeating content</td><td>edges and sudden changes</td></tr>
+      <tr><td>arithmetic</td><td>complex, needs the FFT</td><td>just \(1\), \(-1\), \(0\) — additions only</td></tr>
+      <tr><td>used by</td><td>JPEG</td><td>JPEG2000 (an improved version)</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">The trade-off</span>
+      <p>A Fourier basis vector has a definite frequency but no location — it runs across the whole image. So a sharp edge, which is a local event, needs many frequencies to describe, and JPEG's familiar ringing artefacts come from truncating them.</p>
+      <p>A wavelet has both a frequency <i>and</i> a place. Edges stay cheap.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The JPEG pipeline</h3>
+
+    <p>Transforming all 262,144 pixels at once would be expensive and would mix unrelated parts of the picture. So JPEG works in <b>8 × 8 blocks</b> — 64 pixels each.</p>
+
+    <table class="sl-table">
+      <tr><th>Step</th><th>Operation</th><th>Lossy?</th></tr>
+      <tr><td>1</td><td>split the image into 8 × 8 blocks</td><td>no</td></tr>
+      <tr><td>2</td><td>change basis: 64 pixels \(\to\) 64 coefficients</td><td><b>no</b> — exactly reversible</td></tr>
+      <tr><td>3</td><td>zero every coefficient below a threshold</td><td><b>yes</b> — the only lossy step</td></tr>
+      <tr><td>4</td><td>store the mostly-zero list compactly</td><td>no</td></tr>
+      <tr><td>5</td><td>to view: rebuild \(\hat{x} = \sum\hat{c}_iw_i\)</td><td>—</td></tr>
+    </table>
+
+    <p>The threshold is the quality dial. Raise it and more coefficients vanish: smaller file, more visible damage.</p>
+
+    <h4>And for video</h4>
+
+    <p>Consecutive frames are nearly identical. So rather than compressing each one, encode <b>the difference between frames</b> — which is almost entirely zero, and compresses to almost nothing. Only occasional full frames are stored outright.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Changing the matrix too</h3>
+
+    <p>Section 4 changed the coordinates of a <i>vector</i>. What happens to the matrix of a <i>transformation</i>?</p>
+
+    <p>Let \(A\) be its matrix in the old basis and \(A'\) in the new one. To apply \(T\) to a vector given in new coordinates \(c\):</p>
+
+    <ol class="index-list">
+      <li><b>Translate to old coordinates</b><span>\(x = Wc\)</span></li>
+      <li><b>Apply the transformation</b><span>\(Ax = AWc\)</span></li>
+      <li><b>Translate the answer back</b><span>\(W^{-1}AWc\)</span></li>
+    </ol>
+
+    $$ \boxed{A' = W^{-1}AW} $$
+
+    <div class="box theorem"><span class="label">This is similarity ★</span>
+      <p>Exactly the definition from Lesson 27, now with \(W\) identified: it is the <b>change-of-basis matrix</b>, whose columns are the new basis vectors written in the old coordinates.</p>
+      <p>And when the new basis is the eigenvectors, \(W = S\) and \(A' = \Lambda\) — Lesson 21. Everything lines up.</p>
+    </div>
+
+    <table class="sl-table">
+      <tr><th>New basis</th><th>\(A'\) becomes</th><th>Lesson</th></tr>
+      <tr><td>eigenvectors of \(A\)</td><td>\(\Lambda\), diagonal</td><td>21</td></tr>
+      <tr><td>orthonormal eigenvectors (\(A\) symmetric)</td><td>\(\Lambda\), with \(W^{-1} = W^T\)</td><td>24</td></tr>
+      <tr><td>two bases, in and out</td><td>\(\Sigma\), diagonal, any shape of \(A\)</td><td>28</td></tr>
+      <tr><td>wavelets or cosines</td><td>not diagonal — but the <i>data</i> becomes sparse</td><td>this one</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Images are vectors</b></td><td>A 512 × 512 frame is one vector in \(\mathbb{R}^{262144}\).</td></tr>
+      <tr><td><b>The pixel basis is bad ★</b></td><td>It stores pixels independently, so it cannot exploit the fact that neighbours are similar.</td></tr>
+      <tr><td><b>A good basis vector</b></td><td>A pattern over the whole block — average, half-and-half, alternating.</td></tr>
+      <tr><td><b>Change of basis ★</b></td><td>\(x = Wc\), so \(c = W^{-1}x\).</td></tr>
+      <tr><td><b>Make it cheap</b></td><td>Orthogonal columns give \(c_i = w_i^Tx / w_i^Tw_i\); orthonormal gives \(W^{-1} = W^T\).</td></tr>
+      <tr><td><b>The worked example</b></td><td>\(x = (6,4,5,1)\) in the Haar basis is \(c = (4,1,1,2)\), exactly reversible.</td></tr>
+      <tr><td><b>Compression</b></td><td>Zero the small coefficients. That step alone is lossy; everything else is exact.</td></tr>
+      <tr><td><b>Fourier</b></td><td>Waves spanning the whole signal; great for smooth content, computed by the FFT.</td></tr>
+      <tr><td><b>Haar</b></td><td>Localised, entries \(1, -1, 0\); great for edges; the basis behind JPEG2000.</td></tr>
+      <tr><td><b>JPEG</b></td><td>8 × 8 blocks → transform → threshold → store. Video encodes frame differences.</td></tr>
+      <tr><td><b>Matrices change too ★</b></td><td>\(A' = W^{-1}AW\) — the similarity of Lesson 27, with \(W\) the change-of-basis matrix.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Compression is a choice of basis ★</b><span>The information does not change. Only its description does, and a good description is mostly zeros.</span></li>
+      <li><b>Orthogonality makes it possible</b><span>Without it, changing basis would mean inverting a quarter-million-square matrix.</span></li>
+      <li><b>Only one step loses anything</b><span>The transform is exact; the thresholding is where quality is traded for size.</span></li>
+      <li><b>Localised or global</b><span>Wavelets know where; Fourier knows what frequency. Different content wants different bases.</span></li>
+      <li><b>\(A' = W^{-1}AW\) is the same formula as always</b><span>Change of basis, similarity and diagonalization are three names for one operation.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>One lesson left. It returns to the oldest question in the course — solving \(Ax = b\) — and answers it for the matrices that have no inverse at all. Using the SVD, every matrix gets a <b>pseudoinverse</b>: the best inverse available, which undoes \(A\) on the row space and does the sensible thing everywhere else.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

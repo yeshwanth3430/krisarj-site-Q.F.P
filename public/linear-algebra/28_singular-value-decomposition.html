@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Singular Value Decomposition · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="A = U Sigma V transpose for every matrix of every shape: orthonormal bases for the row space and column space with pure scaling between them, found by diagonalizing A transpose A, with the sign trap in U and the rank-one expansion behind compression.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="28_singular-value-decomposition">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Singular Value Decomposition</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 28</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 28 (MIT 18.06, Lecture 28)</p>
+  <h1>Singular Value Decomposition</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{A = U\Sigma V^T \text{ — one factorisation that works for \textbf{every} matrix.}} $$</p>
+      <p>Every tool so far has demanded something: square, or symmetric, or enough eigenvectors. The <b>singular value decomposition</b> demands nothing. Any matrix of any shape has one, and it hands you orthonormal bases for the row space <i>and</i> the column space at the same time, with \(A\) reduced to a diagonal stretch between them.</p>
+    </div>
+
+    <div class="box method"><span class="label">The three pieces ★</span>
+      <table class="sl-table">
+        <tr><th>Piece</th><th>Shape</th><th>What it holds</th><th>Found from</th></tr>
+        <tr><td>\(V\)</td><td>\(n \times n\) orthogonal</td><td>an orthonormal basis for the <b>row space</b> (plus the nullspace)</td><td>eigenvectors of \(A^TA\)</td></tr>
+        <tr><td>\(\Sigma\)</td><td>\(m \times n\) diagonal</td><td>the <b>singular values</b> \(\sigma_i > 0\)</td><td>\(\sigma_i = \sqrt{\lambda_i}\) of \(A^TA\)</td></tr>
+        <tr><td>\(U\)</td><td>\(m \times m\) orthogonal</td><td>an orthonormal basis for the <b>column space</b> (plus the left nullspace)</td><td>\(u_i = Av_i/\sigma_i\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">What we are asking for</a></li>
+        <li><a href="#t2">Why not just use eigenvectors</a></li>
+        <li><a href="#t3">The trick: multiply by A transpose</a></li>
+        <li><a href="#t4">A worked SVD</a></li>
+        <li><a href="#t5">Getting U right</a></li>
+        <li><a href="#t6">Putting it together</a></li>
+        <li><a href="#t7">The four subspaces, orthonormally</a></li>
+        <li><a href="#t8">A as a sum of rank-one pieces</a></li>
+        <li><a href="#t9">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">What we are asking for ★</a><span>An orthonormal basis in, an orthonormal basis out, and pure scaling in between.</span></li>
+      <li><a href="#t2">Why not just use eigenvectors</a><span>They need a square matrix and may not be perpendicular.</span></li>
+      <li><a href="#t3">The trick: multiply by A transpose ★</a><span>\(A^TA\) is symmetric and positive semidefinite, so Lesson 24 applies.</span></li>
+      <li><a href="#t4">A worked SVD</a><span>\(A^TA\), its eigenvectors, and the singular values.</span></li>
+      <li><a href="#t5">Getting U right ★</a><span>Compute \(Av_i/\sigma_i\) — do not diagonalize \(AA^T\) and guess the signs.</span></li>
+      <li><a href="#t6">Putting it together</a><span>The three matrices multiplied back out.</span></li>
+      <li><a href="#t7">The four subspaces, orthonormally</a><span>Lesson 10's picture, now with perpendicular bases for all four.</span></li>
+      <li><a href="#t8">A as a sum of rank-one pieces</a><span>Keep the largest \(\sigma\) and you have compressed the matrix.</span></li>
+      <li><a href="#t9">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. What we are asking for</h3>
+
+    <p>Here is the goal, stated before any machinery.</p>
+
+    <div class="box definition"><span class="label">The request ★</span>
+      <p>Find orthonormal vectors \(v_1, \dots, v_r\) in the <b>row space</b> and orthonormal vectors \(u_1, \dots, u_r\) in the <b>column space</b>, and positive numbers \(\sigma_i\), such that</p>
+      $$ \boxed{Av_i = \sigma_iu_i} $$
+      <p>In words: \(A\) takes a perpendicular set to another perpendicular set, stretching each by its own factor.</p>
+    </div>
+
+    <p>Collect the \(n\) equations into one. Put the \(v_i\) in the columns of \(V\) and the \(u_i\) in the columns of \(U\):</p>
+
+    $$ AV = U\Sigma $$
+
+    <p>\(V\) is orthogonal, so \(V^{-1} = V^T\), and multiplying on the right gives</p>
+
+    $$ \boxed{A = U\Sigma V^T} $$
+
+    <div class="box intuition"><span class="label">Why this is remarkable</span>
+      <p>Normally a matrix mangles angles — it takes a perpendicular pair and leaves them at some other angle. The SVD says that for <b>every</b> matrix there is a special perpendicular set that comes out perpendicular again. All the distortion is squeezed into the \(n\) stretch factors \(\sigma_i\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Why not just use eigenvectors</h3>
+
+    <p>Eigenvectors satisfy \(Ax = \lambda x\) — input and output on the same line. That is a stronger demand, and it costs:</p>
+
+    <table class="sl-table">
+      <tr><th>Eigenvectors require</th><th>SVD requires</th></tr>
+      <tr><td>\(A\) square</td><td>any shape</td></tr>
+      <tr><td>enough independent eigenvectors</td><td>nothing — it always exists</td></tr>
+      <tr><td>perpendicular only if symmetric</td><td>always perpendicular</td></tr>
+      <tr><td>\(\lambda\) possibly complex or negative</td><td>\(\sigma_i\) real and positive</td></tr>
+    </table>
+
+    <p>The SVD gets all of this by allowing the input basis and the output basis to be <b>different</b>. For a positive definite symmetric matrix the two coincide and the SVD is just \(Q\Lambda Q^T\) — the special case where one basis suffices.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The trick: multiply by A transpose</h3>
+
+    <p>We have three unknowns — \(U\), \(\Sigma\) and \(V\) — in one equation. Eliminate one of them.</p>
+
+    <p>Take \(A = U\Sigma V^T\), so \(A^T = V\Sigma^TU^T\), and multiply:</p>
+
+    $$ A^TA = V\Sigma^T\underbrace{U^TU}_{I}\Sigma V^T = V\Sigma^T\Sigma V^T = V\Sigma^2V^T $$
+
+    <div class="box theorem"><span class="label">\(U\) has vanished ★</span>
+      $$ \boxed{A^TA = V\Sigma^2V^T} $$
+      <p>That is the form \(Q\Lambda Q^T\) from Lesson 24, and \(A^TA\) is symmetric and positive semidefinite (Lesson 27), so the spectral theorem applies and such a \(V\) exists. Therefore:</p>
+      <ul>
+        <li>the columns of \(V\) are the <b>eigenvectors of \(A^TA\)</b>;</li>
+        <li>the eigenvalues of \(A^TA\) are \(\sigma_i^2\), so \(\sigma_i = \sqrt{\lambda_i}\), taking the positive root.</li>
+      </ul>
+      <p>They are all real and non-negative because \(A^TA\) is positive semidefinite — which is exactly why that lesson had to come first.</p>
+    </div>
+
+    <p>The same move with \(AA^T = U\Sigma^2U^T\) shows the columns of \(U\) are the eigenvectors of \(AA^T\). But §5 explains why you should not actually use that.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. A worked SVD</h3>
+
+    $$ A = \begin{bmatrix} 4 & 4 \\ -3 & 3 \end{bmatrix} $$
+
+    <p>Invertible: \(\det A = 12 + 12 = 24 \ne 0\), so \(r = 2\).</p>
+
+    <h4>Step 1 · form \(A^TA\)</h4>
+
+    $$ A^TA = \begin{bmatrix} 4 & -3 \\ 4 & 3 \end{bmatrix}\begin{bmatrix} 4 & 4 \\ -3 & 3 \end{bmatrix} $$
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\((4)(4) + (-3)(-3) = 16 + 9\)</td><td>25</td></tr>
+      <tr><td>\((1,2)\)</td><td>\((4)(4) + (-3)(3) = 16 - 9\)</td><td>7</td></tr>
+      <tr><td>\((2,1)\)</td><td>\((4)(4) + (3)(-3) = 16 - 9\)</td><td>7 — symmetric ✓</td></tr>
+      <tr><td>\((2,2)\)</td><td>\((4)(4) + (3)(3) = 16 + 9\)</td><td>25</td></tr>
+    </table>
+
+    $$ A^TA = \begin{bmatrix} 25 & 7 \\ 7 & 25 \end{bmatrix} $$
+
+    <h4>Step 2 · eigenvalues and eigenvectors</h4>
+
+    <p>This is the \(\begin{bmatrix} a&b \\ b&a \end{bmatrix}\) pattern, whose eigenvectors are always \((1,1)\) and \((1,-1)\):</p>
+
+    $$ A^TA\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 32 \\ 32 \end{bmatrix} = 32\begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad
+       A^TA\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 18 \\ -18 \end{bmatrix} = 18\begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <p>Checks: \(32 + 18 = 50 = \) trace ✓ and \(32 \times 18 = 576 = 625 - 49 = \det\) ✓</p>
+
+    <p>Normalise to unit length:</p>
+
+    $$ v_1 = \frac{1}{\sqrt2}\begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad v_2 = \frac{1}{\sqrt2}\begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <h4>Step 3 · the singular values</h4>
+
+    $$ \sigma_1 = \sqrt{32} = 4\sqrt2 \approx 5.657, \qquad \sigma_2 = \sqrt{18} = 3\sqrt2 \approx 4.243 $$
+
+    <p>Check: \(\sigma_1\sigma_2 = (4\sqrt2)(3\sqrt2) = 12 \times 2 = 24 = |\det A|\) ✓ — the singular values multiply to the absolute determinant, since \(|\det A| = |\det U||\det\Sigma||\det V^T|\) and the orthogonal factors have determinant \(\pm1\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Getting U right</h3>
+
+    <p>You could find \(U\) by diagonalizing \(AA^T\). <b>Do not.</b></p>
+
+    $$ AA^T = \begin{bmatrix} 4&4 \\ -3&3 \end{bmatrix}\begin{bmatrix} 4&-3 \\ 4&3 \end{bmatrix}
+      = \begin{bmatrix} 32 & 0 \\ 0 & 18 \end{bmatrix} $$
+
+    <p>Already diagonal, with the same eigenvalues 32 and 18 ✓. So the eigenvectors look like \((1,0)\) and \((0,1)\) — but <b>an eigenvector is only determined up to sign</b>, and the SVD needs the right one.</p>
+
+    <div class="box pitfall"><span class="label">The sign trap ★</span>
+      <p>Get \(U\) from the defining equation instead:</p>
+      $$ \boxed{u_i = \frac{Av_i}{\sigma_i}} $$
+      <p>This is forced — no sign to choose. Picking \(u_i\) independently from \(AA^T\) gives a 50-50 chance per column of a sign error, and then \(U\Sigma V^T \ne A\).</p>
+    </div>
+
+    <h4>Compute them</h4>
+
+    $$ Av_1 = \frac{1}{\sqrt2}\begin{bmatrix} 4&4 \\ -3&3 \end{bmatrix}\begin{bmatrix} 1 \\ 1 \end{bmatrix}
+      = \frac{1}{\sqrt2}\begin{bmatrix} 8 \\ 0 \end{bmatrix} $$
+
+    $$ u_1 = \frac{Av_1}{\sigma_1} = \frac{1}{4\sqrt2}\cdot\frac{1}{\sqrt2}\begin{bmatrix} 8 \\ 0 \end{bmatrix}
+      = \frac{1}{8}\begin{bmatrix} 8 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+
+    $$ Av_2 = \frac{1}{\sqrt2}\begin{bmatrix} 4&4 \\ -3&3 \end{bmatrix}\begin{bmatrix} 1 \\ -1 \end{bmatrix}
+      = \frac{1}{\sqrt2}\begin{bmatrix} 0 \\ -6 \end{bmatrix} $$
+
+    $$ u_2 = \frac{Av_2}{\sigma_2} = \frac{1}{3\sqrt2}\cdot\frac{1}{\sqrt2}\begin{bmatrix} 0 \\ -6 \end{bmatrix}
+      = \frac16\begin{bmatrix} 0 \\ -6 \end{bmatrix} = \begin{bmatrix} 0 \\ -1 \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">Note the minus sign ★</span>
+      <p>\(u_2 = (0,-1)\), <b>not</b> \((0,1)\). Both are unit eigenvectors of \(AA^T\); only one makes \(Av_2 = \sigma_2u_2\) true. This is exactly the trap the box above warns about, appearing in the very first example.</p>
+    </div>
+
+    <p>Check they are orthonormal: \(u_1 \cdot u_2 = (1)(0) + (0)(-1) = 0\) ✓, and both have length 1 ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Putting it together</h3>
+
+    $$ U = \begin{bmatrix} 1 & 0 \\ 0 & -1 \end{bmatrix}, \qquad
+       \Sigma = \begin{bmatrix} 4\sqrt2 & 0 \\ 0 & 3\sqrt2 \end{bmatrix}, \qquad
+       V = \frac{1}{\sqrt2}\begin{bmatrix} 1 & 1 \\ 1 & -1 \end{bmatrix} $$
+
+    <p><b>Multiply back.</b> First \(U\Sigma\) — scale the columns:</p>
+
+    $$ U\Sigma = \begin{bmatrix} 4\sqrt2 & 0 \\ 0 & -3\sqrt2 \end{bmatrix} $$
+
+    <p>Then times \(V^T = \dfrac{1}{\sqrt2}\begin{bmatrix} 1&1 \\ 1&-1 \end{bmatrix}\) (symmetric here):</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\(\tfrac{1}{\sqrt2}\big(4\sqrt2 \cdot 1 + 0\big) = \tfrac{4\sqrt2}{\sqrt2}\)</td><td>4 ✓</td></tr>
+      <tr><td>\((1,2)\)</td><td>\(\tfrac{1}{\sqrt2}\big(4\sqrt2 \cdot 1 + 0\big)\)</td><td>4 ✓</td></tr>
+      <tr><td>\((2,1)\)</td><td>\(\tfrac{1}{\sqrt2}\big(0 + (-3\sqrt2)(1)\big)\)</td><td>\(-3\) ✓</td></tr>
+      <tr><td>\((2,2)\)</td><td>\(\tfrac{1}{\sqrt2}\big(0 + (-3\sqrt2)(-1)\big)\)</td><td>3 ✓</td></tr>
+    </table>
+
+    $$ U\Sigma V^T = \begin{bmatrix} 4 & 4 \\ -3 & 3 \end{bmatrix} = A \qquad\checkmark $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The four subspaces, orthonormally</h3>
+
+    <p>When \(A\) is not invertible, \(r < n\) and the SVD organises all four subspaces from Lesson 10 — with perpendicular bases for each.</p>
+
+    <table class="sl-table">
+      <tr><th>Vectors</th><th>Span</th><th>Count</th></tr>
+      <tr><td>\(v_1, \dots, v_r\)</td><td>the <b>row space</b> \(C(A^T)\)</td><td>\(r\)</td></tr>
+      <tr><td>\(v_{r+1}, \dots, v_n\)</td><td>the <b>nullspace</b> \(N(A)\)</td><td>\(n - r\)</td></tr>
+      <tr><td>\(u_1, \dots, u_r\)</td><td>the <b>column space</b> \(C(A)\)</td><td>\(r\)</td></tr>
+      <tr><td>\(u_{r+1}, \dots, u_m\)</td><td>the <b>left nullspace</b> \(N(A^T)\)</td><td>\(m - r\)</td></tr>
+    </table>
+
+    <p>And \(\Sigma\) has \(\sigma_1, \dots, \sigma_r > 0\) with zeros after, which is just the statement \(Av_i = 0\) for \(i > r\).</p>
+
+    <div class="box theorem"><span class="label">The whole course in one factorisation ★</span>
+      <p>Lesson 10 gave the four subspaces and their dimensions. Lesson 13 showed they pair off perpendicularly. The SVD now supplies <b>orthonormal bases for all four at once</b>, chosen so that \(A\) takes the first basis to the third with pure scaling.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. A as a sum of rank-one pieces</h3>
+
+    <p>Expand \(U\Sigma V^T\) the way Lesson 24 expanded \(Q\Lambda Q^T\):</p>
+
+    $$ \boxed{A = \sigma_1u_1v_1^T + \sigma_2u_2v_2^T + \dots + \sigma_ru_rv_r^T} $$
+
+    <p>Each \(u_iv_i^T\) is a column times a row, so each piece has <b>rank one</b> — the building blocks from Lesson 11. The rank of \(A\) is the number of non-zero \(\sigma_i\).</p>
+
+    <p>Check on our example. \(u_1v_1^T = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\tfrac{1}{\sqrt2}\begin{bmatrix} 1 & 1 \end{bmatrix} = \tfrac{1}{\sqrt2}\begin{bmatrix} 1&1 \\ 0&0 \end{bmatrix}\), so</p>
+
+    $$ \sigma_1u_1v_1^T = 4\sqrt2 \cdot \frac{1}{\sqrt2}\begin{bmatrix} 1&1 \\ 0&0 \end{bmatrix} = \begin{bmatrix} 4&4 \\ 0&0 \end{bmatrix} $$
+
+    <p>Similarly \(\sigma_2u_2v_2^T = 3\sqrt2 \cdot \tfrac{1}{\sqrt2}\begin{bmatrix} 0&0 \\ -1&1 \end{bmatrix} = \begin{bmatrix} 0&0 \\ -3&3 \end{bmatrix}\). Add them:</p>
+
+    $$ \begin{bmatrix} 4&4 \\ 0&0 \end{bmatrix} + \begin{bmatrix} 0&0 \\ -3&3 \end{bmatrix} = \begin{bmatrix} 4&4 \\ -3&3 \end{bmatrix} = A \qquad\checkmark $$
+
+    <div class="box intuition"><span class="label">Where compression comes from ★</span>
+      <p>Order the pieces by size: \(\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_r\). Keep the first \(k\) and throw the rest away:</p>
+      $$ A_k = \sigma_1u_1v_1^T + \dots + \sigma_ku_kv_k^T $$
+      <p><b>No rank-\(k\) matrix is closer to \(A\) than this one.</b> So if the singular values decay quickly — as they do for photographs and most real data — a handful of terms reproduces the matrix almost exactly.</p>
+      <p>A \(1000 \times 1000\) image needs a million numbers. Fifty terms need \(50(1000 + 1000 + 1) \approx 100{,}000\) — a tenth of the storage, often with no visible difference. That is image compression, and it is this formula.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t9"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The method</h4>
+    <ol class="index-list">
+      <li><b>Form \(A^TA\)</b><span>Square, symmetric, positive semidefinite whatever the shape of \(A\).</span></li>
+      <li><b>Diagonalize it</b><span>Its orthonormal eigenvectors are the columns of \(V\); its eigenvalues are \(\sigma_i^2\).</span></li>
+      <li><b>Take positive square roots</b><span>\(\sigma_i = \sqrt{\lambda_i}\), ordered largest first.</span></li>
+      <li><b>Compute \(u_i = Av_i/\sigma_i\)</b><span>Never guess \(U\) from \(AA^T\) — the signs will betray you.</span></li>
+      <li><b>Check \(U\Sigma V^T = A\)</b><span>And that \(\prod\sigma_i = |\det A|\) when \(A\) is square.</span></li>
+    </ol>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The request ★</b></td><td>\(Av_i = \sigma_iu_i\): perpendicular in, perpendicular out, scaled by \(\sigma_i\).</td></tr>
+      <tr><td><b>The factorisation</b></td><td>\(A = U\Sigma V^T\), with \(U\) and \(V\) orthogonal and \(\Sigma\) diagonal.</td></tr>
+      <tr><td><b>Why it always exists ★</b></td><td>\(A^TA = V\Sigma^2V^T\) is symmetric positive semidefinite, so the spectral theorem supplies \(V\).</td></tr>
+      <tr><td><b>Singular values</b></td><td>\(\sigma_i = \sqrt{\lambda_i(A^TA)}\), real and non-negative, ordered largest first.</td></tr>
+      <tr><td><b>\(U\) ★</b></td><td>\(u_i = Av_i/\sigma_i\). Signs matter, and \(AA^T\) will not tell you them.</td></tr>
+      <tr><td><b>The worked example</b></td><td>\(A^TA = \begin{bmatrix} 25&7 \\ 7&25 \end{bmatrix}\), \(\sigma = 4\sqrt2, 3\sqrt2\), \(u_1 = (1,0)\), \(u_2 = (0,-1)\).</td></tr>
+      <tr><td><b>Determinant check</b></td><td>\(\prod\sigma_i = |\det A|\). Here \(24\).</td></tr>
+      <tr><td><b>Four subspaces</b></td><td>\(v_1..v_r\) row space, \(v_{r+1}..v_n\) nullspace, \(u_1..u_r\) column space, \(u_{r+1}..u_m\) left nullspace.</td></tr>
+      <tr><td><b>Rank one pieces ★</b></td><td>\(A = \sum\sigma_iu_iv_i^T\). Rank = number of non-zero \(\sigma_i\).</td></tr>
+      <tr><td><b>Compression</b></td><td>Keeping the largest \(k\) terms gives the best possible rank-\(k\) approximation.</td></tr>
+      <tr><td><b>Versus eigenvalues</b></td><td>Eigenvectors need one basis and a square matrix; the SVD allows two bases and any shape.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Two bases instead of one ★</b><span>Giving up \(Ax = \lambda x\) for \(Av = \sigma u\) is what buys universality.</span></li>
+      <li><b>\(A^TA\) is the way in</b><span>Multiplying by the transpose kills \(U\) and reduces the problem to a symmetric one.</span></li>
+      <li><b>Everything previous is being used</b><span>Four subspaces, orthogonality, the spectral theorem, positive semidefiniteness, rank-one matrices. This lesson is the assembly.</span></li>
+      <li><b>Compute \(U\) from \(Av/\sigma\) ★</b><span>The one place in the course where a sign error is almost guaranteed if you take the shortcut.</span></li>
+      <li><b>The \(\sigma_i\) rank the directions</b><span>Largest first means the most important part of the matrix comes first — which is why truncating works.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>The SVD was built by choosing good bases. The last three lessons step back to ask what a basis really is: Lesson 29 separates the <b>transformation</b> from the matrix that represents it, Lesson 30 shows what changing basis does to that matrix and uses it for image compression, and Lesson 31 closes the course with the <b>pseudoinverse</b> — the best available inverse for a matrix that has none, built directly from the SVD.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
