@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Column Space and Nullspace · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 6: unions and intersections of subspaces, the column space answering when Ax = b is solvable, and the nullspace of all solutions to Ax = 0.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@2.35.2/plotly.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-06">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Column Space and Nullspace</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 6</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 6 (MIT 18.06, Lecture 6)</p>
+  <h1>Column Space and Nullspace</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Which } b \text{ can } Ax = b \text{ reach — and which } x \text{ does } A \text{ send to zero?}} $$</p>
+      <p>This is <b>the centre of linear algebra</b>. Two subspaces come out of one matrix and answer the two halves of that question. The <b>column space</b> collects everything \(A\) can produce, so it says exactly when \(Ax = b\) is solvable. The <b>nullspace</b> collects every \(x\) that \(A\) destroys. They live in different spaces and are built in opposite ways.</p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Subspaces, briefly</a></li>
+        <li><a href="#t2">Unions and intersections</a></li>
+        <li><a href="#t3">The column space</a></li>
+        <li><a href="#t4">Can we solve Ax = b?</a></li>
+        <li><a href="#t5">The answer</a></li>
+        <li><a href="#t6">How big is this column space?</a></li>
+        <li><a href="#t7">The nullspace</a></li>
+        <li><a href="#t8">Why the nullspace is a space</a></li>
+        <li><a href="#t9">Change b and it breaks</a></li>
+        <li><a href="#t10">Two ways to describe a subspace</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The topics, in the order he teaches them. Click one to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">Subspaces, briefly</a><span>The one requirement, restated: closed under linear combinations.</span></li>
+      <li><a href="#t2">Unions and intersections</a><span>Joining two subspaces usually fails; intersecting them always works.</span></li>
+      <li><a href="#t3">The column space</a><span>All combinations of the columns — a subspace of \(\mathbb{R}^4\) for our example.</span></li>
+      <li><a href="#t4">Can we solve Ax = b?</a><span>Four equations, three unknowns — not for every \(b\). So for which?</span></li>
+      <li><a href="#t5">The answer</a><span>Solvable exactly when \(b\) lies in the column space. The central result.</span></li>
+      <li><a href="#t6">How big is this column space?</a><span>One column contributes nothing new, so the space is a plane in \(\mathbb{R}^4\).</span></li>
+      <li><a href="#t7">The nullspace</a><span>All solutions of \(Ax = 0\) — here a line in \(\mathbb{R}^3\).</span></li>
+      <li><a href="#t8">Why the nullspace is a space</a><span>Two short checks, using nothing but \(A(v+w) = Av + Aw\).</span></li>
+      <li><a href="#t9">Change b and it breaks</a><span>The solutions of \(Ax = b\) are not a subspace once \(b \ne 0\).</span></li>
+      <li><a href="#t10">Two ways to describe a subspace</a><span>Give the vectors and fill out, or give the equations and solve.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Subspaces, briefly</h3>
+
+    <p>From Lesson 5, in one line: a vector space is a collection of vectors where <b>I can add any two and stay inside, and multiply any one by any number and stay inside</b>. Combine the two and the short form is:</p>
+
+    $$ \boxed{\text{for any } v, w \text{ in the space and any numbers } c, d: \quad cv + dw \text{ is in the space}} $$
+
+    <p>All linear combinations stay in. A <b>subspace</b> is a vector space sitting inside another one. In \(\mathbb{R}^3\) the examples to keep in mind are a <b>plane \(P\) through the origin</b> and a <b>line \(L\) through the origin</b> — add two vectors in the plane and you are still in the plane; multiply one by \(-2\) and you are still in the plane. Every subspace must contain the zero vector.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Unions and intersections</h3>
+
+    <p>Two subspaces in hand, \(P\) and \(L\). Two obvious things to try.</p>
+
+    <h4>The union: put them together</h4>
+    <p>\(P \cup L\) means every vector that is in \(P\), or in \(L\), or both. <b>Is that a subspace?</b></p>
+
+    <div class="box pitfall"><span class="label">No — because you cannot add</span>
+      <p>Take a vector from the plane and a vector from the line and add them. The result is generally <b>off somewhere else</b> — not on the plane, not on the line. Closure fails at the first test.</p>
+    </div>
+
+    <h4>The intersection: keep what is in both</h4>
+    <p>\(P \cap L\) means every vector that is in \(P\) <b>and</b> in \(L\). For the picture above, with the line not lying in the plane, the only vector in both is the zero vector — and the zero vector alone <b>is</b> a subspace, as we saw last lesson.</p>
+
+    <p>That is no accident. Take <b>any</b> two subspaces \(S\) and \(T\):</p>
+
+    <div class="box theorem"><span class="label">\(S \cap T\) is always a subspace</span>
+      <p>Let \(v\) and \(w\) both be in the intersection — so both are in \(S\), and both are in \(T\).</p>
+      <ul>
+        <li><b>Addition:</b> \(v + w\) is in \(S\), because \(S\) is a subspace. And \(v + w\) is in \(T\), because \(T\) is a subspace. So \(v + w\) is in both — it is in the intersection. ✓</li>
+        <li><b>Scaling:</b> \(7v\) is in \(S\) since \(v\) was, and \(7v\) is in \(T\) since \(v\) was. So \(7v\) is in the intersection. ✓</li>
+      </ul>
+      <p>Both requirements hold, so the intersection — usually a <b>smaller</b> collection, since we added a requirement — is still a genuine subspace.</p>
+    </div>
+
+    <figure class="fig" style="max-width:560px;margin:22px auto">
+      <svg viewBox="0 0 560 260" role="img" aria-label="The union of a plane and a line is not a subspace; the intersection is">
+        <defs>
+          <marker id="ua1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ua3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <text class="tick" x="20" y="22" font-size="12.5">P ∪ L — add one from each and you leave both</text>
+        <text class="tick" x="320" y="22" font-size="12.5">P ∩ L — only the origin, and that is a subspace</text>
+        <!-- left: plane + line + escaping sum -->
+        <g transform="translate(0,10)">
+          <polygon points="30,150 180,110 270,150 120,190" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+          <text class="lbl c1" x="34" y="206">plane P</text>
+          <line class="l2" x1="150" y1="210" x2="150" y2="50"/>
+          <text class="lbl c2" x="156" y="58">line L</text>
+          <circle class="pt" cx="150" cy="150" r="4"/>
+          <line class="l1" x1="150" y1="150" x2="230" y2="130" marker-end="url(#ua1)"/>
+          <line class="l2" x1="150" y1="150" x2="150" y2="96" marker-end="url(#ua1)"/>
+          <line class="l3 dash" x1="150" y1="150" x2="230" y2="76" marker-end="url(#ua3)"/>
+          <circle class="hit" cx="232" cy="74" r="5"/>
+          <text class="lbl c3" x="206" y="64">their sum — in neither</text>
+        </g>
+        <!-- right: intersection -->
+        <g transform="translate(300,10)">
+          <polygon points="20,150 170,110 260,150 110,190" class="l1" fill="currentColor" fill-opacity=".14" stroke-width="1.5"/>
+          <line class="l2" x1="140" y1="210" x2="140" y2="50"/>
+          <circle class="hit" cx="140" cy="150" r="6"/>
+          <text class="lbl c3" x="150" y="146">only 0</text>
+          <text class="tick" x="20" y="206">and {0} satisfies both rules, dully but genuinely</text>
+        </g>
+      </svg>
+      <figcaption><b>Union breaks, intersection survives.</b> On the left, one arrow from the plane plus one arrow from the line lands at a point belonging to neither — a single counterexample is enough to disqualify the union. On the right, the only vector lying in both is the origin, and \(\{0\}\) passes both closure tests. The same argument works for any two subspaces: anything in both inherits closure twice over, so intersections are always safe.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The column space</h3>
+
+    <p>Now the subspace that matters. Take the example matrix for the whole lecture:</p>
+
+    $$ A = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix} $$
+
+    <p>It is \(4 \times 3\): four rows, three columns. Its columns are vectors with <b>four</b> components, so they live in \(\mathbb{R}^4\):</p>
+
+    $$ \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix}, \qquad \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \qquad \begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix} $$
+
+    <p>Three vectors do not make a subspace. To get one, <b>take all their linear combinations</b> — and that is exactly the definition:</p>
+
+    $$ \boxed{C(A) = \text{all linear combinations of the columns of } A} $$
+
+    <p>It really is a space: multiply a combination by \(11\) and you have another combination; add two combinations and you have a third. <b>It is the smallest subspace containing those three columns</b> — they have to be in it, their combinations have to be in it, and there we stop.</p>
+
+    <div class="box method"><span class="label">Which space does it sit inside?</span>
+      <p>For an \(m \times n\) matrix the columns have \(m\) components, so \(C(A)\) is a subspace of \(\mathbb{R}^m\). Here \(m = 4\): <b>\(C(A)\) is a subspace of \(\mathbb{R}^4\)</b>.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Can we solve Ax = b?</h3>
+
+    <p>Behind the abstraction there is a purpose — understanding \(Ax = b\). Written out, our system is</p>
+
+    $$ \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix}
+      \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+      = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ b_4 \end{bmatrix} $$
+
+    <p><b>Four equations, three unknowns.</b> So \(Ax = b\) does <b>not</b> have a solution for every \(b\) — three columns cannot fill four-dimensional space, and most \(b\) will be unreachable. Anyone would say you cannot usually solve four equations with three unknowns.</p>
+
+    <p>But <b>sometimes you can</b>, and the question of the day is: <b>which right-hand sides work?</b></p>
+
+    <h4>Three right-hand sides that do work</h4>
+
+    <table class="sl-table">
+      <tr><th>\(b\)</th><th>Why it works</th><th>A solution \(x\)</th></tr>
+      <tr><td>\((0,0,0,0)\)</td><td>Guaranteed — take all the \(x\)s to be zero.</td><td>\((0,0,0)\)</td></tr>
+      <tr><td>\((1,2,3,4)\)</td><td>It <b>is</b> column one. Take one of column one, none of the others.</td><td>\((1,0,0)\)</td></tr>
+      <tr><td>\((1,1,1,1)\)</td><td>It is column two.</td><td>\((0,1,0)\)</td></tr>
+    </table>
+
+    <p>Notice the trick that makes these instant: rather than solving four equations, <b>pick an \(x\) first and see what \(b\) comes out</b>. The components of \(x\) are just the amounts of each column, so \(b = Ax\) is always a combination of the columns.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The answer</h3>
+
+    <div class="box theorem"><span class="label">The central result of the lecture ★</span>
+      <p>$$ \boxed{Ax = b \text{ is solvable exactly when } b \text{ lies in } C(A)} $$</p>
+      <p>Why: \(C(A)\) is, by its definition, all the combinations of the columns — which is to say <b>all the vectors \(Ax\)</b>. Those are precisely the right-hand sides we can hit.</p>
+      <ul>
+        <li>If \(b\) <b>is</b> a combination of the columns, then that combination <b>tells you what \(x\) is</b>.</li>
+        <li>If \(b\) is <b>not</b> a combination of the columns, there is no \(x\). No way to solve it at all.</li>
+      </ul>
+    </div>
+
+    <p>That is why the column space is the central object: <b>it says when we can solve</b>. Everything else in this lecture hangs off it.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. How big is this column space?</h3>
+
+    <p>We know \(C(A)\) is inside \(\mathbb{R}^4\) and that it is not all of \(\mathbb{R}^4\). But how much smaller? Ask it this way: <b>can I throw away a column and keep the same column space?</b></p>
+
+    <p>Look again at the three columns, and add the first two:</p>
+
+    $$ \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} + \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}
+      = \begin{bmatrix} 1+1 \\ 2+1 \\ 3+1 \\ 4+1 \end{bmatrix}
+      = \begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix} \quad = \text{ column three} $$
+
+    <p><b>Column three is the sum of the first two.</b> So it is already a combination of them — throwing it in adds <b>nothing new</b>. The combinations of all three columns are exactly the combinations of the first two.</p>
+
+    <div class="box definition"><span class="label">Pivot columns, and a word coming soon</span>
+      <p>Columns one and two will later be called <b>pivot columns</b>; column three is <b>dependent</b> on them. The convention is to keep the earliest columns that keep contributing: column one is fine (it gives a line), column two is fine (a second direction), column three lies in the plane of the first two and gives nothing.</p>
+      <p>Honesty requires noting we could instead have thrown away column one — the choice is a convention, not a necessity.</p>
+    </div>
+
+    <div class="box theorem"><span class="label">So the size is settled</span>
+      <p>$$ \boxed{C(A) \text{ is a two-dimensional subspace of } \mathbb{R}^4 \text{ — a plane through the origin}} $$</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The nullspace</h3>
+
+    <p>Now a completely different subspace from the same matrix. The column space was made of <b>right-hand sides \(b\)</b>. The nullspace is made of <b>solutions \(x\)</b> — and the only right-hand side it cares about is zero.</p>
+
+    $$ \boxed{N(A) = \text{all } x \text{ with } Ax = 0} $$
+
+    <p>Our \(x\) has three components, so:</p>
+
+    <div class="box method"><span class="label">Which space does it sit inside?</span>
+      <p>For an \(m \times n\) matrix, \(n\) is the number of columns, which is the number of unknowns multiplying them. So <b>\(N(A)\) is a subspace of \(\mathbb{R}^n\)</b> — here \(\mathbb{R}^3\), while \(C(A)\) was in \(\mathbb{R}^4\). <b>Two different subspaces, in two different spaces.</b></p>
+    </div>
+
+    <h4>Finding it by eye</h4>
+    <p>The official method is elimination, and that comes next lesson. For a small example we can just look.</p>
+
+    <p><b>One solution is free:</b> \(x = (0,0,0)\). Whatever the matrix, \(A\) times the zero vector is zero — so the nullspace always contains zero, and has a chance of being a space.</p>
+
+    <p><b>Another:</b> we want a combination of the columns giving nothing. We already know column one plus column two equals column three, so take one of each of the first two and <b>subtract</b> the third:</p>
+
+    $$ A\begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix}
+      = 1\begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} + 1\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} - 1\begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix}
+      = \begin{bmatrix} 1+1-2 \\ 2+1-3 \\ 3+1-4 \\ 4+1-5 \end{bmatrix}
+      = \begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} \quad ✓ $$
+
+    <p><b>And then all of them.</b> If \((1,1,-1)\) works then so does \((2,2,-2)\), and \((7,7,-7)\), and \((-11,-11,11)\) — any multiple:</p>
+
+    $$ \boxed{N(A) = \left\{ c\begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix} : c \text{ any number} \right\}} $$
+
+    <p>That description is perfect, because \(c = 0\) automatically puts the zero vector in and \(c = 1\) gives the vector we found. Geometrically, <b>the nullspace is a line in \(\mathbb{R}^3\)</b> — through the origin, going both ways.</p>
+
+    <figure class="fig" style="max-width:640px;margin:22px auto">
+      <div id="fig3d-null" style="width:100%;height:420px"></div>
+      <figcaption><b>The nullspace is a line — drag to rotate.</b> Every point on this line is an \(x\) that \(A\) sends to the zero vector: \((1,1,-1)\), its double \((2,2,-2)\), its negative, and the origin itself. Rotate and you will see it is a genuine line through \((0,0,0)\), which it must be — any multiple of a nullspace vector is still in the nullspace, and the two ends of the line are those multiples running positive and negative. Note which space this lives in: \(\mathbb{R}^3\), one per column of \(A\), while the column space of the same matrix lives in \(\mathbb{R}^4\).</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Why the nullspace is a space</h3>
+
+    <p>We never use the word "space" without checking the two requirements. Here they are, and they cost two lines each.</p>
+
+    <h4>Closed under addition</h4>
+    <p>Suppose \(Av = 0\) and \(Aw = 0\). What about \(v + w\)? Split the multiplication:</p>
+
+    $$ A(v + w) = Av + Aw = 0 + 0 = 0 \quad ✓ $$
+
+    <h4>Closed under scaling</h4>
+    <p>Suppose \(Av = 0\). What about \(12v\)? A number moves outside:</p>
+
+    $$ A(12v) = 12(Av) = 12 \cdot 0 = 0 \quad ✓ $$
+
+    <div class="box intuition"><span class="label">What did the work</span>
+      <p>Nothing but the <b>distributive law</b> of matrix multiplication — that \(A\) can be split across a sum, and a scalar can be brought outside. It looks almost too simple to write down, but that law is exactly what makes the solutions of \(Ax = 0\) a space.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Change b and it breaks</h3>
+
+    <p>To see why \(Ax = 0\) is special, change the right-hand side to something non-zero — say the very special \(b = (1,2,3,4)\), which we know is solvable:</p>
+
+    $$ \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix}
+      \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+      = \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} $$
+
+    <p><b>Do its solutions form a subspace?</b></p>
+
+    <div class="box pitfall"><span class="label">No — and it fails immediately</span>
+      <p>The zero vector is not a solution: \(A \cdot 0 = 0 \ne (1,2,3,4)\). <b>We never even get started</b>, since every subspace must contain zero.</p>
+    </div>
+
+    <p>There are solutions, though. We saw \(x = (1,0,0)\), which takes one of column one. And here is a second — take minus column two plus column three:</p>
+
+    $$ A\begin{bmatrix} 0 \\ -1 \\ 1 \end{bmatrix}
+      = -1\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} + 1\begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix}
+      = \begin{bmatrix} -1+2 \\ -1+3 \\ -1+4 \\ -1+5 \end{bmatrix}
+      = \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} \quad ✓ $$
+
+    <p>So the solutions are a whole collection — but <b>not</b> a subspace. What they form is a <b>line that does not pass through the origin</b>, which is the shifted shape we met in Lesson 5.</p>
+
+    <div class="box intuition"><span class="label">A detail worth noticing</span>
+      <p>Subtract the two solutions we found:</p>
+      $$ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} - \begin{bmatrix} 0 \\ -1 \\ 1 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \\ -1 \end{bmatrix} $$
+      <p>That is exactly the nullspace vector. The solutions of \(Ax = b\) are the nullspace line <b>shifted</b> so it passes through one particular solution — which is why it is parallel to \(N(A)\) but misses the origin. Next lesson makes this precise.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Two ways to describe a subspace</h3>
+
+    <p>Step back and notice that the lecture's two subspaces were handed to us in <b>opposite ways</b>.</p>
+
+    <table class="sl-table">
+      <tr><th></th><th>Column space \(C(A)\)</th><th>Nullspace \(N(A)\)</th></tr>
+      <tr><td><b>How it is given</b></td><td>Here are some vectors — the columns. <b>Take their combinations.</b></td><td>Here is a system of equations — \(Ax = 0\). <b>Find everything that satisfies it.</b></td></tr>
+      <tr><td><b>What you do</b></td><td>Build up. Put vectors in and fill out.</td><td>Cut down. Impose requirements and see what survives.</td></tr>
+      <tr><td><b>Lives in</b></td><td>\(\mathbb{R}^m\) — one component per row.</td><td>\(\mathbb{R}^n\) — one component per column.</td></tr>
+      <tr><td><b>In our example</b></td><td>A plane in \(\mathbb{R}^4\).</td><td>A line in \(\mathbb{R}^3\).</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">The two natural constructions ★</span>
+      <p>Either <b>give a few vectors and take all combinations</b>, or <b>give a system of equations and take all solutions</b>. Both produce subspaces, and they are the two important ways subspaces get built.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Subspace test</b></td><td>\(cv + dw\) stays inside, for all \(v, w\) in it and all numbers \(c, d\).</td></tr>
+      <tr><td><b>Union</b></td><td>\(P \cup L\) is generally <b>not</b> a subspace — add one from each and you leave both.</td></tr>
+      <tr><td><b>Intersection</b></td><td>\(S \cap T\) is <b>always</b> a subspace — closure is inherited twice over.</td></tr>
+      <tr><td><b>Column space</b></td><td>\(C(A)\) = all combinations of the columns = all vectors \(Ax\). Subspace of \(\mathbb{R}^m\).</td></tr>
+      <tr><td><b>Solvability ★</b></td><td>\(Ax = b\) has a solution exactly when \(b\) is in \(C(A)\).</td></tr>
+      <tr><td><b>Dependent column</b></td><td>Column three \(=\) column one \(+\) column two, so it adds nothing; \(C(A)\) is a plane in \(\mathbb{R}^4\).</td></tr>
+      <tr><td><b>Nullspace</b></td><td>\(N(A)\) = all \(x\) with \(Ax = 0\). Subspace of \(\mathbb{R}^n\).</td></tr>
+      <tr><td><b>Our nullspace</b></td><td>All multiples of \((1,1,-1)\) — a line in \(\mathbb{R}^3\).</td></tr>
+      <tr><td><b>Why it is a space</b></td><td>\(A(v+w) = Av + Aw = 0\) and \(A(cv) = c(Av) = 0\).</td></tr>
+      <tr><td><b>Non-zero \(b\)</b></td><td>Solutions of \(Ax = b\) are <b>not</b> a subspace — zero is not among them. They form a shifted line.</td></tr>
+      <tr><td><b>Shift</b></td><td>The difference of two solutions, \((1,0,0) - (0,-1,1) = (1,1,-1)\), is in the nullspace.</td></tr>
+      <tr><td><b>Two constructions</b></td><td>Combinations of given vectors, or solutions of given equations.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>\(Ax = b\) is solvable exactly when \(b\) is in the column space ★</b>
+        <span>The reason the column space is the central object — it is literally the set of all achievable right-hand sides.</span></li>
+      <li><b>A few vectors are never a subspace — take the combinations</b>
+        <span>Three columns are three vectors. Only after closing them up under addition and scaling is there a space.</span></li>
+      <li><b>The two subspaces live in different spaces</b>
+        <span>\(C(A)\) in \(\mathbb{R}^m\), \(N(A)\) in \(\mathbb{R}^n\). For a \(4 \times 3\) matrix that is \(\mathbb{R}^4\) and \(\mathbb{R}^3\) — do not mix them up.</span></li>
+      <li><b>Subspaces must go through the origin ★</b>
+        <span>Which is exactly why \(Ax = 0\) gives a space and \(Ax = b\) with \(b \ne 0\) does not.</span></li>
+      <li><b>Two ways to hand someone a subspace</b>
+        <span>Give the vectors and say "take combinations", or give the equations and say "find the solutions".</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Everything here was found <b>by eye</b>, because the example was small enough to see. That does not scale. The next lesson brings back <b>elimination</b> as the systematic way to compute a nullspace — pivot columns, free variables, and the special solutions that describe \(N(A)\) for a matrix of any size.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script>
+// 3D figure: the nullspace of A is the line through (1,1,-1).
+window.addEventListener("load", function () {
+  if (!window.Plotly) return;
+  var css = getComputedStyle(document.documentElement);
+  function c(v) { return css.getPropertyValue(v).trim(); }
+  var blue = c("--def-b"), red = c("--warn-b"), ink = c("--ink"), soft = c("--ink-soft"),
+      rule = c("--rule"), paper2 = c("--paper-2");
+  function axis(t, lo, hi, dt) {
+    return { title: { text: t, font: { size: 14, color: ink } }, range: [lo, hi], autorange: false,
+      tickmode: "linear", tick0: 0, dtick: dt, tickfont: { size: 11, color: soft },
+      gridcolor: rule, zeroline: true, zerolinecolor: soft, zerolinewidth: 2,
+      showbackground: true, backgroundcolor: paper2, showspikes: false, linecolor: soft, showline: true };
+  }
+  if (!document.getElementById("fig3d-null")) return;
+  var L = { margin: { l: 0, r: 0, t: 0, b: 50 }, paper_bgcolor: "rgba(0,0,0,0)", showlegend: true, uirevision: "keep",
+    legend: { orientation: "h", x: 0, y: -0.02, yanchor: "top", font: { color: ink, size: 11 }, bgcolor: "rgba(0,0,0,0)" },
+    scene: { xaxis: axis("x₁", -3, 3, 1), yaxis: axis("x₂", -3, 3, 1), zaxis: axis("x₃", -3, 3, 1),
+      aspectmode: "cube", dragmode: "turntable", camera: { eye: { x: 1.75, y: -1.6, z: 0.8 }, up: { x: 0, y: 0, z: 1 } } } };
+  Plotly.newPlot("fig3d-null", [
+    { type: "scatter3d", mode: "lines", name: "N(A) — every multiple of (1, 1, −1)", hoverinfo: "name",
+      line: { color: blue, width: 8 }, x: [-2.6, 2.6], y: [-2.6, 2.6], z: [2.6, -2.6] },
+    { type: "scatter3d", mode: "markers+text", name: "(1, 1, −1)", hoverinfo: "name",
+      marker: { color: red, size: 7 }, x: [1], y: [1], z: [-1], text: ["(1, 1, −1)"],
+      textposition: "top center", textfont: { color: red, size: 12 } },
+    { type: "scatter3d", mode: "markers+text", name: "(2, 2, −2)", hoverinfo: "name",
+      marker: { color: red, size: 6 }, x: [2], y: [2], z: [-2], text: ["(2, 2, −2)"],
+      textposition: "top center", textfont: { color: red, size: 12 } },
+    { type: "scatter3d", mode: "markers+text", name: "the origin", hoverinfo: "name",
+      marker: { color: ink, size: 6 }, x: [0], y: [0], z: [0], text: ["0"],
+      textposition: "bottom left", textfont: { color: ink, size: 13 } }
+  ], L, { responsive: true, displaylogo: false, displayModeBar: false });
+});
+</script>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
