@@ -132,46 +132,67 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t5">5. Basis</h3>
 
-    <div class="box definition"><span class="label">Basis ★</span>
-      <p>A <b>basis</b> for a space is a list of vectors that are:</p>
-      <ol>
-        <li><b>independent</b> — nothing wasted, and</li>
-        <li><b>spanning</b> — nothing missing.</li>
-      </ol>
-      <p>Enough to reach everything, with not one vector to spare.</p>
-    </div>
+    <p>A <b>basis</b> is a set of vectors that is both:</p>
+
+    <ul>
+      <li><b>independent</b> — nothing wasted</li>
+      <li><b>spanning</b> — nothing missing</li>
+    </ul>
+
+    <p>Enough to reach everything, with not one vector to spare.</p>
 
     <h4>A basis for \(\mathbb{R}^3\)</h4>
 
     $$ \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix} $$
 
-    <p>Independent, because \(c_1(1,0,0) + c_2(0,1,0) + c_3(0,0,1) = (c_1, c_2, c_3)\), which is zero only when all three \(c\)s are. And they clearly span \(\mathbb{R}^3\).</p>
+    <ul>
+      <li><b>Independent?</b> \(c_1(1,0,0) + c_2(0,1,0) + c_3(0,0,1) = (c_1, c_2, c_3)\), which is zero only when all three are zero ✓</li>
+      <li><b>Spanning?</b> Any \((a,b,c)\) is \(a(1,0,0) + b(0,1,0) + c(0,0,1)\) ✓</li>
+    </ul>
 
-    <div class="box method"><span class="label">Test for \(n\) vectors in \(\mathbb{R}^n\)</span>
-      <p>Put them in as columns. They form a basis <b>exactly when that matrix is invertible</b>.</p>
+    <div class="box method"><span class="label">Quick test for \(n\) vectors in \(\mathbb{R}^n\) ★</span>
+      <p>Put them in as the columns of a matrix. They are a basis <b>exactly when that matrix is invertible</b>.</p>
     </div>
 
-    <div class="box pitfall"><span class="label">One that fails</span>
-      <p>\((1,1,2)\), \((2,2,5)\), \((3,3,8)\) do <b>not</b> form a basis for \(\mathbb{R}^3\): the third is the sum of the first two, so they are dependent. Notice the matrix they form has two identical rows.</p>
-    </div>
+    <h4>One that fails</h4>
+
+    $$ \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix}, \quad \begin{bmatrix} 2 \\ 2 \\ 5 \end{bmatrix}, \quad \begin{bmatrix} 3 \\ 3 \\ 8 \end{bmatrix} $$
+
+    <p>Put them in as columns and the matrix has <b>two identical rows</b>:</p>
+
+    $$ \begin{bmatrix} 1 & 2 & 3 \\ 1 & 2 & 3 \\ 2 & 5 & 8 \end{bmatrix} $$
+
+    <p>Not invertible, so not a basis. And the dependency is there to see:</p>
+
+    $$ 2\begin{bmatrix} 2 \\ 2 \\ 5 \end{bmatrix} - \begin{bmatrix} 1 \\ 1 \\ 2 \end{bmatrix} = \begin{bmatrix} 4-1 \\ 4-1 \\ 10-2 \end{bmatrix} = \begin{bmatrix} 3 \\ 3 \\ 8 \end{bmatrix} \quad ✓ $$
+
+    <p>The third vector was already reachable from the other two.</p>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t6">6. Dimension</h3>
 
-    <p>A space has many different bases — but here is the fact that makes the idea work:</p>
+    <p>A space has <b>many</b> different bases. But they all have one thing in common:</p>
 
     <div class="box theorem"><span class="label">Dimension ★</span>
-      <p>$$ \boxed{\text{Every basis for a given space has the \textbf{same number} of vectors.}} $$</p>
+      <p>$$ \boxed{\text{Every basis for a space has the \textbf{same number} of vectors.}} $$</p>
       <p>That number is the <b>dimension</b> of the space.</p>
     </div>
 
-    <p>So \(\dim \mathbb{R}^n = n\), and every basis for \(\mathbb{R}^n\) has exactly \(n\) vectors.</p>
+    <p>So \(\dim \mathbb{R}^n = n\). Every basis for \(\mathbb{R}^3\) has exactly three vectors — never two, never four.</p>
 
-    <div class="box pitfall"><span class="label">Rank and dimension are different words</span>
-      <p><b>Matrices have a rank. Spaces have a dimension.</b> Do not say the dimension of a matrix or the rank of a subspace.</p>
+    <h4>A basis for something smaller</h4>
+
+    <p>\((1,1,2)\) and \((2,2,5)\) are independent — neither is a multiple of the other. Their combinations fill a <b>plane</b> in \(\mathbb{R}^3\).</p>
+
+    <ul>
+      <li>They <b>are</b> a basis for that plane. Dimension <b>2</b>.</li>
+      <li>They are <b>not</b> a basis for \(\mathbb{R}^3\) — that needs three.</li>
+    </ul>
+
+    <div class="box pitfall"><span class="label">Two different words</span>
+      <p><b>Matrices have a rank. Spaces have a dimension.</b></p>
+      <p>Never say the dimension of a matrix, or the rank of a subspace.</p>
     </div>
-
-    <p>\((1,1,2)\) and \((2,2,5)\) span a <b>plane</b> in \(\mathbb{R}^3\). They are a basis for that plane — dimension 2 — but not for \(\mathbb{R}^3\), which needs three.</p>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t7">7. Basis for C(A) and N(A)</h3>
