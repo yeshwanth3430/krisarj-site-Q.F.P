@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Differential Equations and exp(At) · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Solving du/dt = Au with eigenvalues: each eigenvector gives a pure solution e to the lambda t times x, stability decided by the real parts, decoupling by setting u = Sv, and the matrix exponential defined by its series and computed as S e to the Lambda t S inverse.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="22_differential-equations-and-exp-at">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Differential Equations and exp(At)</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 22</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 22 (MIT 18.06, Lecture 22)</p>
+  <h1>Differential Equations and exp(At)</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\frac{du}{dt} = Au \quad\text{— the same idea as } u_{k+1} = Au_k, \text{ in continuous time.}} $$</p>
+      <p>Lesson 21 took whole steps and got \(\lambda^k\). Here time flows continuously and \(\lambda^k\) becomes \(e^{\lambda t}\). Everything else carries over: expand the initial condition in eigenvectors, follow each one separately, add them up.</p>
+    </div>
+
+    <div class="box method"><span class="label">Discrete and continuous, side by side ★</span>
+      <table class="sl-table">
+        <tr><th></th><th>Difference equation</th><th>Differential equation</th></tr>
+        <tr><td>the rule</td><td>\(u_{k+1} = Au_k\)</td><td>\(du/dt = Au\)</td></tr>
+        <tr><td>pure solution</td><td>\(\lambda^k x\)</td><td>\(e^{\lambda t}x\)</td></tr>
+        <tr><td>general solution</td><td>\(\sum c_i\lambda_i^kx_i\)</td><td>\(\sum c_ie^{\lambda_it}x_i\)</td></tr>
+        <tr><td>decays when</td><td>\(|\lambda_i| < 1\)</td><td>\(\mathrm{Re}(\lambda_i) < 0\)</td></tr>
+        <tr><td>steady state when</td><td>\(\lambda = 1\)</td><td>\(\lambda = 0\)</td></tr>
+        <tr><td>matrix form</td><td>\(u_k = A^ku_0\)</td><td>\(u(t) = e^{At}u_0\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The system</a></li>
+        <li><a href="#t2">Reading the eigenvalues first</a></li>
+        <li><a href="#t3">Finding the eigenvectors</a></li>
+        <li><a href="#t4">Why e to the lambda t works</a></li>
+        <li><a href="#t5">Fitting the initial condition</a></li>
+        <li><a href="#t6">Reading the answer</a></li>
+        <li><a href="#t7">Stability</a></li>
+        <li><a href="#t8">Stability from trace and determinant</a></li>
+        <li><a href="#t9">Decoupling with S</a></li>
+        <li><a href="#t10">The matrix exponential</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The system</a><span>Two quantities feeding into each other, written as one matrix equation.</span></li>
+      <li><a href="#t2">Reading the eigenvalues first</a><span>Trace and determinant give both without a characteristic polynomial.</span></li>
+      <li><a href="#t3">Finding the eigenvectors</a><span>One nullspace each, both checked.</span></li>
+      <li><a href="#t4">Why e to the lambda t works ★</a><span>Substitute and watch both sides agree.</span></li>
+      <li><a href="#t5">Fitting the initial condition</a><span>Solve \(Sc = u(0)\) for the two constants.</span></li>
+      <li><a href="#t6">Reading the answer</a><span>Where the system starts, where it goes, and how fast.</span></li>
+      <li><a href="#t7">Stability ★</a><span>Three outcomes, decided by the real parts of the eigenvalues.</span></li>
+      <li><a href="#t8">Stability from trace and determinant</a><span>A 2 by 2 shortcut, with the trap that comes with it.</span></li>
+      <li><a href="#t9">Decoupling with S</a><span>Setting \(u = Sv\) turns one coupled system into \(n\) separate ones.</span></li>
+      <li><a href="#t10">The matrix exponential ★</a><span>\(e^{At}\) defined by its series, computed by \(Se^{\Lambda t}S^{-1}\).</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The system</h3>
+
+    <p>Two quantities, each changing at a rate that depends on both:</p>
+
+    $$ \begin{aligned} \frac{du_1}{dt} &= -u_1 + 2u_2 \\[4pt] \frac{du_2}{dt} &= \ \ u_1 - 2u_2 \end{aligned} $$
+
+    <p>In matrix form:</p>
+
+    $$ \frac{du}{dt} = Au, \qquad A = \begin{bmatrix} -1 & 2 \\ 1 & -2 \end{bmatrix} $$
+
+    <p>Start it off with everything in the first quantity:</p>
+
+    $$ u(0) = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+
+    <div class="box intuition"><span class="label">What the equations are saying</span>
+      <p>Each column of \(A\) sums to zero, which means <b>nothing is created or destroyed</b> — whatever leaves \(u_1\) arrives in \(u_2\). Material is flowing between two tanks. Guessing from the signs, \(u_1\) should fall and \(u_2\) should rise. The eigenvalues will tell us exactly where they stop.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Reading the eigenvalues first</h3>
+
+    <p>No characteristic polynomial needed — the two checks from Lesson 20 do it.</p>
+
+    <table class="sl-table">
+      <tr><th>Quantity</th><th>Value</th><th>Tells us</th></tr>
+      <tr><td>\(\det A\)</td><td>\((-1)(-2) - (2)(1) = 2 - 2 = 0\)</td><td>\(A\) is singular, so <b>\(\lambda_1 = 0\)</b></td></tr>
+      <tr><td>trace</td><td>\(-1 + (-2) = -3\)</td><td>the eigenvalues add to \(-3\), so <b>\(\lambda_2 = -3\)</b></td></tr>
+    </table>
+
+    $$ \lambda_1 = 0, \qquad \lambda_2 = -3 $$
+
+    <p>Already the behaviour is settled. The solution will contain \(e^{0t} = 1\), which stays put forever, and \(e^{-3t}\), which dies. So the system <b>runs to a steady state</b> — and decays towards it at rate 3.</p>
+
+    <div class="box theorem"><span class="label">Eigenvalue zero means steady state ★</span>
+      <p>If \(\lambda = 0\) with eigenvector \(x\), then \(Ax = 0\), so \(du/dt = 0\) along \(x\): nothing moves. The \(\lambda = 0\) eigenvector <b>is</b> the steady state, up to a constant.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Finding the eigenvectors</h3>
+
+    <h4>For \(\lambda_1 = 0\): the nullspace of \(A\)</h4>
+
+    $$ \begin{bmatrix} -1 & 2 \\ 1 & -2 \end{bmatrix}x = 0 $$
+
+    <p>Both rows say the same thing: \(x_1 = 2x_2\). So</p>
+
+    $$ x_1 = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} -2 + 2 \\ 2 - 2 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix} = 0 \cdot x_1\) ✓</p>
+
+    <h4>For \(\lambda_2 = -3\): the nullspace of \(A + 3I\)</h4>
+
+    $$ A - (-3)I = A + 3I = \begin{bmatrix} -1+3 & 2 \\ 1 & -2+3 \end{bmatrix} = \begin{bmatrix} 2 & 2 \\ 1 & 1 \end{bmatrix} $$
+
+    <p>Singular ✓, and both rows say \(x_1 + x_2 = 0\):</p>
+
+    $$ x_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} -1 - 2 \\ 1 + 2 \end{bmatrix} = \begin{bmatrix} -3 \\ 3 \end{bmatrix} = -3\begin{bmatrix} 1 \\ -1 \end{bmatrix}\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Why e to the lambda t works</h3>
+
+    <p>The claim is that each eigenvector gives a <b>pure solution</b>:</p>
+
+    $$ u(t) = e^{\lambda t}x $$
+
+    <p>Verify it by substituting into \(du/dt = Au\) and computing each side.</p>
+
+    <table class="sl-table">
+      <tr><th>Side</th><th>Computation</th><th>Result</th></tr>
+      <tr><td>left</td><td>\(\dfrac{d}{dt}\left(e^{\lambda t}x\right)\) — \(x\) is a constant vector, so only the exponential differentiates</td><td>\(\lambda e^{\lambda t}x\)</td></tr>
+      <tr><td>right</td><td>\(A\left(e^{\lambda t}x\right) = e^{\lambda t}(Ax) = e^{\lambda t}(\lambda x)\)</td><td>\(\lambda e^{\lambda t}x\)</td></tr>
+    </table>
+
+    <p>Equal ✓ — and the step that made it work is \(Ax = \lambda x\). Nothing else would have.</p>
+
+    <div class="box theorem"><span class="label">The general solution ★</span>
+      <p>The equation is linear, so solutions add:</p>
+      $$ \boxed{u(t) = c_1e^{\lambda_1 t}x_1 + c_2e^{\lambda_2 t}x_2 + \dots + c_ne^{\lambda_n t}x_n} $$
+      <p>Compare with the discrete case: \(\lambda_i^k\) has simply become \(e^{\lambda_i t}\).</p>
+    </div>
+
+    <p>For our system:</p>
+
+    $$ u(t) = c_1e^{0t}\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2e^{-3t}\begin{bmatrix} 1 \\ -1 \end{bmatrix}
+       = c_1\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2e^{-3t}\begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Fitting the initial condition</h3>
+
+    <p>Set \(t = 0\), where both exponentials equal 1:</p>
+
+    $$ c_1\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+
+    <p>Two equations:</p>
+
+    $$ \begin{aligned} 2c_1 + c_2 &= 1 \\ c_1 - c_2 &= 0 \end{aligned} $$
+
+    <p>The second gives \(c_1 = c_2\). Substituting into the first: \(3c_1 = 1\), so</p>
+
+    $$ c_1 = c_2 = \tfrac13 $$
+
+    $$ \boxed{u(t) = \frac13\begin{bmatrix} 2 \\ 1 \end{bmatrix} + \frac13 e^{-3t}\begin{bmatrix} 1 \\ -1 \end{bmatrix}} $$
+
+    <p>Check at \(t=0\): \(\tfrac13(2,1) + \tfrac13(1,-1) = \tfrac13(3, 0) = (1,0)\) ✓</p>
+
+    <div class="box intuition"><span class="label">This is \(Sc = u(0)\)</span>
+      <p>Written as a matrix equation, the step above is</p>
+      $$ \begin{bmatrix} 2 & 1 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} c_1 \\ c_2 \end{bmatrix} = \begin{bmatrix} 1 \\ 0 \end{bmatrix} $$
+      <p>with \(S\) the eigenvector matrix from Lesson 21. The constants are \(c = S^{-1}u(0)\): they are the ingredients of the starting vector, written in the eigenvector basis.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Reading the answer</h3>
+
+    <p>Write out both components:</p>
+
+    $$ u_1(t) = \tfrac23 + \tfrac13 e^{-3t}, \qquad u_2(t) = \tfrac13 - \tfrac13 e^{-3t} $$
+
+    <table class="sl-table">
+      <tr><th>\(t\)</th><th>\(e^{-3t}\)</th><th>\(u_1\)</th><th>\(u_2\)</th><th>total</th></tr>
+      <tr><td>0</td><td>1</td><td>\(\tfrac23 + \tfrac13 = 1\)</td><td>\(\tfrac13 - \tfrac13 = 0\)</td><td>1</td></tr>
+      <tr><td>\(\tfrac13\)</td><td>\(\approx 0.368\)</td><td>\(\approx 0.789\)</td><td>\(\approx 0.211\)</td><td>1</td></tr>
+      <tr><td>1</td><td>\(\approx 0.050\)</td><td>\(\approx 0.683\)</td><td>\(\approx 0.317\)</td><td>1</td></tr>
+      <tr><td>\(\infty\)</td><td>0</td><td>\(\tfrac23\)</td><td>\(\tfrac13\)</td><td>1</td></tr>
+    </table>
+
+    $$ u(\infty) = \begin{bmatrix} 2/3 \\ 1/3 \end{bmatrix} $$
+
+    <p>Three things to notice, each predicted in advance:</p>
+
+    <ul>
+      <li><b>The total never changes.</b> \(u_1 + u_2 = 1\) in every row — because the columns of \(A\) summed to zero.</li>
+      <li><b>The limit is the \(\lambda = 0\) eigenvector</b>, \((2,1)\) scaled to \(\tfrac13(2,1)\). Steady state and \(\lambda = 0\) are the same thing.</li>
+      <li><b>The approach is exponential at rate 3</b>, from \(\lambda_2 = -3\). By \(t = 1\) the transient is down to 5%.</li>
+    </ul>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 520 260" role="img" aria-label="The two components converging to the steady state two thirds and one third">
+        <line class="grid" x1="70" y1="30" x2="70" y2="220"/>
+        <line class="grid" x1="70" y1="220" x2="470" y2="220"/>
+        <line class="grid dash" x1="70" y1="93" x2="470" y2="93"/>
+        <line class="grid dash" x1="70" y1="157" x2="470" y2="157"/>
+        <text class="tick" x="34" y="224">0</text>
+        <text class="tick" x="30" y="161">1/3</text>
+        <text class="tick" x="30" y="97">2/3</text>
+        <text class="tick" x="46" y="38">1</text>
+        <text class="tick" x="446" y="240">t</text>
+        <path class="l1" d="M70,30 C100,62 140,86 200,91 C280,93 380,93 470,93" fill="none"/>
+        <path class="l2" d="M70,220 C100,188 140,164 200,159 C280,157 380,157 470,157" fill="none"/>
+        <text class="lbl c1" x="330" y="82">u₁ → 2/3</text>
+        <text class="lbl c2" x="330" y="180">u₂ → 1/3</text>
+        <text class="tick" x="92" y="52">starts at 1</text>
+        <text class="tick" x="92" y="212">starts at 0</text>
+      </svg>
+      <figcaption>Material flows from \(u_1\) to \(u_2\) until the two settle at \(\tfrac23\) and \(\tfrac13\). The gap closes like \(e^{-3t}\), so the rate is set by \(\lambda_2 = -3\) and the destination by the \(\lambda_1 = 0\) eigenvector \((2,1)\). The two curves always add to 1.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Stability</h3>
+
+    <p>Not every system settles. The eigenvalues decide which of three things happens — and since \(\lambda\) may be complex, it is the <b>real part</b> that matters.</p>
+
+    <div class="box theorem"><span class="label">The three outcomes ★</span>
+      <table class="sl-table">
+        <tr><th>Condition</th><th>Name</th><th>Behaviour</th></tr>
+        <tr><td>\(\mathrm{Re}(\lambda_i) < 0\) for <b>every</b> \(i\)</td><td><b>stable</b></td><td>\(u(t) \to 0\)</td></tr>
+        <tr><td>one \(\lambda = 0\), the rest with \(\mathrm{Re}(\lambda) < 0\)</td><td><b>steady state</b></td><td>\(u(t) \to\) a non-zero limit</td></tr>
+        <tr><td>\(\mathrm{Re}(\lambda) > 0\) for <b>any</b> \(\lambda\)</td><td><b>blow up</b></td><td>\(|u(t)| \to \infty\)</td></tr>
+      </table>
+    </div>
+
+    <p>The reason is just the behaviour of \(e^{\lambda t}\). Write \(\lambda = a + bi\):</p>
+
+    $$ \left|e^{(a+bi)t}\right| = \left|e^{at}\right|\cdot\left|e^{ibt}\right| = e^{at} \cdot 1 $$
+
+    <p>The imaginary part \(b\) only makes the solution <b>oscillate</b> — \(e^{ibt}\) has modulus 1 and spins. The real part \(a\) alone controls growth or decay.</p>
+
+    <p>Our system is the middle case: \(\lambda = 0\) and \(\lambda = -3\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Stability from trace and determinant</h3>
+
+    <p>For a \(2 \times 2\) you can often decide without finding the eigenvalues at all.</p>
+
+    <div class="box theorem"><span class="label">The 2 by 2 test ★</span>
+      <p>For \(A = \begin{bmatrix} a&b \\ c&d \end{bmatrix}\),</p>
+      $$ \boxed{\text{stable} \iff \text{trace} < 0 \ \textbf{and} \ \det A > 0} $$
+      <p>Because trace \(= \lambda_1 + \lambda_2\) and \(\det = \lambda_1\lambda_2\): a positive product means the two have the same sign, and a negative sum then forces both negative.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">A negative trace alone is not enough ★</span>
+      <p>\(A = \begin{bmatrix} -2 & 0 \\ 0 & 1 \end{bmatrix}\) has trace \(-1 < 0\). But it is diagonal, so the eigenvalues are \(-2\) and \(1\) — and \(e^{1t}\) blows up.</p>
+      <p>The determinant catches it: \(\det A = -2 < 0\), so the eigenvalues have opposite signs. <b>Both</b> conditions are needed.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Decoupling with S</h3>
+
+    <p>Here is the structural view of what we just did. The trouble with \(du/dt = Au\) is that \(A\) <b>couples</b> the components — \(u_1\) depends on \(u_2\) and back again. Change variables to remove the coupling.</p>
+
+    <p>Set \(u = Sv\), with \(S\) the eigenvector matrix. Then \(du/dt = S\,dv/dt\), and the equation becomes</p>
+
+    $$ S\frac{dv}{dt} = ASv \qquad\Longrightarrow\qquad \frac{dv}{dt} = S^{-1}ASv = \Lambda v $$
+
+    <div class="box theorem"><span class="label">What \(\Lambda\) buys ★</span>
+      <p>\(\Lambda\) is diagonal, so the system falls apart into \(n\) <b>independent scalar equations</b>:</p>
+      $$ \frac{dv_1}{dt} = \lambda_1v_1, \qquad \frac{dv_2}{dt} = \lambda_2v_2, \qquad \dots $$
+      <p>Each is first-year calculus: \(v_i(t) = e^{\lambda_it}v_i(0)\). Then translate back with \(u = Sv\).</p>
+    </div>
+
+    <p>So the eigenvector basis is the basis in which the components <b>stop talking to each other</b>. That is the whole purpose of diagonalization.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. The matrix exponential</h3>
+
+    <p>In one dimension, \(du/dt = au\) has solution \(u(t) = e^{at}u(0)\). We would like to write the same thing for a matrix:</p>
+
+    $$ \boxed{u(t) = e^{At}u(0)} $$
+
+    <p>But what is \(e\) raised to a matrix?</p>
+
+    <div class="box definition"><span class="label">Definition · matrix exponential</span>
+      <p>Use the power series for \(e^x\) and put a matrix in it:</p>
+      $$ \boxed{e^{At} = I + At + \frac{(At)^2}{2!} + \frac{(At)^3}{3!} + \dots} $$
+      <p>Every term is a matrix, so the sum is a matrix. It converges for every square \(A\) and every \(t\), because the factorials grow faster than the powers.</p>
+    </div>
+
+    <h4>Computing it by diagonalizing</h4>
+
+    <p>Substitute \(A = S\Lambda S^{-1}\), so \(A^k = S\Lambda^kS^{-1}\):</p>
+
+    $$ e^{At} = I + S\Lambda S^{-1}t + \frac{S\Lambda^2S^{-1}t^2}{2!} + \dots
+      = S\left(I + \Lambda t + \frac{\Lambda^2t^2}{2!} + \dots\right)S^{-1} $$
+
+    $$ \boxed{e^{At} = Se^{\Lambda t}S^{-1}} $$
+
+    <p>And \(e^{\Lambda t}\) is as easy as it gets — a diagonal matrix of ordinary exponentials:</p>
+
+    $$ e^{\Lambda t} = \begin{bmatrix} e^{\lambda_1 t} & & \\ & \ddots & \\ & & e^{\lambda_n t} \end{bmatrix} $$
+
+    <p>Which reproduces §4 exactly: \(u(t) = Se^{\Lambda t}S^{-1}u(0)\) is \(\sum c_ie^{\lambda_it}x_i\) with \(c = S^{-1}u(0)\).</p>
+
+    <div class="box pitfall"><span class="label">Two traps</span>
+      <ul>
+        <li><b>\(e^{At}\) is not \(e^{a_{ij}t}\) entrywise.</b> You do not exponentiate the entries. For our system \(e^{At} \to \tfrac13\begin{bmatrix} 2&2 \\ 1&1 \end{bmatrix}\) as \(t \to \infty\), which bears no relation to exponentiating \(-1, 2, 1, -2\).</li>
+        <li><b>\(e^{A}e^{B} \ne e^{A+B}\) in general.</b> It holds only when \(AB = BA\). The familiar index law needs commuting, which matrices usually do not do.</li>
+      </ul>
+      <p>What does always hold: \(e^{At}e^{As} = e^{A(t+s)}\) (a matrix commutes with itself), and \(e^{At}\) is always invertible, with inverse \(e^{-At}\).</p>
+    </div>
+
+    <h4>Stability again, in one line</h4>
+
+    <p>\(e^{At} \to 0\) exactly when every \(e^{\lambda_it} \to 0\), which happens exactly when every \(\mathrm{Re}(\lambda_i) < 0\) — §7, now read straight off \(e^{\Lambda t}\).</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The method</h4>
+    <ol class="index-list">
+      <li><b>Find the eigenvalues of \(A\)</b><span>For a 2 by 2, trace and determinant are usually enough.</span></li>
+      <li><b>Find an eigenvector for each</b><span>The nullspace of \(A - \lambda I\).</span></li>
+      <li><b>Write \(u(t) = \sum c_ie^{\lambda_it}x_i\)</b><span>One pure exponential per eigenvector.</span></li>
+      <li><b>Fit the constants</b><span>Set \(t = 0\) and solve \(Sc = u(0)\).</span></li>
+      <li><b>Read the behaviour off the eigenvalues</b><span>Real parts give growth or decay; \(\lambda = 0\) gives the steady state; imaginary parts give oscillation.</span></li>
+    </ol>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Pure solution ★</b></td><td>\(u = e^{\lambda t}x\) works because \(\lambda e^{\lambda t}x = e^{\lambda t}Ax\).</td></tr>
+      <tr><td><b>General solution ★</b></td><td>\(u(t) = c_1e^{\lambda_1t}x_1 + \dots + c_ne^{\lambda_nt}x_n\), with \(Sc = u(0)\).</td></tr>
+      <tr><td><b>The dictionary</b></td><td>\(\lambda^k \leftrightarrow e^{\lambda t}\); \(|\lambda| < 1 \leftrightarrow \mathrm{Re}(\lambda) < 0\); \(\lambda = 1 \leftrightarrow \lambda = 0\).</td></tr>
+      <tr><td><b>\(\lambda = 0\) ★</b></td><td>\(Ax = 0\) means nothing moves — that eigenvector is the steady state.</td></tr>
+      <tr><td><b>Stability</b></td><td>All \(\mathrm{Re}(\lambda) < 0\) → decay to 0; one \(\lambda = 0\) → steady state; any \(\mathrm{Re}(\lambda) > 0\) → blow-up.</td></tr>
+      <tr><td><b>Imaginary parts</b></td><td>Only oscillate: \(|e^{ibt}| = 1\).</td></tr>
+      <tr><td><b>2 by 2 test ★</b></td><td>Stable iff trace \(< 0\) <b>and</b> \(\det > 0\). Negative trace alone is not enough.</td></tr>
+      <tr><td><b>Decoupling</b></td><td>\(u = Sv\) gives \(dv/dt = \Lambda v\) — \(n\) separate scalar equations.</td></tr>
+      <tr><td><b>\(e^{At}\) ★</b></td><td>Defined by the series; computed as \(Se^{\Lambda t}S^{-1}\) with \(e^{\Lambda t}\) diagonal.</td></tr>
+      <tr><td><b>Not entrywise</b></td><td>\(e^{At}\) has nothing to do with exponentiating the entries, and \(e^Ae^B \ne e^{A+B}\) unless \(AB = BA\).</td></tr>
+      <tr><td><b>The worked system</b></td><td>\(\lambda = 0, -3\); \(u(t) = \tfrac13(2,1) + \tfrac13e^{-3t}(1,-1)\); limit \((\tfrac23, \tfrac13)\); total always 1.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Eigenvalues before algebra ★</b><span>Trace and determinant gave \(0\) and \(-3\), and with them the entire qualitative answer, before a single eigenvector was computed.</span></li>
+      <li><b>Real part decides, imaginary part decorates</b><span>Growth and decay come from \(\mathrm{Re}(\lambda)\); \(\mathrm{Im}(\lambda)\) only adds oscillation.</span></li>
+      <li><b>\(\lambda = 0\) is the steady state</b><span>The nullspace of \(A\) is exactly where the system stops moving.</span></li>
+      <li><b>Diagonalizing is decoupling</b><span>\(dv/dt = \Lambda v\) is \(n\) scalar problems. That is the point of the whole construction.</span></li>
+      <li><b>Both conditions for stability ★</b><span>A negative trace with a negative determinant hides a positive eigenvalue.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>The system here conserved its total because the columns of \(A\) summed to zero. The next lesson looks at the discrete version of that: <b>Markov matrices</b>, whose columns sum to <i>one</i>, which guarantees \(\lambda = 1\) and a steady state that any starting vector drifts towards. The same lesson revisits orthonormal bases in infinite dimensions — <b>Fourier series</b>.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

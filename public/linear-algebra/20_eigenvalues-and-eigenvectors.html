@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eigenvalues and Eigenvectors · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Eigenvectors are the directions a matrix only stretches: Ax = lambda x, solved by making A minus lambda I singular so det(A - lambda I) = 0, with the trace and determinant checks, shifting by a multiple of I, complex eigenvalues of a rotation, and repeated eigenvalues that lose an eigenvector.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="20_eigenvalues-and-eigenvectors">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Eigenvalues and Eigenvectors</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 20</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 20 (MIT 18.06, Lecture 20)</p>
+  <h1>Eigenvalues and Eigenvectors</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Which vectors does } A \text{ only stretch, and by how much?}} $$</p>
+      <p>A matrix usually moves a vector to a new direction. A few special vectors come out pointing exactly the way they went in — only longer, shorter, or reversed. Those are the <b>eigenvectors</b>, the stretch factor is the <b>eigenvalue</b>, and together they occupy the rest of the course.</p>
+    </div>
+
+    <div class="box method"><span class="label">The method ★</span>
+      <table class="sl-table">
+        <tr><th>Step</th><th>Do this</th></tr>
+        <tr><td>1</td><td>Write \(\det(A - \lambda I) = 0\) — the <b>characteristic equation</b>.</td></tr>
+        <tr><td>2</td><td>Solve it for the \(n\) values of \(\lambda\).</td></tr>
+        <tr><td>3</td><td>For each \(\lambda\), find the nullspace of \(A - \lambda I\). Those vectors are the eigenvectors.</td></tr>
+      </table>
+      <p>Two checks to run every time: the eigenvalues must add to the <b>trace</b> and multiply to the <b>determinant</b>.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Eigenvectors and eigenvalues</a></li>
+        <li><a href="#t2">Eigenvalue zero is the nullspace</a></li>
+        <li><a href="#t3">Two examples you can read off</a></li>
+        <li><a href="#t4">The trick that solves it</a></li>
+        <li><a href="#t5">Trace and determinant</a></li>
+        <li><a href="#t6">A worked example</a></li>
+        <li><a href="#t7">Adding a multiple of I</a></li>
+        <li><a href="#t8">A caution about sums and products</a></li>
+        <li><a href="#t9">Complex eigenvalues</a></li>
+        <li><a href="#t10">Triangular and repeated</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Eigenvectors and eigenvalues</a><span>\(Ax = \lambda x\): output parallel to input.</span></li>
+      <li><a href="#t2">Eigenvalue zero is the nullspace</a><span>\(\lambda = 0\) happens exactly when \(A\) is singular.</span></li>
+      <li><a href="#t3">Two examples you can read off</a><span>A projection and a swap, with no calculation at all.</span></li>
+      <li><a href="#t4">The trick that solves it ★</a><span>Two unknowns at once — until you notice \(A - \lambda I\) must be singular.</span></li>
+      <li><a href="#t5">Trace and determinant ★</a><span>The eigenvalues add to the trace and multiply to the determinant.</span></li>
+      <li><a href="#t6">A worked example</a><span>Characteristic equation, both eigenvalues, both eigenvectors, all checks.</span></li>
+      <li><a href="#t7">Adding a multiple of I</a><span>Shifts every eigenvalue and moves no eigenvector.</span></li>
+      <li><a href="#t8">A caution about sums and products</a><span>Eigenvalues of \(A+B\) are not the sums. The common trap.</span></li>
+      <li><a href="#t9">Complex eigenvalues</a><span>A rotation has no real eigenvector, and the algebra says so.</span></li>
+      <li><a href="#t10">Triangular and repeated</a><span>Read them off the diagonal — and sometimes lose an eigenvector.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Eigenvectors and eigenvalues</h3>
+
+    <p>Think of a matrix as a function: feed in \(x\), get out \(Ax\). Normally the output points somewhere new.</p>
+
+    <div class="box definition"><span class="label">Definition ★</span>
+      <p>An <b>eigenvector</b> is a non-zero \(x\) for which \(Ax\) is parallel to \(x\):</p>
+      $$ \boxed{Ax = \lambda x} $$
+      <p>The number \(\lambda\) is the <b>eigenvalue</b> — the factor by which \(A\) stretches that direction. "Eigen" is German for <i>own</i>: these are the matrix's own directions.</p>
+    </div>
+
+    <p>\(\lambda\) may be negative (the vector flips), zero, or complex. But \(x\) must be non-zero — \(A0 = \lambda 0\) holds for every \(\lambda\) and says nothing.</p>
+
+    <figure class="fig" style="max-width:500px;margin:22px auto">
+      <svg viewBox="0 0 500 230" role="img" aria-label="A typical vector changes direction while an eigenvector only changes length">
+        <defs>
+          <marker id="e1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="e3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <text class="tick" x="28" y="26" font-size="12.5">a typical vector — direction changes</text>
+        <line class="l1" x1="50" y1="180" x2="140" y2="120" marker-end="url(#e1)"/>
+        <text class="lbl c1" x="96" y="168">x</text>
+        <line class="l3" x1="50" y1="180" x2="190" y2="170" marker-end="url(#e3)"/>
+        <text class="lbl c3" x="150" y="196">Ax</text>
+        <circle class="pt" cx="50" cy="180" r="4"/>
+        <text class="tick" x="288" y="26" font-size="12.5">an eigenvector — same line, longer</text>
+        <line class="axis dash" x1="290" y1="190" x2="470" y2="70"/>
+        <line class="l1" x1="300" y1="180" x2="360" y2="140" marker-end="url(#e1)"/>
+        <text class="lbl c1" x="326" y="170">x</text>
+        <line class="l3" x1="300" y1="180" x2="446" y2="82" marker-end="url(#e3)"/>
+        <text class="lbl c3" x="400" y="128">Ax = λx</text>
+        <circle class="pt" cx="300" cy="180" r="4"/>
+      </svg>
+      <figcaption>On the left, \(A\) swings the vector off its line. On the right it does not — the output lies on the same dashed line through the origin, scaled by \(\lambda\). Those are the directions we are hunting.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Eigenvalue zero is the nullspace</h3>
+
+    <p>Put \(\lambda = 0\) into the definition:</p>
+
+    $$ Ax = 0x = 0 $$
+
+    <p>That is the nullspace equation from Lesson 7.</p>
+
+    <div class="box theorem"><span class="label">The link ★</span>
+      $$ \boxed{\lambda = 0 \text{ is an eigenvalue} \iff N(A) \ne \{0\} \iff A \text{ is singular}} $$
+      <p>And the eigenvectors for \(\lambda = 0\) are exactly the non-zero nullspace vectors.</p>
+    </div>
+
+    <p>So everything from the first half of the course about nullspaces is the \(\lambda = 0\) special case of what we are starting now.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Two examples you can read off</h3>
+
+    <h4>A projection matrix</h4>
+
+    <p>Let \(P\) project onto a plane in \(\mathbb{R}^3\). No algebra needed — think about what projection does.</p>
+
+    <table class="sl-table">
+      <tr><th>Take \(x\) …</th><th>\(Px\) is</th><th>So \(\lambda\) is</th></tr>
+      <tr><td>already in the plane</td><td>\(x\) — nothing to move</td><td>\(1\)</td></tr>
+      <tr><td>perpendicular to the plane</td><td>\(0\) — all of it is error</td><td>\(0\)</td></tr>
+    </table>
+
+    <p>The plane is 2-dimensional and its perpendicular is 1-dimensional, so \(\lambda = 1\) has two independent eigenvectors and \(\lambda = 0\) has one. Three in all, spanning \(\mathbb{R}^3\).</p>
+
+    <div class="box intuition"><span class="label">And this explains \(P^2 = P\)</span>
+      <p>Squaring a matrix squares its eigenvalues (Lesson 21). The only numbers with \(\lambda^2 = \lambda\) are 0 and 1 — exactly the eigenvalues a projection has.</p>
+    </div>
+
+    <h4>The swap matrix</h4>
+
+    $$ B = \begin{bmatrix} 0 & 1 \\ 1 & 0 \end{bmatrix} $$
+
+    <p>\(B\) exchanges the two entries of a vector. Which vectors survive that?</p>
+
+    <table class="sl-table">
+      <tr><th>\(x\)</th><th>\(Bx\)</th><th>\(\lambda\)</th></tr>
+      <tr><td>\((1,1)\)</td><td>\((1,1)\)</td><td>\(1\)</td></tr>
+      <tr><td>\((1,-1)\)</td><td>\((-1,1) = -(1,-1)\)</td><td>\(-1\)</td></tr>
+    </table>
+
+    <p>They span \(\mathbb{R}^2\), and they are <b>perpendicular</b>: \((1)(1) + (1)(-1) = 0\). That is not luck — \(B\) is symmetric, and Lesson 24 proves symmetric matrices always have perpendicular eigenvectors.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. The trick that solves it</h3>
+
+    <p>\(Ax = \lambda x\) has <b>two</b> unknowns tangled together — the vector \(x\) and the number \(\lambda\). Neither can be found without the other. Here is the way out.</p>
+
+    <p>Move everything to one side:</p>
+
+    $$ Ax - \lambda x = 0 \qquad\Longrightarrow\qquad (A - \lambda I)x = 0 $$
+
+    <div class="box pitfall"><span class="label">Why \(I\) has to be there</span>
+      <p>You cannot write \(A - \lambda\): a matrix minus a number is not defined. \(\lambda I\) is the matrix with \(\lambda\) down the diagonal, and subtracting it is what "subtract \(\lambda\) from \(A\)" has to mean.</p>
+    </div>
+
+    <p>Now read that equation. It says the matrix \(A - \lambda I\) sends a <b>non-zero</b> vector to zero. So it has a non-trivial nullspace, so it is singular — and Lesson 17 told us exactly how to detect that.</p>
+
+    <div class="box theorem"><span class="label">The characteristic equation ★</span>
+      $$ \boxed{\det(A - \lambda I) = 0} $$
+      <p>The vector \(x\) has vanished. This is one polynomial equation in one unknown \(\lambda\), of degree \(n\), so it has \(n\) roots — the \(n\) eigenvalues.</p>
+      <p>Then, for each \(\lambda\) separately, go back and find the nullspace of \(A - \lambda I\) by elimination. That nullspace holds the eigenvectors.</p>
+    </div>
+
+    <p>This is why we spent three lessons on determinants. \(\det(A - \lambda I) = 0\) is the whole reason.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Trace and determinant</h3>
+
+    <div class="box definition"><span class="label">Definition · trace</span>
+      <p>The <b>trace</b> of a square matrix is the sum of its diagonal entries: \(a_{11} + a_{22} + \dots + a_{nn}\).</p>
+    </div>
+
+    <div class="box theorem"><span class="label">Two free checks ★</span>
+      $$ \boxed{\lambda_1 + \lambda_2 + \dots + \lambda_n = \text{trace}(A)} $$
+      $$ \boxed{\lambda_1 \lambda_2 \cdots \lambda_n = \det A} $$
+      <p>Use them after every calculation. They cost one glance and catch most arithmetic slips.</p>
+    </div>
+
+    <p>For a \(2 \times 2\) they do more than check — they <i>give</i> the characteristic equation:</p>
+
+    $$ \boxed{\lambda^2 - \text{trace}(A)\,\lambda + \det A = 0} $$
+
+    <p>And if you can spot one eigenvalue, the trace hands you the other immediately.</p>
+
+    <p>The determinant rule also re-proves §2: a product is zero exactly when one factor is, so \(\det A = 0\) exactly when some \(\lambda = 0\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. A worked example</h3>
+
+    $$ A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} $$
+
+    <h4>Step 1 · the characteristic equation</h4>
+
+    $$ A - \lambda I = \begin{bmatrix} 3-\lambda & 1 \\ 1 & 3-\lambda \end{bmatrix} $$
+
+    $$ \det(A - \lambda I) = (3-\lambda)^2 - (1)(1) = 9 - 6\lambda + \lambda^2 - 1 = \lambda^2 - 6\lambda + 8 $$
+
+    <p>Check the coefficients against §5: the trace is \(3 + 3 = 6\) ✓ and the determinant is \(9 - 1 = 8\) ✓.</p>
+
+    <h4>Step 2 · solve it</h4>
+
+    $$ \lambda^2 - 6\lambda + 8 = (\lambda - 4)(\lambda - 2) = 0 \qquad\Longrightarrow\qquad \lambda_1 = 4, \quad \lambda_2 = 2 $$
+
+    <p>Check: \(4 + 2 = 6\) ✓ (trace) and \(4 \times 2 = 8\) ✓ (determinant).</p>
+
+    <h4>Step 3 · the eigenvector for \(\lambda_1 = 4\)</h4>
+
+    $$ A - 4I = \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix} $$
+
+    <p>Singular, as it must be — the two rows are negatives of each other. The nullspace: \(-x_1 + x_2 = 0\), so \(x_1 = x_2\):</p>
+
+    $$ x_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} 1 \\ 1 \end{bmatrix} = \begin{bmatrix} 3+1 \\ 1+3 \end{bmatrix} = \begin{bmatrix} 4 \\ 4 \end{bmatrix} = 4\begin{bmatrix} 1 \\ 1 \end{bmatrix}\) ✓</p>
+
+    <h4>Step 4 · the eigenvector for \(\lambda_2 = 2\)</h4>
+
+    $$ A - 2I = \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix} $$
+
+    <p>Nullspace: \(x_1 + x_2 = 0\), so \(x_2 = -x_1\):</p>
+
+    $$ x_2 = \begin{bmatrix} -1 \\ 1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} -1 \\ 1 \end{bmatrix} = \begin{bmatrix} -3+1 \\ -1+3 \end{bmatrix} = \begin{bmatrix} -2 \\ 2 \end{bmatrix} = 2\begin{bmatrix} -1 \\ 1 \end{bmatrix}\) ✓</p>
+
+    <div class="box pitfall"><span class="label">An eigenvector is a whole line</span>
+      <p>The nullspace of \(A - \lambda I\) is never a single vector — if \(x\) works then so does \(7x\) and \(-x\). We pick a convenient representative. \((2,2)\) and \((-1,-1)\) are the same eigenvector for our purposes.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Adding a multiple of I</h3>
+
+    <p>Compare the example with the swap matrix from §3. They are related:</p>
+
+    $$ A = \begin{bmatrix} 3&1 \\ 1&3 \end{bmatrix} = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix} + 3I = B + 3I $$
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>Eigenvalues</th><th>Eigenvectors</th></tr>
+      <tr><td>\(B\)</td><td>\(1\) and \(-1\)</td><td>\((1,1)\) and \((1,-1)\)</td></tr>
+      <tr><td>\(A = B + 3I\)</td><td>\(4\) and \(2\)</td><td><b>the same</b></td></tr>
+    </table>
+
+    <p>Each eigenvalue went up by 3; the eigenvectors did not move at all. One line of algebra says why:</p>
+
+    $$ (B + 3I)x = Bx + 3x = \lambda x + 3x = (\lambda + 3)x $$
+
+    $$ \boxed{\text{eigenvalues of } A + cI = \lambda + c, \qquad \text{eigenvectors unchanged}} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. A caution about sums and products</h3>
+
+    <div class="box pitfall"><span class="label">This is the big trap ★</span>
+      <p>§7 worked because \(B\) and \(3I\) share every eigenvector — <b>every</b> vector is an eigenvector of \(3I\). In general:</p>
+      $$ \lambda(A + B) \ne \lambda(A) + \lambda(B), \qquad \lambda(AB) \ne \lambda(A)\lambda(B) $$
+      <p>The rule only holds when \(A\) and \(B\) have the same eigenvectors.</p>
+    </div>
+
+    <p>A counterexample, using the two matrices already on the page:</p>
+
+    $$ B = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix} \ (\lambda = 1, -1), \qquad
+       C = \begin{bmatrix} 0&1 \\ 0&0 \end{bmatrix} \ (\lambda = 0, 0) $$
+
+    <p>If the eigenvalues added, \(B + C\) would have eigenvalues \(1\) and \(-1\). It does not:</p>
+
+    $$ B + C = \begin{bmatrix} 0&2 \\ 1&0 \end{bmatrix}, \qquad
+       \det\big((B{+}C) - \lambda I\big) = \lambda^2 - 2 = 0 \qquad\Longrightarrow\qquad \lambda = \pm\sqrt2 $$
+
+    <p>Trace \(0 = \sqrt2 - \sqrt2\) ✓ and determinant \(-2 = (\sqrt2)(-\sqrt2)\) ✓ — the right answer, and not the sum of anything.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Complex eigenvalues</h3>
+
+    <p>Some matrices have no eigenvector you can draw. Take the 90° rotation:</p>
+
+    $$ Q = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} $$
+
+    <p>Geometrically it is hopeless: rotating by 90° changes <b>every</b> direction, so no real vector comes out parallel to itself. Watch the algebra agree.</p>
+
+    <p>Trace \(= 0\), determinant \(= (0)(0) - (-1)(1) = 1\). So</p>
+
+    $$ \lambda^2 - 0\lambda + 1 = \lambda^2 + 1 = 0 \qquad\Longrightarrow\qquad \lambda = \pm i $$
+
+    <p>Checks: \(i + (-i) = 0\) ✓ (trace) and \((i)(-i) = -i^2 = 1\) ✓ (determinant).</p>
+
+    <div class="box theorem"><span class="label">Patterns worth knowing ★</span>
+      <table class="sl-table">
+        <tr><th>Matrix type</th><th>Eigenvalues</th></tr>
+        <tr><td>real, any</td><td>complex ones come in conjugate pairs \(a \pm bi\)</td></tr>
+        <tr><td><b>symmetric</b> \(A^T = A\)</td><td>always real (proved in Lesson 24)</td></tr>
+        <tr><td><b>antisymmetric</b> \(A^T = -A\)</td><td>always purely imaginary, \(\lambda = bi\)</td></tr>
+      </table>
+      <p>\(Q\) above is antisymmetric — \(Q^T = \begin{bmatrix} 0&1 \\ -1&0 \end{bmatrix} = -Q\) — which is why both eigenvalues came out imaginary.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Triangular and repeated</h3>
+
+    <p>Triangular matrices give their eigenvalues away:</p>
+
+    $$ A = \begin{bmatrix} 3 & 1 \\ 0 & 3 \end{bmatrix}, \qquad
+       A - \lambda I = \begin{bmatrix} 3-\lambda & 1 \\ 0 & 3-\lambda \end{bmatrix} $$
+
+    <p>Still triangular, so the determinant is the product of the diagonal (rule 7):</p>
+
+    $$ (3-\lambda)^2 = 0 \qquad\Longrightarrow\qquad \lambda = 3, 3 $$
+
+    $$ \boxed{\text{for a triangular matrix, the eigenvalues are the diagonal entries}} $$
+
+    <h4>But something is lost</h4>
+
+    <p>Two eigenvalues — are there two eigenvectors? Look at the nullspace of \(A - 3I\):</p>
+
+    $$ A - 3I = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix} $$
+
+    <p>The equation is \(x_2 = 0\), with \(x_1\) free. One free variable, so the nullspace is a <b>line</b>:</p>
+
+    $$ x = \begin{bmatrix} 1 \\ 0 \end{bmatrix} \qquad\text{— and nothing independent of it} $$
+
+    <div class="box pitfall"><span class="label">A repeated eigenvalue may be short of eigenvectors ★</span>
+      <p>\(\lambda = 3\) appears twice but supplies only <b>one</b> independent eigenvector. Such a matrix is called <b>defective</b>, and it is the one case the next lesson's method cannot handle.</p>
+      <p>Repetition does not guarantee trouble. \(I\) has \(\lambda = 1\) repeated \(n\) times and has \(n\) independent eigenvectors — every vector qualifies.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Definition ★</b></td><td>\(Ax = \lambda x\) with \(x \ne 0\). Output parallel to input.</td></tr>
+      <tr><td><b>The trick ★</b></td><td>\((A - \lambda I)x = 0\) needs \(A - \lambda I\) singular, so \(\det(A - \lambda I) = 0\).</td></tr>
+      <tr><td><b>Then the vectors</b></td><td>For each \(\lambda\), eliminate to find the nullspace of \(A - \lambda I\).</td></tr>
+      <tr><td><b>\(\lambda = 0\)</b></td><td>Happens exactly when \(A\) is singular; its eigenvectors are the nullspace.</td></tr>
+      <tr><td><b>Two checks ★</b></td><td>\(\sum \lambda_i = \text{trace}\), \(\prod \lambda_i = \det A\). Run them every time.</td></tr>
+      <tr><td><b>2 by 2 shortcut</b></td><td>\(\lambda^2 - (\text{trace})\lambda + \det A = 0\).</td></tr>
+      <tr><td><b>Projection</b></td><td>\(\lambda = 1\) in the space, \(\lambda = 0\) perpendicular to it.</td></tr>
+      <tr><td><b>Shifting</b></td><td>\(A + cI\) adds \(c\) to every eigenvalue and leaves every eigenvector alone.</td></tr>
+      <tr><td><b>The trap ★</b></td><td>Eigenvalues of \(A+B\) are <b>not</b> \(\lambda(A) + \lambda(B)\) unless the eigenvectors match.</td></tr>
+      <tr><td><b>Complex</b></td><td>A rotation has \(\lambda = \pm i\). Symmetric → real; antisymmetric → imaginary.</td></tr>
+      <tr><td><b>Triangular</b></td><td>Eigenvalues sit on the diagonal.</td></tr>
+      <tr><td><b>Repeated</b></td><td>May be short of eigenvectors — \(\begin{bmatrix} 3&1 \\ 0&3 \end{bmatrix}\) has only one.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>The determinant was built for this ★</b><span>Three lessons of determinant theory exist so that \(\det(A - \lambda I) = 0\) can eliminate \(x\) and leave one equation in \(\lambda\).</span></li>
+      <li><b>Check against trace and determinant every time</b><span>Two sums, no work, and they catch nearly every slip.</span></li>
+      <li><b>Look before you calculate</b><span>Projections, swaps and triangular matrices give their eigenvalues up without any characteristic polynomial.</span></li>
+      <li><b>Eigenvalues do not add ★</b><span>The single most common error. \(A + cI\) is the exception because every vector is an eigenvector of \(cI\).</span></li>
+      <li><b>Counting eigenvalues is not counting eigenvectors</b><span>There are always \(n\) eigenvalues with repeats; there may be fewer independent eigenvectors.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>When a matrix does have \(n\) independent eigenvectors, put them in the columns of a matrix \(S\) and something remarkable happens: \(S^{-1}AS\) is <b>diagonal</b>, with the eigenvalues down the diagonal. Powers of \(A\) then become powers of numbers, and \(A^{100}\) costs almost nothing. That is Lesson 21.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

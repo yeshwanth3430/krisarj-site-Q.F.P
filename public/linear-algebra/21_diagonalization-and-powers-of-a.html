@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Diagonalization and Powers of A · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Putting the eigenvectors in a matrix S gives S inverse A S = Lambda, so powers of A become powers of numbers; then difference equations solved by expanding the initial vector in eigenvectors, with Fibonacci and the golden ratio worked in full.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="21_diagonalization-and-powers-of-a">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Diagonalization and Powers of A</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 21</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 21 (MIT 18.06, Lecture 21)</p>
+  <h1>Diagonalization and Powers of A</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Put the eigenvectors in a matrix and } A \text{ becomes diagonal.}} $$</p>
+      <p>Powers of a matrix are expensive and reveal nothing. Powers of a <b>number</b> are easy. Diagonalization converts the first into the second — and then \(A^{100}\) costs no more than raising \(n\) numbers to the hundredth power.</p>
+    </div>
+
+    <div class="box method"><span class="label">The two equations ★</span>
+      <table class="sl-table">
+        <tr><th>Form</th><th>Meaning</th></tr>
+        <tr><td>\(S^{-1}AS = \Lambda\)</td><td>in the eigenvector basis, \(A\) <i>is</i> diagonal</td></tr>
+        <tr><td>\(A = S\Lambda S^{-1}\)</td><td>the same fact, rearranged for computing</td></tr>
+        <tr><td>\(A^k = S\Lambda^k S^{-1}\)</td><td>powers cost nothing but \(\lambda_i^k\)</td></tr>
+      </table>
+      <p>\(S\) holds the eigenvectors as columns; \(\Lambda\) holds the eigenvalues on its diagonal, <b>in the same order</b>.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The idea</a></li>
+        <li><a href="#t2">Deriving AS = S Lambda</a></li>
+        <li><a href="#t3">A worked diagonalization</a></li>
+        <li><a href="#t4">Powers of A</a></li>
+        <li><a href="#t5">When does A^k go to zero?</a></li>
+        <li><a href="#t6">When can a matrix be diagonalized?</a></li>
+        <li><a href="#t7">Difference equations</a></li>
+        <li><a href="#t8">Fibonacci: setting it up</a></li>
+        <li><a href="#t9">Fibonacci: solving it</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The idea</a><span>Change to the basis the matrix likes, and it stops mixing anything.</span></li>
+      <li><a href="#t2">Deriving AS = S Lambda ★</a><span>One column at a time, then collected into matrices.</span></li>
+      <li><a href="#t3">A worked diagonalization</a><span>\(S\), \(S^{-1}\), \(\Lambda\), multiplied back to check.</span></li>
+      <li><a href="#t4">Powers of A ★</a><span>\(A^k = S\Lambda^kS^{-1}\): the middles cancel in a telescope.</span></li>
+      <li><a href="#t5">When does A^k go to zero?</a><span>Exactly when every \(|\lambda_i| &lt; 1\).</span></li>
+      <li><a href="#t6">When can a matrix be diagonalized?</a><span>\(n\) independent eigenvectors — guaranteed if the eigenvalues differ.</span></li>
+      <li><a href="#t7">Difference equations</a><span>\(u_{k+1} = Au_k\), solved by splitting \(u_0\) into eigenvectors.</span></li>
+      <li><a href="#t8">Fibonacci: setting it up</a><span>Turning a second-order scalar recurrence into a first-order system.</span></li>
+      <li><a href="#t9">Fibonacci: solving it ★</a><span>The golden ratio appears as an eigenvalue and governs the growth.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The idea</h3>
+
+    <p>A general matrix mixes coordinates together. Multiply by it repeatedly and the mixing compounds — \(A^{100}\) takes 99 matrix multiplications and tells you nothing about what is happening.</p>
+
+    <p>But along an eigenvector, \(A\) does not mix at all. It just multiplies by \(\lambda\). So:</p>
+
+    <div class="box intuition"><span class="label">The idea in one line ★</span>
+      <p>Describe every vector in terms of the eigenvectors, and the matrix stops being a matrix. It becomes \(n\) separate numbers, each scaling its own direction.</p>
+    </div>
+
+    <p>Diagonalization is the bookkeeping that carries this out.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Deriving AS = S Lambda</h3>
+
+    <p>Suppose \(A\) has \(n\) independent eigenvectors \(x_1, \dots, x_n\) with eigenvalues \(\lambda_1, \dots, \lambda_n\). Put the eigenvectors in the columns of a square matrix:</p>
+
+    $$ S = \begin{bmatrix} x_1 & x_2 & \cdots & x_n \end{bmatrix} $$
+
+    <p>Multiply \(A\) by \(S\). Matrix times matrix works column by column, and each column is an eigenvector:</p>
+
+    $$ AS = \begin{bmatrix} Ax_1 & Ax_2 & \cdots & Ax_n \end{bmatrix}
+          = \begin{bmatrix} \lambda_1x_1 & \lambda_2x_2 & \cdots & \lambda_nx_n \end{bmatrix} $$
+
+    <p>Now pull the \(\lambda\)'s out. Scaling column \(i\) by \(\lambda_i\) is exactly what multiplying on the <b>right</b> by a diagonal matrix does:</p>
+
+    $$ \begin{bmatrix} \lambda_1x_1 & \cdots & \lambda_nx_n \end{bmatrix}
+      = \begin{bmatrix} x_1 & \cdots & x_n \end{bmatrix}
+        \begin{bmatrix} \lambda_1 & & \\ & \ddots & \\ & & \lambda_n \end{bmatrix} = S\Lambda $$
+
+    $$ \boxed{AS = S\Lambda} $$
+
+    <p>The eigenvectors are independent, so \(S\) is invertible. Multiply by \(S^{-1}\) on whichever side you need:</p>
+
+    $$ \boxed{S^{-1}AS = \Lambda} \qquad\text{and}\qquad \boxed{A = S\Lambda S^{-1}} $$
+
+    <div class="box pitfall"><span class="label">Right, not left</span>
+      <p>\(S\Lambda\) scales the <b>columns</b> of \(S\); \(\Lambda S\) would scale its <b>rows</b>, which is not what we want. Diagonal matrices do different jobs on each side, and the order matters.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. A worked diagonalization</h3>
+
+    <p>Take the matrix from Lesson 20:</p>
+
+    $$ A = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix}, \qquad
+       \lambda_1 = 4 \text{ with } \begin{bmatrix} 1 \\ 1 \end{bmatrix}, \qquad
+       \lambda_2 = 2 \text{ with } \begin{bmatrix} -1 \\ 1 \end{bmatrix} $$
+
+    $$ S = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}, \qquad \Lambda = \begin{bmatrix} 4 & 0 \\ 0 & 2 \end{bmatrix} $$
+
+    <h4>Find \(S^{-1}\)</h4>
+
+    <p>\(\det S = (1)(1) - (-1)(1) = 2\), so</p>
+
+    $$ S^{-1} = \frac12\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}
+      = \begin{bmatrix} 1/2 & 1/2 \\ -1/2 & 1/2 \end{bmatrix} $$
+
+    <p>Check: \(SS^{-1} = \begin{bmatrix} 1&-1 \\ 1&1 \end{bmatrix}\begin{bmatrix} 1/2&1/2 \\ -1/2&1/2 \end{bmatrix} = \begin{bmatrix} 1/2+1/2 & 1/2-1/2 \\ 1/2-1/2 & 1/2+1/2 \end{bmatrix} = I\) ✓</p>
+
+    <h4>Multiply back</h4>
+
+    <p>First \(S\Lambda\) — scale column 1 by 4 and column 2 by 2:</p>
+
+    $$ S\Lambda = \begin{bmatrix} 4 & -2 \\ 4 & 2 \end{bmatrix} $$
+
+    <p>Then \((S\Lambda)S^{-1}\), entry by entry:</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\((4)(1/2) + (-2)(-1/2) = 2 + 1\)</td><td>3</td></tr>
+      <tr><td>\((1,2)\)</td><td>\((4)(1/2) + (-2)(1/2) = 2 - 1\)</td><td>1</td></tr>
+      <tr><td>\((2,1)\)</td><td>\((4)(1/2) + (2)(-1/2) = 2 - 1\)</td><td>1</td></tr>
+      <tr><td>\((2,2)\)</td><td>\((4)(1/2) + (2)(1/2) = 2 + 1\)</td><td>3</td></tr>
+    </table>
+
+    $$ S\Lambda S^{-1} = \begin{bmatrix} 3 & 1 \\ 1 & 3 \end{bmatrix} = A \qquad\checkmark $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Powers of A</h3>
+
+    <p>Start with the direct argument. If \(Ax = \lambda x\) then</p>
+
+    $$ A^2x = A(Ax) = A(\lambda x) = \lambda(Ax) = \lambda^2 x $$
+
+    <div class="box theorem"><span class="label">Powers ★</span>
+      $$ \boxed{A^k \text{ has eigenvalues } \lambda_i^k \text{ and the \textbf{same} eigenvectors}} $$
+    </div>
+
+    <p>In matrix form the proof is a telescope. Write \(A = S\Lambda S^{-1}\) twice:</p>
+
+    $$ A^2 = S\Lambda \underbrace{S^{-1}S}_{I} \Lambda S^{-1} = S\Lambda^2S^{-1} $$
+
+    <p>Every adjacent \(S^{-1}S\) collapses, so</p>
+
+    $$ \boxed{A^k = S\Lambda^kS^{-1}} $$
+
+    <p>And \(\Lambda^k\) is free — a diagonal matrix raised to a power is just each diagonal entry raised to that power.</p>
+
+    <h4>Check it on the example</h4>
+
+    $$ A^2 = \begin{bmatrix} 3&1 \\ 1&3 \end{bmatrix}\begin{bmatrix} 3&1 \\ 1&3 \end{bmatrix}
+      = \begin{bmatrix} 9+1 & 3+3 \\ 3+3 & 1+9 \end{bmatrix} = \begin{bmatrix} 10 & 6 \\ 6 & 10 \end{bmatrix} $$
+
+    <p>Via diagonalization, \(\Lambda^2 = \begin{bmatrix} 16&0 \\ 0&4 \end{bmatrix}\), so \(S\Lambda^2 = \begin{bmatrix} 16 & -4 \\ 16 & 4 \end{bmatrix}\) and</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\((16)(1/2) + (-4)(-1/2) = 8 + 2\)</td><td>10 ✓</td></tr>
+      <tr><td>\((1,2)\)</td><td>\((16)(1/2) + (-4)(1/2) = 8 - 2\)</td><td>6 ✓</td></tr>
+      <tr><td>\((2,1)\)</td><td>\((16)(1/2) + (4)(-1/2) = 8 - 2\)</td><td>6 ✓</td></tr>
+      <tr><td>\((2,2)\)</td><td>\((16)(1/2) + (4)(1/2) = 8 + 2\)</td><td>10 ✓</td></tr>
+    </table>
+
+    <p>Check against Lesson 20's rules too: trace \(10 + 10 = 20 = 16 + 4\) ✓ and determinant \(100 - 36 = 64 = (16)(4)\) ✓.</p>
+
+    <div class="box intuition"><span class="label">What you have bought</span>
+      <p>\(A^{100}\) by repeated multiplication: 99 matrix products. By diagonalization: one inverse, two products, and raising two numbers to the hundredth power. More importantly, \(\Lambda^{100} = \mathrm{diag}(4^{100}, 2^{100})\) tells you at a glance that the \(\lambda = 4\) direction utterly dominates.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. When does A^k go to zero?</h3>
+
+    <div class="box theorem"><span class="label">Stability ★</span>
+      <p>If \(A\) has \(n\) independent eigenvectors, then</p>
+      $$ \boxed{A^k \to 0 \text{ as } k \to \infty \iff |\lambda_i| < 1 \text{ for every } i} $$
+    </div>
+
+    <p>The reason is visible in \(A^k = S\Lambda^kS^{-1}\): \(S\) and \(S^{-1}\) are fixed, so everything depends on \(\Lambda^k\), whose entries are \(\lambda_i^k\). A number raised to higher and higher powers goes to zero exactly when its size is below 1.</p>
+
+    <table class="sl-table">
+      <tr><th>All \(|\lambda_i|\)</th><th>Behaviour of \(A^k\)</th></tr>
+      <tr><td>\(< 1\)</td><td>decays to the zero matrix</td></tr>
+      <tr><td>\(= 1\) for some, \(< 1\) for the rest</td><td>settles to a steady state (the \(\lambda = 1\) part survives)</td></tr>
+      <tr><td>\(> 1\) for some</td><td>blows up, dominated by the largest \(|\lambda|\)</td></tr>
+    </table>
+
+    <p><b>Absolute value matters, not sign.</b> \(\lambda = -0.9\) decays; \(\lambda = -1.1\) blows up while alternating sign. For complex eigenvalues it is the modulus \(|a+bi| = \sqrt{a^2+b^2}\) that counts.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. When can a matrix be diagonalized?</h3>
+
+    <p>Everything above assumed \(n\) independent eigenvectors. When does that hold?</p>
+
+    <div class="box theorem"><span class="label">The guarantee ★</span>
+      $$ \boxed{n \text{ different eigenvalues} \;\Longrightarrow\; n \text{ independent eigenvectors} \;\Longrightarrow\; \text{diagonalizable}} $$
+      <p>Most matrices have distinct eigenvalues, so most matrices are diagonalizable.</p>
+    </div>
+
+    <p>With <b>repeated</b> eigenvalues it can go either way.</p>
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>Eigenvalues</th><th>Independent eigenvectors</th><th>Diagonalizable?</th></tr>
+      <tr><td>\(I = \begin{bmatrix} 1&0 \\ 0&1 \end{bmatrix}\)</td><td>\(1, 1\)</td><td>2 — <i>every</i> vector works</td><td>yes (already diagonal)</td></tr>
+      <tr><td>\(\begin{bmatrix} 2&1 \\ 0&2 \end{bmatrix}\)</td><td>\(2, 2\)</td><td>1</td><td><b>no</b></td></tr>
+    </table>
+
+    <h4>Working out the bad case</h4>
+
+    <p>For \(A = \begin{bmatrix} 2&1 \\ 0&2 \end{bmatrix}\), triangular, so \(\lambda = 2\) twice. The eigenvectors are the nullspace of</p>
+
+    $$ A - 2I = \begin{bmatrix} 0 & 1 \\ 0 & 0 \end{bmatrix} $$
+
+    <p>which says \(x_2 = 0\) with \(x_1\) free — a single line, spanned by \((1,0)\). One eigenvector, so \(S\) cannot be made invertible and \(A\) is <b>defective</b>.</p>
+
+    <div class="box pitfall"><span class="label">Two counts, not one</span>
+      <p>There are always \(n\) eigenvalues counted with repetition — the characteristic polynomial has degree \(n\). There may be fewer independent eigenvectors. Diagonalization needs the <b>second</b> count to reach \(n\).</p>
+      <p>Repetition is a warning, not a verdict: check the nullspace of \(A - \lambda I\) and see how many free variables it has.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Difference equations</h3>
+
+    <p>Here is what diagonalization is for. Start with \(u_0\) and apply \(A\) over and over:</p>
+
+    $$ u_{k+1} = Au_k \qquad\Longrightarrow\qquad u_k = A^ku_0 $$
+
+    <p>True, but useless — it still contains \(A^k\). Instead, <b>split \(u_0\) into eigenvectors</b>:</p>
+
+    $$ u_0 = c_1x_1 + c_2x_2 + \dots + c_nx_n $$
+
+    <p>Apply \(A\) once. Each eigenvector is simply scaled:</p>
+
+    $$ Au_0 = c_1\lambda_1x_1 + c_2\lambda_2x_2 + \dots + c_n\lambda_nx_n $$
+
+    <p>Apply it \(k\) times and each picks up \(\lambda_i^k\):</p>
+
+    <div class="box theorem"><span class="label">The solution ★</span>
+      $$ \boxed{u_k = c_1\lambda_1^kx_1 + c_2\lambda_2^kx_2 + \dots + c_n\lambda_n^kx_n} $$
+      <p>The \(c_i\) come from the initial condition — solve \(Sc = u_0\), i.e. \(c = S^{-1}u_0\).</p>
+    </div>
+
+    <div class="box intuition"><span class="label">Read the answer, do not just compute it</span>
+      <p>Each term grows or shrinks at its own rate. For large \(k\) the term with the largest \(|\lambda|\) swamps the others, so <b>the biggest eigenvalue sets the long-run growth rate and its eigenvector sets the long-run direction</b>. You know the behaviour before computing a single \(c_i\).</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Fibonacci: setting it up</h3>
+
+    <p>The Fibonacci numbers: \(0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, \dots\), with</p>
+
+    $$ F_{k+2} = F_{k+1} + F_k $$
+
+    <p>How fast do they grow? Eigenvalues will say — but first the recurrence has to become a matrix equation, and there are two obstacles: it is <b>second order</b> (it reaches back two steps) and it is <b>scalar</b> (one number, not a vector).</p>
+
+    <div class="box method"><span class="label">Method · second order to first order ★</span>
+      <p>Stack two consecutive values into a vector:</p>
+      $$ u_k = \begin{bmatrix} F_{k+1} \\ F_k \end{bmatrix} $$
+      <p>Then write two equations — the real recurrence, plus a trivial one that does the shifting:</p>
+      $$ \begin{aligned} F_{k+2} &= F_{k+1} + F_k \\ F_{k+1} &= F_{k+1} \end{aligned} $$
+      <p>The second line looks like it says nothing. Its job is to carry \(F_{k+1}\) into the next vector's bottom slot.</p>
+    </div>
+
+    <p>In matrix form:</p>
+
+    $$ u_{k+1} = \begin{bmatrix} F_{k+2} \\ F_{k+1} \end{bmatrix}
+      = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix}\begin{bmatrix} F_{k+1} \\ F_k \end{bmatrix} = Au_k $$
+
+    <p>Check the bottom row: \((1)F_{k+1} + (0)F_k = F_{k+1}\) ✓, which is what the trivial equation demanded.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Fibonacci: solving it</h3>
+
+    $$ A = \begin{bmatrix} 1 & 1 \\ 1 & 0 \end{bmatrix} $$
+
+    <p>\(A\) is symmetric, so Lesson 20 promises real eigenvalues and perpendicular eigenvectors.</p>
+
+    <h4>The eigenvalues</h4>
+
+    <p>Trace \(= 1 + 0 = 1\), determinant \(= (1)(0) - (1)(1) = -1\), so by the \(2\times2\) shortcut:</p>
+
+    $$ \lambda^2 - \lambda - 1 = 0 \qquad\Longrightarrow\qquad \lambda = \frac{1 \pm \sqrt{1+4}}{2} = \frac{1 \pm \sqrt5}{2} $$
+
+    $$ \lambda_1 = \frac{1+\sqrt5}{2} \approx 1.618, \qquad \lambda_2 = \frac{1-\sqrt5}{2} \approx -0.618 $$
+
+    <p>Checks: \(\lambda_1 + \lambda_2 = 1\) ✓ (trace) and \(\lambda_1\lambda_2 = \dfrac{1-5}{4} = -1\) ✓ (determinant).</p>
+
+    <p>\(\lambda_1\) is the <b>golden ratio</b>.</p>
+
+    <h4>The eigenvectors</h4>
+
+    $$ A - \lambda I = \begin{bmatrix} 1-\lambda & 1 \\ 1 & -\lambda \end{bmatrix} $$
+
+    <p>Use the second row: \(x_1 - \lambda x_2 = 0\), so \(x_1 = \lambda x_2\). Taking \(x_2 = 1\):</p>
+
+    $$ x = \begin{bmatrix} \lambda \\ 1 \end{bmatrix} \qquad\text{so}\qquad
+       x_1 = \begin{bmatrix} \lambda_1 \\ 1 \end{bmatrix}, \quad x_2 = \begin{bmatrix} \lambda_2 \\ 1 \end{bmatrix} $$
+
+    <p>Check against the first row: \((1-\lambda)\lambda + 1 = \lambda - \lambda^2 + 1 = -(\lambda^2 - \lambda - 1) = 0\) ✓ — zero precisely because \(\lambda\) solves the characteristic equation.</p>
+
+    <h4>The growth rate</h4>
+
+    <p>By §7,</p>
+
+    $$ u_k = c_1\lambda_1^kx_1 + c_2\lambda_2^kx_2 $$
+
+    <p>Now look at the sizes. \(|\lambda_2| \approx 0.618 < 1\), so \(\lambda_2^k \to 0\). Only the first term survives:</p>
+
+    $$ \boxed{F_k \approx c_1\left(\frac{1+\sqrt5}{2}\right)^k} $$
+
+    <div class="box theorem"><span class="label">What the eigenvalue tells you ★</span>
+      <p>The Fibonacci numbers grow <b>geometrically</b>, multiplying by about 1.618 each step. Check it against the sequence: \(34/21 \approx 1.619\), \(55/34 \approx 1.618\) ✓</p>
+      <p>No amount of staring at \(F_{k+2} = F_{k+1} + F_k\) gives you that number. It is an eigenvalue, and nothing else.</p>
+    </div>
+
+    <h4>The exact formula</h4>
+
+    <p>Carrying the constants through gives <b>Binet's formula</b>:</p>
+
+    $$ F_k = \frac{1}{\sqrt5}\left[\left(\frac{1+\sqrt5}{2}\right)^k - \left(\frac{1-\sqrt5}{2}\right)^k\right] $$
+
+    <p>Test it at \(k = 10\): \(\lambda_1^{10} \approx 122.992\) and \(\lambda_2^{10} \approx 0.00813\), so</p>
+
+    $$ F_{10} \approx \frac{122.992 - 0.008}{2.2360} = \frac{122.984}{2.2360} = 55.000 $$
+
+    <p>And \(F_{10} = 55\) ✓ — an exact whole number out of two irrational ones, because the irrational parts cancel.</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The method</h4>
+    <ol class="index-list">
+      <li><b>Find the eigenvalues and eigenvectors</b><span>\(\det(A - \lambda I) = 0\), then the nullspace of \(A - \lambda I\) for each.</span></li>
+      <li><b>Check there are \(n\) independent eigenvectors</b><span>Automatic if the eigenvalues are all different. Otherwise count the free variables.</span></li>
+      <li><b>Build \(S\) and \(\Lambda\)</b><span>Eigenvectors as columns of \(S\); eigenvalues down \(\Lambda\) in the <b>same order</b>.</span></li>
+      <li><b>Use \(A = S\Lambda S^{-1}\)</b><span>Then \(A^k = S\Lambda^kS^{-1}\), and \(\Lambda^k\) is free.</span></li>
+      <li><b>For a difference equation, expand \(u_0\) in eigenvectors</b><span>\(u_k = \sum c_i\lambda_i^kx_i\), with \(c = S^{-1}u_0\).</span></li>
+    </ol>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The derivation ★</b></td><td>\(AS = S\Lambda\), because \(A\) acting on column \(i\) of \(S\) gives \(\lambda_i\) times that column.</td></tr>
+      <tr><td><b>The two forms</b></td><td>\(S^{-1}AS = \Lambda\) and \(A = S\Lambda S^{-1}\).</td></tr>
+      <tr><td><b>Powers ★</b></td><td>\(A^k = S\Lambda^kS^{-1}\). Same eigenvectors, eigenvalues raised to the \(k\).</td></tr>
+      <tr><td><b>Decay</b></td><td>\(A^k \to 0\) exactly when every \(|\lambda_i| < 1\). Size, not sign.</td></tr>
+      <tr><td><b>Diagonalizable?</b></td><td>Needs \(n\) independent eigenvectors. Distinct eigenvalues guarantee it.</td></tr>
+      <tr><td><b>Defective</b></td><td>\(\begin{bmatrix} 2&1 \\ 0&2 \end{bmatrix}\): \(\lambda = 2\) twice, one eigenvector, cannot be diagonalized.</td></tr>
+      <tr><td><b>Difference equations ★</b></td><td>\(u_k = c_1\lambda_1^kx_1 + \dots + c_n\lambda_n^kx_n\), with \(Sc = u_0\).</td></tr>
+      <tr><td><b>Long run</b></td><td>The largest \(|\lambda|\) sets the growth rate; its eigenvector sets the direction.</td></tr>
+      <tr><td><b>Fibonacci trick ★</b></td><td>\(u_k = (F_{k+1}, F_k)\) turns a second-order scalar recurrence into \(u_{k+1} = \begin{bmatrix} 1&1 \\ 1&0 \end{bmatrix}u_k\).</td></tr>
+      <tr><td><b>The answer</b></td><td>\(\lambda = \tfrac{1 \pm \sqrt5}{2}\). Growth rate \(\approx 1.618\), the golden ratio.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Diagonalizing is changing basis ★</b><span>\(S^{-1}AS = \Lambda\) says: in the eigenvector coordinates, \(A\) is \(n\) independent multiplications.</span></li>
+      <li><b>The middles cancel</b><span>\(A^k = S\Lambda^kS^{-1}\) is one telescoping line, and it is what makes powers cheap.</span></li>
+      <li><b>Expand the initial condition, do not compute \(A^k\)</b><span>Splitting \(u_0\) into eigenvectors turns one hard problem into \(n\) easy ones.</span></li>
+      <li><b>The dominant eigenvalue is the answer</b><span>Everything else decays relative to it. 1.618 for Fibonacci, found without computing a single term.</span></li>
+      <li><b>Count eigenvectors, not eigenvalues ★</b><span>A repeated eigenvalue may or may not supply enough. Only the nullspace knows.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Difference equations step forward in whole jumps. The next lesson does the same thing in <b>continuous</b> time: \(du/dt = Au\), where \(\lambda^k\) becomes \(e^{\lambda t}\), and stability is decided by whether the eigenvalues have negative real part. That lesson also defines \(e^{At}\) — the exponential of a matrix.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

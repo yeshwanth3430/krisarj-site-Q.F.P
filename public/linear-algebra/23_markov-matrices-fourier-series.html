@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markov Matrices; Fourier Series · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Markov matrices have non-negative entries and columns summing to 1, which forces lambda = 1 and a steady state any start drifts to; and Fourier series as expansion in an orthogonal basis of functions, with the inner product an integral.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="23_markov-matrices-fourier-series">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Markov Matrices; Fourier Series</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 23</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 23 (MIT 18.06, Lecture 23)</p>
+  <h1>Markov Matrices; Fourier Series</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Two applications: populations that drift to a steady state, and functions as vectors.}} $$</p>
+      <p>Two unrelated-looking topics, each an application of something already built. <b>Markov matrices</b> use eigenvalues to predict where a population settles. <b>Fourier series</b> use orthonormal bases — in a space whose vectors are functions.</p>
+    </div>
+
+    <div class="box method"><span class="label">The two headlines ★</span>
+      <table class="sl-table">
+        <tr><th>Markov</th><th>Fourier</th></tr>
+        <tr><td>columns sum to 1, entries \(\ge 0\)</td><td>basis \(1, \cos x, \sin x, \cos 2x, \dots\)</td></tr>
+        <tr><td>guarantees \(\lambda = 1\)</td><td>all mutually orthogonal</td></tr>
+        <tr><td>all other \(|\lambda| \le 1\)</td><td>inner product \(f^Tg = \int_0^{2\pi} f g\,dx\)</td></tr>
+        <tr><td>so \(u_k \to c_1x_1\), the steady state</td><td>so each coefficient is one integral</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Eigenvalues of A transpose</a></li>
+        <li><a href="#t2">What a Markov matrix is</a></li>
+        <li><a href="#t3">Why 1 is always an eigenvalue</a></li>
+        <li><a href="#t4">A population example</a></li>
+        <li><a href="#t5">Eigenvalues and eigenvectors</a></li>
+        <li><a href="#t6">The whole future</a></li>
+        <li><a href="#t7">Expanding in an orthonormal basis</a></li>
+        <li><a href="#t8">Functions as vectors</a></li>
+        <li><a href="#t9">The inner product of two functions</a></li>
+        <li><a href="#t10">Fourier coefficients</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Eigenvalues of A transpose</a><span>The same as those of \(A\), and we need it in §3.</span></li>
+      <li><a href="#t2">What a Markov matrix is</a><span>Non-negative entries, columns summing to 1.</span></li>
+      <li><a href="#t3">Why 1 is always an eigenvalue ★</a><span>Subtract \(I\) and every column sums to zero.</span></li>
+      <li><a href="#t4">A population example</a><span>People moving between two states, step by step.</span></li>
+      <li><a href="#t5">Eigenvalues and eigenvectors</a><span>1 and 0.7, with both eigenvectors.</span></li>
+      <li><a href="#t6">The whole future ★</a><span>One formula for every step, and the limit it runs to.</span></li>
+      <li><a href="#t7">Expanding in an orthonormal basis</a><span>\(x_i = q_i^Tv\) — the Lesson 16 result, restated.</span></li>
+      <li><a href="#t8">Functions as vectors</a><span>An infinite-dimensional space whose vectors are functions.</span></li>
+      <li><a href="#t9">The inner product of two functions ★</a><span>Replace the sum by an integral and everything carries over.</span></li>
+      <li><a href="#t10">Fourier coefficients</a><span>Each one is a single integral, because the basis is orthogonal.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Eigenvalues of A transpose</h3>
+
+    <div class="box theorem"><span class="label">A small fact we will need ★</span>
+      $$ \boxed{A \text{ and } A^T \text{ have the same eigenvalues}} $$
+    </div>
+
+    <p>Two lines. First, transposing does not disturb \(\lambda I\), because a diagonal matrix is its own transpose:</p>
+
+    $$ (A - \lambda I)^T = A^T - \lambda I $$
+
+    <p>Second, rule 10 from Lesson 17 says \(\det M^T = \det M\). Put them together:</p>
+
+    $$ \det(A - \lambda I) = \det\big((A-\lambda I)^T\big) = \det(A^T - \lambda I) $$
+
+    <p>The two characteristic polynomials are identical, so they have identical roots ✓</p>
+
+    <div class="box pitfall"><span class="label">Same eigenvalues, different eigenvectors</span>
+      <p>The \(\lambda\)'s match. The eigenvectors generally do not — \(A^T\)'s eigenvectors are \(A\)'s <b>left</b> eigenvectors. Only the numbers transfer.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. What a Markov matrix is</h3>
+
+    <div class="box definition"><span class="label">Definition · Markov matrix</span>
+      <p>A square matrix is <b>Markov</b> when</p>
+      <ul>
+        <li>every entry is \(\ge 0\), and</li>
+        <li>every <b>column</b> sums to 1.</li>
+      </ul>
+    </div>
+
+    $$ A = \begin{bmatrix} 0.1 & 0.01 & 0.3 \\ 0.2 & 0.99 & 0.3 \\ 0.7 & 0 & 0.4 \end{bmatrix} $$
+
+    <p>Check the columns: \(0.1+0.2+0.7 = 1\) ✓, \(0.01+0.99+0 = 1\) ✓, \(0.3+0.3+0.4 = 1\) ✓</p>
+
+    <div class="box intuition"><span class="label">Where the two conditions come from</span>
+      <p>Entry \(a_{ij}\) is the <b>probability</b> that something in state \(j\) moves to state \(i\).</p>
+      <ul>
+        <li>Probabilities cannot be negative → non-negative entries.</li>
+        <li>Everything in state \(j\) must end up <i>somewhere</i> → column \(j\) sums to 1, so nothing is lost.</li>
+      </ul>
+      <p>Powers of a Markov matrix are Markov too, which is right: two steps of a probabilistic move is still a probabilistic move.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">Columns or rows?</span>
+      <p>Some books define Markov matrices with the <b>rows</b> summing to 1. Everything below then applies to \(A^T\) instead. Check which convention you are reading before using any formula.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Why 1 is always an eigenvalue</h3>
+
+    <div class="box theorem"><span class="label">The key fact ★</span>
+      $$ \boxed{\text{every Markov matrix has } \lambda = 1} $$
+    </div>
+
+    <p>To show \(\lambda = 1\) is an eigenvalue we must show \(A - I\) is singular. Subtract 1 from each diagonal entry of the matrix above:</p>
+
+    $$ A - I = \begin{bmatrix} -0.9 & 0.01 & 0.3 \\ 0.2 & -0.01 & 0.3 \\ 0.7 & 0 & -0.6 \end{bmatrix} $$
+
+    <p>Each column used to sum to 1 and has lost exactly 1, so <b>each column now sums to 0</b>:</p>
+
+    <table class="sl-table">
+      <tr><th>Column</th><th>Sum</th></tr>
+      <tr><td>1</td><td>\(-0.9 + 0.2 + 0.7 = 0\) ✓</td></tr>
+      <tr><td>2</td><td>\(0.01 - 0.01 + 0 = 0\) ✓</td></tr>
+      <tr><td>3</td><td>\(0.3 + 0.3 - 0.6 = 0\) ✓</td></tr>
+    </table>
+
+    <p>Now read that as a statement about <b>rows</b>: adding all the rows of \(A - I\) gives the zero row. So the rows are dependent, so \(A - I\) is singular, so \(\det(A - I) = 0\), so \(\lambda = 1\) ✓</p>
+
+    <div class="box intuition"><span class="label">This is where §1 earns its place</span>
+      <p>The argument found a combination of <i>rows</i> that vanishes — which is a vector in the nullspace of \(A^T - I\), not of \(A - I\). But \(A\) and \(A^T\) have the same eigenvalues, so \(\lambda = 1\) for one means \(\lambda = 1\) for the other.</p>
+      <p>In fact \((1,1,\dots,1)\) is always the \(\lambda=1\) eigenvector of \(A^T\). The eigenvector of \(A\) itself is the steady state, and it must be computed.</p>
+    </div>
+
+    <p>A second fact, which we will use but not prove: <b>every other eigenvalue satisfies \(|\lambda| \le 1\).</b> No direction can grow, since no probability exceeds 1.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. A population example</h3>
+
+    <div class="box example"><span class="label">The setup</span>
+      <p>People live in California or Massachusetts. Each year:</p>
+      <ul>
+        <li>90% of Californians stay; 10% move to Massachusetts.</li>
+        <li>20% of Massachusetts residents move to California; 80% stay.</li>
+      </ul>
+      <p>Start with <b>0 in California and 1000 in Massachusetts</b>. Where does everyone end up?</p>
+    </div>
+
+    $$ \begin{bmatrix} u_{\text{Cal}} \\ u_{\text{Mass}} \end{bmatrix}_{k+1}
+      = \underbrace{\begin{bmatrix} 0.9 & 0.2 \\ 0.1 & 0.8 \end{bmatrix}}_{A}
+        \begin{bmatrix} u_{\text{Cal}} \\ u_{\text{Mass}} \end{bmatrix}_{k} $$
+
+    <p>Read the columns to check the matrix is right. Column 1 is "where a Californian goes": 0.9 stays, 0.1 leaves — and it sums to 1 ✓. Column 2 is "where a Massachusetts resident goes": 0.2 to California, 0.8 stays ✓</p>
+
+    <h4>Step it forward</h4>
+
+    $$ u_0 = \begin{bmatrix} 0 \\ 1000 \end{bmatrix} $$
+
+    $$ u_1 = Au_0 = \begin{bmatrix} (0.9)(0) + (0.2)(1000) \\ (0.1)(0) + (0.8)(1000) \end{bmatrix} = \begin{bmatrix} 200 \\ 800 \end{bmatrix} $$
+
+    <table class="sl-table">
+      <tr><th>\(k\)</th><th>California</th><th>Massachusetts</th><th>Total</th></tr>
+      <tr><td>0</td><td>0</td><td>1000</td><td>1000</td></tr>
+      <tr><td>1</td><td>200</td><td>800</td><td>1000</td></tr>
+      <tr><td>2</td><td>340</td><td>660</td><td>1000</td></tr>
+      <tr><td>3</td><td>438</td><td>562</td><td>1000</td></tr>
+      <tr><td>4</td><td>506.6</td><td>493.4</td><td>1000</td></tr>
+    </table>
+
+    <p>The total never moves — that is the columns summing to 1, doing its job. California grows but by smaller and smaller amounts. Where does it stop?</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Eigenvalues and eigenvectors</h3>
+
+    <h4>The eigenvalues, for free</h4>
+
+    <table class="sl-table">
+      <tr><th>Source</th><th>Value</th><th>Gives</th></tr>
+      <tr><td>Markov</td><td>—</td><td>\(\lambda_1 = 1\)</td></tr>
+      <tr><td>trace</td><td>\(0.9 + 0.8 = 1.7\)</td><td>\(\lambda_2 = 1.7 - 1 = 0.7\)</td></tr>
+    </table>
+
+    <p>Check with the determinant: \((0.9)(0.8) - (0.2)(0.1) = 0.72 - 0.02 = 0.7\), and \(\lambda_1\lambda_2 = (1)(0.7) = 0.7\) ✓</p>
+
+    <h4>The eigenvector for \(\lambda_1 = 1\)</h4>
+
+    $$ A - I = \begin{bmatrix} -0.1 & 0.2 \\ 0.1 & -0.2 \end{bmatrix} $$
+
+    <p>Columns sum to zero ✓, as §3 promised. Both rows say \(x_1 = 2x_2\):</p>
+
+    $$ x_1 = \begin{bmatrix} 2 \\ 1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 1.8 + 0.2 \\ 0.2 + 0.8 \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix}\) ✓ — fixed, exactly as \(\lambda = 1\) requires.</p>
+
+    <h4>The eigenvector for \(\lambda_2 = 0.7\)</h4>
+
+    $$ A - 0.7I = \begin{bmatrix} 0.2 & 0.2 \\ 0.1 & 0.1 \end{bmatrix} $$
+
+    <p>Both rows say \(x_1 + x_2 = 0\):</p>
+
+    $$ x_2 = \begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <p>Check: \(A\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 0.9 - 0.2 \\ 0.1 - 0.8 \end{bmatrix} = \begin{bmatrix} 0.7 \\ -0.7 \end{bmatrix} = 0.7\begin{bmatrix} 1 \\ -1 \end{bmatrix}\) ✓</p>
+
+    <div class="box intuition"><span class="label">What each eigenvector means</span>
+      <ul>
+        <li>\(x_1 = (2,1)\) has entries summing to 3 — a real population, in the ratio 2 to 1. It never changes.</li>
+        <li>\(x_2 = (1,-1)\) has entries summing to <b>zero</b>. It is not a population; it is an <i>imbalance</i>, a deviation from the steady ratio. And it shrinks by 30% per step.</li>
+      </ul>
+      <p>Every \(\lambda \ne 1\) eigenvector of a Markov matrix sums to zero, which is why only the \(\lambda = 1\) part can survive.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The whole future</h3>
+
+    <p>Use the Lesson 21 solution:</p>
+
+    $$ u_k = c_1\lambda_1^kx_1 + c_2\lambda_2^kx_2 = c_1(1)^k\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2(0.7)^k\begin{bmatrix} 1 \\ -1 \end{bmatrix} $$
+
+    <h4>Find the constants from \(u_0\)</h4>
+
+    $$ c_1\begin{bmatrix} 2 \\ 1 \end{bmatrix} + c_2\begin{bmatrix} 1 \\ -1 \end{bmatrix} = \begin{bmatrix} 0 \\ 1000 \end{bmatrix}
+      \qquad\Longrightarrow\qquad \begin{aligned} 2c_1 + c_2 &= 0 \\ c_1 - c_2 &= 1000 \end{aligned} $$
+
+    <p>Add the two equations: \(3c_1 = 1000\), so \(c_1 = \tfrac{1000}{3}\). Then \(c_2 = -2c_1 = -\tfrac{2000}{3}\).</p>
+
+    $$ \boxed{u_k = \frac{1000}{3}\begin{bmatrix} 2 \\ 1 \end{bmatrix} - \frac{2000}{3}(0.7)^k\begin{bmatrix} 1 \\ -1 \end{bmatrix}} $$
+
+    <h4>Check at \(k = 1\)</h4>
+
+    $$ \frac{1000}{3}\begin{bmatrix} 2 \\ 1 \end{bmatrix} - \frac{2000}{3}(0.7)\begin{bmatrix} 1 \\ -1 \end{bmatrix}
+      = \begin{bmatrix} \tfrac{2000}{3} - \tfrac{1400}{3} \\[2pt] \tfrac{1000}{3} + \tfrac{1400}{3} \end{bmatrix}
+      = \begin{bmatrix} \tfrac{600}{3} \\[2pt] \tfrac{2400}{3} \end{bmatrix} = \begin{bmatrix} 200 \\ 800 \end{bmatrix} \qquad\checkmark $$
+
+    <p>Matching the table in §4.</p>
+
+    <h4>The limit</h4>
+
+    <p>\((0.7)^k \to 0\), so the second term vanishes:</p>
+
+    $$ u_\infty = \frac{1000}{3}\begin{bmatrix} 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 666\tfrac23 \\ 333\tfrac13 \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">The steady state ★</span>
+      <p>Two thirds in California, one third in Massachusetts — the ratio in the \(\lambda = 1\) eigenvector.</p>
+      <p>And it does not depend on where you start. Any \(u_0\) with 1000 people ends in the same place, because the \(\lambda = 1\) part is fixed by the total and everything else decays. That is the defining feature of a Markov chain.</p>
+    </div>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 520 250" role="img" aria-label="Two populations converging to the two thirds one third split">
+        <line class="grid" x1="70" y1="30" x2="70" y2="210"/>
+        <line class="grid" x1="70" y1="210" x2="470" y2="210"/>
+        <line class="grid dash" x1="70" y1="90" x2="470" y2="90"/>
+        <line class="grid dash" x1="70" y1="150" x2="470" y2="150"/>
+        <text class="tick" x="16" y="214">0</text>
+        <text class="tick" x="10" y="154">333⅓</text>
+        <text class="tick" x="10" y="94">666⅔</text>
+        <text class="tick" x="22" y="38">1000</text>
+        <text class="tick" x="446" y="232">k</text>
+        <path class="l2" d="M70,30 C110,52 150,74 200,84 C270,89 380,90 470,90" fill="none"/>
+        <path class="l1" d="M70,210 C110,188 150,166 200,156 C270,151 380,150 470,150" fill="none"/>
+        <text class="lbl c2" x="312" y="78">Massachusetts?</text>
+        <text class="lbl c1" x="330" y="172">California?</text>
+        <circle class="hit" cx="70" cy="30" r="4"/><circle class="hit" cx="110" cy="54" r="4"/>
+        <circle class="hit" cx="150" cy="72" r="4"/><circle class="hit" cx="190" cy="84" r="4"/>
+        <circle class="pt" cx="70" cy="210" r="4"/><circle class="pt" cx="110" cy="186" r="4"/>
+        <circle class="pt" cx="150" cy="168" r="4"/><circle class="pt" cx="190" cy="156" r="4"/>
+      </svg>
+      <figcaption>The two populations converge to \(666\tfrac23\) and \(333\tfrac13\) — the ratio 2 : 1 from the \(\lambda = 1\) eigenvector. The gap closes by a factor of 0.7 each year, from \(\lambda_2\). Note the curves are mirror images: the total is constant, so whatever one gains the other loses. (Labels are swapped at the start because Massachusetts begins with everyone.)</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Expanding in an orthonormal basis</h3>
+
+    <p>Now the second half of the lecture, which starts by recalling Lesson 16.</p>
+
+    <p>Let \(q_1, \dots, q_n\) be an orthonormal basis. Write any vector \(v\) in it:</p>
+
+    $$ v = x_1q_1 + x_2q_2 + \dots + x_nq_n $$
+
+    <p>To get \(x_i\), dot both sides with \(q_i\):</p>
+
+    $$ q_i^Tv = x_1\underbrace{q_i^Tq_1}_{0} + \dots + x_i\underbrace{q_i^Tq_i}_{1} + \dots + x_n\underbrace{q_i^Tq_n}_{0} $$
+
+    $$ \boxed{x_i = q_i^Tv} $$
+
+    <p>Every term dies except one. In matrix form \(Qx = v\), and since \(Q^{-1} = Q^T\), \(x = Q^Tv\) — the same statement.</p>
+
+    <div class="box intuition"><span class="label">The property that matters</span>
+      <p>Each coefficient is found by <b>one dot product, independently of all the others</b>. Nothing has to be solved. Keep hold of that, because it is the only thing Fourier series need — and it is why they work in infinitely many dimensions, where "solving a system" would be impossible.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Functions as vectors</h3>
+
+    <p>Lesson 11 made the point that a vector is anything you can add and scale. <b>Functions</b> qualify: add two functions, multiply one by 7, and there is a zero function.</p>
+
+    <p>A <b>Fourier series</b> writes a periodic function in a particular basis of that space:</p>
+
+    $$ \boxed{f(x) = a_0 + a_1\cos x + b_1\sin x + a_2\cos 2x + b_2\sin 2x + \dots} $$
+
+    <table class="sl-table">
+      <tr><th></th><th>\(\mathbb{R}^n\)</th><th>Fourier</th></tr>
+      <tr><td>vectors</td><td>columns of numbers</td><td>functions \(f(x)\)</td></tr>
+      <tr><td>basis</td><td>\(q_1, \dots, q_n\)</td><td>\(1, \cos x, \sin x, \cos 2x, \sin 2x, \dots\)</td></tr>
+      <tr><td>dimension</td><td>\(n\)</td><td><b>infinite</b></td></tr>
+      <tr><td>expansion</td><td>\(v = \sum x_iq_i\)</td><td>\(f = a_0 + \sum (a_k\cos kx + b_k\sin kx)\)</td></tr>
+    </table>
+
+    <p>The sum is now infinite. One thing must survive that jump for anything to work: the basis has to be <b>orthogonal</b>. Which requires deciding what orthogonal means here.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. The inner product of two functions</h3>
+
+    <p>For vectors, \(v^Tw = v_1w_1 + v_2w_2 + \dots + v_nw_n\) — multiply matching components, add up.</p>
+
+    <p>A function does not have components indexed \(1, 2, 3\); it has a value at <b>every</b> \(x\). The sum over components becomes an integral over \(x\).</p>
+
+    <div class="box definition"><span class="label">Definition · inner product of functions ★</span>
+      $$ \boxed{f^Tg = \int_0^{2\pi} f(x)g(x)\,dx} $$
+      <p>From 0 to \(2\pi\) because Fourier series describe functions with \(f(x) = f(x + 2\pi)\), so one period is all the information there is.</p>
+    </div>
+
+    <h4>Checking the basis is orthogonal</h4>
+
+    <p>Take \(\sin x\) and \(\cos x\):</p>
+
+    $$ \int_0^{2\pi} \sin x\cos x\,dx = \int_0^{2\pi} \frac{\sin 2x}{2}\,dx
+      = \left[-\frac{\cos 2x}{4}\right]_0^{2\pi} = -\frac14 + \frac14 = 0 \qquad\checkmark $$
+
+    <p>And it works for every pair:</p>
+
+    <table class="sl-table">
+      <tr><th>Pair</th><th>\(\int_0^{2\pi}\)</th><th></th></tr>
+      <tr><td>\(\sin x,\ \cos x\)</td><td>0</td><td>✓ perpendicular</td></tr>
+      <tr><td>\(1,\ \cos x\)</td><td>0</td><td>✓ a full period of cosine cancels</td></tr>
+      <tr><td>\(1,\ \sin x\)</td><td>0</td><td>✓ same</td></tr>
+      <tr><td>\(\cos x,\ \cos 2x\)</td><td>0</td><td>✓ different frequencies</td></tr>
+      <tr><td>\(\sin x,\ \sin 2x\)</td><td>0</td><td>✓ different frequencies</td></tr>
+      <tr><td>\(\cos x,\ \cos x\)</td><td>\(\pi\)</td><td>its own length squared</td></tr>
+      <tr><td>\(\sin x,\ \sin x\)</td><td>\(\pi\)</td><td>same</td></tr>
+      <tr><td>\(1,\ 1\)</td><td>\(2\pi\)</td><td>the constant is longer</td></tr>
+    </table>
+
+    <p>Orthogonal but not orthonormal — the lengths are \(\sqrt\pi\) and \(\sqrt{2\pi}\), not 1. That is why the coefficient formulas below carry a \(\pi\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Fourier coefficients</h3>
+
+    <p>Now repeat §7 exactly. To find \(a_1\), take the inner product of both sides with \(\cos x\):</p>
+
+    $$ \int_0^{2\pi} f(x)\cos x\,dx = a_0\underbrace{\int 1 \cdot \cos x}_{0} + a_1\underbrace{\int \cos^2 x}_{\pi} + b_1\underbrace{\int \sin x\cos x}_{0} + a_2\underbrace{\int \cos 2x\cos x}_{0} + \dots $$
+
+    <p>Every term vanishes but one:</p>
+
+    $$ \boxed{a_1 = \frac{1}{\pi}\int_0^{2\pi} f(x)\cos x\,dx} $$
+
+    <p>And the same for every coefficient:</p>
+
+    <table class="sl-table">
+      <tr><th>Coefficient</th><th>Formula</th><th>Divisor is</th></tr>
+      <tr><td>\(a_0\)</td><td>\(\dfrac{1}{2\pi}\displaystyle\int_0^{2\pi} f(x)\,dx\)</td><td>\(\int 1\cdot1 = 2\pi\) — it is the average of \(f\)</td></tr>
+      <tr><td>\(a_k\)</td><td>\(\dfrac{1}{\pi}\displaystyle\int_0^{2\pi} f(x)\cos kx\,dx\)</td><td>\(\int \cos^2 kx = \pi\)</td></tr>
+      <tr><td>\(b_k\)</td><td>\(\dfrac{1}{\pi}\displaystyle\int_0^{2\pi} f(x)\sin kx\,dx\)</td><td>\(\int \sin^2 kx = \pi\)</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">What just happened ★</span>
+      <p>An infinite system of equations in infinitely many unknowns \(a_0, a_1, b_1, \dots\) — and every unknown was found <b>on its own, by one integral</b>, with no solving at all.</p>
+      <p>That is only possible because the basis is orthogonal. It is the same reason \(\hat x = Q^Tb\) needed no inverse in Lesson 16. Orthogonality is what makes infinite dimensions workable.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>\(A\) and \(A^T\)</b></td><td>Same eigenvalues, because \((A-\lambda I)^T = A^T - \lambda I\) and \(\det M^T = \det M\). Different eigenvectors.</td></tr>
+      <tr><td><b>Markov ★</b></td><td>Entries \(\ge 0\), columns summing to 1. Probabilities that lose nothing.</td></tr>
+      <tr><td><b>Why \(\lambda = 1\) ★</b></td><td>Columns of \(A - I\) sum to zero, so its rows are dependent, so it is singular.</td></tr>
+      <tr><td><b>The others</b></td><td>\(|\lambda| \le 1\), so nothing grows.</td></tr>
+      <tr><td><b>Steady state ★</b></td><td>\(u_k \to c_1x_1\), the \(\lambda = 1\) eigenvector. Independent of where you start.</td></tr>
+      <tr><td><b>The other eigenvectors</b></td><td>Their entries sum to zero — imbalances, not populations, and they decay.</td></tr>
+      <tr><td><b>The worked chain</b></td><td>\(\lambda = 1, 0.7\); \(x_1 = (2,1)\), \(x_2 = (1,-1)\); limit \(666\tfrac23\) and \(333\tfrac13\).</td></tr>
+      <tr><td><b>Orthonormal expansion</b></td><td>\(x_i = q_i^Tv\) — one dot product each, no system to solve.</td></tr>
+      <tr><td><b>Functions as vectors</b></td><td>Addable and scalable, so they form a space — an infinite-dimensional one.</td></tr>
+      <tr><td><b>Inner product ★</b></td><td>\(f^Tg = \int_0^{2\pi} fg\,dx\). The sum over components becomes an integral.</td></tr>
+      <tr><td><b>The basis</b></td><td>\(1, \cos x, \sin x, \cos 2x, \dots\) — all mutually orthogonal, with lengths \(\sqrt{2\pi}\) and \(\sqrt{\pi}\).</td></tr>
+      <tr><td><b>Coefficients ★</b></td><td>\(a_k = \tfrac1\pi\int f\cos kx\), \(b_k = \tfrac1\pi\int f\sin kx\), \(a_0 = \tfrac{1}{2\pi}\int f\) = the average.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>The column condition <i>is</i> the eigenvalue ★</b><span>"Columns sum to 1" and "\(\lambda = 1\) exists" are the same statement, one step apart.</span></li>
+      <li><b>Steady state does not depend on the start</b><span>Every other component decays, so only the \(\lambda = 1\) part can survive.</span></li>
+      <li><b>Read what an eigenvector means</b><span>Summing to 3 makes it a population; summing to 0 makes it an imbalance.</span></li>
+      <li><b>Orthogonality is the whole trick ★</b><span>It is why a coefficient can be found alone — in \(\mathbb{R}^n\) and in infinite dimensions alike.</span></li>
+      <li><b>Sum becomes integral</b><span>That single substitution carries every result about orthonormal bases into function space.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Unit II is finished. The last unit opens with the best-behaved matrices of all — the <b>symmetric</b> ones, with \(A^T = A\). Their eigenvalues are always real and their eigenvectors always perpendicular, which turns diagonalization into \(A = Q\Lambda Q^T\) with no inverse to compute. That leads to positive definiteness, and eventually to the singular value decomposition.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
