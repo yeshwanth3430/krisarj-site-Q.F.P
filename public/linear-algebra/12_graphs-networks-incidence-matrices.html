@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Graphs, Networks, Incidence Matrices · Linear Algebra · Quant from First Principles</title>
-<meta name="description" content="The incidence matrix of a graph: rows are edges, columns are nodes. Its nullspace is equal potentials, its rank counts a tree, its left nullspace is Kirchhoff current law, and Euler formula falls out as a dimension count.">
+<meta name="description" content="The incidence matrix of a graph, built row by row: nullspace is equal potentials, rank counts a tree, left nullspace is Kirchhoff current law, Euler formula falls out as a dimension count, and a real circuit is solved end to end with A-transpose C A x = f.">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -41,6 +41,7 @@
     <div class="box definition"><span class="label">What we are solving</span>
       <p>$$ \boxed{\text{Turn a graph into a matrix. Then its four subspaces stop being abstract.}} $$</p>
       <p>Write down one matrix for a network of nodes and edges and everything from the last five lessons acquires a meaning you can point at: the nullspace is voltage, the rank counts a tree, the left nullspace is current going round a loop, and \(m - r\) counts the loops.</p>
+      <p>Then we take a real circuit, write down its matrix, and <b>solve it completely</b> — every potential, every current, every check.</p>
     </div>
 
     <div class="box method"><span class="label">The dictionary ★</span>
@@ -52,36 +53,45 @@
         <tr><td>\(N(A)\)</td><td>everyone at the same voltage</td><td>dim 1</td></tr>
         <tr><td>rank \(r\)</td><td>edges of a tree</td><td>\(r = 3 = n-1\)</td></tr>
         <tr><td>\(N(A^T)\)</td><td>currents circulating in loops</td><td>dim \(m-r = 2\)</td></tr>
+        <tr><td>\(A^TCA\)</td><td>the whole circuit in one matrix</td><td>\(4 \times 4\), solved in §11</td></tr>
       </table>
     </div>
 
     <nav class="contents"><span class="label">Contents</span>
       <ol>
         <li><a href="#t1">The graph</a></li>
-        <li><a href="#t2">The incidence matrix</a></li>
-        <li><a href="#t3">Loops are dependent rows</a></li>
-        <li><a href="#t4">What Ax means</a></li>
-        <li><a href="#t5">The nullspace: one voltage for everyone</a></li>
-        <li><a href="#t6">The rank, and the tree</a></li>
-        <li><a href="#t7">The left nullspace: currents round a loop</a></li>
-        <li><a href="#t8">Euler's formula</a></li>
-        <li><a href="#t9">The whole circuit in one equation</a></li>
-        <li><a href="#t10">Summary</a></li>
+        <li><a href="#t2">The incidence matrix, row by row</a></li>
+        <li><a href="#t3">What Ax means, entry by entry</a></li>
+        <li><a href="#t4">Loops are dependent rows</a></li>
+        <li><a href="#t5">Elimination on A, in full</a></li>
+        <li><a href="#t6">The nullspace: one voltage for everyone</a></li>
+        <li><a href="#t7">The rank, and the tree</a></li>
+        <li><a href="#t8">A transpose, and what each row says</a></li>
+        <li><a href="#t9">The left nullspace: currents round a loop</a></li>
+        <li><a href="#t10">Euler's formula</a></li>
+        <li><a href="#t11">A real circuit, solved in full</a></li>
+        <li><a href="#t12">The same circuit with real resistors</a></li>
+        <li><a href="#t13">The four subspaces of this matrix</a></li>
+        <li><a href="#t14">Summary</a></li>
       </ol>
     </nav>
 
     <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
     <ol class="index-list">
-      <li><a href="#t1">The graph</a><span>Four nodes, five edges, an arrow on each.</span></li>
-      <li><a href="#t2">The incidence matrix</a><span>One row per edge: \(-1\) where it leaves, \(+1\) where it arrives.</span></li>
-      <li><a href="#t3">Loops are dependent rows</a><span>Walk a loop and the rows cancel.</span></li>
-      <li><a href="#t4">What Ax means</a><span>Feed in voltages, get out the drop across each edge.</span></li>
-      <li><a href="#t5">The nullspace: one voltage for everyone</a><span>\(Ax = 0\) says \(x_1 = x_2 = x_3 = x_4\). Dimension 1.</span></li>
-      <li><a href="#t6">The rank, and the tree</a><span>\(r = n - 1\), and the independent edges form a tree.</span></li>
-      <li><a href="#t7">The left nullspace: currents round a loop</a><span>\(A^Ty = 0\) is Kirchhoff's current law. One basis vector per loop.</span></li>
-      <li><a href="#t8">Euler's formula</a><span>nodes − edges + loops = 1, and it is just \(r = n - 1\) rearranged.</span></li>
-      <li><a href="#t9">The whole circuit in one equation</a><span>\(A^TCAx = f\).</span></li>
-      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+      <li><a href="#t1">The graph</a><span>Four nodes, five edges, an arrow on each — and what the arrow is for.</span></li>
+      <li><a href="#t2">The incidence matrix, row by row</a><span>\(-1\) where the edge leaves, \(+1\) where it arrives. All five rows built.</span></li>
+      <li><a href="#t3">What Ax means, entry by entry</a><span>All five dot products, one at a time.</span></li>
+      <li><a href="#t4">Loops are dependent rows</a><span>Both dependencies, checked entry by entry.</span></li>
+      <li><a href="#t5">Elimination on A, in full</a><span>Every row operation, down to two zero rows and \(r = 3\).</span></li>
+      <li><a href="#t6">The nullspace: one voltage for everyone</a><span>Back-substitution gives \((1,1,1,1)\). Dimension 1.</span></li>
+      <li><a href="#t7">The rank, and the tree</a><span>\(r = n - 1\), and the independent edges form a tree.</span></li>
+      <li><a href="#t8">A transpose, and what each row says</a><span>Four balance equations, one per node.</span></li>
+      <li><a href="#t9">The left nullspace: currents round a loop</a><span>Two bases — one by eye, one handed over by elimination.</span></li>
+      <li><a href="#t10">Euler's formula</a><span>nodes − edges + loops = 1, proved by counting dimensions.</span></li>
+      <li><a href="#t11">A real circuit, solved in full ★</a><span>One amp in, one amp out. Build \(A^TA\), ground a node, eliminate, back-substitute, read off every voltage and current, check all four nodes.</span></li>
+      <li><a href="#t12">The same circuit with real resistors</a><span>Put conductances in \(C\) and solve again. What changes, what does not.</span></li>
+      <li><a href="#t13">The four subspaces of this matrix</a><span>All four, with their dimensions and bases, collected.</span></li>
+      <li><a href="#t14">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
     </ol>
 
     <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
@@ -89,9 +99,11 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t1">1. The graph</h3>
 
-    <p>Same definition as last lesson: \(G = \{\text{nodes}, \text{edges}\}\). Here is the one used throughout, with \(n = 4\) nodes and \(m = 5\) edges.</p>
+    <p>Same definition as last lesson:</p>
 
-    <p>One addition: each edge gets an <b>arrow</b>. The arrow is not the direction current flows — it is just a bookkeeping choice, saying which way counts as positive. Flow the other way will come out as a negative number.</p>
+    $$ \boxed{G = \{\text{nodes},\ \text{edges}\}} $$
+
+    <p>Here is the one used throughout, with \(n = 4\) nodes and \(m = 5\) edges.</p>
 
     <figure class="fig" style="max-width:470px;margin:22px auto">
       <svg viewBox="0 0 470 250" role="img" aria-label="A directed graph with four nodes and five edges">
@@ -120,20 +132,37 @@
       <figcaption>Edge 1 runs \(1 \to 2\), edge 2 runs \(2 \to 3\), edge 3 runs \(1 \to 3\), edge 4 runs \(1 \to 4\), edge 5 runs \(3 \to 4\). Two loops are visible: nodes 1-2-3 and nodes 1-3-4.</figcaption>
     </figure>
 
+    <h4>Why the arrows</h4>
+
+    <p>Each edge gets an arrow. The arrow is <b>not</b> a claim about which way current flows — you do not know that yet. It is a bookkeeping choice: it says <i>this direction counts as positive</i>. If the current turns out to run the other way, the number comes out negative and that is the answer telling you so.</p>
+
+    <p>Same idea as choosing which way is "up" before you measure a height. The choice does not change the physics, only the sign on the page.</p>
+
     <!-- ====================================================== -->
-    <h3 class="topic" id="t2">2. The incidence matrix</h3>
+    <h3 class="topic" id="t2">2. The incidence matrix, row by row</h3>
 
     <div class="box definition"><span class="label">Definition · incidence matrix</span>
       <p>One <b>row per edge</b>, one <b>column per node</b>. If an edge runs from node \(a\) to node \(b\), its row has</p>
       <ul>
-        <li>\(-1\) in column \(a\) — where it leaves,</li>
-        <li>\(+1\) in column \(b\) — where it arrives,</li>
-        <li>\(0\) everywhere else.</li>
+        <li>\(-1\) in column \(a\) — where the arrow leaves,</li>
+        <li>\(+1\) in column \(b\) — where the arrow arrives,</li>
+        <li>\(0\) in every other column.</li>
       </ul>
-      <p>So every row has exactly two non-zeros, and they add to zero.</p>
+      <p>So every row has exactly two non-zero entries, and they add to zero.</p>
     </div>
 
-    <p>Build it row by row. Edge 1 runs \(1 \to 2\): put \(-1\) in column 1, \(+1\) in column 2. Edge 2 runs \(2 \to 3\): \(-1\) in column 2, \(+1\) in column 3. And so on.</p>
+    <p>Build it one row at a time. The four columns are nodes 1, 2, 3, 4 in that order.</p>
+
+    <table class="sl-table">
+      <tr><th>Edge</th><th>From → to</th><th>Reasoning</th><th>Row</th></tr>
+      <tr><td>1</td><td>\(1 \to 2\)</td><td>leaves node 1 → \(-1\) in column 1; arrives node 2 → \(+1\) in column 2; nothing in columns 3, 4</td><td>\((-1,\ 1,\ 0,\ 0)\)</td></tr>
+      <tr><td>2</td><td>\(2 \to 3\)</td><td>leaves node 2 → \(-1\) in column 2; arrives node 3 → \(+1\) in column 3</td><td>\((0,\ -1,\ 1,\ 0)\)</td></tr>
+      <tr><td>3</td><td>\(1 \to 3\)</td><td>leaves node 1 → \(-1\) in column 1; arrives node 3 → \(+1\) in column 3</td><td>\((-1,\ 0,\ 1,\ 0)\)</td></tr>
+      <tr><td>4</td><td>\(1 \to 4\)</td><td>leaves node 1 → \(-1\) in column 1; arrives node 4 → \(+1\) in column 4</td><td>\((-1,\ 0,\ 0,\ 1)\)</td></tr>
+      <tr><td>5</td><td>\(3 \to 4\)</td><td>leaves node 3 → \(-1\) in column 3; arrives node 4 → \(+1\) in column 4</td><td>\((0,\ 0,\ -1,\ 1)\)</td></tr>
+    </table>
+
+    <p>Stack the five rows:</p>
 
     $$ A = \begin{bmatrix}
       -1 & 1 & 0 & 0 \\
@@ -144,37 +173,35 @@
     \end{bmatrix}
     \begin{matrix} \text{edge } 1 \to 2 \\ \text{edge } 2 \to 3 \\ \text{edge } 1 \to 3 \\ \text{edge } 1 \to 4 \\ \text{edge } 3 \to 4 \end{matrix} $$
 
-    <p>It is \(5 \times 4\): \(m = 5\) rows, \(n = 4\) columns.</p>
+    <p>Shape: \(5 \times 4\). Five rows because \(m = 5\) edges, four columns because \(n = 4\) nodes. <b>Rows are edges, columns are nodes</b> — keep saying it until it is automatic, because every statement in this lesson depends on knowing which is which.</p>
+
+    <h4>Reading it the other way</h4>
+
+    <p>A column tells you about a node. Column 1 is \((-1, 0, -1, -1, 0)\) — non-zero in rows 1, 3, 4, so node 1 touches edges 1, 3 and 4, and all three leave it. Column 4 is \((0,0,0,1,1)\) — node 4 touches edges 4 and 5, and both arrive.</p>
 
     <div class="box intuition"><span class="label">What is special about these matrices</span>
-      <p>This is not a matrix someone invented for a homework problem. It came out of a picture, and it shows: every entry is \(-1\), \(0\) or \(1\), and a big graph gives a matrix that is almost all zeros — <b>sparse</b>. Real applications hand you matrices with structure like this, and the structure is what makes huge ones solvable.</p>
+      <p>This is not a matrix someone invented for a homework problem. It came out of a picture, and it shows:</p>
+      <ul>
+        <li>every entry is \(-1\), \(0\) or \(1\);</li>
+        <li>every row sums to zero;</li>
+        <li>a graph with a thousand nodes gives a matrix that is over 99% zeros — <b>sparse</b>.</li>
+      </ul>
+      <p>Real applications hand you structure like this, and the structure is what makes enormous systems solvable.</p>
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t3">3. Loops are dependent rows</h3>
+    <h3 class="topic" id="t3">3. What Ax means, entry by entry</h3>
 
-    <p>Look at nodes 1, 2, 3 and the three edges joining them — edges 1, 2 and 3. They form a <b>loop</b>. Pull out those rows:</p>
+    <p>Give each node a number \(x_i\). In the electrical picture, \(x_i\) is the <b>potential</b> (voltage) at node \(i\). Now multiply \(A\) by \(x\). The result has five entries — one per edge — and each is a row of \(A\) dotted with \(x\). Do all five.</p>
 
-    $$ \begin{bmatrix} -1 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ -1 & 0 & 1 & 0 \end{bmatrix}
-       \begin{matrix} 1 \to 2 \\ 2 \to 3 \\ 1 \to 3 \end{matrix} $$
-
-    <p>Add the first two:</p>
-
-    $$ (-1,1,0,0) + (0,-1,1,0) = (-1,0,1,0) \quad = \quad \text{row 3} $$
-
-    <p>Row 3 is row 1 plus row 2. They are <b>dependent</b>.</p>
-
-    <div class="box theorem"><span class="label">The link ★</span>
-      $$ \boxed{\text{a loop in the graph} \iff \text{dependent rows in } A} $$
-      <p>Why: going \(1 \to 2\) then \(2 \to 3\) gets you to the same place as going \(1 \to 3\). In the matrix, the \(+1\) and \(-1\) at node 2 cancel when you add, and what is left is the direct edge.</p>
-    </div>
-
-    <p>The graph has a second loop — nodes 1, 3, 4 using edges 3, 5 and 4 — so there is a second dependency among the rows. Keep that number, <b>2 loops</b>; it reappears in §7 as a dimension.</p>
-
-    <!-- ====================================================== -->
-    <h3 class="topic" id="t4">4. What Ax means</h3>
-
-    <p>Give each node a number \(x_i\). In the electrical picture, \(x_i\) is the <b>potential</b> (voltage) at node \(i\). Now multiply:</p>
+    <table class="sl-table">
+      <tr><th>Row</th><th>Dot product, written out</th><th>Result</th></tr>
+      <tr><td>1</td><td>\((-1)x_1 + (1)x_2 + (0)x_3 + (0)x_4\)</td><td>\(x_2 - x_1\)</td></tr>
+      <tr><td>2</td><td>\((0)x_1 + (-1)x_2 + (1)x_3 + (0)x_4\)</td><td>\(x_3 - x_2\)</td></tr>
+      <tr><td>3</td><td>\((-1)x_1 + (0)x_2 + (1)x_3 + (0)x_4\)</td><td>\(x_3 - x_1\)</td></tr>
+      <tr><td>4</td><td>\((-1)x_1 + (0)x_2 + (0)x_3 + (1)x_4\)</td><td>\(x_4 - x_1\)</td></tr>
+      <tr><td>5</td><td>\((0)x_1 + (0)x_2 + (-1)x_3 + (1)x_4\)</td><td>\(x_4 - x_3\)</td></tr>
+    </table>
 
     $$ Ax = \begin{bmatrix}
       -1 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ -1 & 0 & 1 & 0 \\ -1 & 0 & 0 & 1 \\ 0 & 0 & -1 & 1
@@ -182,65 +209,174 @@
     \begin{bmatrix} x_1 \\ x_2 \\ x_3 \\ x_4 \end{bmatrix}
     = \begin{bmatrix} x_2 - x_1 \\ x_3 - x_2 \\ x_3 - x_1 \\ x_4 - x_1 \\ x_4 - x_3 \end{bmatrix} $$
 
-    <p>Each row did exactly one thing: subtract the potential where the edge starts from the potential where it ends.</p>
+    <p>Every row did the same single job: <b>take the potential where the edge ends and subtract the potential where it starts</b>. The \(-1\) does the subtracting, the \(+1\) does the adding, and the zeros ignore every node the edge does not touch.</p>
 
     <div class="box intuition"><span class="label">In one line</span>
-      <p>\(x\) holds <b>potentials at the nodes</b>. \(Ax\) holds <b>potential differences across the edges</b>. The matrix is a difference-taker.</p>
+      <p>\(x\) holds <b>potentials at the nodes</b>. \(Ax\) holds <b>potential differences across the edges</b>. The incidence matrix is a difference-taker.</p>
     </div>
 
-    <p>Note the shapes line up with the picture: \(x\) has one entry per node (\(n = 4\)), \(Ax\) has one entry per edge (\(m = 5\)).</p>
+    <p>The shapes match the picture: \(x\) has one entry per node (\(n = 4\)), \(Ax\) has one entry per edge (\(m = 5\)). A \(5 \times 4\) matrix takes 4-vectors to 5-vectors, so the algebra could not have come out any other way.</p>
+
+    <h4>A quick numerical run</h4>
+
+    <p>Put \(x = (7, 3, 3, 1)\) — node 1 at 7 volts, nodes 2 and 3 at 3, node 4 at 1:</p>
+
+    $$ Ax = \begin{bmatrix} 3-7 \\ 3-3 \\ 3-7 \\ 1-7 \\ 1-3 \end{bmatrix} = \begin{bmatrix} -4 \\ 0 \\ -4 \\ -6 \\ -2 \end{bmatrix} $$
+
+    <p>Edge 2 reads 0 because its two ends are at the same potential. The negatives say the potential <i>falls</i> in the arrow direction — which is exactly where current will want to run.</p>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t5">5. The nullspace: one voltage for everyone</h3>
+    <h3 class="topic" id="t4">4. Loops are dependent rows</h3>
 
-    <p>Now ask the Lesson 7 question: which \(x\) give \(Ax = 0\)?</p>
+    <p>Nodes 1, 2, 3 and the edges joining them — edges 1, 2 and 3 — form a <b>loop</b>. Pull out those three rows:</p>
 
-    $$ \begin{bmatrix} x_2 - x_1 \\ x_3 - x_2 \\ x_3 - x_1 \\ x_4 - x_1 \\ x_4 - x_3 \end{bmatrix}
-       = \begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} $$
+    $$ \begin{bmatrix} -1 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ -1 & 0 & 1 & 0 \end{bmatrix}
+       \begin{matrix} \text{row 1: } 1 \to 2 \\ \text{row 2: } 2 \to 3 \\ \text{row 3: } 1 \to 3 \end{matrix} $$
 
-    <p>Every difference is zero, so every pair of connected nodes has the same potential. The graph is connected, so that spreads to all four:</p>
+    <p>Add rows 1 and 2, column by column:</p>
 
-    $$ x_1 = x_2 = x_3 = x_4 $$
+    <table class="sl-table">
+      <tr><th>Column</th><th>row 1</th><th>row 2</th><th>sum</th><th>row 3</th></tr>
+      <tr><td>1</td><td>\(-1\)</td><td>\(0\)</td><td>\(-1\)</td><td>\(-1\) ✓</td></tr>
+      <tr><td>2</td><td>\(1\)</td><td>\(-1\)</td><td>\(0\)</td><td>\(0\) ✓</td></tr>
+      <tr><td>3</td><td>\(0\)</td><td>\(1\)</td><td>\(1\)</td><td>\(1\) ✓</td></tr>
+      <tr><td>4</td><td>\(0\)</td><td>\(0\)</td><td>\(0\)</td><td>\(0\) ✓</td></tr>
+    </table>
 
-    <p>One free choice — the common value \(c\):</p>
+    $$ \text{row 1} + \text{row 2} = \text{row 3} $$
+
+    <p>They are <b>dependent</b>. And look at what made it work: in column 2 the \(+1\) from row 1 (arriving at node 2) met the \(-1\) from row 2 (leaving node 2) and cancelled. Node 2 is the middle of the path, so it disappears.</p>
+
+    <div class="box theorem"><span class="label">The link ★</span>
+      $$ \boxed{\text{a loop in the graph} \iff \text{dependent rows in } A} $$
+      <p>Going \(1 \to 2\) then \(2 \to 3\) lands you where \(1 \to 3\) lands you. In the matrix, every node you pass <i>through</i> cancels, and only the two ends survive — which is the direct edge's row.</p>
+    </div>
+
+    <h4>The second loop</h4>
+
+    <p>Nodes 1, 3, 4 using edges 3, 5, 4 form another loop. Add rows 3 and 5:</p>
+
+    $$ (-1,0,1,0) + (0,0,-1,1) = (-1,0,0,1) = \text{row 4} $$
+
+    <p>Column by column: \(-1+0 = -1\) ✓, \(0+0 = 0\) ✓, \(1+(-1) = 0\) ✓ (node 3 cancels, it is the middle), \(0+1 = 1\) ✓.</p>
+
+    <p>So <b>two loops, two dependencies</b>. Hold on to that 2 — it reappears in §9 as a dimension.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Elimination on A, in full</h3>
+
+    <p>Two dependencies among five rows suggests three independent ones. Do not guess — eliminate. Pivots are the first non-zero in each new row, exactly as in Lesson 2.</p>
+
+    <p><b>Start.</b></p>
+
+    $$ \begin{bmatrix} \mathbf{-1} & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ -1 & 0 & 1 & 0 \\ -1 & 0 & 0 & 1 \\ 0 & 0 & -1 & 1 \end{bmatrix} $$
+
+    <p><b>Step 1 — pivot \(-1\) in row 1, column 1.</b> Rows 3 and 4 have \(-1\) in column 1; rows 2 and 5 already have 0 there and are left alone.</p>
+
+    <ul>
+      <li>row 3 \(\leftarrow\) row 3 \(-\) row 1 \(= (-1-(-1),\ 0-1,\ 1-0,\ 0-0) = (0,-1,1,0)\)</li>
+      <li>row 4 \(\leftarrow\) row 4 \(-\) row 1 \(= (-1-(-1),\ 0-1,\ 0-0,\ 1-0) = (0,-1,0,1)\)</li>
+    </ul>
+
+    $$ \begin{bmatrix} -1 & 1 & 0 & 0 \\ 0 & \mathbf{-1} & 1 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & -1 & 0 & 1 \\ 0 & 0 & -1 & 1 \end{bmatrix} $$
+
+    <p><b>Step 2 — pivot \(-1\) in row 2, column 2.</b> Rows 3 and 4 have \(-1\) there.</p>
+
+    <ul>
+      <li>row 3 \(\leftarrow\) row 3 \(-\) row 2 \(= (0-0,\ -1-(-1),\ 1-1,\ 0-0) = (0,0,0,0)\) &nbsp;— <b>a zero row</b></li>
+      <li>row 4 \(\leftarrow\) row 4 \(-\) row 2 \(= (0-0,\ -1-(-1),\ 0-1,\ 1-0) = (0,0,-1,1)\)</li>
+    </ul>
+
+    $$ \begin{bmatrix} -1 & 1 & 0 & 0 \\ 0 & -1 & 1 & 0 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & \mathbf{-1} & 1 \\ 0 & 0 & -1 & 1 \end{bmatrix} $$
+
+    <p><b>Step 3 — pivot \(-1\) in row 4, column 3.</b> Row 5 has \(-1\) there.</p>
+
+    <ul>
+      <li>row 5 \(\leftarrow\) row 5 \(-\) row 4 \(= (0,0,-1-(-1),1-1) = (0,0,0,0)\) &nbsp;— <b>a second zero row</b></li>
+    </ul>
+
+    <p>Move the zero rows to the bottom:</p>
+
+    $$ U = \begin{bmatrix} \mathbf{-1} & 1 & 0 & 0 \\ 0 & \mathbf{-1} & 1 & 0 \\ 0 & 0 & \mathbf{-1} & 1 \\ 0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+
+    <div class="box method"><span class="label">What elimination just told us ★</span>
+      <ul>
+        <li><b>Three pivots</b>, so \(\;r = 3\).</li>
+        <li><b>Pivot columns 1, 2, 3.</b> Column 4 has no pivot — it is <b>free</b>.</li>
+        <li><b>Two zero rows</b>, one for each loop. Nothing was lost: the zero rows <i>are</i> the dependencies from §4.</li>
+      </ul>
+    </div>
+
+    <p>Which combinations produced those zeros? Track them back, because they are the left nullspace and we will want them in §9.</p>
+
+    <ul>
+      <li>Zero row 1 came from row 3, minus row 1, minus row 2: &nbsp;\(-\text{r}_1 - \text{r}_2 + \text{r}_3 = 0\).</li>
+      <li>Zero row 2 came from row 5 minus (row 4 \(-\) row 1 \(-\) row 2): &nbsp;\(\text{r}_1 + \text{r}_2 - \text{r}_4 + \text{r}_5 = 0\).</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The nullspace: one voltage for everyone</h3>
+
+    <p>Now the Lesson 7 question: which \(x\) give \(Ax = 0\)? Use \(U\) — elimination never changes the solutions.</p>
+
+    <p>Column 4 is free, so set \(x_4 = 1\) and back-substitute up the three pivot rows.</p>
+
+    <table class="sl-table">
+      <tr><th>Row of \(U\)</th><th>Equation</th><th>Solve</th></tr>
+      <tr><td>\((0,0,-1,1)\)</td><td>\(-x_3 + x_4 = 0\)</td><td>\(x_3 = x_4 = 1\)</td></tr>
+      <tr><td>\((0,-1,1,0)\)</td><td>\(-x_2 + x_3 = 0\)</td><td>\(x_2 = x_3 = 1\)</td></tr>
+      <tr><td>\((-1,1,0,0)\)</td><td>\(-x_1 + x_2 = 0\)</td><td>\(x_1 = x_2 = 1\)</td></tr>
+    </table>
+
+    <p>One special solution, so</p>
 
     $$ N(A) = \left\{ c\begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix} \right\} \qquad\Longrightarrow\qquad \boxed{\dim N(A) = 1} $$
 
-    <p>Check it: \(A(1,1,1,1)^T\) subtracts 1 from 1 five times and gives \((0,0,0,0,0)\) ✓.</p>
+    <p>Check it against the original \(A\), all five rows at once: every row has one \(+1\) and one \(-1\), so each dot product with \((1,1,1,1)\) is \(1 - 1 = 0\). \(Ax = (0,0,0,0,0)\) ✓</p>
+
+    <h4>Reading the same answer off the picture</h4>
+
+    <p>Going back to §3, \(Ax = 0\) says every one of these is zero:</p>
+
+    $$ x_2 - x_1 = 0,\quad x_3 - x_2 = 0,\quad x_3 - x_1 = 0,\quad x_4 - x_1 = 0,\quad x_4 - x_3 = 0 $$
+
+    <p>Each edge forces its two ends equal. The graph is connected, so that equality travels along the edges to every node: \(x_1 = x_2 = x_3 = x_4\). One number to choose, dimension 1.</p>
 
     <div class="box intuition"><span class="label">What it means physically</span>
-      <p>If every node sits at the same voltage, nothing flows. And measuring the network can never tell you what that shared voltage <i>is</i> — only differences are observable. To pin it down you <b>ground</b> one node, which declares \(x_4 = 0\). That removes the one free constant, and then every other potential is determined.</p>
+      <p>If every node sits at the same voltage, nothing flows. And no measurement of the network can tell you what that shared voltage <i>is</i> — only differences are observable, and all the differences are zero.</p>
+      <p>To pin it down you <b>ground</b> a node: declare \(x_4 = 0\). That uses up the one free constant, and then every other potential is determined. We will do exactly this in §11, and it is not a trick — it is the one piece of information the matrix genuinely does not contain.</p>
     </div>
 
     <div class="box pitfall"><span class="label">A connected graph never has \(N(A) = \{0\}\)</span>
-      <p>The constant vector \((1,1,\dots,1)\) is in the nullspace of <b>every</b> incidence matrix — each row has one \(+1\) and one \(-1\), which always cancel. So the columns of \(A\) are never independent, and \(A\) can never have \(r = n\).</p>
+      <p>The constant vector \((1,1,\dots,1)\) is in the nullspace of <b>every</b> incidence matrix, because each row has one \(+1\) and one \(-1\) and they always cancel. So the columns of \(A\) are never independent, \(A\) can never have \(r = n\), and \(A^TA\) can never be invertible. Ground a node or the system has no unique answer.</p>
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t6">6. The rank, and the tree</h3>
+    <h3 class="topic" id="t7">7. The rank, and the tree</h3>
 
     <p>\(A\) has \(n = 4\) columns and \(\dim N(A) = 1\). From \(\dim N(A) = n - r\):</p>
 
     $$ 1 = 4 - r \qquad\Longrightarrow\qquad \boxed{r = 3 = n - 1} $$
 
-    <p>So three of the five rows are independent and two are not — one redundant row per loop, as §3 promised.</p>
+    <p>Three independent rows out of five, two dependent — one redundant row per loop, exactly as §4 said.</p>
 
-    <p>Which three? Rows 1, 2 and 4, for instance — edges \(1\to2\), \(2\to3\) and \(1\to4\). The other two are combinations of these:</p>
+    <p>Which three? Any three that are independent will do. Rows 1, 2 and 4 are one such set — edges \(1\to2\), \(2\to3\) and \(1\to4\). The other two rows are combinations of them:</p>
 
-    <ul>
-      <li>row 3 \(= \) row 1 \(+\) row 2 &nbsp;&nbsp; \((1\to3\) is \(1\to2\) then \(2\to3)\)</li>
-      <li>row 5 \(= \) row 4 \(-\) row 1 \(-\) row 2 &nbsp;&nbsp; \((3\to4\) is \(3\to1\) then \(1\to4)\)</li>
-    </ul>
+    <table class="sl-table">
+      <tr><th>Dependent row</th><th>Built from</th><th>Check, column by column</th><th>In the picture</th></tr>
+      <tr><td>row 3 \((-1,0,1,0)\)</td><td>\(\text{r}_1 + \text{r}_2\)</td><td>\(-1{+}0,\ 1{-}1,\ 0{+}1,\ 0{+}0 = (-1,0,1,0)\) ✓</td><td>\(1\to3\) is \(1\to2\) then \(2\to3\)</td></tr>
+      <tr><td>row 5 \((0,0,-1,1)\)</td><td>\(\text{r}_4 - \text{r}_1 - \text{r}_2\)</td><td>\(-1{+}1{-}0,\ 0{-}1{+}1,\ 0{-}0{-}1,\ 1{-}0{-}0 = (0,0,-1,1)\) ✓</td><td>\(3\to4\) is \(3\to1\) then \(1\to4\)</td></tr>
+    </table>
 
-    <p>Draw just those three independent edges and look at what you get: all four nodes connected, and <b>no loop</b>.</p>
+    <p>Draw just the three independent edges and look at what you get: all four nodes connected, and <b>no loop</b>.</p>
 
     <div class="box definition"><span class="label">Definition · tree</span>
-      <p>A <b>tree</b> is a connected graph with no loops. The independent edges of \(A\) always form one.</p>
-      <p>That is the whole content of \(r = n - 1\): it takes \(n - 1\) edges to join \(n\) nodes, and any edge after that closes a loop.</p>
+      <p>A <b>tree</b> is a connected graph with no loops. The independent edges of an incidence matrix always form one.</p>
+      <p>That is the whole content of \(r = n - 1\): it takes \(n - 1\) edges to join \(n\) nodes, and every edge after that closes a loop and makes a row dependent.</p>
     </div>
 
     <figure class="fig" style="max-width:470px;margin:22px auto">
-      <svg viewBox="0 0 470 250" role="img" aria-label="The same graph with the three tree edges highlighted and the two loop-closing edges dashed">
+      <svg viewBox="0 0 470 250" role="img" aria-label="The same graph with the three tree edges solid and the two loop-closing edges dashed">
         <line class="l3 dash" x1="182" y1="71" x2="247" y2="182"/>
         <line class="l3 dash" x1="264" y1="186" x2="389" y2="70"/>
         <line class="l1" x1="167" y1="70" x2="79" y2="183"/>
@@ -260,66 +396,108 @@
         <text class="tick c3" x="222" y="136">edge 3</text>
         <text class="tick c3" x="336" y="140">edge 5</text>
       </svg>
-      <figcaption><b>Solid = a tree.</b> Edges 1, 2 and 4 reach all four nodes using the fewest possible edges — three of them, \(n-1\) — and close no loop. Each dashed edge added back creates exactly one loop, and exactly one dependent row.</figcaption>
+      <figcaption><b>Solid = a tree.</b> Edges 1, 2 and 4 reach all four nodes with the fewest possible edges — three of them, \(n-1\) — and close no loop. Put either dashed edge back and you create exactly one loop and exactly one dependent row.</figcaption>
     </figure>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t7">7. The left nullspace: currents round a loop</h3>
+    <h3 class="topic" id="t8">8. A transpose, and what each row says</h3>
 
-    <p>Now the fourth subspace, \(N(A^T)\) — solutions of \(A^Ty = 0\). Its dimension is forced:</p>
+    <p>Transpose \(A\) and the roles swap: \(A^T\) is \(4 \times 5\), so now <b>rows are nodes and columns are edges</b>.</p>
 
-    $$ \dim N(A^T) = m - r = 5 - 3 = \boxed{2} $$
-
-    <p>Two. The same 2 as the number of loops. First see what the equation says. Transposing \(A\) swaps the roles — now rows are nodes and columns are edges:</p>
-
-    $$ A^Ty = \begin{bmatrix}
-      -1 & 0 & -1 & -1 & 0 \\ 1 & -1 & 0 & 0 & 0 \\ 0 & 1 & 1 & 0 & -1 \\ 0 & 0 & 0 & 1 & 1
+    $$ A^T = \begin{bmatrix}
+      -1 & 0 & -1 & -1 & 0 \\
+      1 & -1 & 0 & 0 & 0 \\
+      0 & 1 & 1 & 0 & -1 \\
+      0 & 0 & 0 & 1 & 1
     \end{bmatrix}
-    \begin{bmatrix} y_1 \\ y_2 \\ y_3 \\ y_4 \\ y_5 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \\ 0 \end{bmatrix} $$
+    \begin{matrix} \text{node 1} \\ \text{node 2} \\ \text{node 3} \\ \text{node 4} \end{matrix} $$
 
-    <p>Here \(y_j\) is the <b>current on edge \(j\)</b>. Read the four equations out one at a time:</p>
+    <p>Check one row against the picture. Row 1 is node 1, and it reads \((-1, 0, -1, -1, 0)\): non-zero in columns 1, 3, 4, so node 1 touches edges 1, 3 and 4, with a \(-1\) each because all three leave it. That is what the drawing shows ✓</p>
+
+    <p>Now let \(y_j\) be the <b>current on edge \(j\)</b>, positive in the arrow direction, and compute \(A^Ty\) row by row:</p>
 
     <table class="sl-table">
-      <tr><th>Row</th><th>Equation</th><th>What it says</th></tr>
-      <tr><td>node 1</td><td>\(-y_1 - y_3 - y_4 = 0\)</td><td>the three currents leaving node 1 cancel</td></tr>
-      <tr><td>node 2</td><td>\(y_1 - y_2 = 0\)</td><td>what comes into node 2 goes out</td></tr>
-      <tr><td>node 3</td><td>\(y_2 + y_3 - y_5 = 0\)</td><td>in on edges 2 and 3, out on edge 5</td></tr>
-      <tr><td>node 4</td><td>\(y_4 + y_5 = 0\)</td><td>node 4 balances too</td></tr>
+      <tr><th>Row</th><th>Dot product</th><th>Reads</th><th>In words</th></tr>
+      <tr><td>node 1</td><td>\(-y_1 + 0 - y_3 - y_4 + 0\)</td><td>\(-(y_1 + y_3 + y_4)\)</td><td>minus everything leaving node 1</td></tr>
+      <tr><td>node 2</td><td>\(y_1 - y_2 + 0 + 0 + 0\)</td><td>\(y_1 - y_2\)</td><td>in on edge 1, out on edge 2</td></tr>
+      <tr><td>node 3</td><td>\(0 + y_2 + y_3 + 0 - y_5\)</td><td>\(y_2 + y_3 - y_5\)</td><td>in on edges 2 and 3, out on edge 5</td></tr>
+      <tr><td>node 4</td><td>\(0 + 0 + 0 + y_4 + y_5\)</td><td>\(y_4 + y_5\)</td><td>in on edges 4 and 5</td></tr>
     </table>
 
-    <div class="box theorem"><span class="label">Kirchhoff's Current Law ★</span>
-      $$ \boxed{A^Ty = 0 \quad\text{means}\quad \text{current in} = \text{current out, at every node}} $$
-      <p>Nothing accumulates anywhere. It is a conservation law, and it is exactly the left nullspace.</p>
-    </div>
-
-    <h4>Finding a basis — by looking at loops</h4>
-
-    <p>We need two independent solutions, and we know where to look.</p>
-
-    <p><b>Loop 1 — nodes 1, 2, 3.</b> Send one unit of current round it. That uses edge 1 forwards, edge 2 forwards, and edge 3 <i>backwards</i> (so \(-1\)). Edges 4 and 5 carry nothing:</p>
-
-    $$ y = (1,\, 1,\, -1,\, 0,\, 0) $$
-
-    <p>Check against the four equations: node 1 gives \(-1 - (-1) - 0 = 0\) ✓, node 2 gives \(1 - 1 = 0\) ✓, node 3 gives \(1 + (-1) - 0 = 0\) ✓, node 4 gives \(0 + 0 = 0\) ✓.</p>
-
-    <p><b>Loop 2 — nodes 1, 3, 4.</b> One unit round this one uses edge 3 forwards, edge 5 forwards, edge 4 backwards:</p>
-
-    $$ y = (0,\, 0,\, 1,\, -1,\, 1) $$
-
-    <p>Check: node 1 gives \(-0 - 1 - (-1) = 0\) ✓, node 3 gives \(0 + 1 - 1 = 0\) ✓, node 4 gives \(-1 + 1 = 0\) ✓.</p>
-
-    <p>Two independent vectors in a 2-dimensional space — that is a basis.</p>
-
-    <div class="box pitfall"><span class="label">The outer loop is not a third one</span>
-      <p>There is a visible third loop, round the outside through nodes 1, 2, 3, 4. Its current vector is \((1,1,0,-1,1)\), and it is in \(N(A^T)\) — but it is not new:</p>
-      $$ (1,1,-1,0,0) + (0,0,1,-1,1) = (1,1,0,-1,1) $$
-      <p>The shared edge 3 carries \(-1\) from one loop and \(+1\) from the other, and they cancel. <b>Independent</b> loops number \(m - r = 2\), not however many you can trace by eye.</p>
+    <div class="box theorem"><span class="label">What \(A^Ty\) is ★</span>
+      $$ \boxed{(A^Ty)_i = \text{net current flowing } \textbf{into} \text{ node } i \text{ along the edges}} $$
+      <p>The \(+1\)s collect what arrives and the \(-1\)s subtract what leaves. \(A\) took differences of node values; \(A^T\) adds up edge values at each node. They are opposite jobs, which is why one matrix is the transpose of the other.</p>
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t8">8. Euler's formula</h3>
+    <h3 class="topic" id="t9">9. The left nullspace: currents round a loop</h3>
 
-    <p>Put the two counts together. Independent loops \(= m - r\), and \(r = n - 1\), so</p>
+    <p>Set \(A^Ty = 0\). From the table above, that is four equations:</p>
+
+    $$ y_1 + y_3 + y_4 = 0, \qquad y_1 = y_2, \qquad y_2 + y_3 = y_5, \qquad y_4 + y_5 = 0 $$
+
+    <div class="box theorem"><span class="label">Kirchhoff's Current Law ★</span>
+      $$ \boxed{A^Ty = 0 \quad\text{means}\quad \text{current in} = \text{current out, at every node}} $$
+      <p>Nothing piles up anywhere. It is a conservation law, and it is exactly the left nullspace.</p>
+    </div>
+
+    <p>The dimension is forced before we solve anything:</p>
+
+    $$ \dim N(A^T) = m - r = 5 - 3 = \boxed{2} $$
+
+    <p>Two — the same 2 as the number of loops. Two different ways to find a basis:</p>
+
+    <h4>Method · by looking at loops</h4>
+
+    <p><b>Loop 1 — nodes 1, 2, 3.</b> Send one unit of current round it. Edge 1 is used forwards (\(+1\)), edge 2 forwards (\(+1\)), edge 3 <i>backwards</i> (\(-1\), because the loop goes \(3 \to 1\) while the arrow points \(1 \to 3\)). Edges 4 and 5 carry nothing.</p>
+
+    $$ y = (1,\ 1,\ -1,\ 0,\ 0) $$
+
+    <p>Check all four equations:</p>
+
+    <table class="sl-table">
+      <tr><th>Node</th><th>Equation</th><th>Substitute</th><th></th></tr>
+      <tr><td>1</td><td>\(y_1 + y_3 + y_4 = 0\)</td><td>\(1 + (-1) + 0 = 0\)</td><td>✓</td></tr>
+      <tr><td>2</td><td>\(y_1 - y_2 = 0\)</td><td>\(1 - 1 = 0\)</td><td>✓</td></tr>
+      <tr><td>3</td><td>\(y_2 + y_3 - y_5 = 0\)</td><td>\(1 + (-1) - 0 = 0\)</td><td>✓</td></tr>
+      <tr><td>4</td><td>\(y_4 + y_5 = 0\)</td><td>\(0 + 0 = 0\)</td><td>✓</td></tr>
+    </table>
+
+    <p><b>Loop 2 — nodes 1, 3, 4.</b> One unit round this one uses edge 3 forwards, edge 5 forwards, edge 4 backwards:</p>
+
+    $$ y = (0,\ 0,\ 1,\ -1,\ 1) $$
+
+    <table class="sl-table">
+      <tr><th>Node</th><th>Equation</th><th>Substitute</th><th></th></tr>
+      <tr><td>1</td><td>\(y_1 + y_3 + y_4 = 0\)</td><td>\(0 + 1 + (-1) = 0\)</td><td>✓</td></tr>
+      <tr><td>2</td><td>\(y_1 - y_2 = 0\)</td><td>\(0 - 0 = 0\)</td><td>✓</td></tr>
+      <tr><td>3</td><td>\(y_2 + y_3 - y_5 = 0\)</td><td>\(0 + 1 - 1 = 0\)</td><td>✓</td></tr>
+      <tr><td>4</td><td>\(y_4 + y_5 = 0\)</td><td>\(-1 + 1 = 0\)</td><td>✓</td></tr>
+    </table>
+
+    <p>Two solutions, independent (the first is zero on edges 4 and 5, the second is zero on edges 1 and 2, so neither is a multiple of the other), inside a space of dimension 2. That is a basis.</p>
+
+    <h4>Method · read them off elimination</h4>
+
+    <p>No picture needed. In §5 we tracked which combinations of rows produced the two zero rows:</p>
+
+    $$ -\text{r}_1 - \text{r}_2 + \text{r}_3 = 0 \quad\Longrightarrow\quad y = (-1,-1,1,0,0) $$
+    $$ \text{r}_1 + \text{r}_2 - \text{r}_4 + \text{r}_5 = 0 \quad\Longrightarrow\quad y = (1,1,0,-1,1) $$
+
+    <p>A combination of rows of \(A\) that gives zero is precisely a \(y\) with \(y^TA = 0\), which is \(A^Ty = 0\). This is the \(EA = R\) trick from Lesson 10: run \([\,A \mid I\,]\) through elimination and the rows of \(E\) matching the zero rows of \(R\) are the basis you want.</p>
+
+    <p>The first vector is just \(-1\) times the loop-1 vector — same line. The second is new-looking: it is the <b>outer loop</b>, round nodes 1, 2, 3, 4. Both pairs are valid bases of the same 2-dimensional space.</p>
+
+    <div class="box pitfall"><span class="label">Count independent loops, not visible ones</span>
+      <p>The graph has three loops you can trace with a finger: 1-2-3, 1-3-4, and the outer 1-2-3-4. But the outer one is the sum of the other two:</p>
+      $$ (1,1,-1,0,0) + (0,0,1,-1,1) = (1,1,0,-1,1) $$
+      <p>Edge 3 carries \(-1\) from one loop and \(+1\) from the other, and they cancel — which is exactly the picture of a current going round the outside instead of through the middle. <b>Independent</b> loops number \(m - r = 2\), however many your finger finds.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Euler's formula</h3>
+
+    <p>Put the two counts side by side. Independent loops \(= m - r\), and \(r = n - 1\), so</p>
 
     $$ \#\text{loops} = m - (n-1) $$
 
@@ -327,44 +505,306 @@
 
     $$ \boxed{\#\text{nodes} - \#\text{edges} + \#\text{loops} = 1} $$
 
-    <p>Our graph: \(4 - 5 + 2 = 1\) ✓.</p>
+    <p>Our graph: \(4 - 5 + 2 = 1\) ✓</p>
 
     <div class="box intuition"><span class="label">A famous formula, proved by counting dimensions</span>
-      <p>This is <b>Euler's formula</b> for connected graphs, and we did not prove it with pictures or induction. It fell out of \(\dim N(A^T) = m - r\) and \(r = n - 1\) — two statements about a matrix. That is the point of the lecture: once the graph is a matrix, graph facts become dimension facts.</p>
+      <p>This is <b>Euler's formula</b> for connected graphs, and we did not prove it with pictures or induction. It fell out of two statements about a matrix: \(\dim N(A^T) = m - r\), and \(r = n-1\). That is the point of the whole lecture — once the graph is a matrix, graph facts become dimension facts.</p>
     </div>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t9">9. The whole circuit in one equation</h3>
+    <h3 class="topic" id="t11">11. A real circuit, solved in full</h3>
 
-    <p>We have met three of the four pieces of a circuit. Here is the chain, start to finish.</p>
+    <p>Everything so far has been structure. Now put numbers in and get numbers out.</p>
+
+    <div class="box example"><span class="label">The problem</span>
+      <p>Take the same graph and make it a real circuit. Every edge is a <b>1 ohm resistor</b>. A source pushes <b>1 amp into node 1</b> and takes <b>1 amp back out of node 4</b>.</p>
+      <p><b>Find every node voltage and every edge current.</b></p>
+    </div>
+
+    <h4>Step 1 · the three equations of a circuit</h4>
+
+    <p>Three things are true at once, and each is one of our matrices.</p>
 
     <table class="sl-table">
-      <tr><th>Step</th><th>Equation</th><th>From → to</th></tr>
-      <tr><td>potentials</td><td>\(x\)</td><td>one number per node</td></tr>
-      <tr><td><b>\(e = Ax\)</b></td><td>differences across edges</td><td>nodes → edges</td></tr>
-      <tr><td><b>\(y = Ce\)</b> — Ohm's law</td><td>current = conductance × voltage drop</td><td>edges → edges</td></tr>
-      <tr><td><b>\(A^Ty = f\)</b> — Kirchhoff</td><td>what flows in from outside</td><td>edges → nodes</td></tr>
+      <tr><th>Physics</th><th>Matrix form</th><th>What it maps</th></tr>
+      <tr><td>A voltage drop across each resistor</td><td>\(e = Ax\)</td><td>4 node potentials → 5 edge differences</td></tr>
+      <tr><td><b>Ohm's law</b>: current = conductance × drop</td><td>\(y = Ce\)</td><td>5 drops → 5 currents</td></tr>
+      <tr><td><b>Kirchhoff</b>: current balances at every node</td><td>\(A^Ty = f\)</td><td>5 currents → 4 node balances</td></tr>
     </table>
 
-    <p>\(C\) is a diagonal matrix holding each edge's conductance — how easily that edge conducts. \(f\) is zero when there are no outside current sources; plug in a battery or a current source and \(f\) is no longer zero.</p>
+    <p>\(C\) is a diagonal matrix of <b>conductances</b> — conductance is \(1/\text{resistance}\), so 1 ohm resistors give \(C = I\). \(f\) holds the current injected at each node from outside. Here</p>
+
+    $$ f = \begin{bmatrix} 1 \\ 0 \\ 0 \\ -1 \end{bmatrix}
+      \begin{matrix} \text{1 A in at node 1} \\ \text{nothing} \\ \text{nothing} \\ \text{1 A out at node 4} \end{matrix} $$
 
     <p>Substitute the first into the second, and that into the third:</p>
 
     $$ \boxed{A^TCAx = f} $$
 
-    <div class="box intuition"><span class="label">Look at the shape of it</span>
-      <p>\(A\) on the right, \(A^T\) on the left, something diagonal in between. That pattern — \(A^TCA\) — is the single most common matrix in applied mathematics. It turns up in circuits, in structures under load, in heat flow, and in least squares, where \(C = I\) and the equation is \(A^TAx = A^Tb\). We are two lessons away from meeting it from the other direction.</p>
+    <div class="box pitfall"><span class="label">About the signs</span>
+      <p>\(e = Ax\) gives \(x_{\text{end}} - x_{\text{start}}\), which is the potential <b>rise</b> along the arrow. Current actually flows the other way — downhill — so physically \(y = -Ce\). And \((A^Ty)_i\) is current flowing <b>into</b> node \(i\) along edges, while \(f_i\) is current pushed in from outside, so \(A^Ty = -f\).</p>
+      <p>Two minus signs, and they cancel: \(A^T(-CAx) = -f\) is the same equation as \(A^TCAx = f\). The formula is right either way; just remember when you read currents off at the end that <b>the drop is \(-e\)</b>.</p>
+    </div>
+
+    <h4>Step 2 · build \(A^TA\)</h4>
+
+    <p>With \(C = I\) the matrix is \(A^TA\). It is \(4 \times 4\) — one row and column per node. Entry \((i,j)\) is column \(i\) of \(A\) dotted with column \(j\) of \(A\). The columns are</p>
+
+    $$ a_1 = \begin{bmatrix} -1\\0\\-1\\-1\\0 \end{bmatrix},\quad
+       a_2 = \begin{bmatrix} 1\\-1\\0\\0\\0 \end{bmatrix},\quad
+       a_3 = \begin{bmatrix} 0\\1\\1\\0\\-1 \end{bmatrix},\quad
+       a_4 = \begin{bmatrix} 0\\0\\0\\1\\1 \end{bmatrix} $$
+
+    <p>Two entries, done by hand:</p>
+
+    <ul>
+      <li>\((1,1)\): \(a_1 \cdot a_1 = (-1)^2 + 0 + (-1)^2 + (-1)^2 + 0 = 3\)</li>
+      <li>\((1,2)\): \(a_1 \cdot a_2 = (-1)(1) + (0)(-1) + (-1)(0) + (-1)(0) + (0)(0) = -1\)</li>
+    </ul>
+
+    <p>All sixteen:</p>
+
+    $$ A^TA = \begin{bmatrix}
+      3 & -1 & -1 & -1 \\
+      -1 & 2 & -1 & 0 \\
+      -1 & -1 & 3 & -1 \\
+      -1 & 0 & -1 & 2
+    \end{bmatrix} $$
+
+    <div class="box intuition"><span class="label">You can write this one down without multiplying ★</span>
+      <p>Look at what the entries are:</p>
+      <ul>
+        <li><b>Diagonal</b> \((i,i)\) = how many edges touch node \(i\). Node 1 touches edges 1, 3, 4 → 3. Node 2 touches edges 1, 2 → 2. Node 3 touches 2, 3, 5 → 3. Node 4 touches 4, 5 → 2. That is \((3,2,3,2)\) ✓</li>
+        <li><b>Off-diagonal</b> \((i,j)\) = \(-1\) if an edge joins \(i\) and \(j\), otherwise \(0\). Entry \((2,4) = 0\) because nodes 2 and 4 are not joined ✓</li>
+      </ul>
+      <p>This matrix has a name — the <b>graph Laplacian</b> — and it is the single most-used matrix in network analysis. It is symmetric, and every row sums to zero.</p>
+    </div>
+
+    <h4>Step 3 · it cannot be solved yet</h4>
+
+    <p>Every row of \(A^TA\) sums to zero, so</p>
+
+    $$ A^TA \begin{bmatrix} 1\\1\\1\\1 \end{bmatrix} = \begin{bmatrix} 3-1-1-1 \\ -1+2-1+0 \\ -1-1+3-1 \\ -1+0-1+2 \end{bmatrix} = \begin{bmatrix} 0\\0\\0\\0 \end{bmatrix} $$
+
+    <p>The constant vector is in its nullspace, so \(A^TA\) is <b>not invertible</b> — exactly the warning from §6. Add any constant to every voltage and the currents do not change.</p>
+
+    <p>Fix it the way an engineer does: <b>ground node 4</b>. Set \(x_4 = 0\), delete the fourth unknown and the fourth equation, and three equations in three unknowns remain:</p>
+
+    $$ \begin{bmatrix} 3 & -1 & -1 \\ -1 & 2 & -1 \\ -1 & -1 & 3 \end{bmatrix}
+       \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
+       = \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} $$
+
+    <h4>Step 4 · eliminate</h4>
+
+    <p>Augmented, with the pivot in bold:</p>
+
+    $$ \left[\begin{array}{ccc|c} \mathbf{3} & -1 & -1 & 1 \\ -1 & 2 & -1 & 0 \\ -1 & -1 & 3 & 0 \end{array}\right] $$
+
+    <p><b>Pivot 1 = 3.</b> Both lower rows have \(-1\) in column 1, so the multiplier is \(-1/3\) for each — subtract \(-\tfrac13\) of row 1, which means <i>add</i> a third of row 1.</p>
+
+    <ul>
+      <li>row 2 \(\leftarrow\) row 2 \(+ \tfrac13\)row 1 \(= (-1 + 1,\ 2 - \tfrac13,\ -1 - \tfrac13 \mid 0 + \tfrac13) = (0,\ \tfrac53,\ -\tfrac43 \mid \tfrac13)\)</li>
+      <li>row 3 \(\leftarrow\) row 3 \(+ \tfrac13\)row 1 \(= (-1 + 1,\ -1 - \tfrac13,\ 3 - \tfrac13 \mid 0 + \tfrac13) = (0,\ -\tfrac43,\ \tfrac83 \mid \tfrac13)\)</li>
+    </ul>
+
+    $$ \left[\begin{array}{ccc|c} 3 & -1 & -1 & 1 \\ 0 & \mathbf{\tfrac53} & -\tfrac43 & \tfrac13 \\ 0 & -\tfrac43 & \tfrac83 & \tfrac13 \end{array}\right] $$
+
+    <p><b>Pivot 2 = \(\tfrac53\).</b> Multiplier for row 3 is \(\dfrac{-4/3}{5/3} = -\dfrac45\), so add \(\tfrac45\) of row 2.</p>
+
+    <ul>
+      <li>column 3: \(\tfrac83 + \tfrac45 \cdot \left(-\tfrac43\right) = \tfrac83 - \tfrac{16}{15} = \tfrac{40}{15} - \tfrac{16}{15} = \tfrac{24}{15} = \tfrac85\)</li>
+      <li>right side: \(\tfrac13 + \tfrac45 \cdot \tfrac13 = \tfrac13 + \tfrac{4}{15} = \tfrac{5}{15} + \tfrac{4}{15} = \tfrac{9}{15} = \tfrac35\)</li>
+    </ul>
+
+    $$ \left[\begin{array}{ccc|c} 3 & -1 & -1 & 1 \\ 0 & \tfrac53 & -\tfrac43 & \tfrac13 \\ 0 & 0 & \mathbf{\tfrac85} & \tfrac35 \end{array}\right] $$
+
+    <p>Three pivots — \(3, \tfrac53, \tfrac85\), all non-zero — so this reduced system <b>is</b> invertible. Grounding worked.</p>
+
+    <h4>Step 5 · back-substitute</h4>
+
+    <table class="sl-table">
+      <tr><th>Row</th><th>Equation</th><th>Solve</th></tr>
+      <tr><td>3</td><td>\(\tfrac85 x_3 = \tfrac35\)</td><td>\(x_3 = \tfrac35 \cdot \tfrac58 = \tfrac38\)</td></tr>
+      <tr><td>2</td><td>\(\tfrac53 x_2 - \tfrac43 x_3 = \tfrac13\)</td><td>\(\tfrac53 x_2 = \tfrac13 + \tfrac43 \cdot \tfrac38 = \tfrac13 + \tfrac12 = \tfrac56\), so \(x_2 = \tfrac56 \cdot \tfrac35 = \tfrac12\)</td></tr>
+      <tr><td>1</td><td>\(3x_1 - x_2 - x_3 = 1\)</td><td>\(3x_1 = 1 + \tfrac12 + \tfrac38 = \tfrac{15}{8}\), so \(x_1 = \tfrac58\)</td></tr>
+    </table>
+
+    $$ \boxed{x = \left(\tfrac58,\ \tfrac12,\ \tfrac38,\ 0\right) \ \text{volts}} $$
+
+    <p>Sanity check before going on: node 1 is the highest (current is pushed in there), node 4 is the lowest at 0 (it is grounded and current is drawn out), and nodes 2 and 3 sit in between. Exactly what you would expect.</p>
+
+    <h4>Step 6 · the currents</h4>
+
+    <p>The drop across each edge, in its arrow direction, is \(x_{\text{start}} - x_{\text{end}}\). With 1 ohm resistors, current = drop.</p>
+
+    <table class="sl-table">
+      <tr><th>Edge</th><th>Direction</th><th>Drop \(= x_{\text{start}} - x_{\text{end}}\)</th><th>Current \(y_j\)</th></tr>
+      <tr><td>1</td><td>\(1 \to 2\)</td><td>\(\tfrac58 - \tfrac12 = \tfrac18\)</td><td>\(\tfrac18\) A</td></tr>
+      <tr><td>2</td><td>\(2 \to 3\)</td><td>\(\tfrac12 - \tfrac38 = \tfrac18\)</td><td>\(\tfrac18\) A</td></tr>
+      <tr><td>3</td><td>\(1 \to 3\)</td><td>\(\tfrac58 - \tfrac38 = \tfrac28 = \tfrac14\)</td><td>\(\tfrac14\) A</td></tr>
+      <tr><td>4</td><td>\(1 \to 4\)</td><td>\(\tfrac58 - 0 = \tfrac58\)</td><td>\(\tfrac58\) A</td></tr>
+      <tr><td>5</td><td>\(3 \to 4\)</td><td>\(\tfrac38 - 0 = \tfrac38\)</td><td>\(\tfrac38\) A</td></tr>
+    </table>
+
+    <p>Every current is positive, so every one really does flow in the arrow direction. (Had we drawn an arrow the wrong way, one of these would simply have come out negative.)</p>
+
+    <h4>Step 7 · check every node</h4>
+
+    <table class="sl-table">
+      <tr><th>Node</th><th>In</th><th>Out</th><th>Balance</th></tr>
+      <tr><td>1</td><td>1 A from the source</td><td>\(y_1 + y_3 + y_4 = \tfrac18 + \tfrac14 + \tfrac58 = \tfrac{1+2+5}{8} = 1\)</td><td>✓</td></tr>
+      <tr><td>2</td><td>\(y_1 = \tfrac18\)</td><td>\(y_2 = \tfrac18\)</td><td>✓</td></tr>
+      <tr><td>3</td><td>\(y_2 + y_3 = \tfrac18 + \tfrac14 = \tfrac38\)</td><td>\(y_5 = \tfrac38\)</td><td>✓</td></tr>
+      <tr><td>4</td><td>\(y_4 + y_5 = \tfrac58 + \tfrac38 = 1\)</td><td>1 A to the source</td><td>✓</td></tr>
+    </table>
+
+    <p>All four balance. The amp that went in at node 1 comes out at node 4, having split three ways and recombined.</p>
+
+    <figure class="fig" style="max-width:540px;margin:22px auto">
+      <svg viewBox="0 0 520 290" role="img" aria-label="The solved circuit with node voltages and edge currents marked">
+        <defs>
+          <marker id="sa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="sb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <line class="l3" x1="190" y1="20" x2="190" y2="64" marker-end="url(#sb)"/>
+        <text class="tick c3" x="200" y="30">1 A in</text>
+        <line class="l3" x1="436" y1="80" x2="492" y2="80" marker-end="url(#sb)"/>
+        <text class="tick c3" x="436" y="66">1 A out</text>
+        <line class="l1" x1="181" y1="91" x2="90" y2="203" marker-end="url(#sa)"/>
+        <line class="l1" x1="94" y1="215" x2="256" y2="215" marker-end="url(#sa)"/>
+        <line class="l1" x1="197" y1="92" x2="264" y2="201" marker-end="url(#sa)"/>
+        <line class="l1" x1="204" y1="80" x2="404" y2="80" marker-end="url(#sa)"/>
+        <line class="l1" x1="282" y1="206" x2="408" y2="91" marker-end="url(#sa)"/>
+        <circle class="pt" cx="190" cy="80" r="11"/>
+        <circle class="pt" cx="80" cy="215" r="11"/>
+        <circle class="pt" cx="272" cy="215" r="11"/>
+        <circle class="pt" cx="420" cy="80" r="11"/>
+        <text class="lbl ci" x="208" y="72">1</text>
+        <text class="lbl ci" x="52" y="223">2</text>
+        <text class="lbl ci" x="267" y="246">3</text>
+        <text class="lbl ci" x="412" y="110">4</text>
+        <text class="tick ci" x="118" y="60">x₁ = 5/8 V</text>
+        <text class="tick ci" x="14" y="250">x₂ = 1/2 V</text>
+        <text class="tick ci" x="292" y="246">x₃ = 3/8 V</text>
+        <text class="tick ci" x="376" y="128">x₄ = 0 (ground)</text>
+        <text class="tick c1" x="96" y="140">y₁ = 1/8</text>
+        <text class="tick c1" x="142" y="236">y₂ = 1/8</text>
+        <text class="tick c1" x="243" y="150">y₃ = 1/4</text>
+        <text class="tick c1" x="268" y="66">y₄ = 5/8</text>
+        <text class="tick c1" x="348" y="156">y₅ = 3/8</text>
+      </svg>
+      <figcaption><b>The solved circuit.</b> One amp enters node 1 and splits: \(\tfrac58\) takes the direct edge to node 4, \(\tfrac14\) goes via node 3, and \(\tfrac18\) takes the long way through node 2. The direct route carries the most because it has the least resistance between node 1 and ground — one resistor instead of two or three. At node 4 the branches recombine into one amp.</figcaption>
+    </figure>
+
+    <div class="box intuition"><span class="label">What linear algebra just did for us</span>
+      <p>No loop equations, no "assume a current and solve", no circuit tricks. We wrote down one matrix from the picture, formed \(A^TA\), grounded a node, and eliminated. The same five lines of work handle a network with ten thousand nodes.</p>
     </div>
 
     <!-- ====================================================== -->
-    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+    <h3 class="topic" id="t12">12. The same circuit with real resistors</h3>
+
+    <p>Nothing above depended on the resistors being equal. Give them real values — resistances \(\tfrac12, \tfrac12, \tfrac13, 1, \tfrac14\) ohms, so the conductances \(c_j = 1/R_j\) are</p>
+
+    $$ C = \begin{bmatrix} 2 &&&& \\ & 2 &&& \\ && 3 && \\ &&& 1 & \\ &&&& 4 \end{bmatrix} $$
+
+    <p>Now \(A^TCA\) replaces \(A^TA\). The pattern is the same as the Laplacian, with conductances in place of counts: the diagonal entry at node \(i\) adds up the conductances of the edges touching \(i\), and the off-diagonal \((i,j)\) is minus the conductance of the edge joining them.</p>
+
+    <ul>
+      <li>\((1,1)\): node 1 touches edges 1, 3, 4 → \(2 + 3 + 1 = 6\)</li>
+      <li>\((1,3)\): edge 3 joins nodes 1 and 3 → \(-3\)</li>
+      <li>\((2,4)\): no edge joins nodes 2 and 4 → \(0\)</li>
+    </ul>
+
+    $$ A^TCA = \begin{bmatrix}
+      6 & -2 & -3 & -1 \\
+      -2 & 4 & -2 & 0 \\
+      -3 & -2 & 9 & -4 \\
+      -1 & 0 & -4 & 5
+    \end{bmatrix} $$
+
+    <p>Same source, \(f = (1,0,0,-1)\), same ground \(x_4 = 0\). Drop row and column 4:</p>
+
+    $$ \left[\begin{array}{ccc|c} \mathbf{6} & -2 & -3 & 1 \\ -2 & 4 & -2 & 0 \\ -3 & -2 & 9 & 0 \end{array}\right] $$
+
+    <p>Eliminate. Multipliers are \(-\tfrac{2}{6} = -\tfrac13\) and \(-\tfrac{3}{6} = -\tfrac12\):</p>
+
+    <ul>
+      <li>row 2 \(\leftarrow\) row 2 \(+\tfrac13\)row 1 \(= (0,\ 4 - \tfrac23,\ -2 - 1 \mid \tfrac13) = (0,\ \tfrac{10}{3},\ -3 \mid \tfrac13)\)</li>
+      <li>row 3 \(\leftarrow\) row 3 \(+\tfrac12\)row 1 \(= (0,\ -2 - 1,\ 9 - \tfrac32 \mid \tfrac12) = (0,\ -3,\ \tfrac{15}{2} \mid \tfrac12)\)</li>
+      <li>row 3 \(\leftarrow\) row 3 \(+\tfrac{9}{10}\)row 2 \(= (0,\ 0,\ \tfrac{15}{2} - \tfrac{27}{10} \mid \tfrac12 + \tfrac{3}{10}) = (0,\ 0,\ \tfrac{24}{5} \mid \tfrac45)\)</li>
+    </ul>
+
+    <p>Back-substitute:</p>
+
+    <table class="sl-table">
+      <tr><th>Row</th><th>Equation</th><th>Solve</th></tr>
+      <tr><td>3</td><td>\(\tfrac{24}{5}x_3 = \tfrac45\)</td><td>\(x_3 = \tfrac45 \cdot \tfrac{5}{24} = \tfrac16\)</td></tr>
+      <tr><td>2</td><td>\(\tfrac{10}{3}x_2 - 3x_3 = \tfrac13\)</td><td>\(\tfrac{10}{3}x_2 = \tfrac13 + \tfrac12 = \tfrac56\), so \(x_2 = \tfrac14\)</td></tr>
+      <tr><td>1</td><td>\(6x_1 - 2x_2 - 3x_3 = 1\)</td><td>\(6x_1 = 1 + \tfrac12 + \tfrac12 = 2\), so \(x_1 = \tfrac13\)</td></tr>
+    </table>
+
+    $$ x = \left(\tfrac13,\ \tfrac14,\ \tfrac16,\ 0\right) \ \text{volts} $$
+
+    <p>Currents are now conductance × drop:</p>
+
+    <table class="sl-table">
+      <tr><th>Edge</th><th>\(c_j\)</th><th>Drop</th><th>\(y_j = c_j \times\) drop</th></tr>
+      <tr><td>1 \((1\to2)\)</td><td>2</td><td>\(\tfrac13 - \tfrac14 = \tfrac{1}{12}\)</td><td>\(\tfrac16\) A</td></tr>
+      <tr><td>2 \((2\to3)\)</td><td>2</td><td>\(\tfrac14 - \tfrac16 = \tfrac{1}{12}\)</td><td>\(\tfrac16\) A</td></tr>
+      <tr><td>3 \((1\to3)\)</td><td>3</td><td>\(\tfrac13 - \tfrac16 = \tfrac16\)</td><td>\(\tfrac12\) A</td></tr>
+      <tr><td>4 \((1\to4)\)</td><td>1</td><td>\(\tfrac13 - 0 = \tfrac13\)</td><td>\(\tfrac13\) A</td></tr>
+      <tr><td>5 \((3\to4)\)</td><td>4</td><td>\(\tfrac16 - 0 = \tfrac16\)</td><td>\(\tfrac23\) A</td></tr>
+    </table>
+
+    <p>Check the nodes again: node 1 out \(= \tfrac16 + \tfrac12 + \tfrac13 = 1\) ✓, node 2 \(\tfrac16 = \tfrac16\) ✓, node 3 in \(= \tfrac16 + \tfrac12 = \tfrac23 = y_5\) ✓, node 4 in \(= \tfrac13 + \tfrac23 = 1\) ✓.</p>
+
+    <div class="box method"><span class="label">What changed, and what did not</span>
+      <ul>
+        <li><b>Changed:</b> every voltage and every current. Edge 4 was the busiest route before; now it carries only \(\tfrac13\) A because it is the <i>worst</i> conductor (1, against edge 3's 3 and edge 5's 4). The traffic moved to the better-conducting path through node 3.</li>
+        <li><b>Did not change:</b> the matrix \(A\), the rank, the nullspace, the tree, the loop count, the ground, and every single step of the method. \(C\) is the only thing that knows about resistance — the graph structure does not care.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t13">13. The four subspaces of this matrix</h3>
+
+    <p>Collect everything this one \(5 \times 4\) matrix with \(r = 3\) has given us.</p>
+
+    <table class="sl-table">
+      <tr><th>Subspace</th><th>Lives in</th><th>Dimension</th><th>Basis</th><th>Meaning here</th></tr>
+      <tr><td>\(C(A)\) — columns</td><td>\(\mathbb{R}^5\) (edges)</td><td>\(r = 3\)</td><td>columns 1, 2, 3</td><td>which patterns of edge-differences can actually come from some set of node voltages</td></tr>
+      <tr><td>\(N(A)\)</td><td>\(\mathbb{R}^4\) (nodes)</td><td>\(n - r = 1\)</td><td>\((1,1,1,1)\)</td><td>every node at the same voltage — the ungrounded constant</td></tr>
+      <tr><td>\(C(A^T)\) — rows</td><td>\(\mathbb{R}^4\) (nodes)</td><td>\(r = 3\)</td><td>rows 1, 2, 4</td><td>the edges of a tree</td></tr>
+      <tr><td>\(N(A^T)\)</td><td>\(\mathbb{R}^5\) (edges)</td><td>\(m - r = 2\)</td><td>\((1,1,-1,0,0)\), \((0,0,1,-1,1)\)</td><td>currents circulating in loops with no source</td></tr>
+    </table>
+
+    <p>The dimensions fit with nothing left over: \(3 + 1 = 4 = n\) on the node side, \(3 + 2 = 5 = m\) on the edge side.</p>
+
+    <div class="box intuition"><span class="label">Why the loop currents matter in §11</span>
+      <p>Anything in \(N(A^T)\) can be added to the answer and Kirchhoff still holds. So why was the solution of §11 unique? Because we did not just impose Kirchhoff — we also imposed <b>Ohm's law</b>, and \(y = -CAx\) forces the current to come from <i>some</i> set of voltages. A pure loop current comes from no voltages at all. That extra condition is what removes the two loop degrees of freedom and leaves one answer.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t14"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The method, start to finish</h4>
+    <ol class="index-list">
+      <li><b>Draw the graph and put an arrow on every edge</b><span>The arrow only fixes which direction counts as positive.</span></li>
+      <li><b>Write \(A\)</b><span>One row per edge: \(-1\) where it leaves, \(+1\) where it arrives, \(0\) elsewhere.</span></li>
+      <li><b>Write \(C\)</b><span>Diagonal, holding the conductance \(1/R\) of each edge. All-ones if every resistor is 1 ohm.</span></li>
+      <li><b>Form \(A^TCA\)</b><span>Or write it straight down: diagonal = total conductance at the node, off-diagonal \((i,j)\) = minus the conductance joining \(i\) and \(j\).</span></li>
+      <li><b>Ground a node</b><span>Delete its row and column. Without this the matrix is singular, because \((1,1,\dots,1)\) is in its nullspace.</span></li>
+      <li><b>Solve \(A^TCAx = f\)</b><span>Elimination and back-substitution, exactly as in Lesson 2.</span></li>
+      <li><b>Read the currents</b><span>\(y_j = c_j(x_{\text{start}} - x_{\text{end}})\). Negative means it flows against the arrow.</span></li>
+      <li><b>Check every node</b><span>Current in must equal current out. Four checks, four ticks.</span></li>
+    </ol>
 
     <h4>Everything on one screen</h4>
     <table class="sl-table">
-      <tr><th>Subspace of the incidence matrix</th><th>Meaning</th><th>Dimension</th><th>Here</th></tr>
+      <tr><th>Subspace</th><th>Meaning</th><th>Dimension</th><th>Here</th></tr>
       <tr><td>\(N(A)\)</td><td>all nodes at the same potential</td><td>1</td><td>\((1,1,1,1)\)</td></tr>
       <tr><td>\(C(A^T)\) — rows</td><td>the edges of a tree</td><td>\(r = n-1\)</td><td>3</td></tr>
-      <tr><td>\(C(A)\) — columns</td><td>the potential drops that are achievable</td><td>\(r\)</td><td>3</td></tr>
+      <tr><td>\(C(A)\) — columns</td><td>the achievable patterns of edge differences</td><td>\(r\)</td><td>3</td></tr>
       <tr><td>\(N(A^T)\)</td><td>currents circulating in loops</td><td>\(m - r\)</td><td>2</td></tr>
     </table>
 
@@ -372,25 +812,37 @@
       <tr><th>Idea</th><th>The line to remember</th></tr>
       <tr><td><b>Building \(A\) ★</b></td><td>One row per edge: \(-1\) where it leaves, \(+1\) where it arrives.</td></tr>
       <tr><td><b>\(Ax\)</b></td><td>Potentials at nodes in, potential differences across edges out.</td></tr>
+      <tr><td><b>\(A^Ty\)</b></td><td>Edge currents in, net current into each node out. The opposite job.</td></tr>
       <tr><td><b>\(N(A)\)</b></td><td>\(Ax = 0\) forces every node equal. Always dimension 1 for a connected graph — ground a node to remove it.</td></tr>
-      <tr><td><b>Loops ★</b></td><td>A loop in the picture is a dependent row in the matrix.</td></tr>
+      <tr><td><b>Loops ★</b></td><td>A loop in the picture is a dependent row in the matrix, and a zero row after elimination.</td></tr>
       <tr><td><b>Rank</b></td><td>\(r = n - 1\). The independent edges form a tree — connected, no loops.</td></tr>
-      <tr><td><b>\(N(A^T)\) ★</b></td><td>\(A^Ty = 0\) is Kirchhoff's current law. Dimension \(m - r\) = number of independent loops.</td></tr>
+      <tr><td><b>\(N(A^T)\) ★</b></td><td>\(A^Ty = 0\) is Kirchhoff's current law. Dimension \(m - r\) = number of <i>independent</i> loops.</td></tr>
       <tr><td><b>Euler</b></td><td>nodes − edges + loops = 1, which is \(r = n-1\) rearranged.</td></tr>
-      <tr><td><b>The circuit</b></td><td>\(e = Ax\), \(y = Ce\), \(A^Ty = f\) \(\Rightarrow\) \(A^TCAx = f\).</td></tr>
+      <tr><td><b>The Laplacian</b></td><td>\(A^TA\): diagonal = how many edges touch the node, off-diagonal = \(-1\) if joined. Rows sum to zero, so it is singular.</td></tr>
+      <tr><td><b>The circuit ★</b></td><td>\(e = Ax\), \(y = Ce\), \(A^Ty = f\) \(\Rightarrow\) \(A^TCAx = f\).</td></tr>
+    </table>
+
+    <h4>The worked answers</h4>
+    <table class="sl-table">
+      <tr><th></th><th>All 1 ohm (§11)</th><th>Real resistors (§12)</th></tr>
+      <tr><td>\(x\) (volts)</td><td>\(\left(\tfrac58, \tfrac12, \tfrac38, 0\right)\)</td><td>\(\left(\tfrac13, \tfrac14, \tfrac16, 0\right)\)</td></tr>
+      <tr><td>\(y\) (amps)</td><td>\(\left(\tfrac18, \tfrac18, \tfrac14, \tfrac58, \tfrac38\right)\)</td><td>\(\left(\tfrac16, \tfrac16, \tfrac12, \tfrac13, \tfrac23\right)\)</td></tr>
+      <tr><td>busiest edge</td><td>edge 4, the direct route</td><td>edge 5, the best conductor</td></tr>
+      <tr><td>all four nodes balance</td><td>✓</td><td>✓</td></tr>
     </table>
 
     <h4>What he emphasised</h4>
     <ol class="index-list">
-      <li><b>This matrix came from the real world ★</b><span>It is sparse, its entries are \(-1, 0, 1\), and every row sums to zero. Applications hand you structure; made-up examples do not.</span></li>
+      <li><b>This matrix came from the real world ★</b><span>Sparse, entries \(-1, 0, 1\), every row summing to zero. Applications hand you structure; made-up examples do not.</span></li>
       <li><b>Every subspace has a physical name</b><span>Nullspace = equal potentials. Rank = tree. Left nullspace = loop currents. The abstractions were about something all along.</span></li>
       <li><b>Euler's formula is a dimension count</b><span>\(n - m + \text{loops} = 1\) is \(\dim N(A^T) = m - r\) with \(r = n-1\) substituted in.</span></li>
       <li><b>Count independent loops, not visible ones</b><span>The outer loop is the sum of the two inner ones, so it adds no dimension.</span></li>
-      <li><b>\(A^TCA\) is the shape to watch for</b><span>The same sandwich appears in least squares, mechanics and every network problem.</span></li>
+      <li><b>\(A^TCA\) is the shape to watch for</b><span>The same sandwich appears in least squares, in structures under load, in heat flow, and in every network problem.</span></li>
+      <li><b>Grounding is not a trick</b><span>It supplies the one number the matrix genuinely does not contain. Without it the system is singular and there is no unique answer.</span></li>
     </ol>
 
     <h4>What comes next</h4>
-    <p>Lesson 10 lined up the four subspaces in pairs; this lesson gave those pairs physical names. What has not been said yet is how the pairs sit relative to each other. The answer is <b>at right angles</b> — the nullspace is perpendicular to the row space, and the left nullspace is perpendicular to the column space. That is the next lesson, and it opens the second half of the course.</p>
+    <p>Lesson 10 lined the four subspaces up in pairs; this lesson gave the pairs physical names. What has not been said yet is how the pairs sit relative to each other. The answer is <b>at right angles</b> — the nullspace is perpendicular to the row space, and the left nullspace is perpendicular to the column space. That is the next lesson, and it opens the second half of the course. The \(A^TCA\) we just built comes back there too, as \(A^TA\) in least squares.</p>
     <p><a href="index.html">← All lessons</a></p>
 
   </div>
