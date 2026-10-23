@@ -1,0 +1,336 @@
+Markov matrices; Fourier series
+In this lecture we look at Markov matrices and Fourier series – two applications
+of eigenvalues and projections.
+
+Eigenvalues of A T
+The eigenvalues of A and the eigenvalues of A T are the same:
+
+( A − λI )T = A T − λI,
+so property 10 of determinants tells us that det( A − λI ) = det( A T − λI ). If λ
+is an eigenvalue of A then det( A T − λI ) = 0 and λ is also an eigenvalue of A T .
+
+Markov matrices
+A matrix like:
+
+⎡
+
+⎤
+.1 .01 .3
+A = ⎣ .2 .99 .3 ⎦
+.7
+0 .4
+
+in which all entries are non-negative and each column adds to 1 is called a
+Markov matrix. These requirements come from Markov matrices’ use in proba­
+bility. Squaring or raising a Markov matrix to a power gives us another Markov
+matrix.
+When dealing with systems of differential equations, eigenvectors with the
+eigenvalue 0 represented steady states. Here we’re dealing with powers of
+matrices and get a steady state when λ = 1 is an eigenvalue.
+The constraint that the columns add to 1 guarantees that 1 is an eigenvalue.
+All other eigenvalues will be less than 1. Remember that (if A has n indepen­
+dent eigenvectors) the solution to uk = Ak u0 is uk = c1 λ1k x1 + c2 λ2k x2 + · · · +
+cn λkn xn . If λ1 = 1 and all others eigenvalues are less than one the system ap­
+proaches the steady state c1 x1 . This is the x1 component of u0 .
+Why does the fact that the columns sum to 1 guarantee that 1 is an eigen­
+value? If 1 is an eigenvalue of A, then:
+⎡
+⎤
+−.9
+.01
+.3
+.3 ⎦
+A − 1I = ⎣ .2 −.01
+.7
+0 −.6
+should be singular. Since we’ve subtracted 1 from each diagonal entry, the sum
+of the entries in each column of A − I is zero. But then the sum of the rows of
+A − I must be the zero row, and so A − I is singular. The eigenvector x1 is in the
+�
+�
+nullspace of A − I and has eigenvalue 1. It’s not very hard to ﬁnd x1 =
+
+1
+
+.6
+33
+.7
+
+.
+
+We’re studying the equation uk+1 = Auk where A is a Markov matrix. For
+example u1 might be the population of (number of people in) Massachusetts
+and u2 might be the population of California. A might describe what fraction
+of the population moves from state to state, or the probability of a single person
+moving. We can’t have negative numbers of people, so the entries of A will
+always be positive. We want to account for all the people in our model, so the
+columns of A add to 1 = 100%.
+For example:
+�
+�
+�
+��
+�
+uCal
+.9 .2
+uCal
+=
+uMass t=k+1
+.1 .8
+uMass t=k
+assumes that there’s a 90% chance that a person in California will stay in Cal­
+ifornia and only a 10% chance that she or he will move, while there’s a 20%
+percent chance that a� Massachusetts
+�
+� resident
+� will move to California. If our
+initial conditions are
+�
+
+uCal
+uMass
+
+uCal
+uMass
+
+0
+
+�
+
+�
+
+=
+1
+
+=
+
+0
+1000
+
+.9
+.1
+
+.2
+.8
+
+��
+
+, then after one move u1 = Au0 is:
+0
+1000
+
+�
+
+�
+
+=
+
+200
+800
+
+�
+.
+
+For the next few values of k, the Massachusetts population will decrease and
+the California population will increase while the total population remains con­
+stant at 1000.
+To understand the long �term behavior
+of this system we’ll need the eigen­
+�
+vectors and eigenvalues of
+
+.9
+.1
+
+.2
+.8
+
+. We know that one eigenvalue is λ1 = 1.
+
+Because the trace .9 + .8 = 1.7 is the sum of the eigenvalues, we see that λ2 = .7.
+Next we calculate the eigenvectors:
+�
+�
+.2
+−.1
+A − λ1 I =
+x1 = 0,
+.1 −.2
+�
+�
+2
+so we choose x1 =
+. The eigenvalue 1 corresponds to the steady state
+1
+solution, and λ2 = .7 < 1, so the system approaches a limit in which 2/3 of
+1000 people live in California and 1/3 of 1000 people are in Massachusetts.
+This will be the limit from any starting vector u0 .
+To know how the population is distributed after a ﬁnite number of steps we
+look for an eigenvector corresponding to λ2 = .7:
+�
+�
+.2 .2
+A − λ2 I =
+x1 = 0,
+.1 .1
+�
+�
+1
+so let x2 =
+.
+−1
+
+2
+
+From what we learned about difference equations we know that:
+�
+�
+�
+�
+2
+−1
+u k = c 1 1k
++ c2 (.7)k
+.
+1
+1
+When k = 0 we have:
+�
+u0 =
+
+0
+1000
+
+�
+
+�
+
+= c1
+
+2
+1
+
+�
+
+�
+
++ c2
+
+−1
+1
+
+�
+,
+
+2000
+so c1 = 1000
+3 and c2 = 3 .
+
+In some applications Markov matrices are deﬁned differently – their rows
+add to 1 rather than their columns. In this case, the calculations are the trans­
+pose of everything we’ve done here.
+
+Fourier series and projections
+Expansion with an orthonormal basis
+If we have an orthonormal basis q1 , q2 , ..., qn then we can write any vector v as
+v = x1 q1 + x2 q2 + · · · + xn qn , where:
+qiT v = x1 qiT q1 + x2 qiT q2 + · · · + xn qiT qn = xi .
+Since qiT q j = 0 unless i = j, this equation gives xi = qiT v.
+⎡
+⎤
+x1
+�
+�⎢
+⎥
+In terms of matrices, q1 · · · qn ⎣ ... ⎦ = v, or Qx = v. So x =
+xn
+Because the qi form an orthonormal basis, Q−1 = Q T and x = Q T v.
+This is another way to see that xi = qiT v.
+Q−1 v.
+
+Fourier series
+The key idea above was that the basis of vectors qi was orthonormal. Fourier
+series are built on this idea. We can describe a function f ( x ) in terms of trigono­
+metric functions:
+f ( x ) = a0 + a1 cos x + b1 sin x + a2 cos 2x + b2 sin 2x + · · · .
+This Fourier series is an inﬁnite sum and the previous example was ﬁnite, but
+the two are related by the fact that the cosines and sines in the Fourier series
+are orthogonal.
+We’re now working in an inﬁnite dimensional vector space. The vectors in
+this space are functions and the (orthogonal) basis vectors are 1, cos x, sin x,
+cos 2x, sin 2x, ...
+
+3
+
+What does “orthogonal” mean in this context? How do we compute a dot
+product or inner product in this vector space? For vectors in Rn the inner prod­
+uct is v T w = v1 w1 + v2 w2 + · · · + vn wn . Functions are described by a contin­
+uum of values f ( x ) rather than by a discrete collection of components vi . The
+best parallel to the vector dot product is:
+f Tg =
+
+� 2π
+0
+
+f ( x ) g( x ) dx.
+
+We integrate from 0 to 2π because Fourier series are periodic:
+f ( x ) = f ( x + 2π ).
+The inner product of two basis vectors is zero, as desired. For example,
+� 2π
+0
+
+sin x cos x dx =
+
+�2π
+�
+1
+(sin x )2 �� = 0.
+2
+0
+
+How do we ﬁnd a0 , a1 , etc. to ﬁnd the coordinates or Fourier coefﬁcients
+of a function in this space? The constant term a0 is the average value of the
+function. Because we’re working with an orthonormal basis, we can use the
+inner product to ﬁnd the coefﬁcients ai .
+� 2π
+0
+
+f ( x ) cos x dx
+
+=
+
+� 2π
+0
+
+= 0+
+
+� 2π
+
+= a1 π.
+1
+π
+ﬁnd any of the values ai .
+We conclude that a1 =
+
+( a0 + a1 cos x + b1 sin x + a2 cos 2x + · · · ) cos x dx
+0
+
+� 2π
+0
+
+a1 cos2 x dx + 0 + 0 + · · ·
+
+f ( x ) cos x dx. We can use the same technique to
+
+4
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

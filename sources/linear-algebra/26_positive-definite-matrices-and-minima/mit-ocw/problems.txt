@@ -1,0 +1,27 @@
+Exercises on positive deﬁnite matrices and minima
+
+Problem 27.1: (6.5 #33. Introduction to Linear Algebra: Strang) When A and
+B are symmetric positive deﬁnite, AB might not even be symmetric, but its
+eigenvalues are still positive. Start from ABx = λx and take dot products
+with Bx. Then prove λ > 0.
+�
+
+�
+1 5
+Problem 27.2: Find the quadratic form associated with the matrix
+.
+7 9
+Is this function f ( x, y) always positive, always negative, or sometimes
+positive and sometimes negative?
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,224 @@
+Properties of determinants
+Determinants
+Now halfway through the course, we leave behind rectangular matrices and
+focus on square ones. Our next big topics are determinants and eigenvalues.
+The determinant is a number associated with any square matrix; we’ll write
+it as det A or | A|. The determinant encodes a lot of information about the
+matrix; the matrix is invertible exactly when the determinant is non-zero.
+
+Properties
+Rather than start with a big�formula,
+� we’ll list the properties of the determi­
+� a b �
+� = ad − bc; these properties will give us a
+nant. We already know that ��
+c d �
+formula for the determinant of square matrices of all sizes.
+1. det I = 1
+2. If you exchange two rows of a matrix, you reverse the sign of its determi­
+nant from positive to negative or from negative to positive.
+3.
+
+(a) If we multiply
+one row
+of
+�
+� a matrix
+� by t, the determinant is multi�
+� ta tb �
+� a b �
+�
+� = t�
+plied by t: ��
+� c d �.
+c d �
+
+(b) The determinant behaves like a linear function on the rows of the
+matrix:
+�
+� �
+� �
+�
+� a + a� b + b� � � a b � � a� b� �
+�
+�=�
+�+�
+�
+�
+� � c d � � c d �.
+c
+d
+�
+�
+�
+�
+� 1 0 �
+� 0 1 �
+�
+�
+�
+� = −1.
+Property 1 tells us that �
+� = 1. Property 2 tells us that �
+�
+0
+
+1
+
+1
+
+0
+
+The determinant of a permutation matrix P is 1 or −1 depending on whether
+P exchanges an even or odd number of rows.
+From these three properties we can deduce many others:
+4. If two rows of a matrix are equal, its determinant is zero.
+This is because of property 2, the exchange rule. On the one hand, ex­
+changing the two identical rows does not change the determinant. On
+the other hand, exchanging the two rows changes the sign of the deter­
+minant. Therefore the determinant must be 0.
+5. If i �= j, subtracting t times row i from row j doesn’t change the determi­
+nant.
+
+1
+
+In two dimensions, this argument looks like:
+�
+�
+�
+� �
+�
+�
+�
+�
+� �
+�
+a
+b
+�
+� = � a b � − � a b � property 3(b)
+� c − ta d − tb �
+� c d � � ta tb �
+�
+�
+�
+�
+� a b �
+� a b �
+�
+�
+�
+� property 3(a)
+= �
+−t�
+c d �
+a b �
+�
+�
+� a b �
+�
+� property 4.
+= �
+c d �
+The proof for higher dimensional matrices is similar.
+6. If A has a row that is all zeros, then det A = 0.
+We get this from property 3 (a) by letting t = 0.
+7. The determinant of a triangular matrix is the product of the diagonal
+entries (pivots) d1 , d2 , ..., dn .
+Property 5 tells us that the determinant of the triangular matrix won’t
+change if we use elimination to convert it to a diagonal matrix with the
+entries di on its diagonal. Then property 3 (a) tells us that the determinant
+of this diagonal matrix is the product d1 d2 · · · dn times the determinant of
+the identity matrix. Property 1 completes the argument.
+Note that we cannot use elimination to get a diagonal matrix if one of
+the di is zero. In that case elimination will give us a row of zeros and
+property 6 gives us the conclusion we want.
+8. det A = 0 exactly when A is singular.
+If A is singular, then we can use elimination to get a row of zeros, and
+property 6 tells us that the determinant is zero.
+If A is not singular, then elimination produces a full set of pivots d1 , d2 , ..., dn
+and the determinant is d1 d2 · · · dn �= 0 (with minus signs from row ex­
+changes).
+We now have a very practical formula for the determinant of a non-singular
+matrix. In fact, the way computers ﬁnd the determinants of large matrices
+is to ﬁrst perform elimination (keeping track of whether the number of row
+exchanges is odd or even) and then multiply the pivots:
+�
+�
+�
+�
+a b
+a
+b
+−→
+, if a �= 0, so
+c d
+0 d − ac b
+�
+�
+� a b �
+c
+�
+�
+� c d � = a(d − a b) = ad − bc.
+9. det AB = (det A)(det B)
+This is very useful. Although the determinant of a sum does not equal
+the sum of the determinants, it is true that the determinant of a product
+equals the product of the determinants.
+2
+
+For example:
+det A−1 =
+
+1
+,
+det A
+
+because A−1 A = 1. (Note that if A is singular then A−1 does not exist and
+det A−1 is undeﬁned.) Also, det A2 = (det A)2 and det 2A = 2n det A
+(applying property 3 to each row of the matrix). This reminds us of vol­
+ume – if we double the length, width and height of a three dimensional
+box, we increase its volume by a multiple of 23 = 8.
+10. det A T = det A
+�
+� a
+�
+� c
+
+� �
+b �� �� a
+=
+d � � b
+
+�
+c ��
+= ad − bc.
+d �
+
+This lets us translate properties (2, 3, 4, 5, 6) involving rows into state­
+ments about columns. For instance, if a column of a matrix is all zeros
+then the determinant of that matrix is zero.
+To see why | A T | = | A|, use elimination to write A = LU. The statement
+becomes |U T L T | = | LU |. Rule 9 then tells us |U T || L T | = | L||U |.
+Matrix L is a lower triangular matrix with 1’s on the diagonal, so rule 5
+tells us that | L| = | L T | = 1. Because U is upper triangular, rule 5 tells us
+that |U | = |U T |. Therefore |U T || L T | = | L||U | and | A T | = | A|.
+We have one loose end to worry about. Rule 2 told us that a row exchange
+changes the sign of the determinant. If it’s possible to do seven row exchanges
+and get the same matrix you would by doing ten row exchanges, then we could
+prove that the determinant equals its negative. To complete the proof that the
+determinant is well deﬁned by properties 1, 2 and 3 we’d need to show that the
+result of an odd number of row exchanges (odd permutation) can never be the
+same as the result of an even number of row exchanges (even permutation).
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

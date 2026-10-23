@@ -1,0 +1,46 @@
+Exercises on singular value decomposition
+
+Problem 29.1: (Based on 6.7 #4. Introduction to Linear Algebra: Strang) Ver­
+ify that if we compute �
+the singular
+value decomposition A = UΣV T of the
+�
+Fibonacci matrix A =
+
+1 1
+1 0
+
+,
+�
+
+Σ=
+
+√
+1+ 5
+2
+
+0
+
+0
+√
+
+5−1
+2
+
+�
+.
+
+Problem 29.2: (6.7 #11.) Suppose A has orthogonal columns w1 , w2 , ..., wn
+of lengths σ1 , σ2 , ..., σn . Calculate A T A. What are U, Σ, and V in the SVD?
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

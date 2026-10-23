@@ -1,0 +1,208 @@
+Projection matrices and least squares
+Projections
+Last lecture, we learned that P = A( A T A)−1 A T is the matrix that projects a
+vector b onto the space spanned by the columns of A. If b is perpendicular to
+the column space, then it’s in the left nullspace N ( A T ) of A and Pb = 0. If b is
+in the column space then b = Ax for some x, and Pb = b.
+A typical vector will have a component p in the column space and a compo­
+nent e perpendicular to the column space (in the left nullspace); its projection
+is just the component in the column space.
+The matrix projecting b onto N ( A T ) is I − P:
+e
+e
+
+= b−p
+= ( I − P)b.
+
+Naturally, I − P has all the properties of a projection matrix.
+
+Least squares
+y
+2
+1
+0
+−1
+
+0
+
+1
+
+2
+
+3
+
+4
+x
+
+Figure 1: Three points and a line close to them.
+We want to ﬁnd the closest line b = C + Dt to the points (1, 1), (2, 2), and
+(3, 2). The process we’re going to use is called linear regression; this technique
+is most useful if none of the data points are outliers.
+By “closest” line we mean one that minimizes the error represented by the
+distance from the points to the line. We measure that error by adding up the
+squares of these distances. In other words, we want to minimize || Ax − b||2 =
+||e||2 .
+
+1
+
+If the line went through all three points, we’d have:
+C+D
+C + 2D
+
+= 1
+= 2
+C + 3D = 2,
+but this system is unsolvable. It’s equivalent to Ax = b, where:
+⎡
+⎤
+⎡
+⎤
+�
+�
+1 1
+1
+C
+A = ⎣ 1 2 ⎦,x =
+and b = ⎣ 2 ⎦ .
+D
+1 3
+2
+There are two ways of viewing this. In the space of the line we’re trying to
+ﬁnd, e1 , e2 and e3 are the vertical distances from the data points to the line. The
+components p1 , p2 and p3 are the values of C + Dt near each data point; p ≈ b.
+In the other view we have a vector b in R3 , its projection p onto the column
+space of A, and its projection e onto N ( A T ).
+�
+�
+Ĉ
+We will now ﬁnd x̂ =
+and p. We know:
+ˆ
+D
+�
+
+A T Ax̂
+��
+�
+6
+Ĉ
+14
+D̂
+
+3
+6
+
+= �A T b �
+5
+=
+.
+11
+
+From this we get the normal equations:
+3Ĉ + 6D̂
+6Ĉ + 14D̂
+
+= 5
+= 11.
+
+We solve these to ﬁnd D̂ = 1/2 and Ĉ = 2/3.
+We could also have used calculus to ﬁnd the minimum of the following
+function of two variables:
+e12 + e22 + e32 = (C + D − 1)2 + (C + 2D − 2)2 + (C + 3D − 2)2 .
+Either way, we end up solving a system of linear equations to ﬁnd that the
+closest line to our points is b = 23 + 12 t.
+This gives us:
+i
+1
+2
+3
+�
+or p =
+
+7/6
+5/3
+13/6
+
+�
+
+�
+and e =
+
+pi
+7/6
+5/3
+13/6
+�
+
+−1/6
+2/6
+−1/6
+
+ei
+−1/6
+1/3
+−1/6
+
+. Note that p and e are orthogonal, and
+
+also that e is perpendicular to the columns of A.
+2
+
+The matrix A T A
+We’ve been assuming that the matrix A T A is invertible. Is this justiﬁed?
+If A has independent columns, then A T A is invertible.
+To prove this we assume that A T Ax = 0, then show that it must be true that
+x = 0:
+A T Ax
+
+=
+x A Ax =
+( Ax)T ( Ax) =
+Ax =
+T
+
+T
+
+0
+xT 0
+0
+0.
+
+Since A has independent columns, Ax = 0 only when x = 0.
+As long as the columns of A are independent, we can use linear regression
+to ﬁnd approximate solutions to unsolvable systems of linear equations. The
+columns of A are guaranteed to be independent
+i.e.
+⎡
+⎤ if⎡they⎤ are orthonormal,
+⎡
+⎤
+1
+0
+0
+if they are perpendicular unit vectors like ⎣ 0 ⎦, ⎣ 1 ⎦ and ⎣ 0 ⎦, or like
+0
+0
+1
+�
+�
+�
+�
+cos θ
+− sin θ
+and
+.
+sin θ
+cos θ
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

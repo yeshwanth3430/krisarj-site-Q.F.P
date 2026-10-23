@@ -1,0 +1,25 @@
+Exercises on linear transformations and their matrices
+
+Problem 30.1: Consider the transformation T that doubles the distance
+between each point and the origin without changing the direction from
+the origin to the points. In polar coordinates this is described by
+T (r, θ ) = (2r, θ ).
+a) Yes or no: is T a linear transformation?
+b) Describe T using Cartesian (xy) coordinates. Check your work by con­
+ﬁrming that the transformation doubles the lengths of vectors.
+c) If your answer to (a) was ”yes”, ﬁnd the matrix of T. If your answer to
+(a) was ”no”, explain why the T isn’t linear.
+Problem 30.2: Describe a transformation which leaves the zero vector
+ﬁxed but which is not a linear transformation.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

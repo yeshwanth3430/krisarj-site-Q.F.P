@@ -1,0 +1,115 @@
+Left and right inverses; pseudoinverse
+Although pseudoinverses will not appear on the exam, this lecture will help us
+to prepare.
+
+Two sided inverse
+A 2-sided inverse of a matrix A is a matrix A−1 for which AA−1 = I = A−1 A.
+This is what we’ve called the inverse of A. Here r = n = m; the matrix A has
+full rank.
+
+Left inverse
+Recall that A has full column rank if its columns are independent; i.e. if r = n.
+In this case the nullspace of A contains just the zero vector. The equation Ax =
+b either has exactly one solution x or is not solvable.
+The matrix A T A is an invertible n by n symmetric matrix, so ( A T A)−1 A T A =
+−1
+I. We say Aleft
+= ( A T A)−1 A T is a left inverse of A. (There may be other left in­
+verses as well, but this is our favorite.) The fact that A T A is invertible when A
+has full column rank was central to our discussion of least squares.
+−1
+is an m by m matrix which only equals the identity if m = n.
+Note that AAleft
+A rectangular matrix can’t have a two sided inverse because either that matrix
+or its transpose has a nonzero nullspace.
+
+Right inverse
+If A has full row rank, then r = m. The nullspace of A T contains only the zero
+vector; the rows of A are independent. The equation Ax = b always has at
+least one solution; the nullspace of A has dimension n − m, so there will be
+n − m free variables and (if n > m) inﬁnitely many solutions!
+−1
+−1
+Matrices with full row rank have right inverses Aright
+with AAright
+= I. The
+nicest one of these is A T ( AA T )−1 . Check: A times A T ( AAT )−1 is I.
+
+Pseudoinverse
+An invertible matrix (r = m = n) has only the zero vector in its nullspace and
+left nullspace. A matrix with full column rank r = n has only the zero vector
+in its nullspace. A matrix with full row rank r = m has only the zero vector in
+its left nullspace. The remaining case to consider is a matrix A for which r < n
+and r < m.
+−1
+If A has full column rank and Aleft
+= ( A T A)−1 A T , then
+−1
+AAleft
+= A ( A T A ) −1 A T = P
+
+is the matrix which projects Rm onto the column space of A. This is as close as
+we can get to the product AM = I.
+1
+
+−1
+Similarly, if A has full row rank then Aright
+A = A T ( AA T )−1 A is the matrix
+which projects Rn onto the row space of A.
+
+It’s nontrivial nullspaces that cause trouble when we try to invert matrices.
+If Ax = 0 for some nonzero x, then there’s no hope of ﬁnding a matrix A−1
+that will reverse this process to give A−1 0 = x.
+The vector Ax is always in the column space of A. In fact, the correspon­
+dence between vectors x in the (r dimensional) row space and vectors Ax in
+the (r dimensional) column space is one-to-one. In other words, if x �= y are
+vectors in the row space of A then Ax �= Ay in the column space of A. (The
+proof of this would make a good exam question.)
+Proof that if x �= y then Ax �= Ay
+Suppose the statement is false. Then we can ﬁnd x �= y in the row space of A
+for which Ax = Ay. But then A(x − y) = 0, so x − y is in the nullspace of A.
+But the row space of A is closed under linear combinations (like subtraction),
+so x − y is also in the row space. The only vector in both the nullspace and the
+row space is the zero vector, so x − y = 0. This contradicts our assumption that
+x and y are not equal to each other.
+We conclude that the mapping x �→ Ax from row space to column space is
+invertible. The inverse of this operation is called the pseudoinverse and is very
+useful to statisticians in their work with linear regression – they might not be
+able to guarantee that their matrices have full column rank r = n.
+Finding the pseudoinverse A+
+The pseudoinverse A+ of A is the matrix for which x = A+ Ax for all x in the
+row space of A. The nullspace of A+ is the nullspace of A T .
+We start from the singular value decomposition A = UΣV T . Recall that Σ is
+a m by n matrix whose entries are zero except for the singular values σ1 , σ2 , ..., σr
+which appear on the diagonal of its ﬁrst r rows. The matrices U and V are or­
+thonormal and therefore easy to invert. We only need to ﬁnd a pseudoinverse
+for Σ.
+The closest we can get to an inverse for Σ is an n by m matrix Σ+ whose ﬁrst
+r rows have 1/σ1 , 1/σ2 , ..., 1/σr on the diagonal. If r = n = m then Σ+ = Σ−1 .
+Always, the product of Σ and Σ+ is a square matrix whose ﬁrst r diagonal
+entries are 1 and whose other entries are 0.
+If A = UΣV T then its pseudoinverse is A+ = VΣ+ U T . (Recall that Q T =
+−
+1
+Q for orthogonal matrices U, V or Q.)
+We would get a similar result if we included non-zero entries in the lower
+right corner of Σ+ , but we prefer not to have extra non-zero entries.
+
+2
+
+Conclusion
+Although pseudoinverses will not appear on the exam, many of the topics we
+covered while discussing them (the four subspaces, the SVD, orthogonal ma­
+trices) are likely to appear.
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

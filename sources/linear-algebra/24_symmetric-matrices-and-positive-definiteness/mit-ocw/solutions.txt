@@ -1,0 +1,119 @@
+Exercises on symmetric matrices and positive deﬁniteness
+Problem 25.1: (6.4 #10. Introduction to Linear Algebra: Strang) Here is a
+quick “proof” that the eigenvalues of all real matrices are real:
+False Proof: Ax = λx gives x T Ax = λx T x so λ =
+
+xT Ax
+is real.
+xT x
+
+There is a hidden assumption in this proof which is not justiﬁed. Find the
+ﬂaw by testing each step on the 90 ◦ rotation matrix:
+�
+�
+0 −1
+1
+0
+with λ = i and x = (i, 1).
+�
+Solution:
+
+We can esily conﬁrm that Ax = λx =
+
+−1
+i
+
+�
+. Next, check if
+
+xT Ax = λxT x is true for the 90 ◦ rotation matrix:
+�
+�
+�
+� −1
+T
+i 1
+x Ax =
+=0
+i
+� �
+�
+� i
+T
+λx x = i i 1
+=0
+1
+x T Ax = λx T x.�
+Note that xT x = 0. Since the next and last step involves dividing by this
+term, the hidden assumption must be that xT x �= 0. If x = ( a, b) then
+� �
+�
+� a
+T
+x x= a b
+= a2 + b2 .
+b
+The “proof” assumes that the squares of the components of the eigenvec­
+tor cannot sum to zero: a2 + b2 �= 0. This may be false if the components
+are complex.
+Problem 25.2: (6.5 #32.) A group of nonsingular matrices includes AB
+and A−1 if it includes A and B. “Products and inverses stay in the group.”
+Which of these are groups?
+1
+
+a) Positive deﬁnite symmetric matrices A.
+b) Orthogonal matrices Q.
+c) All exponentials etA of a ﬁxed matrix A.
+d) Matrices D with determinant 1.
+Solution:
+a) The positive deﬁnite symmetric matrices A do not form a group. To
+show this, we provide a counterexample in the form of two positive
+deﬁnite symmetric matrices A and B whose product is not a positive
+deﬁnite symmetric matrix.
+�
+�
+�
+�
+�
+�
+2 1
+1 1/2
+2.5 2
+If A =
+and B =
+then AB =
+is not
+1 1
+
+1/2
+
+1
+
+1.5 1.5
+
+symmetric.
+b) The orthogonal matrices Q form a group. If A and B are orthogonal
+matrices, then:
+A T A = I ⇒ A−1 = A T ⇒ A−1 is orthogonal, and
+B T B = I ⇒ ( AB) T AB = B T A T AB = B T B = I ⇒ AB is orthogonal.
+c) The exponentials etA of a ﬁxed matrix A form a group. For the elements
+e pA and eqA :
+
+(e pA )−1 = e− pA is of the form etA
+e pA eqA = e( p+q) A is of the form etA
+d) The matrices D with determinant 1 form a group. If det A = 1 then
+det A−1 = 1. If matrices A and B have determinant 1 then their product
+also has determinant 1:
+det( AB) = det( A) det( B) = 1.
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

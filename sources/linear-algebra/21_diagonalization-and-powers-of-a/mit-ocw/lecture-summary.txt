@@ -1,0 +1,248 @@
+Diagonalization and powers of A
+We know how to ﬁnd eigenvalues and eigenvectors. In this lecture we learn to
+diagonalize any matrix that has n independent eigenvectors and see how diago­
+nalization simpliﬁes calculations. The lecture concludes by using eigenvalues
+and eigenvectors to solve difference equations.
+
+Diagonalizing a matrix S−1 AS = Λ
+If A has n linearly independent eigenvectors, we can put those vectors in the
+columns of a (square, invertible) matrix S. Then
+�
+�
+AS = A x1 x2 · · · xn
+�
+�
+λ1 x1 λ2 x2 · · · λ n x n
+=
+⎡
+⎤
+λ1
+0 ···
+0
+⎢ 0 λ2
+0 ⎥
+⎢
+⎥
+= S⎢ .
+= SΛ.
+.
+..
+... ⎥
+⎣ ..
+⎦
+0 ···
+0 λn
+Note that Λ is a diagonal matrix whose non-zero entries are the eigenvalues of
+A. Because the columns of S are independent, S−1 exists and we can multiply
+both sides of AS = SΛ by S−1 :
+S−1 AS = Λ.
+Equivalently, A = SΛS−1 .
+
+Powers of A
+What are the eigenvalues and eigenvectors of A2 ?
+If Ax
+then A2 x
+
+= λx,
+= λAx = λ2 x.
+
+The eigenvalues of A2 are the squares of the eigenvalues of A. The eigenvectors
+of A2 are the same as the eigenvectors of A. If we write A = SΛS−1 then:
+A2 = SΛS−1 SΛS−1 = SΛ2 S−1 .
+Similarly, Ak = SΛk S−1 tells us that raising the eigenvalues of A to the kth
+power gives us the eigenvalues of Ak , and that the eigenvectors of Ak are the
+same as those of A.
+Theorem: If A has n independent eigenvectors with eigenvalues λi , then
+Ak → 0 as k → ∞ if and only if all |λi | < 1.
+A is guaranteed to have n independent eigenvectors (and be diagonalizable)
+if all its eigenvalues are different. Most matrices do have distinct eigenvalues.
+1
+
+Repeated eigenvalues
+If A has repeated eigenvalues, it may or may not have n independent eigen­
+vectors. For example, the eigenvalues of the identity matrix are all 1, but that
+matrix still has n independent eigenvectors.
+�
+�
+If A is the triangular matrix
+
+2
+0
+
+1
+2
+
+its eigenvalues are 2 and 2. Its eigen­
+�
+�
+0 1
+vectors are in the nullspace of A − λI =
+which is spanned by x =
+0 0
+� �
+1
+. This particular A does not have two independent eigenvectors.
+0
+
+Difference equations uk+1 = Auk
+Start with a given vector u0 . We can create a sequence of vectors in which each
+new vector is A times the previous vector: uk+1 = Auk . uk+1 = Auk is a ﬁrst
+order difference equation, and uk = Ak u0 is a solution to this system.
+We get a more satisfying solution if we write u0 as a combination of eigen­
+vectors of A:
+u0 = c1 x1 + c2 x2 + · · · + cn xn = Sc.
+Then:
+Au0 = c1 λ1 x1 + c2 λ2 x2 + · · · + cn λn xn
+and:
+
+uk = Ak u0 = c1 λ1k x1 + c2 λ2k x2 + · · · + cn λkn xn = Λk Sc.
+
+Fibonacci sequence
+The Fibonacci sequence is 0, 1, 1, 2, 3, 5, 8, 13, .... In general, Fk+2 = Fk+1 + Fk . If
+we could understand this in terms of matrices, the eigenvalues of the matrices
+would tell us how fast the numbers in the sequence are increasing.
+uk+1 = Auk was a ﬁrst order system. Fk+2 = Fk+1 + Fk is a second order
+scalar equation, but�we can� convert it to ﬁrst order linear system by using a
+clever trick. If uk =
+
+Fk+1
+Fk
+
+, then:
+Fk+2
+Fk+1
+
+=
+=
+
+Fk+1 + Fk
+
+(1)
+
+Fk+1 .
+
+(2)
+�
+
+is equivalent to the ﬁrst order system uk+1 =
+
+1
+1
+
+1
+0
+
+�
+
+What are the eigenvalues and eigenvectors of A =
+
+uk .
+�
+
+1
+1
+
+1
+0
+
+�
+? Because A is
+
+symmetric, its eigenvalues will be real and its eigenvectors will be orthogonal.
+
+2
+
+Because A is a two by two matrix we know its eigenvalues sum to 1 (the trace)
+and their product is −1 (the determinant).
+�
+�
+� 1−λ 1 �
+� = λ2 − λ − 1
+| A − λI | = ��
+1
+−λ �
+√
+√
+Setting this to zero we ﬁnd λ = 1± 21+4 ; i.e. λ1 = 12 (1 + 5) ≈ 1.618 and
+√
+λ2 = 12 (1 − 5) ≈ −.618. The growth rate of the Fk is controlled by λ1 , the only
+eigenvalue with absolute value greater than 1. This tells us that for large k, Fk ≈
+� √ �k
+c1 1+2 5 for some constant c1 . (Remember uk = Ak u0 = c1 λ1k x1 + c2 λ2k x2 ,
+
+and here λ2k goes to zero since |λ2 | < 1.)
+To ﬁnd the eigenvectors of A note that:
+�
+�
+1−λ 1
+( A − λI )x =
+x
+1
+−λ
+�
+�
+�
+�
+�
+�
+λ
+λ1
+λ2
+equals 0 when x =
+, so x1 =
+and x2 =
+.
+1
+1
+1
+�
+�
+� �
+F1
+1
+Finally, u0 =
+= 0 = c1 x1 + c2 x2 tells us that c1 = −c2 = √1 .
+F0
+5
+�
+�
+Fk+1
+Because
+= uk = c1 λ1k x1 + c2 λ2k x2 , we get:
+Fk
+1
+Fk = √
+5
+
+�
+
+�
+√ �k
+√ �k
+1+ 5
+1
+1− 5
+−√
+.
+2
+2
+5
+
+Using eigenvalues and eigenvectors, we have found a closed form expression for
+the Fibonacci numbers.
+Summary: When a sequence evolves over time according to the rules of a
+ﬁrst order system, the eigenvalues of the matrix of that system determine the
+long term behavior of the series. To get an exact formula for the series we ﬁnd
+the eigenvectors of the matrix and then solve for the coefﬁcients c1 , c2 , ...
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

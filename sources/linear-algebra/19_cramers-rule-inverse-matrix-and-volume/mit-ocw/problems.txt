@@ -1,0 +1,41 @@
+Exercises on Cramer’s rule, inverse matrix, and volume
+
+Problem 20.1: (5.3 #8. Introduction to Linear Algebra: Strang) Suppose
+⎡
+⎤
+1 1 4
+A = ⎣ 1 2 2 ⎦.
+1 2 5
+Find its cofactor matrix C and multiply AC T to ﬁnd det( A).
+⎡
+⎤
+6 −3 0
+· · ⎦ and AC T =
+C=⎣ ·
+.
+·
+· ·
+If you change a1,3 = 4 to 100, why is det( A) unchanged?
+Problem 20.2: (5.3 #28.) Spherical coordinates ρ, φ, θ satisfy
+x = ρ sin φ cos θ, y = ρ sin φ sin θ and z = ρ cos φ.
+Find the three by three matrix of partial derivatives:
+⎡
+⎤
+∂x/∂ρ ∂x/∂φ ∂x/∂θ
+⎣ ∂y/∂ρ ∂y/∂φ ∂y/∂θ ⎦ .
+∂z/∂ρ ∂z/∂φ ∂z/∂θ
+Simplify its determinant to J = ρ2 sin φ. In spherical coordinates,
+dV = ρ2 sin φ dρ dφ dθ
+is the volume of an inﬁnitesimal “coordinate box.”
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,245 @@
+Exercises on complex matrices; fast Fourier transform
+
+Problem 26.1: Compute the matrix F2 .
+�
+�
+1 1
+Solution: F2 =
+, where w = ei2π/2 = −1. Hence
+1 w
+
+�
+F2 =
+
+1
+1
+1 −1
+
+�
+.
+
+Problem 26.2: Find the matrices D and P used in the factorization:
+�
+�
+��
+I
+D
+F2
+F4 =
+P
+I −D
+F2
+Hint: D is created using fourth roots, not square roots, of 1. Check your
+answer by multiplying.
+�
+�
+1
+1
+Solution: We computed F2 =
+in the previous problem.
+1 −1
+�
+�
+1 0
+D=
+contains the ﬁrst two fourth roots of 1 (and − D contains the
+0 i
+others, -1 and -i).
+P is a permutation matrix that arranges the components of the incom­
+ing vector so that its even components come ﬁrst. For F4 , that means swap­
+ping the ﬁrst and second components:
+⎡
+⎤ ⎡
+⎤
+x0
+x0
+⎢ x1 ⎥ ⎢ x2 ⎥
+⎥ ⎢
+⎥
+P⎢
+⎣ x2 ⎦ = ⎣ x1 ⎦ .
+x3
+x3
+⎡
+
+1
+⎢ 0
+So, P = ⎢
+⎣ 0
+0
+
+1
+
+0
+0
+1
+0
+
+0
+1
+0
+0
+
+⎤
+0
+0 ⎥
+⎥.
+0 ⎦
+1
+
+Finally, we check our work by multiplying:
+⎡
+�
+
+I
+I
+
+D
+−D
+
+��
+
+�
+
+F2
+F2
+
+P
+
+=
+
+=
+
+=
+
+=
+
+1
+⎢ 0
+⎢
+⎣ 1
+0
+⎡
+1
+⎢ 0
+⎢
+⎣ 1
+0
+⎡
+1
+⎢ 1
+⎢
+⎣ 1
+1
+⎡
+1
+⎢ 1
+⎢
+⎣ 1
+1
+
+⎤⎡
+0
+1
+1 0
+⎢
+i ⎥
+⎥ ⎢ 1 −1 0
+0 1
+0 ⎦⎣ 0
+−i
+0
+0 1
+⎤⎡
+0
+1
+0
+1 0
+1
+⎢
+1
+0
+i ⎥
+⎥ ⎢ 1 0 −1
+0
+0 −1
+0 ⎦⎣ 0 1
+1
+0 1
+0
+0 −i
+⎤
+1
+1
+1
+i −1 − i ⎥
+⎥
+−1
+1 −1 ⎦
+− i −1
+i
+⎤
+1 1 1
+i i2 i3 ⎥
+⎥ = F4 . �
+i2 i4 i6 ⎦
+3
+6
+9
+i
+i
+i
+0
+1
+0
+1
+
+1
+0
+−1
+0
+
+2
+
+⎤⎡
+0
+1
+⎢
+0 ⎥
+⎥⎢ 0
+1 ⎦⎣ 0
+−1
+0
+⎤
+0
+0 ⎥
+⎥
+1 ⎦
+−1
+
+0
+0
+1
+0
+
+0
+1
+0
+0
+
+⎤
+0
+0 ⎥
+⎥
+0 ⎦
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

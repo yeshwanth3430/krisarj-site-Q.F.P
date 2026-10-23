@@ -1,0 +1,336 @@
+Exercises on change of basis; image compression
+Problem 31.1: Verify that the vectors of the Haar wavelet basis, given in
+lecture, are orthogonal. Adjust their lengths so that the resulting basis
+vectors are orthonormal.
+Solution: The vectors given for the Haar wavelet basis were:
+⎡ ⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤
+1
+1
+1
+0
+1
+0
+0
+0
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥
+⎢ ⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥
+⎢ ⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥
+⎢ ⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥
+⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ .
+⎢ ⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥
+⎢ ⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎣ 1 ⎦ ⎣ −1 ⎦ ⎣ 0 ⎦ ⎣ −1 ⎦ ⎣ 0 ⎦ ⎣ 0 ⎦ ⎣ 0 ⎦ ⎣ 1 ⎦
+1
+−1
+0
+−1
+0
+0
+0
+−1
+It’s easy to see that the second through eighth vectors are orthogonal
+to the ﬁrst; their inner products are sums of equal numbers of ones and
+negative ones. The same thing happens when taking the dot products of
+the third through eighth vectors with the second. The remaining inner
+products are either sums of equal numbers of ones and negative ones or
+simply sums of zeros. Since all the pairwise inner products are zero, the
+vectors are orthogonal.
+To make the basis orthonormal, divide by the lengths of the vectors:
+√ ⎤ ⎡
+√ ⎤
+√ ⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤
+⎤ ⎡
+⎡
+⎤ ⎡
+1/√8
+1/√8
+0
+0
+0
+0
+1/√2
+1/2
+⎢ 1/ 8 ⎥ ⎢ 1/ 8 ⎥
+⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+⎢
+0 ⎥ ⎢
+0 ⎥
+0 ⎥ ⎢ −1/ 2 ⎥ ⎢
+⎢
+⎥ ⎢
+⎥ ⎢ 1/2 ⎥ ⎢
+√0 ⎥ ⎢
+⎥
+⎥ ⎢
+⎥ ⎢
+⎢ 1/√8 ⎥ ⎢ 1/√8 ⎥ ⎢
+⎥ ⎢ 1/ 2 ⎥ ⎢
+⎥ ⎢
+0
+0 ⎥
+−
+1/2
+0
+⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+0
+√ ⎥ ⎢
+√ ⎥ ⎢
+⎥ ⎢
+⎢
+⎥ ⎢
+⎥
+√ ⎥
+⎥ ⎢
+⎥ ⎢
+⎢
+⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+0
+0
+0 ⎥ ⎢
+⎢ 1/√8 ⎥ ⎢ 1/√8 ⎥ ⎢ −1/2 ⎥ ⎢
+0 ⎥ , ⎢ −1/ 2 ⎥ , ⎢
+√ ⎥,⎢
+⎥.
+⎥,⎢
+⎥,⎢
+⎢
+⎥,⎢
+⎥,⎢
+⎥
+⎢
+⎥
+⎢
+⎥
+⎢
+0 ⎥
+0 ⎥ ⎢ 1/2 ⎥ ⎢
+⎢ 1/√8 ⎥ ⎢ −1/√8 ⎥ ⎢
+0 ⎥ ⎢ 1/√2 ⎥ ⎢
+0 ⎥ ⎢
+⎥
+⎥ ⎢
+⎥ ⎢
+⎢
+⎥ ⎢
+⎥ ⎢
+⎢
+⎢
+⎥ ⎢
+⎥
+0 ⎥ ⎢ 1/2 ⎥ ⎢
+⎢ 1/ 8 ⎥ ⎢ −1/ 8 ⎥ ⎢
+0 ⎥
+0 ⎥
+√0 ⎥
+⎥ ⎢
+⎥ ⎢ −1/ 2 ⎥ ⎢
+√ ⎥ ⎢
+√ ⎥ ⎣
+⎢
+⎦
+⎣
+⎦
+⎣
+⎦
+⎣
+⎦
+⎣
+⎦
+⎣
+0
+−1/2
+1/√2 ⎦
+0
+0
+0
+⎣ 1/ 8 ⎦ ⎣ −1/ 8 ⎦
+√
+√
+0
+−1/2
+0
+0
+0
+−1/ 2
+1/ 8
+−1/ 8
+⎡
+
+Problem 31.2: We can think of the set of all two by two matrices with
+real valued entries as a vector space. Describe two different bases for this
+space. Is one of your bases better than the other for describing diagonal
+matrices? What about triangular matrices? Symmetric matrices?
+1
+
+Solution: There are many different ways to answer this question correctly.
+The most obvious choice of basis is:
+�
+� �
+� �
+� �
+�
+1 0
+0 1
+0 0
+0 0
+,
+,
+,
+.
+0 0
+0 0
+1 0
+0 1
+Hopefully, the second basis you chose differs from this one signiﬁ­
+cantly. Here are some possibilities:
+�
+� �
+� �
+� �
+�
+1 1
+1
+1
+1 −1
+1 −1
+,
+,
+,
+1 1
+−1 −1
+1 −1
+−1
+1
+or
+
+�
+
+1 0
+0 1
+
+� �
+� �
+� �
+�
+0 1
+1
+0
+0 1
+,
+,
+,
+1 0
+0 −1
+−1 0
+
+If you have trouble checking that the matrices in your basis are indepen­
+dent, think of them as vectors in R4 and check that those vectors are inde­
+pendent. The examples above are easy to check because, when considered
+as vectors in R4 , they are orthogonal.
+Of these bases, the ﬁrst may be best for describing diagonal matrices;
+the third is also reasonably good for that task:
+�
+�
+�
+�
+�
+�
+4 0
+1 0
+1
+0
+=3
++1
+.
+0 2
+0 1
+0 −1
+The ﬁrst basis also looks best for describing triangular matrices – any
+triangular matrix is a combination of only three of the four vectors. The
+third is best for describing symmetric matrices
+� because� symmetric matri­
+ces will always have a zero coefﬁcient for the
+
+2
+
+0 1
+−1 0
+
+component.
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,87 @@
+Exercises on orthogonal matrices and Gram-Schmidt
+
+Problem 17.1: (4.4 #10.b Introduction to Linear Algebra: Strang)
+Orthonormal vectors are automatically linearly independent.
+Matrix Proof: Show that Qx = 0 implies x = 0. Since Q may be rectan­
+gular, you can use Q T but not Q−1 .
+Solution: By deﬁnition, Q is a matrix whose columns are orthonormal,
+and so we know that Q T Q = I (where Q may be rectangular). Then:
+Qx = 0 =⇒ Q T Qx = Q T 0 =⇒ Ix = 0 =⇒ x = 0.
+Thus the nullspace of Q is the zero vector, and so the columns of Q are
+linearly independent. There are no non-zero linear combinations of the
+columns that equal the zero vector. Thus, orthonormal vectors are auto­
+matically linearly independent.
+Problem 17.2: (4.4 #18) Given the vectors a, b and c listed below, use the
+Gram-Schmidt process to ﬁnd orthogonal vectors A, B, and C that span
+the same space.
+a = (1, −1, 0, 0), b = (0, 1, −1, 0), c = (0, 0, 1, −1).
+Show that {A, B, C} and {a, b, c} are bases for the space of vectors per­
+pendicular to d = (1, 1, 1, 1).
+Solution:
+
+We apply Gram-Schmidt to a, b, c. First, we set
+A = a = (1, −1, 0, 0).
+
+Next we ﬁnd B :
+AT b
+1
+B = b − T A = (0, 1, −1, 0) + (1, −1, 0, 0) =
+2
+A A
+
+�
+
+�
+1 1
+, , −1, 0 .
+2 2
+
+And then we ﬁnd C :
+AT c
+BT c
+2
+C = c − T A − T B = (0, 0, 1, −1) +
+3
+A A
+B B
+1
+
+�
+
+1 1
+, , −1, 0
+2 2
+
+�
+
+�
+
+=
+
+�
+1 1 1
+, , , −1 .
+3 3 3
+
+We know from the ﬁrst problem that the elements of the set {A, B, C}
+are linearly independent, and each vector is orthogonal to (1,1,1,1). The
+space of vectors perpendicular to d is three dimensional (since the row
+space of (1, 1, 1, 1) is one-dimensional, and the number of dimensions of
+the row space added to the number of dimensions of the nullspace add to
+4). Therefore {A, B, C} forms a basis for the space of vectors perpendicular
+to d.
+Similarly, {a, b, c} is a basis for the space of vectors perpendicular to d
+because the vectors are linearly independent, orthogonal to (1,1,1,1), and
+because there are three of them.
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

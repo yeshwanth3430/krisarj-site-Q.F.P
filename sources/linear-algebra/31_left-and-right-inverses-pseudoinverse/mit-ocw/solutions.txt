@@ -1,0 +1,201 @@
+Exercises on left and right inverses; pseudoinverse
+�
+Problem 32.1: Find a right inverse for A =
+
+1 0 1
+0 1 0
+
+�
+.
+
+−1
+Solution: We apply the formula Aright
+= A T ( AA T )−1 :
+
+⎡
+AT =
+AA T =
+
+( AA T )−1 =
+A T ( AA T )−1 =
+⎡
+
+⎤
+1 0
+⎣ 0 1 ⎦
+1 0
+�
+�
+2 0
+0 1
+�
+�
+1/2 0
+0 1
+⎡
+⎤
+1/2 0
+⎣ 0 1 ⎦.
+1/2 0
+
+⎤
+
+1/2 0
+−1
+Thus, Aright
+= ⎣ 0 1 ⎦ is one right inverse of A. We can quickly check
+1/2 0
+−1
+that AAright
+= I.
+
+�
+
+�
+4 3
+Problem 32.2: Does the matrix A =
+have a left inverse? A right
+8 6
+inverse? A pseudoinverse? If the answer to any of these questions is ”yes”,
+ﬁnd the appropriate inverse.
+Solution: The second row of A is a multiple of the ﬁrst row, so A has rank
+1 and det A = 0. Because A is a square matrix its determinant is deﬁned,
+and we can use the fact that det C · det D = det(CD ) to prove that A can’t
+have a left or right inverse. (If AB = I, then det A det B = det I implies
+0 = 1.)
+We can ﬁnd a pseudoinverse A+ = VΣ+ U T for A. We start by ﬁnding
+the singular value decomposition UΣV T of A.
+
+1
+
+The SVD of A was calculated in the lecture on singular value decom­
+position, so we know that
+�
+�
+�
+� � √
+� �
+�
+4 3
+1
+2
+.8
+.6
+125
+0
+1
+= √5
+.
+8 6
+2 −1
+.6 −.8
+0 0
+A
+U
+Σ
+VT
+Hence, Σ+ =
+
+�
+
+√
+�
+1/ 125 0
+and
+0 0
+
++ T
+A+ = V
+√
+�Σ U
+��
+��
+�
+��
+1
+.8
+.6
+1
+2
+1/ 125 0
+√
+=
+.6 −.8
+0 0
+5 2 −1
+�
+��
+��
+�
+.8
+.6
+1/25 0
+1
+2
+=
+.6 −.8
+0 0
+2 −1
+�
+��
+��
+�
+.8
+.6
+1/25 0
+1
+2
+=
+.6 −.8
+0 0
+2 −1
+�
+�
+1
+4 8
+=
+.
+125 3 6
+
+To check our work, we conﬁrm that A+ reverses the operation of A on
+its row space using the bases we found while computing its SVD. Recall
+that
+�
+σj u j for j ≤ r
+Av j =
+0
+for j > r.
+� √ �
+� �
+1/√5
+4
+1
+Here u1 =
+and A+ u1 = √
+= σ11 v1 . We can also check
+125
+3
+2/ 5
+�
+��
+�
+4 8
+2
+1
++
+that A u2 = 125
+= 0.
+3 6
+−1
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

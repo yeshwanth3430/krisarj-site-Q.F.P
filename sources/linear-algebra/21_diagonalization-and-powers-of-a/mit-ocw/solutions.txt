@@ -1,0 +1,164 @@
+Exercises on diagonalization and powers of A
+
+Problem 22.1: (6.2 #6. Introduction to Linear Algebra: Strang) Describe all
+matrices S that diagonalize this matrix A (ﬁnd all eigenvectors):
+�
+�
+4 0
+A=
+.
+1 2
+Then describe all matrices that diagonalize A−1 .
+Solution: To ﬁnd the eigenvectors of A, we ﬁrst ﬁnd the eigenvalues:
+�
+�
+4−λ
+0
+det
+= 0 =⇒ (4 − λ)(2 − λ) = 0.
+1 2−λ
+Hence the eigenvalues are λ1 = 4 and λ2 = 2. Using these values, we ﬁnd
+the eigenvectors by solving ( A − λI )x = 0 :
+�
+�� � � �
+0
+0
+y
+0
+( A − λ1 I ) x =
+=
+=⇒ y = 2z,
+1 −2
+z
+0
+thus any multiple of (2,1) is an eigenvector for λ1 .
+�
+�� � � �
+2 0
+y
+0
+( A − λ2 I ) x =
+=
+=⇒ y = 0, z = free variable,
+1 0
+z
+0
+thus any multiple of (0,1) is an eigenvector for λ2 . Therefore the columns
+of the matrices S that diagonalize A are nonzero multiples of (2,1) and
+(1,0). They can appear in either order.
+Finally, because A−1 = SΛ−1 S−1 the same matrices S will diagonalize
+A −1 .
+Problem 22.2: (6.2 #16.) Find Λ and S to diagonalize A :
+�
+�
+.6 .9
+A=
+.
+.4 .1
+What is the limit of Λk as k → ∞? What is the limit matrix of SΛk S−1 ? In
+the columns of this matrix you see the
+.
+1
+
+Solution: Since each of the columns of A sums to one, A is a Markov
+matrix and deﬁnitely has eigenvalue λ1 = 1. The trace of A is .7, so the
+other eigenvalue is λ2 = .7 − 1 = −.3. To ﬁnd S we need to ﬁnd the
+corresponding eigenvectors:
+�
+�� � � �
+−.4
+.9
+y
+0
+( A − λ1 I ) x 1 =
+=
+=⇒ x1 = (9, 4).
+.4 −.9
+z
+0
+�
+�� � � �
+.9 .9
+y
+0
+( A − λ2 I ) x 2 =
+=
+=⇒ y = −z =⇒ x2 = (1, −1).
+.4 .4
+z
+0
+Putting these together, we have:
+�
+�
+�
+�
+�
+�
+9
+1
+1
+1
+k
+S=
+and Λ =
+. As k → ∞, Λ →
+.
+4 −1
+−.3
+0
+So
+∞ −1
+
+SΛ S
+
+�
+
+→
+
+9
+1
+4 −1
+
+��
+
+��
+
+1
+0
+
+1
+13
+
+��
+
+1
+1
+4 −9
+
+�
+
+1
+=
+13
+
+�
+
+In the columns of this matrix you see the steady state vector.
+
+2
+
+9 9
+4 4
+
+�
+.
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

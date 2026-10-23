@@ -1,0 +1,218 @@
+Eigenvalues and eigenvectors
+The subject of eigenvalues and eigenvectors will take up most of the rest of
+the course. We will again be working with square matrices. Eigenvalues are
+special numbers associated with a matrix and eigenvectors are special vectors.
+
+Eigenvectors and eigenvalues
+A matrix A acts on vectors x like a function does, with input x and output Ax.
+Eigenvectors are vectors for which Ax is parallel to x. In other words:
+Ax = λx.
+In this equation, x is an eigenvector of A and λ is an eigenvalue of A.
+Eigenvalue 0
+If the eigenvalue λ equals 0 then Ax = 0x = 0. Vectors with eigenvalue 0 make
+up the nullspace of A; if A is singular, then λ = 0 is an eigenvalue of A.
+
+Examples
+Suppose P is the matrix of a projection onto a plane. For any x in the plane
+Px = x, so x is an eigenvector with eigenvalue 1. A vector x perpendicular to
+the plane has Px = 0, so this is an eigenvector with eigenvalue λ = 0. The
+eigenvectors of P span the whole space (but this is not true for every matrix).
+�
+�
+� �
+0 1
+1
+The matrix B =
+has an eigenvector x =
+with eigenvalue 1
+1 0
+1
+�
+�
+1
+and another eigenvector x =
+with eigenvalue −1. These eigenvectors
+−1
+
+span the space. They are perpendicular because B = B T (as we will prove).
+
+det( A − λI ) = 0
+An n by n matrix will have n eigenvalues, and their sum will be the sum of the
+diagonal entries of the matrix: a11 + a22 + · · · + ann . This sum is the trace of the
+matrix. For a two by two matrix, if we know one eigenvalue we can use this
+fact to ﬁnd the second.
+Can we solve Ax = λx for the eigenvalues and eigenvectors of A? Both λ
+and x are unknown; we need to be clever to solve this problem:
+
+= λx
+( A − λI )x = 0
+Ax
+
+In order for λ to be an eigenvector, A − λI must be singular. In other words,
+det( A − λI ) = 0. We can solve this characteristic equation for λ to get n solutions.
+1
+
+If we’re lucky, the solutions are distinct. If not, we have one or more repeated
+eigenvalues.
+Once we’ve found an eigenvalue λ, we can use elimination to ﬁnd the
+nullspace of A − λI. The vectors in that nullspace are eigenvectors of A with
+eigenvalue λ.
+Calculating eigenvalues and eigenvectors
+�
+�
+3 1
+Let A =
+. Then:
+1
+
+3
+
+det( A − λI )
+
+�
+� 3−λ
+�
+� 1
+
+=
+
+�
+1 ��
+3−λ �
+
+= (3 − λ )2 − 1
+= λ2 − 6λ + 8.
+Note that the coefﬁcient 6 is the trace (sum of diagonal entries) and 8 is the
+determinant of A. In general, the eigenvalues of a two by two matrix are the
+solutions to:
+λ2 − trace( A) · λ + det A = 0.
+Just as the trace is the sum of the eigenvalues of a matrix, the product of the
+eigenvalues of
+equals its determinant.
+� any matrix
+�
+3 1
+For A =
+, the eigenvalues are λ1 = 4 and λ2 = 2. We ﬁnd the
+1 3
+� �
+�
+�
+1
+−1
+1
+eigenvector x1 =
+for λ1 = 4 in the nullspace of A − λ1 I =
+.
+1
+1 −1
+�
+�
+1 1
+x2 will be in the nullspace of A − 2I =
+. The nullspace is an entire
+1 1
+�
+�
+−1
+line; x2 could be any vector on that line. A natural choice is x2 =
+.
+1
+�
+�
+0 1
+Note that these eigenvectors are the same as those of B =
+. Adding
+1 0
+�
+�
+0 1
+3I to the matrix B =
+added 3 to each of its eigenvalues and did not
+1
+
+0
+
+change its eigenvectors, because Ax = ( B + 3I )x = λx + 3x = (λ + 3)x.
+A caution
+Similarly, if Ax = λx and Bx = αx, ( A + B)x = (λ + α)x. It would be nice if
+the eigenvalues of a matrix sum were always the sums of the eigenvalues, but
+this is only true if A and B have the same eigenvectors. The eigenvalues of the
+product AB aren’t usually equal to the products λ( A)λ(b), either.
+
+2
+
+Complex eigenvalues
+�
+�
+0 −1
+The matrix Q =
+rotates every vector in the plane by 90◦ . It has
+1
+0
+trace 0 = λ1 + λ2 and determinant 1 = λ1 · λ2 . Its only real eigenvector is the
+zero vector; any other vector’s direction changes when it is multiplied by Q.
+How will this affect our eigenvalue calculation?
+�
+�
+� − λ −1 �
+�
+�
+det( A − λI ) = �
+1 −λ �
+
+= λ2 + 1.
+det( A − λI ) = 0 has solutions λ1 = i and λ2 = −i. If a matrix has a complex
+eigenvalue a + bi then the complex conjugate a − bi is also an eigenvalue of that
+matrix.
+Symmetric matrices have real eigenvalues. For antisymmetric matrices like
+Q, for which A T = − A, all eigenvalues are imaginary (λ = bi).
+Triangular matrices and repeated eigenvalues
+�
+�
+3 1
+For triangular matrices such as A =
+, the eigenvalues are exactly the
+0
+
+3
+
+entries on the diagonal. In this case, the eigenvalues are 3 and 3:
+�
+�
+� 3−λ
+1 ��
+�
+det( A − λ det I ) = �
+3−λ �
+0
+�
+�
+= (3 − λ)(3 − λ)
+= ( a11 − λ)( a22 − λ)
+
+= 0,
+so λ1 = 3 and λ2 = 3. To ﬁnd the eigenvectors, solve:
+�
+�
+0 1
+( A − λI )x =
+x=0
+0 0
+� �
+1
+. There is no independent eigenvector x2 .
+to get x1 =
+0
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,25 @@
+Exercises on properties of determinants
+
+Problem 18.1: (5.1 #10. Introduction to Linear Algebra: Strang) If the entries
+in every row of a square matrix A add to zero, solve Ax = 0 to prove that
+det A = 0. If those entries add to one, show that det( A − I ) = 0. Does this
+mean that det A = 1?
+Problem 18.2: (5.1 #18.) Use row operations and the properties of the
+determinant to calculate the three by three “Vandermonde determinant”:
+⎡
+⎤
+1 a a2
+det ⎣ 1 b b2 ⎦ = (b − a)(c − a)(c − b).
+1 c c2
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

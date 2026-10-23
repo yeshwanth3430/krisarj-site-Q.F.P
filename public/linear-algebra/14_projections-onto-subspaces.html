@@ -1,0 +1,498 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projections onto Subspaces · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Projecting b onto a line and onto a subspace: the error is perpendicular, giving x-hat = a-transpose b over a-transpose a, the projection matrix P = A(A-transpose A)inverse A-transpose with P-transpose = P and P-squared = P, and a least squares line fitted to three points.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="14_projections-onto-subspaces">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Projections onto Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 14</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 14 (MIT 18.06, Lecture 14)</p>
+  <h1>Projections onto Subspaces</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{b \text{ is not in the column space. Find the closest thing that is.}} $$</p>
+      <p>\(Ax = b\) often has no solution — \(Ax\) always lands inside \(C(A)\) and \(b\) sits outside it. So drop a perpendicular from \(b\) onto \(C(A)\). The foot of that perpendicular is \(p\), the closest reachable vector, and we solve \(A\hat{x} = p\) instead.</p>
+    </div>
+
+    <div class="box method"><span class="label">The three formulas ★</span>
+      <table class="sl-table">
+        <tr><th></th><th>Onto a line through \(a\)</th><th>Onto the column space of \(A\)</th></tr>
+        <tr><td>the coefficient</td><td>\(\hat{x} = \dfrac{a^Tb}{a^Ta}\)</td><td>\(\hat{x} = (A^TA)^{-1}A^Tb\)</td></tr>
+        <tr><td>the projection</td><td>\(p = a\dfrac{a^Tb}{a^Ta}\)</td><td>\(p = A(A^TA)^{-1}A^Tb\)</td></tr>
+        <tr><td>the matrix</td><td>\(P = \dfrac{aa^T}{a^Ta}\)</td><td>\(P = A(A^TA)^{-1}A^T\)</td></tr>
+      </table>
+      <p>The right-hand column is the left-hand one with "divide by \(a^Ta\)" replaced by "multiply by \((A^TA)^{-1}\)".</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The question</a></li>
+        <li><a href="#t2">Solving for the coefficient</a></li>
+        <li><a href="#t3">The projection matrix for a line</a></li>
+        <li><a href="#t4">A worked projection onto a line</a></li>
+        <li><a href="#t5">The two properties of P</a></li>
+        <li><a href="#t6">Why project at all</a></li>
+        <li><a href="#t7">Projecting onto a plane</a></li>
+        <li><a href="#t8">The normal equations</a></li>
+        <li><a href="#t9">The three formulas in n dimensions</a></li>
+        <li><a href="#t10">The two extreme cases</a></li>
+        <li><a href="#t11">Least squares: a line through three points</a></li>
+        <li><a href="#t12">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The question</a><span>Which point on a line is closest to \(b\)?</span></li>
+      <li><a href="#t2">Solving for the coefficient</a><span>One perpendicularity condition gives \(\hat{x} = a^Tb / a^Ta\).</span></li>
+      <li><a href="#t3">The projection matrix for a line</a><span>\(P = aa^T/a^Ta\) — a matrix, not a number.</span></li>
+      <li><a href="#t4">A worked projection onto a line</a><span>Real numbers, the error checked perpendicular.</span></li>
+      <li><a href="#t5">The two properties of P ★</a><span>\(P^T = P\) and \(P^2 = P\). Both have one-line reasons.</span></li>
+      <li><a href="#t6">Why project at all</a><span>\(Ax\) can only land in \(C(A)\), so move \(b\) there first.</span></li>
+      <li><a href="#t7">Projecting onto a plane</a><span>Two basis vectors, two perpendicularity conditions, one matrix equation.</span></li>
+      <li><a href="#t8">The normal equations ★</a><span>\(A^TA\hat{x} = A^Tb\), and why the error lives in the left nullspace.</span></li>
+      <li><a href="#t9">The three formulas in n dimensions</a><span>And why you may not simplify \((A^TA)^{-1}\).</span></li>
+      <li><a href="#t10">The two extreme cases</a><span>\(b\) already inside: \(Pb = b\). \(b\) perpendicular: \(Pb = 0\).</span></li>
+      <li><a href="#t11">Least squares: a line through three points ★</a><span>Fully worked — the matrix, the solve, the fitted line, every residual.</span></li>
+      <li><a href="#t12">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The question</h3>
+
+    <p>You have a vector \(b\) and a line — all the multiples of some vector \(a\). <b>Which point on that line is closest to \(b\)?</b></p>
+
+    <p>Call the answer \(p\). You could reach for trigonometry or calculus. Linear algebra is easier, and it needs only one observation:</p>
+
+    <div class="box intuition"><span class="label">The idea in one line</span>
+      <p>The closest point is the one you reach by dropping a perpendicular from \(b\) onto the line. Any other point on the line is further away, because it is the hypotenuse of a right triangle whose leg is \(p\).</p>
+    </div>
+
+    <figure class="fig" style="max-width:480px;margin:22px auto">
+      <svg viewBox="0 0 480 240" role="img" aria-label="Projecting b onto the line through a, with error e perpendicular to the line">
+        <defs>
+          <marker id="j1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="j2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="j3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <line class="axis" x1="50" y1="200" x2="440" y2="88" stroke-dasharray="0"/>
+        <text class="tick" x="396" y="82">the line through a</text>
+        <line class="l1" x1="50" y1="200" x2="170" y2="166" marker-end="url(#j1)"/>
+        <text class="lbl c1" x="104" y="196">a</text>
+        <line class="l2" x1="50" y1="200" x2="260" y2="66" marker-end="url(#j2)"/>
+        <text class="lbl c2" x="146" y="118">b</text>
+        <line class="l3" x1="50" y1="200" x2="286" y2="132" marker-end="url(#j3)"/>
+        <text class="lbl c3" x="238" y="168">p = x̂a</text>
+        <line class="l2 dash" x1="286" y1="132" x2="260" y2="66"/>
+        <text class="lbl c2" x="296" y="96">e = b − p</text>
+        <path class="axis" d="M272,136 L277,150 L291,145" fill="none" stroke-width="1.4"/>
+        <circle class="pt" cx="50" cy="200" r="4"/>
+        <text class="tick" x="26" y="216">0</text>
+      </svg>
+      <figcaption>\(p\) is the shadow \(b\) casts on the line. The leftover \(e = b - p\) is the <b>error</b>, and it stands at right angles to the line. That right angle is the only equation we need.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Solving for the coefficient</h3>
+
+    <p>Two facts, written down:</p>
+
+    <ul>
+      <li>\(p\) is on the line, so \(p = \hat{x}a\) for some single number \(\hat{x}\);</li>
+      <li>\(e = b - p\) is perpendicular to \(a\), so \(a^Te = 0\).</li>
+    </ul>
+
+    <p>Substitute the first into the second:</p>
+
+    $$ a^T(b - \hat{x}a) = 0 $$
+
+    <p>Expand. \(\hat{x}\) is a number, so it slides out of the product:</p>
+
+    $$ a^Tb - \hat{x}\,a^Ta = 0 \qquad\Longrightarrow\qquad \hat{x}\,a^Ta = a^Tb $$
+
+    <p>Both \(a^Ta\) and \(a^Tb\) are ordinary numbers, so divide:</p>
+
+    $$ \boxed{\hat{x} = \frac{a^Tb}{a^Ta}} \qquad\text{and}\qquad \boxed{p = a\,\frac{a^Tb}{a^Ta}} $$
+
+    <div class="box intuition"><span class="label">Sanity checks on the formula</span>
+      <ul>
+        <li>Double \(b\) and \(\hat{x}\) doubles — the shadow doubles too. Correct.</li>
+        <li>Double \(a\) and nothing changes: the numerator doubles, the denominator quadruples, and the extra \(a\) in \(p = \hat x a\) makes up the difference. Correct — the <i>line</i> is the same line, so the closest point must be the same point.</li>
+        <li>If \(b \perp a\) then \(a^Tb = 0\), so \(p = 0\). The closest point on the line is the origin. Correct.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The projection matrix for a line</h3>
+
+    <p>Now ask for the operation rather than the answer: what single matrix \(P\) takes any \(b\) to its projection?</p>
+
+    $$ p = Pb $$
+
+    <p>Rearrange the formula for \(p\). Move the scalar to the end — scalars commute with everything, matrices do not:</p>
+
+    $$ p = a\,\frac{a^Tb}{a^Ta} = \frac{a\,a^Tb}{a^Ta} = \underbrace{\frac{aa^T}{a^Ta}}_{P}\,b $$
+
+    $$ \boxed{P = \frac{aa^T}{a^Ta}} $$
+
+    <div class="box pitfall"><span class="label">\(aa^T\) and \(a^Ta\) are completely different objects</span>
+      <table class="sl-table">
+        <tr><th>Expression</th><th>Shapes</th><th>Result</th><th>For \(a = (1,2,2)\)</th></tr>
+        <tr><td>\(a^Ta\)</td><td>\((1\times3)(3\times1)\)</td><td>a single <b>number</b></td><td>\(1 + 4 + 4 = 9\)</td></tr>
+        <tr><td>\(aa^T\)</td><td>\((3\times1)(1\times3)\)</td><td>a \(3 \times 3\) <b>matrix</b></td><td>see below</td></tr>
+      </table>
+      <p>Matrix multiplication is not commutative, and here swapping the order does not just change the answer — it changes the <i>shape</i> of the answer.</p>
+    </div>
+
+    <p>\(aa^T\) is a column times a row, which Lesson 11 told us is a <b>rank one</b> matrix. So \(P\) has rank 1, and its column space is the line through \(a\) itself — which is exactly right, since everything \(P\) produces lands on that line.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. A worked projection onto a line</h3>
+
+    <p>Take \(a = (1,2,2)\) and \(b = (1,1,1)\).</p>
+
+    <p><b>The two numbers.</b></p>
+
+    $$ a^Ta = 1^2 + 2^2 + 2^2 = 1 + 4 + 4 = 9, \qquad a^Tb = (1)(1) + (2)(1) + (2)(1) = 5 $$
+
+    <p><b>The coefficient and the projection.</b></p>
+
+    $$ \hat{x} = \frac{5}{9}, \qquad p = \frac59 \begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix} = \begin{bmatrix} 5/9 \\ 10/9 \\ 10/9 \end{bmatrix} $$
+
+    <p><b>The error.</b></p>
+
+    $$ e = b - p = \begin{bmatrix} 1 - 5/9 \\ 1 - 10/9 \\ 1 - 10/9 \end{bmatrix} = \begin{bmatrix} 4/9 \\ -1/9 \\ -1/9 \end{bmatrix} $$
+
+    <p><b>Check it is perpendicular to \(a\).</b></p>
+
+    $$ a^Te = (1)\tfrac49 + (2)\left(-\tfrac19\right) + (2)\left(-\tfrac19\right) = \tfrac49 - \tfrac29 - \tfrac29 = 0 \qquad\checkmark $$
+
+    <p><b>The matrix.</b> \(aa^T\) is each entry of \(a\) times each entry of \(a\):</p>
+
+    $$ aa^T = \begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}\begin{bmatrix} 1 & 2 & 2 \end{bmatrix}
+      = \begin{bmatrix} 1 & 2 & 2 \\ 2 & 4 & 4 \\ 2 & 4 & 4 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      P = \frac19\begin{bmatrix} 1 & 2 & 2 \\ 2 & 4 & 4 \\ 2 & 4 & 4 \end{bmatrix} $$
+
+    <p><b>Check \(Pb = p\).</b> Row 1 of \(P\) dotted with \(b = (1,1,1)\) is \(\tfrac19(1 + 2 + 2) = \tfrac59\) ✓. Row 2 gives \(\tfrac19(2+4+4) = \tfrac{10}{9}\) ✓. Row 3 is the same ✓.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The two properties of P</h3>
+
+    <div class="box theorem"><span class="label">Every projection matrix satisfies these ★</span>
+      $$ \boxed{P^T = P} \qquad\text{and}\qquad \boxed{P^2 = P} $$
+    </div>
+
+    <p><b>Symmetric.</b> \(aa^T\) is symmetric — entry \((i,j)\) is \(a_ia_j\) and entry \((j,i)\) is \(a_ja_i\), the same number. Dividing by the number \(a^Ta\) does not disturb that. In the worked example you can read the symmetry straight off the \(3 \times 3\) grid.</p>
+
+    <p><b>Idempotent</b> — projecting twice is the same as projecting once. The reason is pure common sense: \(Pb\) is already on the line, and the closest point on the line to a point already on the line is that point itself. So \(P(Pb) = Pb\).</p>
+
+    <p>Check it algebraically on \(P = aa^T/a^Ta\):</p>
+
+    $$ P^2 = \frac{aa^T}{a^Ta}\cdot\frac{aa^T}{a^Ta} = \frac{a\,\overbrace{(a^Ta)}^{\text{a number}}\,a^T}{(a^Ta)^2} = \frac{aa^T}{a^Ta} = P \qquad\checkmark $$
+
+    <p>The middle \(a^Ta\) is a scalar, so it cancels one factor from the denominator.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Why project at all</h3>
+
+    <p>Back to the real reason. \(Ax = b\) may have no solution, and here is precisely why:</p>
+
+    <div class="box theorem"><span class="label">The obstruction</span>
+      <p>\(Ax\) is a combination of the columns of \(A\), so <b>\(Ax\) can only ever land inside \(C(A)\)</b>. If \(b\) is outside \(C(A)\), no \(x\) will ever reach it.</p>
+    </div>
+
+    <p>With \(m\) much bigger than \(n\) — 100 measurements, 2 unknowns — the column space is a 2-dimensional sliver inside \(\mathbb{R}^{100}\), and \(b\) is essentially never in it.</p>
+
+    <p>So change the target. Replace \(b\) by the closest vector that <i>is</i> reachable:</p>
+
+    $$ \text{unsolvable: } Ax = b \qquad\longrightarrow\qquad \text{solvable: } A\hat{x} = p, \quad p = \text{projection of } b \text{ onto } C(A) $$
+
+    <p>We are not ignoring the inconvenient part of \(b\). We are isolating it: \(b = p + e\), where \(p\) is the part we can explain and \(e\) is the part no choice of \(x\) could ever produce.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Projecting onto a plane</h3>
+
+    <p>Now the same question one dimension up. In \(\mathbb{R}^3\), project \(b\) onto a plane.</p>
+
+    <p>Let \(a_1\) and \(a_2\) be a basis for the plane, and put them in a matrix:</p>
+
+    $$ A = \begin{bmatrix} a_1 & a_2 \end{bmatrix} $$
+
+    <p>Then the plane <b>is</b> \(C(A)\) — all combinations of the two columns — and that is the whole point of using a matrix here.</p>
+
+    <p>The projection is some combination of \(a_1\) and \(a_2\):</p>
+
+    $$ p = \hat{x}_1 a_1 + \hat{x}_2 a_2 = A\hat{x}, \qquad \hat{x} = \begin{bmatrix} \hat{x}_1 \\ \hat{x}_2 \end{bmatrix} $$
+
+    <p>Now there are <b>two</b> perpendicularity conditions instead of one. The error \(e = b - A\hat{x}\) must be at right angles to the plane, which means at right angles to both spanning directions:</p>
+
+    $$ a_1^T(b - A\hat{x}) = 0 \qquad\text{and}\qquad a_2^T(b - A\hat{x}) = 0 $$
+
+    <p>Stack those two equations. Stacking \(a_1^T\) on top of \(a_2^T\) is exactly \(A^T\):</p>
+
+    $$ \boxed{A^T(b - A\hat{x}) = \begin{bmatrix} 0 \\ 0 \end{bmatrix}} $$
+
+    <div class="box intuition"><span class="label">Compare with the line</span>
+      <p>For a line, \(A\) had one column and the condition read \(a^T(b - \hat{x}a) = 0\). It is the same equation. Only the number of columns changed, and the transpose absorbed the change.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The normal equations</h3>
+
+    <p>Expand \(A^T(b - A\hat{x}) = 0\):</p>
+
+    $$ A^Tb - A^TA\hat{x} = 0 \qquad\Longrightarrow\qquad \boxed{A^TA\hat{x} = A^Tb} $$
+
+    <p>These are the <b>normal equations</b>. "Normal" is yet another word for perpendicular, and it is there because the whole thing came from a right angle.</p>
+
+    <p>This is the equation promised at the end of Lesson 13, and that lesson already told us when it can be solved: \(A^TA\) is invertible exactly when the columns of \(A\) are independent — which is the same as saying \(a_1\) and \(a_2\) really do span a plane rather than collapsing to a line.</p>
+
+    <div class="box theorem"><span class="label">Where the error lives ★</span>
+      <p>\(A^T(b - A\hat{x}) = 0\) says \(A^Te = 0\), which says</p>
+      $$ \boxed{e \in N(A^T)} $$
+      <p>The error is in the <b>left nullspace</b>. And Lesson 13 proved \(N(A^T) \perp C(A)\). So the error is automatically perpendicular to the column space — which is what we demanded of it in the first place.</p>
+      <p>Two lectures built from different ends have just met. That is the check that the construction is right.</p>
+    </div>
+
+    <p>So \(b\) splits cleanly into the two complementary subspaces of \(\mathbb{R}^m\):</p>
+
+    $$ b = \underbrace{p}_{\text{in } C(A)} + \underbrace{e}_{\text{in } N(A^T)} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. The three formulas in n dimensions</h3>
+
+    <p>Solve the normal equations for \(\hat{x}\), then build \(p\) and \(P\) from it.</p>
+
+    <table class="sl-table">
+      <tr><th>Quantity</th><th>Formula</th><th>What it is</th></tr>
+      <tr><td>\(\hat{x}\)</td><td>\((A^TA)^{-1}A^Tb\)</td><td>the coefficients — how much of each column to take</td></tr>
+      <tr><td>\(p\)</td><td>\(A\hat{x} = A(A^TA)^{-1}A^Tb\)</td><td>the projection itself, a vector in \(C(A)\)</td></tr>
+      <tr><td>\(P\)</td><td>\(A(A^TA)^{-1}A^T\)</td><td>the matrix that does it to any \(b\)</td></tr>
+    </table>
+
+    <div class="box pitfall"><span class="label">Do not "simplify" \((A^TA)^{-1}\) ★</span>
+      <p>It is very tempting to write \((A^TA)^{-1} = A^{-1}(A^T)^{-1}\) and watch everything collapse to \(P = I\). <b>You may not.</b> \(A\) is \(m \times n\) with \(m > n\) — it is not square, so \(A^{-1}\) does not exist and the step is meaningless.</p>
+      <p>The one case where it <i>is</i> legal is when \(A\) is square and invertible. And then the collapse is correct: a square invertible \(A\) has \(C(A)\) equal to the whole space, \(b\) is already in it, nothing needs projecting, and \(P = I\) is the honest answer.</p>
+    </div>
+
+    <p>The two properties survive in general:</p>
+
+    <ul>
+      <li><b>\(P^T = P\)</b>: transpose the product, reversing the order — \(\big(A(A^TA)^{-1}A^T\big)^T = A\big((A^TA)^{-1}\big)^TA^T\), and \((A^TA)^{-1}\) is symmetric because \(A^TA\) is. So you get \(P\) back.</li>
+      <li><b>\(P^2 = P\)</b>: \(A(A^TA)^{-1}\underbrace{A^TA(A^TA)^{-1}}_{= I}A^T = A(A^TA)^{-1}A^T = P\). The middle pair cancels.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. The two extreme cases</h3>
+
+    <p>Test \(P\) on the two vectors whose answer you already know.</p>
+
+    <table class="sl-table">
+      <tr><th>If \(b\) is …</th><th>Then</th><th>Why</th></tr>
+      <tr><td>already in \(C(A)\)</td><td>\(Pb = b\)</td><td>\(b = Ax\) for some \(x\), so \(Pb = A(A^TA)^{-1}A^TAx = Ax = b\) — the middle cancels</td></tr>
+      <tr><td>perpendicular to \(C(A)\), i.e. in \(N(A^T)\)</td><td>\(Pb = 0\)</td><td>\(A^Tb = 0\) kills the formula at the last factor</td></tr>
+    </table>
+
+    <p>Between them these two cases split any \(b\). Define \(I - P\) and you get the projection onto the <i>other</i> subspace:</p>
+
+    $$ b = \underbrace{Pb}_{p \,\in\, C(A)} + \underbrace{(I-P)b}_{e \,\in\, N(A^T)} $$
+
+    <p>\(I - P\) is a projection matrix too — symmetric, and \((I-P)^2 = I - 2P + P^2 = I - 2P + P = I - P\) ✓.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. Least squares: a line through three points</h3>
+
+    <p>Now the application the whole lecture was aiming at.</p>
+
+    <div class="box example"><span class="label">The problem</span>
+      <p>Three data points: \((t,b) = (1,1),\ (2,2),\ (3,2)\).</p>
+      <p>Find the straight line \(b = C + Dt\) that comes closest to all three.</p>
+    </div>
+
+    <h4>Step 1 · write down the impossible system</h4>
+
+    <p>If the line passed through all three points exactly, then</p>
+
+    $$ \begin{aligned} C + 1D &= 1 \\ C + 2D &= 2 \\ C + 3D &= 2 \end{aligned} $$
+
+    <p>Three equations, two unknowns. In matrix form:</p>
+
+    $$ \underbrace{\begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 3 \end{bmatrix}}_{A}
+       \underbrace{\begin{bmatrix} C \\ D \end{bmatrix}}_{x}
+       = \underbrace{\begin{bmatrix} 1 \\ 2 \\ 2 \end{bmatrix}}_{b} $$
+
+    <p>Column 1 is all ones (the constant \(C\)); column 2 holds the \(t\) values. There is <b>no solution</b>: the three points are not collinear, and you can see it — the first two suggest a slope of 1, the last two a slope of 0.</p>
+
+    <h4>Step 2 · build \(A^TA\) and \(A^Tb\)</h4>
+
+    <p>The columns are \(a_1 = (1,1,1)\) and \(a_2 = (1,2,3)\).</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Dot product</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((A^TA)_{11}\)</td><td>\(a_1 \cdot a_1\)</td><td>\(1+1+1\)</td><td>3</td></tr>
+      <tr><td>\((A^TA)_{12}\)</td><td>\(a_1 \cdot a_2\)</td><td>\(1+2+3\)</td><td>6</td></tr>
+      <tr><td>\((A^TA)_{22}\)</td><td>\(a_2 \cdot a_2\)</td><td>\(1+4+9\)</td><td>14</td></tr>
+      <tr><td>\((A^Tb)_1\)</td><td>\(a_1 \cdot b\)</td><td>\(1+2+2\)</td><td>5</td></tr>
+      <tr><td>\((A^Tb)_2\)</td><td>\(a_2 \cdot b\)</td><td>\(1 + 4 + 6\)</td><td>11</td></tr>
+    </table>
+
+    $$ A^TA = \begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix}, \qquad A^Tb = \begin{bmatrix} 5 \\ 11 \end{bmatrix} $$
+
+    <h4>Step 3 · solve the normal equations</h4>
+
+    $$ \begin{bmatrix} 3 & 6 \\ 6 & 14 \end{bmatrix}\begin{bmatrix} C \\ D \end{bmatrix} = \begin{bmatrix} 5 \\ 11 \end{bmatrix} $$
+
+    <p>Determinant \(= (3)(14) - (6)(6) = 42 - 36 = 6 \ne 0\), so it is invertible ✓. Eliminate: row 2 \(-\) 2 × row 1 gives</p>
+
+    $$ (6 - 6)C + (14 - 12)D = 11 - 10 \qquad\Longrightarrow\qquad 2D = 1 \qquad\Longrightarrow\qquad D = \tfrac12 $$
+
+    <p>Back-substitute into row 1:</p>
+
+    $$ 3C + 6\left(\tfrac12\right) = 5 \qquad\Longrightarrow\qquad 3C = 2 \qquad\Longrightarrow\qquad C = \tfrac23 $$
+
+    $$ \boxed{b = \tfrac23 + \tfrac12 t} $$
+
+    <h4>Step 4 · the fitted values and the residuals</h4>
+
+    <table class="sl-table">
+      <tr><th>\(t\)</th><th>Measured \(b\)</th><th>Fitted \(p = \tfrac23 + \tfrac12 t\)</th><th>Residual \(e = b - p\)</th></tr>
+      <tr><td>1</td><td>1</td><td>\(\tfrac23 + \tfrac12 = \tfrac76\)</td><td>\(1 - \tfrac76 = -\tfrac16\)</td></tr>
+      <tr><td>2</td><td>2</td><td>\(\tfrac23 + 1 = \tfrac53\)</td><td>\(2 - \tfrac53 = \tfrac13\)</td></tr>
+      <tr><td>3</td><td>2</td><td>\(\tfrac23 + \tfrac32 = \tfrac{13}{6}\)</td><td>\(2 - \tfrac{13}{6} = -\tfrac16\)</td></tr>
+    </table>
+
+    $$ p = \left(\tfrac76,\ \tfrac53,\ \tfrac{13}{6}\right), \qquad e = \left(-\tfrac16,\ \tfrac13,\ -\tfrac16\right) $$
+
+    <h4>Step 5 · check</h4>
+
+    <p>The error must satisfy \(A^Te = 0\). Two dot products:</p>
+
+    <table class="sl-table">
+      <tr><th>Condition</th><th>Arithmetic</th><th></th></tr>
+      <tr><td>\(a_1 \cdot e = 0\)</td><td>\(-\tfrac16 + \tfrac13 - \tfrac16 = \tfrac{-1 + 2 - 1}{6} = 0\)</td><td>✓</td></tr>
+      <tr><td>\(a_2 \cdot e = 0\)</td><td>\(-\tfrac16 + \tfrac23 - \tfrac12 = \tfrac{-1 + 4 - 3}{6} = 0\)</td><td>✓</td></tr>
+    </table>
+
+    <p>The first says <b>the residuals add to zero</b> — a best-fit line always leaves as much above as below. The second says the residuals have no correlation left with \(t\); if they did, tilting the line would improve the fit.</p>
+
+    <p>The total squared error — the thing "least squares" minimises:</p>
+
+    $$ \|e\|^2 = \left(\tfrac16\right)^2 + \left(\tfrac13\right)^2 + \left(\tfrac16\right)^2 = \tfrac{1}{36} + \tfrac{4}{36} + \tfrac{1}{36} = \tfrac{6}{36} = \tfrac16 $$
+
+    <p>No other choice of \(C\) and \(D\) gets below \(\tfrac16\).</p>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 520 280" role="img" aria-label="Three data points and the least squares line through them">
+        <line class="grid" x1="80" y1="40" x2="80" y2="230"/>
+        <line class="grid" x1="80" y1="230" x2="470" y2="230"/>
+        <line class="grid dash" x1="80" y1="170" x2="470" y2="170"/>
+        <line class="grid dash" x1="80" y1="110" x2="470" y2="110"/>
+        <text class="tick" x="58" y="234">0</text>
+        <text class="tick" x="58" y="174">1</text>
+        <text class="tick" x="58" y="114">2</text>
+        <text class="tick" x="166" y="250">1</text>
+        <text class="tick" x="266" y="250">2</text>
+        <text class="tick" x="366" y="250">3</text>
+        <text class="tick" x="440" y="250">t</text>
+        <text class="tick" x="62" y="34">b</text>
+        <line class="l1" x1="110" y1="190" x2="440" y2="91"/>
+        <text class="lbl c1" x="356" y="84">b = 2/3 + t/2</text>
+        <line class="l3" x1="170" y1="170" x2="170" y2="160"/>
+        <line class="l3" x1="270" y1="110" x2="270" y2="130"/>
+        <line class="l3" x1="370" y1="110" x2="370" y2="100"/>
+        <circle class="hit" cx="170" cy="170" r="6"/>
+        <circle class="hit" cx="270" cy="110" r="6"/>
+        <circle class="hit" cx="370" cy="110" r="6"/>
+        <circle class="pt" cx="170" cy="160" r="4"/>
+        <circle class="pt" cx="270" cy="130" r="4"/>
+        <circle class="pt" cx="370" cy="100" r="4"/>
+        <text class="tick c3" x="180" y="168">−1/6</text>
+        <text class="tick c3" x="280" y="128">+1/3</text>
+        <text class="tick c3" x="380" y="108">−1/6</text>
+      </svg>
+      <figcaption>The three measurements (large dots) and the fitted values on the line (small dots). The short vertical bars are the residuals \(-\tfrac16, +\tfrac13, -\tfrac16\). They add to zero, and the sum of their squares, \(\tfrac16\), is as small as any line can make it.</figcaption>
+    </figure>
+
+    <div class="box intuition"><span class="label">Where the projection went</span>
+      <p>\(p = \left(\tfrac76, \tfrac53, \tfrac{13}{6}\right)\) is the projection of \(b = (1,2,2)\) onto the plane \(C(A)\) inside \(\mathbb{R}^3\). The "line of best fit" and "projection onto a plane" are the same calculation seen from two sides: the data lives in \(\mathbb{R}^3\) (one coordinate per measurement), and the two-parameter family of straight lines is a plane in it.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t12"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The method, start to finish</h4>
+    <ol class="index-list">
+      <li><b>Write the unsolvable system \(Ax = b\)</b><span>One row per measurement, one column per unknown.</span></li>
+      <li><b>Form \(A^TA\) and \(A^Tb\)</b><span>Entry \((i,j)\) is column \(i\) dotted with column \(j\).</span></li>
+      <li><b>Solve \(A^TA\hat{x} = A^Tb\)</b><span>Invertible as long as the columns of \(A\) are independent.</span></li>
+      <li><b>Compute \(p = A\hat{x}\) and \(e = b - p\)</b><span>\(p\) is the explainable part, \(e\) the leftover.</span></li>
+      <li><b>Check \(A^Te = 0\)</b><span>One dot product per column. If it fails, the arithmetic is wrong.</span></li>
+    </ol>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The whole method ★</b></td><td>\(e = b - p\) is perpendicular to the space you are projecting onto. Write that down and solve.</td></tr>
+      <tr><td><b>Onto a line</b></td><td>\(\hat{x} = \dfrac{a^Tb}{a^Ta}\), \(\;p = a\hat{x}\), \(\;P = \dfrac{aa^T}{a^Ta}\).</td></tr>
+      <tr><td><b>\(aa^T\) vs \(a^Ta\)</b></td><td>A matrix and a number. Order changes the shape, not just the value.</td></tr>
+      <tr><td><b>Onto \(C(A)\) ★</b></td><td>\(A^TA\hat{x} = A^Tb\), \(\;p = A\hat{x}\), \(\;P = A(A^TA)^{-1}A^T\).</td></tr>
+      <tr><td><b>Properties of \(P\) ★</b></td><td>\(P^T = P\) and \(P^2 = P\). Projecting twice changes nothing.</td></tr>
+      <tr><td><b>No simplifying</b></td><td>\((A^TA)^{-1} \ne A^{-1}(A^T)^{-1}\) unless \(A\) is square — and then \(P = I\).</td></tr>
+      <tr><td><b>Where \(e\) lives ★</b></td><td>\(A^Te = 0\), so \(e \in N(A^T)\), which Lesson 13 proved is perpendicular to \(C(A)\).</td></tr>
+      <tr><td><b>The split</b></td><td>\(b = Pb + (I-P)b\), one piece in \(C(A)\), the other in \(N(A^T)\).</td></tr>
+      <tr><td><b>Extremes</b></td><td>\(b\) in \(C(A)\) → \(Pb = b\). \(b \perp C(A)\) → \(Pb = 0\).</td></tr>
+      <tr><td><b>The worked fit</b></td><td>\((1,1),(2,2),(3,2)\) give \(b = \tfrac23 + \tfrac12 t\), residuals \(\left(-\tfrac16, \tfrac13, -\tfrac16\right)\), \(\|e\|^2 = \tfrac16\).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>One right angle generates every formula ★</b><span>\(a^Te = 0\) for a line, \(A^Te = 0\) for a subspace. Everything else is algebra on that.</span></li>
+      <li><b>Keep the shapes in view</b><span>\(a^Ta\) is a number you divide by; \(A^TA\) is a matrix you invert. That substitution is the entire step up in dimension.</span></li>
+      <li><b>Resist simplifying \((A^TA)^{-1}\)</b><span>The temptation is strong and the step is illegal for rectangular \(A\).</span></li>
+      <li><b>The error is in the left nullspace</b><span>Lesson 13 and Lesson 14 arrive at the same orthogonality from opposite directions.</span></li>
+      <li><b>Fitting a line <i>is</i> projecting</b><span>Least squares is not an analogy for projection — it is the same calculation.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We have \(P\), we have the normal equations, and we have one worked fit. The next lesson goes back over the same ground with the pieces named properly: why \(\|e\|^2\) really is minimised, what \(A^TA\) looks like for a general fit, and the geometry of the two spaces that \(P\) and \(I-P\) send \(b\) into. After that, Lesson 16 makes the whole thing easier by choosing bases that are already perpendicular.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+Exercises on orthogonal matrices and Gram-Schmidt
+
+Problem 17.1: (4.4 #10.b Introduction to Linear Algebra: Strang)
+Orthonormal vectors are automatically linearly independent.
+Matrix Proof: Show that Qx = 0 implies x = 0. Since Q may be rectan­
+gular, you can use Q T but not Q−1 .
+Problem 17.2: (4.4 #18) Given the vectors a, b and c listed below, use the
+Gram-Schmidt process to ﬁnd orthogonal vectors A, B, and C that span
+the same space.
+a = (1, −1, 0, 0), b = (0, 1, −1, 0), c = (0, 0, 1, −1).
+Show that {A, B, C} and {a, b, c} are bases for the space of vectors per­
+pendicular to d = (1, 1, 1, 1).
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

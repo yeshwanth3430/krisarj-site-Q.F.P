@@ -1,0 +1,30 @@
+Exercises on left and right inverses; pseudoinverse
+�
+Problem 32.1: Find a right inverse for A =
+�
+
+1 0 1
+0 1 0
+
+�
+.
+
+�
+4 3
+Problem 32.2: Does the matrix A =
+have a left inverse? A right
+8 6
+inverse? A pseudoinverse? If the answer to any of these questions is ”yes”,
+ﬁnd the appropriate inverse.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

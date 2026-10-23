@@ -1,0 +1,59 @@
+Exercises on determinant formulas and cofactors
+
+Problem 19.1: Compute the determinant of:
+⎡
+⎤
+0 0 0 1
+⎢ 1 0 0 0 ⎥
+⎥
+A=⎢
+⎣ 0 1 0 0 ⎦.
+0 0 1 0
+Which method of computing the determinant do you prefer for this prob­
+lem, and why?
+Problem 19.2: (5.2 #33. Introduction to Linear Algebra: Strang) The symmet­
+ric Pascal matrices have determinant 1. If I subtract 1 from the n, n entry,
+why does the determinant become zero? (Use rule 3 or cofactors.)
+1
+⎢ 1
+det ⎣
+1
+1
+
+⎡
+
+1 1 1
+2 3 4 ⎥
+= 1 (known)
+3 6 10 ⎦
+4 10 20
+
+1
+⎢ 1
+det ⎣
+1
+1
+
+⎤
+
+⎡
+
+1
+
+1 1 1
+2 3 4 ⎥
+= 0 (to explain).
+3 6 10 ⎦
+4 10 19
+
+⎤
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

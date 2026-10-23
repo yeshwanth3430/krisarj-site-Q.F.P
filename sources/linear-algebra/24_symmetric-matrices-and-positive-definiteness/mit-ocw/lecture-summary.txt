@@ -1,0 +1,164 @@
+Symmetric matrices and positive deﬁnite­ness
+Symmetric matrices are good – their eigenvalues are real and each has a com­
+plete set of orthonormal eigenvectors. Positive deﬁnite matrices are even bet­
+ter.
+
+Symmetric matrices
+A symmetric matrix is one for which A = A T . If a matrix has some special
+property (e.g. it’s a Markov matrix), its eigenvalues and eigenvectors are likely
+to have special properties as well. For a symmetric matrix with real number
+entries, the eigenvalues are real numbers and it’s possible to choose a complete
+set of eigenvectors that are perpendicular (or even orthonormal).
+If A has n independent eigenvectors we can write A = SΛS−1 . If A is sym­
+metric we can write A = QΛQ−1 = QΛQ T , where Q is an orthogonal matrix.
+Mathematicians call this the spectral theorem and think of the eigenvalues as the
+“spectrum” of the matrix. In mechanics it’s called the principal axis theorem.
+In addition, any matrix of the form QΛQ T will be symmetric.
+Real eigenvalues
+Why are the eigenvalues of a symmetric matrix real? Suppose A is symmetric
+and Ax = λx. Then we can conjugate to get Ax = λx. If the entries of A
+are real, this becomes Ax = λx. (This proves that complex eigenvalues of real
+valued matrices come in conjugate pairs.)
+Now transpose to get x T A T = x T λ. Because A is symmetric we now have
+T
+x A = x T λ. Multiplying both sides of this equation on the right by x gives:
+x T Ax = x T λx.
+On the other hand, we can multiply Ax = λx on the left by x T to get:
+x T Ax = x T λx.
+Comparing the two equations we see that x T λx = x T λx and, unless x T x is zero,
+we can conclude λ = λ is real.
+How do we know x T x �= 0?
+⎡
+⎤
+x1
+⎥
+�
+�⎢
+⎢ x2 ⎥
+x T x = x 1 x 2 · · · x n ⎢ . ⎥ = | x1 |2 + | x2 |2 + · · · + | x n |2 .
+⎣ .. ⎦
+xn
+If x �= 0 then x T x �= 0.
+
+1
+
+With complex vectors, as with complex numbers, multiplying by the conju­
+gate is often helpful.
+Symmetric matrices with real entries have A = A T , real eigenvalues, and
+perpendicular eigenvectors. If A has complex entries, then it will have real
+T
+
+eigenvalues and perpendicular eigenvectors if and only if A = A . (The proof
+of this follows the same pattern.)
+Projection onto eigenvectors
+If A = A T , we can write:
+A
+
+= QΛQ T
+⎡
+
+=
+
+�
+
+q1
+
+q2
+
+· · · qn
+
+�⎢
+⎢
+⎢
+⎣
+
+⎤
+q1T
+⎥ ⎢ qT ⎥
+⎥⎢ 2 ⎥
+⎥⎢ . ⎥
+⎦ ⎣ .. ⎦
+⎤⎡
+
+λ1
+λ2
+..
+
+.
+λn
+
+qnT
+
+= λ1 q1 q1T + λ2 q2 q2T + · · · + λn qn qnT
+The matrix qk qkT is the projection matrix onto qk , so every symmetric matrix is
+a combination of perpendicular projection matrices.
+Information about eigenvalues
+If we know that eigenvalues are real, we can ask whether they are positive or
+negative. (Remember that the signs of the eigenvalues are important in solving
+systems of differential equations.)
+For very large matrices A, it’s impractical to compute eigenvalues by solv­
+ing | A − λI | = 0. However, it’s not hard to compute the pivots, and the signs
+of the pivots of a symmetric matrix are the same as the signs of the eigenvalues:
+number of positive pivots = number of positive eigenvalues.
+Because the eigenvalues of A + bI are just b more than the eigenvalues of
+A, we can use this fact to ﬁnd which eigenvalues of a symmetric matrix are
+greater or less than any real number b. This tells us a lot about the eigenvalues
+of A even if we can’t compute them directly.
+
+Positive deﬁnite matrices
+A positive deﬁnite matrix is a symmetric matrix A for which all eigenvalues are
+positive. A good way to tell if a matrix is positive deﬁnite is to check that all
+its pivots are positive.
+
+2
+
+�
+Let A =
+
+5
+2
+
+2
+3
+
+�
+. The pivots of this matrix are 5 and (det A)/5 = 11/5.
+
+The matrix is symmetric and its pivots (and therefore eigenvalues) are positive,
+so A is a positive deﬁnite matrix. Its eigenvalues are the solutions to:
+
+| A − λI | = λ2 − 8λ + 11 = 0,
+√
+i.e. 4 ± 5.
+The determinant
+of a �positive deﬁnite matrix is always positive but the de­
+�
+terminant of
+
+−1
+0
+
+0
+−3
+
+is also positive, and that matrix isn’t positive deﬁ­
+
+nite. If all of the subdeterminants of A are positive (determinants of the k by
+k matrices in the upper left corner of A, where 1 ≤ k ≤ n), then A is positive
+deﬁnite.
+The subject of positive deﬁnite matrices brings together what we’ve learned
+about pivots, determinants and eigenvalues of square matrices. Soon we’ll
+have a chance to bring together what we’ve learned in this course and apply it
+to non-square matrices.
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

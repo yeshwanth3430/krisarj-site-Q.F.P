@@ -1,0 +1,135 @@
+Exercises on singular value decomposition
+
+Problem 29.1: (Based on 6.7 #4. Introduction to Linear Algebra: Strang)
+Verify that if we compute the
+value decomposition A = UΣV T of
+� singular
+�
+the Fibonacci matrix A =
+
+1 1
+1 0
+
+,
+
+�
+
+√
+1+ 5
+2
+
+Σ=
+
+0
+√
+
+�
+
+5−1
+2
+
+0
+
+.
+
+Solution:
+T
+
+T
+
+A A = AA =
+
+�
+
+2 1
+1 1
+
+�
+.
+
+The √
+eigenvalues of this matrix are the roots of x2 − 3x + 1, which are
+3± 5
+. Thus we have:
+2
+√
+√
+3+ 5
+3− 5
+2
+2
+σ1 =
+and σ2 =
+.
+2
+2
+�
+�
+σ1 0
+To check that Σ =
+, we will square the entries of the matrix Σ
+0
+
+σ2
+
+given above.
+�
+
+√ �2
+√
+√
+1+ 5
+1+2 5+5
+3+ 5
+=
+=
+.�
+2
+4
+2
+
+�√
+
+5−1
+2
+
+�2
+
+√
+√
+5−2 5+1
+3− 5
+=
+=
+.�
+4
+2
+
+Problem 29.2: (6.7 #11.) Suppose A has orthogonal columns w1 , w2 , ...,
+wn of lengths σ1 , σ2 , ..., σn . Calculate A T A. What are U, Σ, and V in the
+SVD?
+1
+
+Solution:
+Since the columns of A are orthogonal, A T A is a diagonal
+matrix with entries σ1 2 , ..., σn 2 . Since A T A = VΣ2 V T , we ﬁnd that Σ2 is the
+matrix with diagonal entries σ1 2 , ...,σn 2 and thus that Σ is the matrix with
+diagonal entries σ1 , ..., σn .
+Referring again to the equation A T A = VΣ2 V T , we conclude also that
+V = I.
+The equation A = UΣV T then tells us that U must be the matrix whose
+1
+columns are wi .
+σi
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

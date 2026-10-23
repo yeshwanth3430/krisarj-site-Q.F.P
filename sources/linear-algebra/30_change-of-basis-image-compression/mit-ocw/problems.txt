@@ -1,0 +1,21 @@
+Exercises on change of basis; image compression
+
+Problem 31.1: Verify that the vectors of the Haar wavelet basis, given in
+lecture, are orthogonal. Adjust their lengths so that the resulting basis
+vectors are orthonormal.
+Problem 31.2: We can think of the set of all two by two matrices with
+real valued entries as a vector space. Describe two different bases for this
+space. Is one of your bases better than the other for describing diagonal
+matrices? What about triangular matrices? Symmetric matrices?
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

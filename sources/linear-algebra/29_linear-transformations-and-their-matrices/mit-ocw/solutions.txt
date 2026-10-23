@@ -1,0 +1,169 @@
+Exercises on linear transformations and their matrices
+
+Problem 30.1: Consider the transformation T that doubles the distance
+between each point and the origin without changing the direction from
+the origin to the points. In polar coordinates this is described by
+T (r, θ ) = (2r, θ ).
+a) Yes or no: is T a linear transformation?
+b) Describe T using Cartesian (xy) coordinates. Check your work by con­
+ﬁrming that the transformation doubles the lengths of vectors.
+c) If your answer to (a) was ”yes”, ﬁnd the matrix of T. If your answer to
+(a) was ”no”, explain why the T isn’t linear.
+Solution:
+a) Yes. In terms of vectors, T (v) = 2v, so T (v1 + v2 ) = 2v1 + 2v2 =
+T (v1 ) + T (v2 ) and T (cv) = 2cv = cT (v).
+�� ��
+� x � �
+� = x2 + y2 and can calculate
+b) T ( x, y) = (2x, 2y). We know ��
+�
+y
+
+� �� ��� ��
+�� ��
+��
+�
+� � 2x � �
+�
+�
+x
+�T
+�=�
+� = 4( x 2 + y2 ) = 2 � x � .
+�
+� � 2y �
+� y �
+y
+This conﬁrms that T doubles the lengths of vectors.
+�
+c) We can use our answer to (b) to ﬁnd that the matrix of T is
+
+2 0
+0 2
+
+�
+.
+
+Problem 30.2: Describe a transformation which leaves the zero vector
+ﬁxed but which is not a linear transformation.
+Solution: If we limit ourselves to “simple” transformations, this is not an
+easy task!
+
+1
+
+One way to solve this is to ﬁnd��
+a transformation
+�� �
+�that acts differently
+x
+y
+
+on different parts of the plane. If T
+��
+T
+
+1
+1
+
+�
+
+�
+
++
+
+1
+−1
+
+=
+��
+
+�
+
+x
+|y|
+
+�
+
+=
+
+2
+0
+
+��
+
+�
+
+2
+2
+
+then
+
+is not equal to
+��
+T
+
+1
+1
+
+��
+
+��
+
++T
+
+1
+−1
+
+=
+
+�
+.
+
+Another approach
+�� �� is to
+� use�a nonlinear
+� �function
+�� to� deﬁne� the transfor­
+x
+
+x
+
+mation: if T
+=
+y
+y2
+�
+�� �� �
+x
+cx
+to cT
+=
+.
+2
+y
+
+then T c
+
+cy
+
+2
+
+x
+y
+
+=
+
+cx
+c2 y2
+
+is not equal
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

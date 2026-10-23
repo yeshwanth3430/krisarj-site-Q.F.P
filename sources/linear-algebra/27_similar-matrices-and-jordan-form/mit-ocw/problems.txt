@@ -1,0 +1,62 @@
+Exercises on similar matrices and Jordan form
+
+Problem 28.1: (6.6 #12. Introduction to Linear Algebra: Strang) These Jordan
+matrices have eigenvalues 0, 0, 0, 0. They have two eigenvectors; one from
+each block. However, their block sizes don’t match and they are not similar:
+⎡
+⎤
+⎡
+⎤
+0 1 0 0
+0 1 0 0
+⎢ 0 0 0 0 ⎥
+⎢
+⎥
+⎥ and K = ⎢ 0 0 1 0 ⎥ .
+J=⎢
+⎣ 0 0 0 1 ⎦
+⎣ 0 0 0 0 ⎦
+0 0 0 0
+0 0 0 0
+For a generic matrix M, show that if J M = MK then M is not invertible
+and so J is not similar to K.
+Problem 28.2: (6.6 #20.) Why are these statements all true?
+a) If A is similar to B then A2 is similar to B2 .
+b) A2 and B2 can be similar when A and B are not similar (try λ = 0, 0.)
+�
+�
+�
+�
+3 0
+3 1
+c)
+is similar to
+.
+0 4
+0 4
+�
+�
+�
+�
+3 0
+3 1
+d)
+is not similar to
+.
+0 3
+0 3
+e) Given a matrix A, let B be the matrix obtained by exchanging rows 1
+and 2 of A and then exchanging columns 1 and 2 of A. Show that A is
+similar to B.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

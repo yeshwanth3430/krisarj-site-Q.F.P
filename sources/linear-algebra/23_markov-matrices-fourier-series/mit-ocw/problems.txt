@@ -1,0 +1,49 @@
+Exercises on Markov matrices; Fourier series
+
+Problem 24.1: (6.4 #7. Introduction to Linear Algebra: Strang)
+�
+�
+1 b
+a) Find a symmetric matrix
+that has a negative eigenvalue.
+b 1
+b) How do you know it must have a negative pivot?
+c) How do you know it can’t have two negative eigenvalues?
+Problem 24.2: (6.4 #23.) Which of these classes of matrices do A and B
+belong to: invertible, orthogonal, projection, permutation, diagonalizable,
+Markov?
+⎡
+⎤
+⎡
+⎤
+0 0 1
+1 1 1
+1
+A = ⎣ 0 1 0 ⎦ B = ⎣ 1 1 1 ⎦.
+3
+1 0 0
+1 1 1
+Which of these factorizations are possible for A and B: LU, QR, SΛS−1 , or
+QΛQ T ?
+
+1
+
+Problem 24.3: (8.3 #11.) Complete A to a Markov matrix and ﬁnd the
+steady state eigenvector. When A is a symmetric Markov matrix, why is
+x1 = (1, . . . , 1) its steady state?
+⎡
+⎤
+.7 .1 .2
+A = ⎣ .1 .6 .3 ⎦ .
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

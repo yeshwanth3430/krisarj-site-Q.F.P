@@ -1,0 +1,319 @@
+Orthogonal matrices and Gram-Schmidt
+In this lecture we ﬁnish introducing orthogonality. Using an orthonormal ba­
+sis or a matrix with orthonormal columns makes calculations much easier. The
+Gram-Schmidt process starts with any basis and produces an orthonormal ba­
+sis that spans the same space as the original basis.
+
+Orthonormal vectors
+The vectors q1 , q2 , ...qn are orthonormal if:
+�
+0 if i �= j
+T
+qi q j =
+1 if i = j.
+In other words, they all have (normal) length 1 and are perpendicular (ortho)
+to each other. Orthonormal vectors are always independent.
+
+Orthonormal matrix
+�
+�
+If the columns of Q = q1 ... qn are orthonormal, then Q T Q = I is the
+identity.
+Matrices with orthonormal columns are a new class of important matri­
+ces to add to those on our list: triangular, diagonal, permutation, symmetric,
+reduced row echelon, and projection matrices. We’ll call them “orthonormal
+matrices”.
+A square orthonormal matrix Q is called an orthogonal matrix. If Q is square,
+then Q T Q = I tells us that Q T = Q−1 .
+�
+�
+�
+�
+For example, if Q =
+
+0
+1
+0
+
+0
+0
+1
+
+1
+0
+0
+
+then Q T =
+
+0
+0
+1
+
+1
+0
+0
+
+0
+1
+0
+
+. Both Q and Q T
+
+are orthogonal matrices, and their product is the identity.
+�
+�
+�
+cos θ − sin θ
+1
+The matrix Q =
+is orthogonal. The matrix
+sin θ
+
+cos θ
+
+1
+
+not, but we can adjust that matrix to get the orthogonal matrix Q = √1
+2
+
+1
+−1
+
+�
+
+�
+
+1
+−1
+
+1
+1
+
+is
+
+We can use the same tactic to ﬁnd some larger orthogonal matrices called
+Hadamard matrices:
+⎡
+⎤
+1
+1
+1
+1
+1 ⎢ 1 −1
+1 −1 ⎥
+⎥.
+Q= ⎢
+⎣
+1 −1 −1 ⎦
+2 1
+1
+1 −1 −1
+An example of a rectangular matrix with orthonormal columns is:
+⎡
+⎤
+1 −2
+1⎣
+2 −1 ⎦ .
+Q=
+3
+2
+2
+1
+
+�
+.
+
+We can extend this to a (square) orthogonal matrix:
+⎡
+⎤
+1 −2
+2
+1⎣
+2 −1 −2 ⎦ .
+3
+2
+2
+1
+These examples are particularly nice because they don’t include compli­
+cated square roots.
+
+Orthonormal columns are good
+Suppose Q has orthonormal columns. The matrix that projects onto the column
+space of Q is:
+P = Q T ( Q T Q ) −1 Q T .
+If the columns of Q are orthonormal, then Q T Q = I and P = QQ T . If Q is
+square, then P = I because the columns of Q span the entire space.
+Many equations become trivial when using a matrix with orthonormal columns.
+If our basis is orthonormal, the projection component x̂i is just qiT b because
+A T Ax̂ = A T b becomes x̂ = Q T b.
+
+Gram-Schmidt
+With elimination, our goal was “make the matrix triangular”. Now our goal is
+“make the matrix orthonormal”.
+We start with two independent vectors a and b and want to ﬁnd orthonor­
+mal vectors q1 and q2 that span the same plane. We start by ﬁnding orthogonal
+vectors A and B that span the same space as a and b. Then the unit vectors
+q1 = ||A
+and q2 = ||B
+form the desired orthonormal basis.
+A||
+B||
+Let A = a. We get a vector orthogonal to A in the space spanned by a and
+b by projecting b onto a and letting B = b − p. (B is what we previously called
+e.)
+AT b
+B = b − T A.
+A A
+If we multiply both sides of this equation by A T , we see that A T B = 0.
+What if we had started with three independent vectors, a, b and c? Then
+we’d ﬁnd a vector C orthogonal to both A and B by subtracting from c its
+components in the A and B directions:
+C = c−
+
+AT c
+BT c
+A − T B.
+T
+A A
+B B
+
+2
+
+�
+For example, suppose a =
+
+1
+1
+1
+
+�
+
+�
+and b =
+
+1
+0
+2
+
+�
+. Then A = a and:
+
+⎡
+B
+
+=
+
+=
+
+=
+
+⎤
+⎡
+⎤
+1
+1
+Tb
+A
+⎣ 0 ⎦−
+⎣ 1 ⎦
+TA
+A
+2
+1
+⎡
+⎤
+⎡
+⎤
+1
+1
+⎣ 0 ⎦− 3 ⎣ 1 ⎦
+3
+2
+1
+⎡
+⎤
+0
+⎣ −1 ⎦ .
+1
+
+Normalizing, we get:
+√
+1/√3
+= ⎣ 1/√3
+1/ 3
+
+⎡
+
+Q=
+
+�
+
+q1
+
+q2
+
+�
+
+⎤
+
+√0
+−1/√2 ⎦ .
+1/ 2
+
+The column space of Q is the plane spanned by a and b.
+When we studied elimination, we wrote the process in terms of matrices
+and found A = LU. A similar equation A = QR relates our starting matrix A
+to the result Q of the Gram-Schmidt process. Where L was lower triangular, R
+is upper triangular.
+�
+�
+Suppose A = a1 a2 . Then:
+A
+�
+
+a1
+
+Q
+a2
+
+�
+
+=
+
+�
+
+q1
+
+R
+q2
+
+�
+
+�
+
+a1T q1
+a1T q2
+
+a2T q1
+a2T q2
+
+�
+
+.
+
+If R is upper triangular, then it should be true that a1T q2 = 0. This must be true
+because we chose q1 to be a unit vector in the direction of a1 . All the later qi
+were chosen to be perpendicular to the earlier ones.
+Notice that R = Q T A. This makes sense; Q T Q = I.
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,28 @@
+Exercises on complex matrices; fast Fourier transform
+
+Problem 26.1: Compute the matrix F2 .
+Problem 26.2: Find the matrices D and P used in the factorization:
+�
+��
+�
+I
+D
+F2
+F4 =
+P
+I −D
+F2
+Hint: D is created using fourth roots, not square roots, of 1. Check your
+answer by multiplying.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,245 @@
+Change of basis; image compression
+We’ve learned that computations can be made easier by an appropriate choice
+of basis. One application of this principle is to image compression. Lecture
+videos, music, and other data sources contain a lot of information; that infor­
+mation can be efﬁciently stored and transmitted only after we change the basis
+used to record it.
+
+Compression of images
+Suppose one frame of our lecture video is 512 by 512 pixels and that the video
+is recorded in black and white. The camera records a brightness level for each
+of the (512)2 pixels; in this sense, each frame of video is a vector in a (512)2
+dimensional vector space.
+The standard basis for this space has a vector for each pixel. Transmitting
+the values of all (512)2 components of each frame using the standard basis
+would require far too much bandwidth, but if we change our basis according
+to the JPEG image compression standard we can transmit a fairly good copy
+the video very efﬁciently.
+For example, if we’re reporting light levels pixel by pixel, there’s no efﬁcient
+way to transmit the information “the entire frame is black”. However, if one of
+our basis vectors corresponds to all pixels having the same light level (say 1),
+we can very efﬁciently transmit a recording of a blank blackboard.
+Along with a vector of all 1’s, we might choose a basis vector that alternates
+1’s and −1’s, or one that’s half 1’s and half −1’s corresponding to an image
+that’s bright on the left and dark on the right. Our choice of basis will directly
+affect how much data we need to download to watch a video, and the best
+choice of basis for algebra lectures might differ from the best choice for action
+movies!
+Fourier basis vectors
+⎡
+⎤ ⎡
+⎤ ⎡
+⎤
+⎡
+⎤
+1
+1
+1
+1
+2
+7
+⎢ 1 ⎥ ⎢ ω ⎥ ⎢ ω ⎥
+⎢ ω ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢ 14 ⎥
+⎢ 1 ⎥ ⎢ ω2 ⎥ ⎢ ω4 ⎥
+⎢ ω ⎥
+⎢
+⎥ ⎢ 3 ⎥ ⎢ 6 ⎥
+⎢ 21 ⎥
+⎢ 1 ⎥ ⎢ ω ⎥ ⎢ ω ⎥
+⎢
+⎥
+⎢
+⎥ , ⎢ 4 ⎥ , ⎢ 8 ⎥ , · · · , ⎢ ω 28 ⎥
+⎢ 1 ⎥ ⎢ ω ⎥ ⎢ ω ⎥
+⎢ ω ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎢ 1 ⎥ ⎢ ω 5 ⎥ ⎢ ω 10 ⎥
+⎢ ω 35 ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎣ 1 ⎦ ⎣ ω 6 ⎦ ⎣ ω 12 ⎦
+⎣ ω 42 ⎦
+1
+ω7
+ω 14
+ω 49
+The best known basis is the Fourier basis, which is closely related to the Fourier
+matrices we studied earlier. The basis used by JPEG is made up of cosines –
+the real parts of ω jk .
+This method breaks the 512 by 512 rectangle of pixels into blocks that are 8
+pixels on a side, each block containing 64 pixels total. The brightness informa­
+tion for those pixels is then compressed, possibly by eliminating all coefﬁcients
+1
+
+below some threshold chosen so that we can hardly see the difference once
+they’re gone.
+lossless
+
+signal x −→ 64 coefﬁcients c
+
+lossy compression
+
+−→
+
+ĉ (many zeros) −→ x̂ = ∑ ĉi vi
+
+In video, not only should we consider compressing each frame, we can
+also consider compressing sequences of frames. There’s very little difference
+between one frame and the next. If we do it right, we only need to encode and
+compress the differences between frames, not every frame in its entirety.
+The Haar wavelet basis
+⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤ ⎡
+⎤
+⎡
+⎤
+1
+1
+1
+0
+1
+0
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥ ⎢ −1 ⎥
+⎢ 0 ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥
+⎢ 0 ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎢ 1 ⎥ ⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 0 ⎥
+⎢
+⎥
+⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,⎢
+⎥,··· ,⎢ 0 ⎥
+⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥
+⎢ 0 ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎢ 1 ⎥ ⎢ −1 ⎥ ⎢ 0 ⎥ ⎢ 1 ⎥ ⎢ 0 ⎥
+⎢ 0 ⎥
+⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+⎣ 1 ⎦ ⎣ −1 ⎦ ⎣ 0 ⎦ ⎣ −1 ⎦ ⎣ 0 ⎦
+⎣ 1 ⎦
+1
+−1
+0
+−1
+0
+−1
+The closest competitor to the JPEG encoding method uses a wavelet basis.
+(JPEG2000 improves on the Haar wavelets above.) In Haar’s wavelet basis
+for R8 , the non-zero entries are half 1’s and half −1’s (except for the vector of
+all 1’s). However, half or even three quarters of a basis vector’s entries may
+be 0. These vectors are chosen to be orthogonal and can be adjusted to be or­
+thonormal.
+Compression and matrices
+Linear algebra is used to ﬁnd the coefﬁcients ci in the change of basis from the
+standard basis (light levels for each pixel) to the Fourier or wavelet basis. For
+example, we might want to write:
+x = c1 w1 + · · · + c8 w8 .
+But this is just a linear combination of the wavelet basis vectors. If W is the
+matrix whose columns are the wavelet vectors, then our task is simply to solve
+for c:
+⎡
+⎤
+c1
+⎢ c2 ⎥
+⎢
+⎥
+x = W ⎢ . ⎥.
+.
+⎣ . ⎦
+c8
+So c = W −1 x.
+Our calculations will be faster and easier if we don’t have to spend a lot of
+time inverting a matrix (e.g. if W −1 = W T ) or multiplying by the inverse. So
+in the ﬁeld of image compression, the criteria for a good basis are:
+2
+
+• Multiplication by the basis matrix and its inverse is fast (as in the FFT or
+in the wavelet basis).
+• Good compression – the image can be approximated using only a few
+basis vectors. Most components ci are small – safely set to zero.
+
+Change of basis
+Vectors
+Let the columns of matrix W be the basis vectors of the new basis. Then if x is
+a vector in the old basis, we can convert it to a vector c in the new basis using
+the relation:
+x = Wc.
+Transformation matrices
+Suppose we have a linear transformation T. If T has the matrix A when work­
+ing with the basis v1 , v2 , ..., v8 and T has the matrix B when working with the
+basis w1 , w2 , ..., w8 , it turns out that A and B must be similar matrices. In other
+words, B = M−1 AM for some change of basis matrix M.
+Reminder: If we have a basis v1 , v2 , ..., v8 and we know T (vi ) for each i, then
+we can use the fact that T is a linear transformation to ﬁnd T (v) = c1 T (v1 ) +
+c2 T (v2 ) + · · · + c8 T (v8 ) for any vector v = c1 v1 + c2 v2 + · · · + c8 v8 in the space.
+The entries of column i of the matrix A are the coefﬁcients of the output vector
+T ( v i ).
+If our basis consists of eigenvectors of our transformation, i.e. if T (vi ) =
+λi vi , then A = Λ, the (diagonal) matrix of eigenvalues. It would be wonderful
+to use a basis of eigenvectors for image processing, but ﬁnding such a basis
+requires far more computation than simply using a Fourier or wavelet basis.
+Summary
+When we change bases, the coefﬁcients of our vectors change according to the
+rule x = Wc. Matrix entries change according to a rule B = M−1 AM.
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

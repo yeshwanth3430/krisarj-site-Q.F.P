@@ -1,0 +1,106 @@
+Exercises on eigenvalues and eigenvectors
+Problem 21.1: (6.1 #19. Introduction to Linear Algebra: Strang) A three by
+three matrix B is known to have eigenvalues 0, 1 and 2. This information
+is enough to ﬁnd three of these (give the answers where possible):
+a) The rank of B
+b) The determinant of B T B
+c) The eigenvalues of B T B
+d) The eigenvalues of ( B2 + I )−1
+Solution:
+a) B has 0 as an eigenvalue and is therefore singular (not invertible). Since
+B is a three by three matrix, this means that its rank can be at most 2.
+Since B has two distinct nonzero eigenvalues, its rank is exactly 2.
+b) Since B is singular, det( B) = 0 . Thus det( B T B) = det( B T ) det( B) = 0.
+c) There is not enough information to ﬁnd the eigenvalues of B T B. For
+example:
+⎡
+If B = ⎣
+
+⎤
+
+0
+
+⎡
+
+⎦ then B T B = ⎣
+
+1
+
+⎤
+
+0
+1
+
+2
+⎡
+
+4
+⎤
+
+0 1
+⎣
+1
+If B =
+
+⎦.
+
+⎡
+
+⎦ then B T B = ⎣
+2
+
+⎤
+
+0
+2
+
+⎦.
+4
+
+d) If p(t) is a polynomial and if x is an eigenvector of A with eigenvalue
+λ, then
+p( A)x = p(λ)x.
+We also know that if λ is an eigenvalue of A then 1/λ is an eigenvalue
+of A−1 . Hence the eigenvalues of ( B2 + I )−1 are 021+1 , 121+1 and 221+1 , or
+1, 1/2 and 1/5.
+1
+
+Problem 21.2: (6.1 #29.) Find the eigenvalues of A, B, and C when
+⎡
+⎤
+⎡
+⎤
+⎡
+⎤
+1 2 3
+0 0 1
+2 2 2
+A = ⎣ 0 4 5 ⎦ , B = ⎣ 0 2 0 ⎦ and C = ⎣ 2 2 2 ⎦ .
+0 0 6
+3 0 0
+2 2 2
+Solution: Since the eigenvalues of a triangular matrix are its diagonal
+entries, the eigenvalues of A are 1,4, and 6. For B we have:
+det( B − λI ) = (−λ)(2 − λ)(−λ) − 3(2 − λ)
+
+= (λ2 − 3)(2 − λ).
+√
+Hence the eigenvalues of B are ± 3 and 2. Finally, for C we have:
+det(C − λI ) = (2 − λ)[(2 − λ)2 − 4] − 2[2(2 − λ) − 4] + 2[4 − 2(2 − λ)]
+
+= λ3 − 6λ2 = λ2 (λ − 6).
+The eigenvalues of C are 6, 0, and 0.
+We can quickly check our answers by computing the determinants of
+A and B and by noting that C is singular.
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

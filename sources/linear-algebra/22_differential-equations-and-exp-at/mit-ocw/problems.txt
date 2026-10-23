@@ -1,0 +1,46 @@
+Exercises on differential equations and e At
+
+Problem 23.1: (6.3 #14.a Introduction to Linear Algebra: Strang) The matrix
+in this question is skew-symmetric ( A T = − A) :
+⎡
+⎤
+0
+c −b
+u1 � = cu2 − bu3
+du
+0
+a ⎦ u or u2 � = au3 − cu1
+= ⎣ −c
+dt
+b −a
+0
+u3 � = bu1 − au2 .
+Find the derivative of ||u(t)||2 using the deﬁnition:
+
+||u(t)||2 = u1 2 + u2 2 + u3 2 .
+What does this tell you about the rate of change of the length of u? What
+does this tell you about the range of values of u(t)?
+�
+Problem 23.2: (6.3 #24.) Write A =
+
+1 1
+0 3
+
+�
+
+as SΛS−1 . Multiply SeΛt S−1
+
+to ﬁnd the matrix exponential e At . Check your work by evaluating e At and
+the derivative of e At when t = 0.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

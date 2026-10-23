@@ -1,0 +1,36 @@
+Exercises on eigenvalues and eigenvectors
+
+Problem 21.1: (6.1 #19. Introduction to Linear Algebra: Strang) A three by
+three matrix B is known to have eigenvalues 0, 1 and 2. This information
+is enough to ﬁnd three of these (give the answers where possible):
+a) The rank of B
+b) The determinant of B T B
+c) The eigenvalues of B T B
+d) The eigenvalues of ( B2 + I )−1
+
+Problem 21.2: (6.1 #29.) Find the eigenvalues of A, B, and C when
+⎡
+⎤
+⎡
+⎤
+⎡
+⎤
+1 2 3
+0 0 1
+2 2 2
+A = ⎣ 0 4 5 ⎦ , B = ⎣ 0 2 0 ⎦ and C = ⎣ 2 2 2 ⎦ .
+0 0 6
+3 0 0
+2 2 2
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

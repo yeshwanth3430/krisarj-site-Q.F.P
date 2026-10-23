@@ -1,0 +1,55 @@
+Exercises on positive deﬁnite matrices and minima
+Problem 27.1: (6.5 #33. Introduction to Linear Algebra: Strang) When A
+and B are symmetric positive deﬁnite, AB might not even be symmetric,
+but its eigenvalues are still positive. Start from ABx = λx and take dot
+products with Bx. Then prove λ > 0.
+Solution:
+ABx = λx
+
+( ABx)T Bx = (λx)T Bx
+( Bx)T A T Bx = λx T Bx
+( Bx)T A( Bx) = λ(x T Bx).
+where A T = A because A is symmetric. Since A is positive deﬁnite we
+know ( Bx) T A( Bx) > 0, and since B is positive deﬁnite x T Bx > 0. Hence,
+λ must be positive as well.
+�
+
+�
+1 5
+Problem 27.2: Find the quadratic form associated with the matrix
+.
+7 9
+Is this function f ( x, y) always positive, always negative, or sometimes
+positive and sometimes negative?
+Solution:
+
+To ﬁnd the quadratic form, compute xT Ax:
+�
+�� �
+�
+� 1 5
+x
+x y
+f ( x, y) =
+7 9
+y
+= x ( x + 5y) + y(7x + 9y)
+= x2 + 12xy + 9y2 .
+
+This expression can be positive, e.g. when y = 0 and x �= 0.
+The expression will sometimes be negative because A is not positive
+deﬁnite. For instance, f (2, −2) = −8. Thus the quadratic form associated
+with the matrix A is sometimes positive and sometimes negative. An­
+other way to reach this conclusion is to note that det A = −26 is negative
+and so A is not positive deﬁnite.
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Spring 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Orthogonal Vectors and Subspaces · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="The four subspaces come in perpendicular pairs: the nullspace is orthogonal to the row space and the left nullspace to the column space, proved by reading Ax = 0 as dot products; plus A transpose A, and why it is invertible exactly when A has independent columns.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="13_orthogonal-vectors-and-subspaces">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Orthogonal Vectors and Subspaces</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 13</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 13 (MIT 18.06, Lecture 13)</p>
+  <h1>Orthogonal Vectors and Subspaces</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{The four subspaces do not just sit there. They sit at right angles, in two pairs.}} $$</p>
+      <p>Lesson 10 gave the four subspaces and their dimensions. This lesson gives the missing fact: the nullspace is <b>perpendicular</b> to the row space, and the left nullspace is perpendicular to the column space. Then it asks the question that the next three lessons answer — what do you do when \(Ax = b\) has no solution?</p>
+    </div>
+
+    <div class="box method"><span class="label">The big picture ★</span>
+      <table class="sl-table">
+        <tr><th>In \(\mathbb{R}^n\) (one per column)</th><th>In \(\mathbb{R}^m\) (one per row)</th></tr>
+        <tr><td>row space \(C(A^T)\), dimension \(r\)</td><td>column space \(C(A)\), dimension \(r\)</td></tr>
+        <tr><td>\(\perp\)</td><td>\(\perp\)</td></tr>
+        <tr><td>nullspace \(N(A)\), dimension \(n-r\)</td><td>left nullspace \(N(A^T)\), dimension \(m-r\)</td></tr>
+      </table>
+      <p>Each column of the table splits its whole space into two pieces that meet at right angles and between them use up every dimension.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">What orthogonal means</a></li>
+        <li><a href="#t2">The test: x transpose y = 0</a></li>
+        <li><a href="#t3">Why the test works — Pythagoras</a></li>
+        <li><a href="#t4">Orthogonal subspaces</a></li>
+        <li><a href="#t5">The blackboard and the floor</a></li>
+        <li><a href="#t6">The nullspace is perpendicular to the row space</a></li>
+        <li><a href="#t7">A worked example in R³</a></li>
+        <li><a href="#t8">The other pair, for free</a></li>
+        <li><a href="#t9">Orthogonal complements</a></li>
+        <li><a href="#t10">When Ax = b has no solution</a></li>
+        <li><a href="#t11">The matrix A transpose A</a></li>
+        <li><a href="#t12">When is A transpose A invertible?</a></li>
+        <li><a href="#t13">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">What orthogonal means</a><span>Another word for perpendicular, and it works in any dimension.</span></li>
+      <li><a href="#t2">The test: x transpose y = 0</a><span>One dot product decides it.</span></li>
+      <li><a href="#t3">Why the test works — Pythagoras</a><span>Expand \(\|x+y\|^2\) and the cross term is the dot product.</span></li>
+      <li><a href="#t4">Orthogonal subspaces</a><span>Every vector in one perpendicular to every vector in the other.</span></li>
+      <li><a href="#t5">The blackboard and the floor</a><span>The standard example of two spaces that are <i>not</i> orthogonal.</span></li>
+      <li><a href="#t6">The nullspace is perpendicular to the row space ★</a><span>\(Ax = 0\) says exactly that, read one row at a time.</span></li>
+      <li><a href="#t7">A worked example in R³</a><span>A line and the plane perpendicular to it, from one \(2 \times 3\) matrix.</span></li>
+      <li><a href="#t8">The other pair, for free</a><span>Apply the same proof to \(A^T\).</span></li>
+      <li><a href="#t9">Orthogonal complements</a><span>Perpendicular <b>and</b> the dimensions fill the space. Stronger than it sounds.</span></li>
+      <li><a href="#t10">When Ax = b has no solution</a><span>Too many equations, measurement error, no exact answer. What now?</span></li>
+      <li><a href="#t11">The matrix A transpose A</a><span>Square, symmetric, and the key to everything that follows.</span></li>
+      <li><a href="#t12">When is A transpose A invertible? ★</a><span>Exactly when \(A\) has independent columns. Proved in three lines.</span></li>
+      <li><a href="#t13">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. What orthogonal means</h3>
+
+    <p><b>Orthogonal</b> is another word for <b>perpendicular</b>. Two vectors are orthogonal when the angle between them is 90°. The symbol is \(\perp\).</p>
+
+    <p>Why bother with a new word? Because "perpendicular" sounds like something you can only see, and we need it in \(\mathbb{R}^{17}\) where there is nothing to see. The algebra below works in every dimension and never draws a picture.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The test: x transpose y = 0</h3>
+
+    <div class="box theorem"><span class="label">The whole lesson in one line ★</span>
+      $$ \boxed{x \perp y \iff x^Ty = 0} $$
+      <p>\(x^Ty\) is the <b>dot product</b>: multiply matching entries and add. It is a single number, and its being zero is the complete test.</p>
+    </div>
+
+    <p>Try it. Take</p>
+
+    $$ x = \begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix}, \qquad y = \begin{bmatrix} 2 \\ -1 \\ 0 \end{bmatrix} $$
+
+    $$ x^Ty = (1)(2) + (2)(-1) + (3)(0) = 2 - 2 + 0 = 0 $$
+
+    <p>So they are orthogonal — in \(\mathbb{R}^3\), where you could just about picture it, but the arithmetic would be identical in \(\mathbb{R}^{300}\).</p>
+
+    <p>Note also that \(x^Ty = y^Tx\). Order does not matter, so "\(x\) is orthogonal to \(y\)" and "\(y\) is orthogonal to \(x\)" are the same statement.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Why the test works — Pythagoras</h3>
+
+    <p>Here is the reason, and it is the only proof in the lesson that needs a picture.</p>
+
+    <p>If \(x\) and \(y\) are perpendicular, they are two sides of a right triangle and \(x+y\) is the hypotenuse. Pythagoras says</p>
+
+    $$ \|x\|^2 + \|y\|^2 = \|x+y\|^2 $$
+
+    <p>Length squared is itself a dot product: \(\|x\|^2 = x^Tx\), because \(x^Tx = x_1^2 + x_2^2 + \dots\) — the sum of squares, which is exactly what Pythagoras measures. So rewrite the whole statement with dot products and expand the right-hand side:</p>
+
+    $$ (x+y)^T(x+y) = x^Tx + x^Ty + y^Tx + y^Ty = \|x\|^2 + \|y\|^2 + 2x^Ty $$
+
+    <p>Compare with what Pythagoras demanded:</p>
+
+    $$ \|x\|^2 + \|y\|^2 + 2x^Ty \;=\; \|x\|^2 + \|y\|^2 \qquad\Longrightarrow\qquad \boxed{2x^Ty = 0} $$
+
+    <p>Everything cancels except the cross term. Pythagoras holds <b>exactly when</b> the dot product is zero — and since Pythagoras holds exactly when the angle is 90°, so does \(x^Ty = 0\).</p>
+
+    <h4>Check it on the numbers</h4>
+
+    <p>With \(x = (1,2,3)\) and \(y = (2,-1,0)\) from above, \(x+y = (3,1,3)\):</p>
+
+    <table class="sl-table">
+      <tr><th>Quantity</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\(\|x\|^2\)</td><td>\(1 + 4 + 9\)</td><td>14</td></tr>
+      <tr><td>\(\|y\|^2\)</td><td>\(4 + 1 + 0\)</td><td>5</td></tr>
+      <tr><td>\(\|x+y\|^2\)</td><td>\(9 + 1 + 9\)</td><td>19</td></tr>
+    </table>
+
+    <p>\(14 + 5 = 19\) ✓ — Pythagoras holds, as it must, because the dot product was zero.</p>
+
+    <figure class="fig" style="max-width:440px;margin:22px auto">
+      <svg viewBox="0 0 440 230" role="img" aria-label="A right triangle with legs x and y and hypotenuse x plus y">
+        <defs>
+          <marker id="pa1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="pa2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="pa3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <line class="l1" x1="70" y1="180" x2="250" y2="180" marker-end="url(#pa1)"/>
+        <line class="l2" x1="250" y1="180" x2="250" y2="56" marker-end="url(#pa2)"/>
+        <line class="l3 dash" x1="70" y1="180" x2="250" y2="56" marker-end="url(#pa3)"/>
+        <path class="axis" d="M232,180 L232,162 L250,162" fill="none" stroke-width="1.4"/>
+        <circle class="pt" cx="70" cy="180" r="4"/>
+        <text class="lbl c1" x="150" y="202">x</text>
+        <text class="lbl c2" x="262" y="122">y</text>
+        <text class="lbl c3" x="128" y="104">x + y</text>
+        <text class="tick" x="40" y="196">0</text>
+        <text class="tick" x="300" y="150">‖x‖² + ‖y‖² = ‖x+y‖²</text>
+        <text class="tick" x="300" y="170">only when xᵀy = 0</text>
+      </svg>
+      <figcaption>Lay \(y\) at the tip of \(x\) and the sum closes the triangle. The right angle at the corner is the geometric statement; \(x^Ty = 0\) is the algebraic one. Expanding \(\|x+y\|^2\) shows they are the same statement.</figcaption>
+    </figure>
+
+    <div class="box pitfall"><span class="label">The zero vector is orthogonal to everything</span>
+      <p>\(0^Ty = 0\) for any \(y\), so the zero vector is perpendicular to every vector — including itself. There is no angle to look at, but the test passes, and the test is the definition. This matters later: a subspace that contains only \(0\) is orthogonal to anything at all.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Orthogonal subspaces</h3>
+
+    <div class="box definition"><span class="label">Definition · orthogonal subspaces</span>
+      <p>Subspace \(S\) is orthogonal to subspace \(T\) when</p>
+      $$ \boxed{\text{every vector in } S \text{ is orthogonal to } \textbf{every} \text{ vector in } T} $$
+      <p>Not some. Not a convenient choice of one from each. Every pairing has to give a zero dot product.</p>
+    </div>
+
+    <p>That is a strong demand, and the next section shows how easily it fails.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The blackboard and the floor</h3>
+
+    <p>Stand in a lecture theatre. The blackboard is a plane; the floor is a plane. They meet at right angles the way a wall meets a floor. Are they orthogonal subspaces?</p>
+
+    <p><b>No.</b> Take the line where the board meets the floor. Any vector along that line lies in <i>both</i> planes. Pick that same vector twice — once as a member of \(S\), once as a member of \(T\) — and its dot product with itself is \(\|v\|^2\), which is not zero unless \(v = 0\).</p>
+
+    <div class="box pitfall"><span class="label">Two subspaces that share any non-zero vector are not orthogonal</span>
+      <p>A non-zero \(v\) in both spaces fails the test against itself. So orthogonal subspaces can only ever meet at \(\{0\}\).</p>
+      <p>There is also a dimension reason here: two planes in \(\mathbb{R}^3\) need \(2 + 2 = 4\) dimensions' worth of perpendicular directions, and \(\mathbb{R}^3\) has only 3 to give.</p>
+    </div>
+
+    <h4>Which subspaces of \(\mathbb{R}^2\) and \(\mathbb{R}^3\) <i>are</i> orthogonal?</h4>
+
+    <table class="sl-table">
+      <tr><th>Pair</th><th>Orthogonal?</th><th>Why</th></tr>
+      <tr><td>\(\{0\}\) and any subspace</td><td>yes</td><td>\(0\) is orthogonal to everything</td></tr>
+      <tr><td>two lines through the origin in \(\mathbb{R}^2\)</td><td>only if they cross at 90°</td><td>e.g. the \(x\)-axis and the \(y\)-axis</td></tr>
+      <tr><td>a line and the whole plane \(\mathbb{R}^2\)</td><td>never (unless the line is \(\{0\}\))</td><td>the line lies inside the plane, so it meets it in more than \(0\)</td></tr>
+      <tr><td>a line and a plane in \(\mathbb{R}^3\)</td><td>yes, if the line is the plane's normal</td><td>this is the pairing we meet in §7</td></tr>
+      <tr><td>two planes in \(\mathbb{R}^3\)</td><td>never</td><td>they always share a line</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The nullspace is perpendicular to the row space</h3>
+
+    <p>Now the result the lecture is built around. And it is already written down — we just have not read it the right way.</p>
+
+    <p>Start with \(Ax = 0\). Written out with the rows of \(A\) shown as rows:</p>
+
+    $$ \begin{bmatrix} \text{— row 1 —} \\ \text{— row 2 —} \\ \vdots \\ \text{— row } m \text{ —} \end{bmatrix}
+       \begin{bmatrix} \ \\ x \\ \ \end{bmatrix}
+       = \begin{bmatrix} 0 \\ 0 \\ \vdots \\ 0 \end{bmatrix} $$
+
+    <p>Matrix times vector, one row at a time, is exactly a list of dot products. So \(Ax = 0\) says:</p>
+
+    $$ (\text{row } 1) \cdot x = 0, \quad (\text{row } 2) \cdot x = 0, \quad \dots, \quad (\text{row } m) \cdot x = 0 $$
+
+    <p>Every row of \(A\) is orthogonal to \(x\). That is the whole content of \(Ax = 0\), said in the language of §2.</p>
+
+    <h4>From the rows to the whole row space</h4>
+
+    <p>Being perpendicular to each row is not yet being perpendicular to the row <i>space</i>, which contains all their combinations. But it follows immediately. Take any combination:</p>
+
+    $$ v = c_1(\text{row } 1) + c_2(\text{row } 2) + \dots + c_m(\text{row } m) $$
+
+    $$ v^Tx = c_1\underbrace{(\text{row }1)\cdot x}_{0} + c_2\underbrace{(\text{row }2)\cdot x}_{0} + \dots + c_m\underbrace{(\text{row }m)\cdot x}_{0} = 0 $$
+
+    <p>Zero plus zero plus zero. So \(x\) is perpendicular to every vector in the row space.</p>
+
+    <div class="box theorem"><span class="label">The result ★</span>
+      $$ \boxed{N(A) \perp C(A^T)} $$
+      <p>In words: <b>the nullspace is perpendicular to the row space.</b> And there was nothing to prove beyond reading \(Ax = 0\) as a statement about dot products.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. A worked example in R³</h3>
+
+    <p>Take</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 5 \\ 2 & 4 & 10 \end{bmatrix} $$
+
+    <p>Row 2 is twice row 1, so there is really only one independent row: \(r = 1\). Then \(n = 3\), so the pieces are</p>
+
+    <table class="sl-table">
+      <tr><th>Subspace</th><th>Dimension</th><th>What it is</th></tr>
+      <tr><td>row space \(C(A^T)\)</td><td>\(r = 1\)</td><td>the <b>line</b> of all multiples of \((1,2,5)\)</td></tr>
+      <tr><td>nullspace \(N(A)\)</td><td>\(n - r = 2\)</td><td>a <b>plane</b> through the origin</td></tr>
+    </table>
+
+    <h4>Find the nullspace</h4>
+
+    <p>Row 2 eliminates to zero, so \(Ax = 0\) is really the single equation</p>
+
+    $$ x_1 + 2x_2 + 5x_3 = 0 $$
+
+    <p>Column 1 is the pivot column; columns 2 and 3 are free. Two special solutions — set one free variable to 1 and the other to 0 each time:</p>
+
+    <table class="sl-table">
+      <tr><th>Free choice</th><th>Equation becomes</th><th>Special solution</th></tr>
+      <tr><td>\(x_2 = 1,\ x_3 = 0\)</td><td>\(x_1 + 2 = 0\)</td><td>\((-2, 1, 0)\)</td></tr>
+      <tr><td>\(x_2 = 0,\ x_3 = 1\)</td><td>\(x_1 + 5 = 0\)</td><td>\((-5, 0, 1)\)</td></tr>
+    </table>
+
+    <h4>Check the perpendicularity directly</h4>
+
+    <table class="sl-table">
+      <tr><th>Dot product</th><th>Arithmetic</th><th></th></tr>
+      <tr><td>\((1,2,5) \cdot (-2,1,0)\)</td><td>\(-2 + 2 + 0\)</td><td>\(= 0\) ✓</td></tr>
+      <tr><td>\((1,2,5) \cdot (-5,0,1)\)</td><td>\(-5 + 0 + 5\)</td><td>\(= 0\) ✓</td></tr>
+    </table>
+
+    <p>So the row-space line is perpendicular to both directions that span the nullspace plane — and therefore to the whole plane. The equation \(x_1 + 2x_2 + 5x_3 = 0\) is, word for word, "the plane through the origin perpendicular to \((1,2,5)\)".</p>
+
+    <figure class="fig" style="max-width:520px;margin:22px auto">
+      <svg viewBox="0 0 520 250" role="img" aria-label="A line through the origin and the perpendicular plane through the origin in R3">
+        <defs>
+          <marker id="oa1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <polygon points="80,150 290,98 440,150 230,202" class="l2" fill="currentColor" fill-opacity=".14" stroke-width="2"/>
+        <text class="lbl c2" x="86" y="186">nullspace N(A)</text>
+        <text class="tick" x="86" y="204">the plane, dimension 2</text>
+        <line class="l1" x1="260" y1="150" x2="260" y2="36" marker-end="url(#oa1)"/>
+        <line class="l1" x1="260" y1="150" x2="260" y2="226"/>
+        <text class="lbl c1" x="272" y="46">row space C(Aᵀ)</text>
+        <text class="tick" x="272" y="64">the line through (1,2,5)</text>
+        <path class="axis" d="M242,150 L242,132 L260,132" fill="none" stroke-width="1.4"/>
+        <circle class="pt" cx="260" cy="150" r="5"/>
+        <text class="tick" x="222" y="166">0</text>
+        <text class="tick" x="330" y="222">1 + 2 = 3 = dimension of ℝ³</text>
+      </svg>
+      <figcaption>A line and a plane, meeting only at the origin, at right angles. Together \(1 + 2 = 3\) dimensions — they use up all of \(\mathbb{R}^3\) with nothing left over and nothing counted twice. That "nothing left over" is the idea of §9.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The other pair, for free</h3>
+
+    <p>We proved \(N(A) \perp C(A^T)\) for <b>every</b> matrix. So it is true for \(A^T\) as well. Write it out and translate:</p>
+
+    <table class="sl-table">
+      <tr><th>Apply the result to \(A^T\)</th><th>Translate back</th></tr>
+      <tr><td>\(N(A^T) \perp C\big((A^T)^T\big)\)</td><td>\((A^T)^T = A\)</td></tr>
+      <tr><td>\(N(A^T) \perp C(A)\)</td><td><b>the left nullspace is perpendicular to the column space</b></td></tr>
+    </table>
+
+    $$ \boxed{N(A^T) \perp C(A)} $$
+
+    <p>No new work. Transposing swapped rows for columns, and the proof came along unchanged.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Orthogonal complements</h3>
+
+    <p>Perpendicular is good. The truth is stronger.</p>
+
+    <div class="box definition"><span class="label">Definition · orthogonal complement</span>
+      <p>\(S\) and \(T\) are <b>orthogonal complements</b> in \(\mathbb{R}^k\) when both hold:</p>
+      <ul>
+        <li>they are orthogonal — every vector in one is perpendicular to every vector in the other;</li>
+        <li>their dimensions add to \(k\), so between them they fill the space.</li>
+      </ul>
+      <p>Equivalently: \(S\) contains <b>all</b> the vectors perpendicular to \(T\), not just some of them.</p>
+    </div>
+
+    <p>That second condition is the one with teeth. In \(\mathbb{R}^3\), the \(z\)-axis is perpendicular to the \(x\)-axis — but it is not its complement, because \(1 + 1 = 2 \ne 3\) and the whole \(y\) direction is missing. The complement of the \(x\)-axis is the entire \(yz\)-plane.</p>
+
+    <div class="box theorem"><span class="label">Part two of the fundamental theorem ★</span>
+      $$ \boxed{N(A) \text{ and } C(A^T) \text{ are orthogonal complements in } \mathbb{R}^n} $$
+      $$ \boxed{N(A^T) \text{ and } C(A) \text{ are orthogonal complements in } \mathbb{R}^m} $$
+      <p>The dimensions were checked back in Lesson 10: \(r + (n-r) = n\) ✓ and \(r + (m-r) = m\) ✓. Adding perpendicularity to that is what makes them complements.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">The theorem in three parts</span>
+      <table class="sl-table">
+        <tr><th>Part</th><th>Says</th><th>Where</th></tr>
+        <tr><td>One</td><td>the dimensions of the four subspaces</td><td>Lesson 10</td></tr>
+        <tr><td>Two</td><td>they come in perpendicular pairs</td><td><b>this lesson</b></td></tr>
+        <tr><td>Three</td><td>how to build orthogonal bases for them</td><td>Lesson 16</td></tr>
+      </table>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. When Ax = b has no solution</h3>
+
+    <p>The second half of the lecture changes the question.</p>
+
+    <p>Suppose you measure something 100 times to fit 2 unknowns. Then \(A\) is \(100 \times 2\): \(m = 100\) equations, \(n = 2\) unknowns. Far too many equations. Every measurement carries a little error, so no pair of unknowns satisfies all 100 exactly, and \(b\) is not in the column space:</p>
+
+    $$ Ax = b \qquad \text{has \textbf{no} solution} $$
+
+    <p>Throwing away 98 measurements would be mad — the extra data is <i>information</i>, not noise to discard. So the question becomes:</p>
+
+    <div class="box definition"><span class="label">The new question</span>
+      $$ \boxed{\text{If no } x \text{ solves } Ax = b, \text{ which } \hat{x} \text{ comes closest?}} $$
+      <p>The answer, worked out over the next two lessons, comes from one equation:</p>
+      $$ A^TA\hat{x} = A^Tb $$
+      <p>Multiply both sides of the unsolvable system by \(A^T\) and it becomes solvable. Lesson 14 shows why that is the right thing to do; this lesson makes sure the matrix \(A^TA\) behaves.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. The matrix A transpose A</h3>
+
+    <p>Two facts about \(A^TA\), straight from the shapes.</p>
+
+    <table class="sl-table">
+      <tr><th>Fact</th><th>Why</th></tr>
+      <tr><td><b>It is square</b>, \(n \times n\)</td><td>\(A^T\) is \(n \times m\) and \(A\) is \(m \times n\), so the product is \(n \times n\) — one row and column per unknown</td></tr>
+      <tr><td><b>It is symmetric</b></td><td>\((A^TA)^T = A^T(A^T)^T = A^TA\). Transposing a product reverses the order, and here reversing gives back the same thing</td></tr>
+    </table>
+
+    <h4>Work one out</h4>
+
+    $$ A = \begin{bmatrix} 1 & 1 \\ 1 & 2 \\ 1 & 5 \end{bmatrix} \qquad
+       A^T = \begin{bmatrix} 1 & 1 & 1 \\ 1 & 2 & 5 \end{bmatrix} $$
+
+    <p>Four entries, each a dot product of two columns of \(A\). The columns are \(a_1 = (1,1,1)\) and \(a_2 = (1,2,5)\):</p>
+
+    <table class="sl-table">
+      <tr><th>Entry</th><th>Dot product</th><th>Arithmetic</th><th>Value</th></tr>
+      <tr><td>\((1,1)\)</td><td>\(a_1 \cdot a_1\)</td><td>\(1 + 1 + 1\)</td><td>3</td></tr>
+      <tr><td>\((1,2)\)</td><td>\(a_1 \cdot a_2\)</td><td>\(1 + 2 + 5\)</td><td>8</td></tr>
+      <tr><td>\((2,1)\)</td><td>\(a_2 \cdot a_1\)</td><td>\(1 + 2 + 5\)</td><td>8 — the same, as symmetry requires</td></tr>
+      <tr><td>\((2,2)\)</td><td>\(a_2 \cdot a_2\)</td><td>\(1 + 4 + 25\)</td><td>30</td></tr>
+    </table>
+
+    $$ A^TA = \begin{bmatrix} 3 & 8 \\ 8 & 30 \end{bmatrix} $$
+
+    <p>Is it invertible? For a \(2 \times 2\), check \(ad - bc\):</p>
+
+    $$ (3)(30) - (8)(8) = 90 - 64 = 26 \ne 0 \qquad\Longrightarrow\qquad \text{invertible ✓} $$
+
+    <p>A \(3 \times 2\) matrix turned into an invertible \(2 \times 2\) one. That is the whole trick of least squares, and it is why \(A^TA\hat{x} = A^Tb\) can be solved when \(Ax = b\) cannot.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t12">12. When is A transpose A invertible?</h3>
+
+    <p>Not always. Here is a matrix whose columns are dependent — the second is three times the first:</p>
+
+    $$ A = \begin{bmatrix} 1 & 3 \\ 1 & 3 \\ 1 & 3 \end{bmatrix} \qquad\Longrightarrow\qquad
+       A^TA = \begin{bmatrix} 3 & 9 \\ 9 & 27 \end{bmatrix} $$
+
+    <p>Check: \((3)(27) - (9)(9) = 81 - 81 = 0\). <b>Singular.</b> So the question is exactly when it works.</p>
+
+    <div class="box theorem"><span class="label">The key fact ★</span>
+      $$ \boxed{N(A^TA) = N(A)} \qquad\text{and so}\qquad \boxed{\text{rank}(A^TA) = \text{rank}(A)} $$
+    </div>
+
+    <h4>The proof, both directions</h4>
+
+    <p><b>Direction 1 — anything in \(N(A)\) is in \(N(A^TA)\).</b> Easy. If \(Ax = 0\), multiply on the left by \(A^T\):</p>
+
+    $$ A^TAx = A^T(Ax) = A^T 0 = 0 \qquad\checkmark $$
+
+    <p><b>Direction 2 — anything in \(N(A^TA)\) is in \(N(A)\).</b> This is the one with the idea in it. Suppose \(A^TAx = 0\). Multiply on the left by \(x^T\):</p>
+
+    $$ x^TA^TAx = x^T 0 = 0 $$
+
+    <p>Now regroup the left side. Since \(x^TA^T = (Ax)^T\),</p>
+
+    $$ (Ax)^T(Ax) = 0 \qquad\text{which is}\qquad \|Ax\|^2 = 0 $$
+
+    <p>A length squared is a sum of squares of real numbers. The only way that sum is zero is if every term is zero. So</p>
+
+    $$ Ax = 0 \qquad\checkmark $$
+
+    <p>Both directions hold, so the two nullspaces are the same set.</p>
+
+    <div class="box method"><span class="label">The conclusion ★</span>
+      <p>\(A^TA\) is \(n \times n\), so it is invertible exactly when its nullspace is only \(\{0\}\). By the theorem that happens exactly when \(N(A) = \{0\}\), which is exactly when the columns of \(A\) are independent:</p>
+      $$ \boxed{A^TA \text{ is invertible} \iff A \text{ has independent columns}} $$
+    </div>
+
+    <p>Check it on the two examples:</p>
+
+    <table class="sl-table">
+      <tr><th>\(A\)</th><th>Columns</th><th>\(A^TA\)</th><th>Determinant</th><th>Invertible?</th></tr>
+      <tr><td>\(\begin{bmatrix} 1&1 \\ 1&2 \\ 1&5 \end{bmatrix}\)</td><td>\((1,1,1)\) and \((1,2,5)\) — independent</td><td>\(\begin{bmatrix} 3&8 \\ 8&30 \end{bmatrix}\)</td><td>26</td><td>yes ✓</td></tr>
+      <tr><td>\(\begin{bmatrix} 1&3 \\ 1&3 \\ 1&3 \end{bmatrix}\)</td><td>second \(= 3\times\) first — dependent</td><td>\(\begin{bmatrix} 3&9 \\ 9&27 \end{bmatrix}\)</td><td>0</td><td>no</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">Why this is good news for data</span>
+      <p>In a real fitting problem \(A\) is tall and thin — 100 measurements, 2 unknowns. Tall and thin matrices almost always have independent columns, because dependence would mean two of your variables are measuring the identical thing. So \(A^TA\) is almost always invertible, and \(A^TA\hat{x} = A^Tb\) almost always has exactly one answer.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t13"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The test ★</b></td><td>\(x \perp y \iff x^Ty = 0\). One dot product, any dimension.</td></tr>
+      <tr><td><b>Why</b></td><td>Expand \(\|x+y\|^2\); it equals \(\|x\|^2 + \|y\|^2\) exactly when the cross term \(2x^Ty\) vanishes.</td></tr>
+      <tr><td><b>Zero vector</b></td><td>Orthogonal to everything, itself included.</td></tr>
+      <tr><td><b>Orthogonal subspaces</b></td><td><i>Every</i> vector in one perpendicular to <i>every</i> vector in the other. They can only meet at \(\{0\}\).</td></tr>
+      <tr><td><b>Blackboard and floor</b></td><td>Not orthogonal — they share a line, and a non-zero vector is never perpendicular to itself.</td></tr>
+      <tr><td><b>The big result ★</b></td><td>\(N(A) \perp C(A^T)\), because \(Ax=0\) <i>is</i> "\(x\) dotted with every row gives 0".</td></tr>
+      <tr><td><b>The other pair</b></td><td>\(N(A^T) \perp C(A)\) — the same proof applied to \(A^T\).</td></tr>
+      <tr><td><b>Complements</b></td><td>Perpendicular <b>and</b> dimensions adding to the whole space. \(r + (n-r) = n\), \(r + (m-r) = m\).</td></tr>
+      <tr><td><b>\(A^TA\)</b></td><td>Square \(n \times n\), symmetric, entry \((i,j)\) = column \(i\) dotted with column \(j\).</td></tr>
+      <tr><td><b>\(N(A^TA) = N(A)\) ★</b></td><td>Because \(A^TAx = 0 \Rightarrow \|Ax\|^2 = 0 \Rightarrow Ax = 0\).</td></tr>
+      <tr><td><b>Invertibility ★</b></td><td>\(A^TA\) is invertible exactly when \(A\) has independent columns.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>\(Ax = 0\) was always a statement about angles ★</b><span>Reading matrix-times-vector as a list of dot products turns the nullspace into a perpendicularity statement with no work at all.</span></li>
+      <li><b>Orthogonal means <i>every</i> pair</b><span>The blackboard-and-floor example exists to stop you accepting a weaker version.</span></li>
+      <li><b>Complement is stronger than perpendicular</b><span>Perpendicular is about angles; complement adds "and nothing is missing".</span></li>
+      <li><b>\(A^TA\) is the matrix of the rest of the course</b><span>Square, symmetric, same nullspace as \(A\), invertible when the columns are independent.</span></li>
+      <li><b>Length zero means the vector is zero</b><span>That one step is what makes \(N(A^TA) = N(A)\) work, and it only holds over the real numbers.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We now know \(b\) can sit outside the column space, and we know the column space has a perpendicular partner to sit in — the left nullspace. The next lesson splits \(b\) into those two pieces: the part inside \(C(A)\), which is the closest thing to \(b\) we can actually hit, and the error sticking out perpendicular to it. That operation is called <b>projection</b>, and \(A^TA\) is at the centre of it.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

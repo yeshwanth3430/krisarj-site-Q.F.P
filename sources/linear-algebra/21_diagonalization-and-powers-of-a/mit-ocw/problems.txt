@@ -1,0 +1,33 @@
+Exercises on diagonalization and powers of A
+
+Problem 22.1: (6.2 #6. Introduction to Linear Algebra: Strang) Describe all
+matrices S that diagonalize this matrix A (ﬁnd all eigenvectors):
+�
+�
+4 0
+A=
+.
+1 2
+Then describe all matrices that diagonalize A−1 .
+Problem 22.2: (6.2 #16.) Find Λ and S to diagonalize A :
+�
+�
+.6 .9
+A=
+.
+.4 .1
+What is the limit of Λk as k → ∞? What is the limit matrix of SΛk S−1 ? In
+the columns of this matrix you see the
+.
+
+1
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

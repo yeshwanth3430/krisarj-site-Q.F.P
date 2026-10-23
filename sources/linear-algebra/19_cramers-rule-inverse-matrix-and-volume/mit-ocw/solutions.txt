@@ -1,0 +1,117 @@
+Exercises on Cramer’s rule, inverse matrix, and volume
+(5.3 #8. Introduction to Linear Algebra: Strang) Suppose
+⎡
+⎤
+1 1 4
+A = ⎣ 1 2 2 ⎦.
+1 2 5
+
+Problem 20.1:
+
+Find its cofactor matrix C and multiply AC T to ﬁnd det( A).
+⎡
+⎤
+6 −3 0
+· · ⎦ and AC T =
+C=⎣ ·
+.
+·
+· ·
+If you change a1,3 = 4 to 100, why is det( A) unchanged?
+Solution:
+AC T :
+
+We ﬁll in the cofactor matrix C and then multiply to obtain
+⎡
+⎤
+6 −3
+0
+1 −1 ⎦
+C=⎣ 3
+−6
+2
+1
+
+and
+⎡
+
+⎤⎡
+⎤ ⎡
+⎤
+6
+1 1 4
+3 0 0
+3 −6
+1
+2 ⎦ = ⎣ 0 3 0 ⎦ = 3I.
+AC T = ⎣ 1 2 2 ⎦ ⎣ −3
+1 2 5
+0 0 3
+1
+0 −1
+Since AC T = det( A) I, we have det( A) = 3. If 4 is changed to 100, det( A)
+is unchanged because the cofactor of that entry is 0, and thus its value does
+not contribute to the determinant.
+Problem 20.2:
+
+(5.3 #28.) Spherical coordinates ρ, φ, θ satisfy
+
+x = ρ sin φ cos θ, y = ρ sin φ sin θ and z = ρ cos φ.
+Find the three by three matrix of partial derivatives:
+⎡
+⎤
+∂x/∂ρ ∂x/∂φ ∂x/∂θ
+⎣ ∂y/∂ρ ∂y/∂φ ∂y/∂θ ⎦ .
+∂z/∂ρ ∂z/∂φ ∂z/∂θ
+1
+
+Simplify its determinant to J = ρ2 sin φ. In spherical coordinates,
+dV = ρ2 sin φ dρ dφ dθ
+is the volume of an inﬁnitesimal “coordinate box.”
+Solution: The rows are formed by the partials of x, y, and z with respect
+to ρ, φ, and θ:
+⎡
+⎤
+sin φ cos θ ρ cos φ cos θ −ρ sin φ sin θ
+⎣ sin φ sin θ ρ cos φ sin θ ρ sin φ cos θ ⎦ .
+−ρ sin φ
+0
+cos φ
+Expanding its determinant J along the bottom row, we get:
+�
+�
+ρ cos φ cos θ −ρ sin φ sin θ
+J = cos φ
+ρ cos φ sin θ
+ρ sin φ cos θ
+�
+�
+sin φ cos θ −ρ sin φ sin θ
+−(−ρ sin φ)
++0
+sin φ sin θ
+ρ sin φ cos θ
+
+= cos φ(ρ2 cos φ sin φ cos2 θ + ρ2 cos φ sin φ sin2 θ )
++ρ sin φ(ρ sin2 φ cos2 θ + ρ sin2 φ sin2 θ )
+=
+=
+=
+J =
+
+cos φ(ρ2 cos φ sin φ(cos2 θ + sin2 θ )) + ρ sin φ(ρ sin2 φ(cos2 θ + sin2 θ ))
+cos φ(ρ2 cos φ sin φ) + ρ2 sin3 φ
+ρ2 sin φ(cos2 φ + sin2 φ)
+ρ2 sin φ.
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

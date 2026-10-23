@@ -1,0 +1,467 @@
+Complex matrices; fast Fourier transform
+Matrices with all real entries can have complex eigenvalues! So we can’t avoid
+working with complex numbers. In this lecture we learn to work with complex
+vectors and matrices.
+The most important complex matrix is the Fourier matrix Fn , which is used
+for Fourier transforms. Normally, multiplication by Fn would require n2 mul­
+tiplications. The fast Fourier transform (FFT) reduces this to roughly n log2 n
+multiplications, a revolutionary improvement.
+
+Complex vectors
+Length
+z1
+⎢ z2 ⎥
+n
+⎥
+Given a vector z = ⎢
+⎣ ... ⎦ ∈ C with complex entries, how do we ﬁnd its
+zn
+
+⎡
+
+⎤
+
+length? Our old deﬁnition:
+z1
+⎢ z2 ⎥
+⎥
+zn ] ⎢
+⎣ ... ⎦
+zn
+
+⎡
+
+z T z = [ z1
+
+z2
+
+···
+
+⎤
+
+is no good; this quantity isn’t always positive. For example:
+�
+�
+�
+� 1
+1 i
+= 0.
+i
+�
+�
+1
+We don’t want to deﬁne the length of
+to be 0. The correct deﬁnition is:
+i
+|z|2 = z T z = |z1 |2 + |z2 |2 + · · · + |zn |2 . Then we have:
+�
+
+�
+length
+
+1
+i
+
+��2
+
+=
+
+�
+
+1
+
+−i
+
+�
+
+�
+
+1
+i
+
+�
+
+= 2.
+
+To simplify our notation we write |z|2 = z H z, where z H = z T . The H comes
+from the name Hermite, and z H z is read “z Hermitian z”.
+Inner product
+Similarly, the inner or dot product of two complex vectors is not just y T x. We
+must also take the complex conjugate of y:
+y H x = y T x = y1 x1 + y2 x2 + · · · + y n x n .
+1
+
+Complex matrices
+Hermitian matrices
+Symmetric matrices are real valued matrices for which A T = A. If A is comT
+
+= A; such a matrix is called Hermitian and we
+Note that the diagonal entries of a Hermitian matrix
+abbreviate A
+must be real. For example,
+�
+�
+T
+2
+3+i
+A =A=
+.
+3−i
+5
+plex, a nicer property is A
+T
+
+as A H .
+
+Similar to symmetric matrices, Hermitian matrices have real eigenvalues and
+perpendicular eigenvectors.
+Unitary matrices
+What does it mean for complex vectors q1 , q2 , ..., qn to be perpendicular (or
+orthonormal)? We must use our new deﬁnition of the inner product. For a
+collection of q j in complex space to be orthonormal, we require:
+�
+0 j �= k
+q j qk =
+1 j=k
+�
+�
+We can again deﬁne Q = q1 q2 · · · qn , and then Q H Q = I. Just as
+“Hermitian” is the complex equivalent of “symmetric”, the term “unitary” is
+analogous to “orthogonal”. A unitary matrix is a square matrix with perpen­
+dicular columns of unit length.
+
+Discrete Fourier transform
+A Fourier series is a way of writing a periodic function or signal as a sum of
+functions of different frequencies:
+f ( x ) = a0 + a1 cos x + b1 sin x + a2 cos 2x + b2 sin 2x + · · · .
+When working with ﬁnite data sets, the discrete Fourier transform is the key to
+this decomposition.
+In electrical engineering and computer science, the rows and columns of a
+matrix are numbered starting with 0, not 1 (and ending with n − 1, not n). We’ll
+follow this convention when discussing the Fourier matrix:
+1
+⎢ 1
+⎢
+⎢
+Fn = ⎢ 1
+⎢ .
+⎣ ..
+
+1
+w
+w2
+
+1
+
+w n −1
+
+⎡
+
+1
+w2
+w4
+
+···
+
+..
+w 2( n −1)
+2
+
+.
+
+1
+
+⎤
+
+w n −1 ⎥
+⎥
+w 2( n −1) ⎥
+⎥.
+⎥
+...
+⎦
+
+· · · w ( n −1)
+
+2
+
+Notice that Fn = FnT and ( Fn ) jk = w jk , where j, k = 0, 1, ..., n − 1 and the com­
+plex number w is w = ei·2π/n (so wn = 1). The columns of this matrix are
+orthogonal.
+All the entries of Fn are on the unit circle in the complex plane, and rais­
+ing each one to the nth power gives 1. We could write w = cos(2π/n) +
+i sin(2π/n), but that would just make it harder to compute w jk .
+Because w4 = 1 and w = e2πi/4 = i, our best example of a Fourier matrix is:
+⎡
+⎤ ⎡
+⎤
+1 1 1 1
+1
+1
+1
+1
+⎢ 1 i i2 i3 ⎥ ⎢ 1
+i −1 − i ⎥
+⎥ ⎢
+⎥.
+F4 = ⎢
+⎣ 1 i 2 i 4 i 6 ⎦ = ⎣ 1 −1
+1 −1 ⎦
+1 − i −1
+i
+1 i3 i6 i9
+To ﬁnd the Fourier transform of a vector with four components (four data
+points) we multiply by F4 .
+It’s easy to check that the columns of F4 are orthogonal, as long as we re­
+member to conjugate when computing the inner product. However, F4 is not
+quite unitary because each column has length 2. We could divide each entry
+by 2 to get a matrix whose columns are orthonormal:
+1 H
+F F = I.
+4 4 4
+An example
+The signal corresponding to a single impulse at time zero is (roughly) described
+⎡ ⎤
+1
+
+⎢ 0 ⎥
+by ⎣ ⎦. To ﬁnd the Fourier transform of this signal we compute:
+0
+0
+
+⎡
+
+1
+⎢ 1
+⎢
+⎣ 1
+1
+
+1
+i
+−1
+−i
+
+1
+−1
+1
+−1
+
+⎤⎡
+⎤ ⎡
+⎤
+1
+1
+1
+⎢
+⎥ ⎢
+⎥
+−i ⎥
+⎥⎢ 0 ⎥ = ⎢ 1 ⎥.
+⎦
+⎣
+⎦
+⎣
+−1
+0
+1 ⎦
+i
+0
+1
+
+A single impulse has all frequencies in equal amounts.
+If we multiply by F4 again we almost get back to (1, 0, 0, 0):
+⎡
+⎤⎡
+⎤ ⎡
+⎤
+⎡
+⎤
+1
+1
+1
+1
+1
+4
+1
+⎢ 1
+⎢
+⎥ ⎢
+⎥
+⎢
+⎥
+i −1 − i ⎥
+⎢
+⎥⎢ 1 ⎥ = ⎢ 0 ⎥ = 4⎢ 0 ⎥.
+⎣ 1 −1
+⎦
+⎣
+⎦
+⎣
+⎦
+⎣
+1
+0
+0 ⎦
+1 −1
+1 − i −1
+i
+1
+0
+0
+Because √1n Fn is unitary, multiplying by Fn and dividing by the scalar n inverts
+the transform.
+3
+
+Fast Fourier transform
+Fourier matrices can be broken down into chunks with lots of zero entries;
+Fourier probably didn’t notice this. Gauss did, but didn’t realize how signiﬁ­
+cant a discovery this was.
+There’s a nice relationship between Fn and F2n related to the fact that w22n =
+wn :
+�
+��
+�
+I
+D
+Fn
+0
+F2n =
+P,
+I −D
+0 Fn
+where D is a diagonal matrix and P is a 2n by 2n permutation matrix:
+⎡
+⎤
+1
+
+⎢ 0
+⎢
+⎢
+⎢
+⎢
+⎢ 0
+P=⎢
+⎢ 0
+⎢ 0
+⎢
+⎢
+⎣
+0
+
+0
+0
+
+0
+1
+
+0
+1
+0
+
+0
+0
+0
+
+0
+
+0
+
+0
+0
+..
+.
+0
+0
+1
+..
+.
+0
+
+···
+···
+
+0
+0
+
+···
+···
+···
+
+⎥
+⎥
+⎥
+⎥
+1 0 ⎥
+⎥.
+0 0 ⎥
+0 0 ⎥
+⎥
+⎥
+⎦
+
+···
+
+0
+
+0
+0 ⎥
+
+1
+
+So, a 2n sized Fourier transform F times x which we might think would require
+(2n)2 = 4n2 operations can instead be performed using two size n Fourier
+transforms (2n2 operations) plus two very simple matrix multiplications which
+require on the order of n multiplications. The matrix P picks out the even com­
+ponents x0 , x2 , x4 , ... of a vector ﬁrst, and then the odd ones – this calculation
+can be done very quickly.
+Thus we can do a Fourier transform of size 64 on a vector by separating
+the vector into its odd and even components, performing a size 32 Fourier
+transform on each half of its components, then recombining the two halves
+through a process which involves multiplication by the diagonal matrix D.
+⎡
+⎤
+1
+
+⎢
+⎢
+D=⎢
+⎢
+⎣
+
+w
+
+⎥
+⎥
+⎥.
+⎥
+⎦
+
+w2
+..
+
+.
+w n −1
+
+Of course we can break each of those copies of F32 down into two copies of
+F16 , and so on. In the end, instead of using n2 operations to multiply by Fn we
+get the same result using about 12 n log2 n operations.
+A typical case is n = 1024 = 210 . Simply multiplying by Fn requires over
+a million calculations. The fast Fourier transform can be completed with only
+1
+2 n log2 n = 5 · 1024 calculations. This is 200 times faster!
+This is only possible because Fourier matrices are special matrices with or­
+thogonal columns. In the next lecture we’ll return to dealing exclusively with
+real numbers and will learn about positive deﬁnite matrices, which are the ma­
+trices most often seen in applications.
+4
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

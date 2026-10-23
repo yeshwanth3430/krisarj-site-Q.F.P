@@ -1,0 +1,138 @@
+Exercises on differential equations and e At
+
+Problem 23.1: (6.3 #14.a Introduction to Linear Algebra: Strang) The ma­
+trix in this question is skew-symmetric ( A T = − A) :
+⎡
+⎤
+0
+c −b
+u1 � = cu2 − bu3
+du
+0
+a ⎦ u or u2 � = au3 − cu1
+= ⎣ −c
+dt
+0
+b −a
+u3 � = bu1 − au2 .
+Find the derivative of ||u(t)||2 using the deﬁnition:
+
+||u(t)||2 = u1 2 + u2 2 + u3 2 .
+What does this tell you about the rate of change of the length of u? What
+does this tell you about the range of values of u(t)?
+Solution:
+d||u(t)||2
+d ( u1 2 + u2 2 + u3 2 )
+=
+dt
+dt
+= 2u1 u1 � + 2u2 u2 � + 2u3 u3 �
+= 2u1 (cu2 − bu3 ) + 2u2 ( au3 − cu1 ) + 2u3 (bu1 − au2 )
+= 0.
+This means ||u(t)||2 stays equal to ||u(0)||2 . Because u(t) never changes
+length, it is always on the circumference of a circle of radius ||u(0)||.
+�
+Problem 23.2:
+
+(6.3 #24.) Write A =
+
+1 1
+0 3
+
+�
+
+as SΛS−1 . Multiply SeΛt S−1
+
+to ﬁnd the matrix exponential e At . Check your work by evaluating e At and
+the derivative of e At when t = 0.
+Solution: The eigenvalues of A are λ1 = 1 and λ2 = 3, with correspond­
+ing eigenvectors x1 = (1, 0) and x2 = (1, 2). This gives us the following
+values for S, Λ, and S−1 :
+�
+�
+�
+�
+�
+�
+1 1
+1 0
+1 −1/2
+−1
+S=
+,Λ =
+,S =
+.
+0 2
+0 3
+0
+1/2
+1
+
+We use these to ﬁnd e At :
+�
+�� t
+��
+� � t
+�
+e
+0
+1 1
+e .5e3t − .5et
+1 −1/2
+Λt −1
+Se S =
+=
+= e At .
+3t
+0 2
+0
+1/2
+0 e3t
+0
+e
+Check:
+e
+
+At
+
+�
+
+=
+
+et .5e3t − .5et
+0
+e3t
+
+�
+equals I when t = 0. �
+
+� t
+�
+de At
+e 1.5e3t − .5et
+=
+.
+0
+3e3t
+dt
+�
+�
+�
+de At ��
+1 1
+=
+= A. �
+0 3
+dt �t=0
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

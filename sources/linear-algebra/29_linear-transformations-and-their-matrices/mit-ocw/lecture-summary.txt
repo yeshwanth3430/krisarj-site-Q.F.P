@@ -1,0 +1,250 @@
+Linear transformations and their matrices
+In older linear algebra courses, linear transformations were introduced before
+matrices. This geometric approach to linear algebra initially avoids the need
+for coordinates. But eventually there must be coordinates and matrices when
+the need for computation arises.
+
+Without coordinates (no matrix)
+Example 1: Projection
+We can describe a projection as a linear transformation T which takes every vec­
+tor in R2 into another vector in R2 . In other words,
+T : R2 −→ R2 .
+The rule for this mapping is that every vector v is projected onto a vector T (v)
+on the line of the projection. Projection is a linear transformation.
+Deﬁnition of linear
+A transformation T is linear if:
+T (v + w) = T (v) + T (w)
+and
+T (cv) = cT (v)
+for all vectors v and w and for all scalars c. Equivalently,
+T (cv + dw) = cT (v) + dT (w)
+for all vectors v and w and scalars c and d. It’s worth noticing that T (0) = 0,
+because if not it couldn’t be true that T (c0) = cT (0).
+Non-example 1: Shift the whole plane
+Consider the transformation T (v) = v + v0 that shifts every vector in the plane
+by adding some ﬁxed vector v0 to it. This is not a linear transformation because
+T (2v) = 2v + v0 �= 2T (v).
+Non-example 2: T (v) = ||v||
+The transformation T (v) = ||v|| that takes any vector to its length is not a
+linear transformation because T (cv) �= cT (v) if c < 0.
+We’re not going to study transformations that aren’t linear. From here on,
+we’ll only use T to stand for linear transformations.
+
+1
+
+Example 2: Rotation by 45◦
+This transformation T : R2 −→ R2 takes an input vector v and outputs the
+vector T (v) that comes from rotating v counterclockwise by 45◦ about the ori­
+gin. Note that we can describe this and see that it’s linear without using any
+coordinates.
+The big picture
+One advantage of describing transformations geometrically is that it helps us
+to see the big picture, as opposed to focusing on the transformation’s effect on
+a single point. We can quickly see how rotation by 45◦ will transform a picture
+of a house in the plane. If the transformation was described in terms of a matrix
+rather than as a rotation, it would be harder to guess what the house would be
+mapped to.
+Frequently, the best way to understand a linear transformation is to ﬁnd
+the matrix that lies behind the transformation. To do this, we have to choose a
+basis and bring in coordinates.
+
+With coordinates (matrix!)
+All of the linear transformations we’ve discussed above can be described in
+terms of matrices. In a sense, linear transformations are an abstract description
+of multiplication by a matrix, as in the following example.
+Example 3: T (v) = Av
+Given a matrix A, deﬁne T (v) = Av. This is a linear transformation:
+A(v + w) = A(v) + A(w)
+and
+A(cv) = cA(v).
+Example 4
+�
+Suppose A =
+
+1
+0
+
+0
+−1
+
+�
+. How would we describe the transformation T (v) =
+
+Av geometrically?
+When we multiply A by a vector v in R2 , the x component of the vector
+is unchanged and the sign of the y component of the vector is reversed. The
+transformation v �→ Av reﬂects the xy-plane across the x axis.
+Example 5
+How could we ﬁnd a linear transformation T : R3 −→ R2 that takes three
+dimensional space to two dimensional space? Choose any 2 by 3 matrix A and
+deﬁne T (v) = Av.
+2
+
+Describing T (v)
+How much information do we need about T to to determine T (v) for all v? If
+we know how T transforms a single vector v1 , we can use the fact that T is a
+linear transformation to calculate T (cv1 ) for any scalar c. If we know T (v1 )
+and T (v2 ) for two independent vectors v1 and v2 , we can predict how T will
+transform any vector cv1 + dv2 in the plane spanned by v1 and v2 . If we wish to
+know T (v) for all vectors v in Rn , we just need to know T (v1 ), T (v2 ), ..., T (vn )
+for any basis v1 , v2 , ..., vn of the input space. This is because any v in the input
+space can be written as a linear combination of basis vectors, and we know that
+T is linear:
+v = c1 v1 + c2 v2 + · · · + c n v n
+T ( v ) = c1 T ( v1 ) + c2 T ( v2 ) + · · · + c n T ( v n ).
+
+This is how we get from a (coordinate-free) linear transformation to a (co­
+ordinate based) matrix; the ci are our coordinates. Once we’ve chosen a basis,
+every vector v in the space can be written as a combination of basis vectors in
+exactly one way. The coefﬁcients of those vectors are the coordinates of v in that
+basis.
+Coordinates come from a basis; changing the basis changes the coordinates
+of vectors in the space. We may not use the standard basis all the time – we
+sometimes want to use a basis of eigenvectors or some other basis.
+The matrix of a linear transformation
+Given a linear transformation T, how do we construct a matrix A that repre­
+sents it?
+First, we have to choose two bases, say v1 , v2 , ..., vn of Rn to give coordi­
+nates to the input vectors and w1 , w2 , ..., wm of Rm to give coordinates to the
+output vectors. We want to ﬁnd a matrix A so that T (v) = Av, where v and
+Av get their coordinates from these bases.
+The ﬁrst column of A consists of the coefﬁcients a11 , a21 , ..., a1m of T (v1 ) =
+a11 w1 + a21 w2 + · · · + a1m wm . The entries of column i of the matrix A are de­
+termined by T (vi ) = a1i w1 + a2i w2 + · · · + a1i wm . Because we’ve guaranteed
+that T (vi ) = Avi for each basis vector vi and because T is linear, we know that
+T (v) = Av for all vectors v in the input space.
+In the example of the projection matrix, n = m = 2. The transformation T
+projects every vector in the plane onto a line. In this example, it makes sense
+to use the same basis for the input and the output. To make our calculations as
+simple as possible, we’ll choose v1 to be a unit vector on the line of projection
+and v2 to be a unit vector perpendicular to v1 . Then
+T ( c1 v1 + c2 v2 ) = c1 v1 + 0
+
+3
+
+�
+and the matrix of the projection transformation is just A =
+�
+Av =
+
+1
+0
+
+0
+0
+
+��
+
+c1
+c2
+
+�
+
+�
+
+=
+
+c1
+0
+
+1
+0
+
+0
+0
+
+�
+.
+
+�
+.
+
+This is a nice matrix! If our chosen basis consists of eigenvectors then the
+matrix of the transformation will be the diagonal matrix Λ with eigenvalues
+on the diagonal.
+To see how important the choice of basis is, let’s use the standard basis for
+the linear transformation� that� projects the plane �onto�a line at a 45◦ angle. If
+1
+
+0
+
+we choose v1 = w1 =
+and v2 = w2 =
+, we get the projection
+0
+1
+�
+�
+aa T
+1/2 1/2
+matrix P = T =
+. We can check by graphing that this is the
+1/2 1/2
+a a
+correct matrix, but calculating P directly is more difﬁcult for this basis than it
+was with a basis of eigenvectors.
+Example 6: T =
+
+d
+dx
+
+Let T be a transformation that takes the derivative:
+T (c1 + c2 x + c3 x2 ) = c2 + 2c3 x.
+
+(1)
+
+The input space is the three dimensional space of quadratic polynomials c1 +
+c2 x + c3 x2 with basis v1 = 1, v2 = x and v3 = x2 . The output space is a
+two dimensional subspace of the input space with basis w1 = v1 = 1 and
+w2 = v2 = x.
+�
+�
+This is a linear transformation! So we can ﬁnd A =
+
+0
+0
+
+the transformation (1) as a matrix multiplication (2):
+⎛⎡
+⎤⎞
+⎡
+⎤
+�
+�
+c1
+c1
+c2
+T ⎝⎣ c2 ⎦⎠ = A ⎣ c2 ⎦ =
+.
+2c3
+c3
+c3
+
+1
+0
+
+0
+2
+
+and write
+
+(2)
+
+Conclusion
+For any linear transformation T we can ﬁnd a matrix A so that T (v) = Av.
+If the transformation is invertible, the inverse transformation has the matrix
+A−1 . The product of two transformations T1 : v �→ A1 v and T2 : w �→ A2 w
+corresponds to the product A2 A1 of their matrices. This is where matrix multi­
+plication came from!
+
+4
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

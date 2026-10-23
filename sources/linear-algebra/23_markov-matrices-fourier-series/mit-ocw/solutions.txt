@@ -1,0 +1,109 @@
+Exercises on Markov matrices; Fourier series
+
+Problem 24.1: (6.4 #7. Introduction to Linear Algebra: Strang)
+�
+�
+1 b
+a) Find a symmetric matrix
+that has a negative eigenvalue.
+b 1
+b) How do you know it must have a negative pivot?
+c) How do you know it can’t have two negative eigenvalues?
+Solution:
+a) The eigenvalues of that matrix are 1 ± b. If b > 1 or b < −1 the matrix
+has a negative eigenvalue.
+b) The pivots have the same signs as the eigenvalues. If the matrix has a
+negative eigenvalue, then it must have a negative pivot.
+c) To obtain one negative eigenvalue, we choose either b > 1 or b < −1
+(as stated in part (a)). If we choose b > 1, then λ1 = 1 + b will be
+positive while λ2 = 1 − b will be negative. Alternatively, if we choose
+b < −1, then λ1 = 1 + b will be negative while λ2 = 1 − b will be
+positive. Therefore this matrix cannot have two negative eigenvalues.
+Problem 24.2: (6.4 #23.) Which of these classes of matrices do A and B
+belong to: invertible, orthogonal, projection, permutation, diagonalizable,
+Markov?
+⎡
+⎤
+⎡
+⎤
+0 0 1
+1 1 1
+1
+A = ⎣ 0 1 0 ⎦ B = ⎣ 1 1 1 ⎦.
+3
+1 0 0
+1 1 1
+Which of these factorizations are possible for A and B: LU, QR, SΛS−1 , or
+QΛQ T ?
+
+1
+
+Solution:
+a) For A :
+A is invertible.
+det A = −1 �= 0.
+T
+AA = I.
+A is orthogonal.
+A is not a projection.
+A2 = I �= A.
+A has one 1 in each row and column with A is a permutation.
+0’s elsewhere.
+A = A T , so A is symmetric.
+A is diagonalizable.
+Each column of A sums to one.
+A is Markov.
+A = LU is not possible because A11 = 0. QR is possible because A has
+independent columns, SΛS−1 is possible because it is diagonalizable,
+and QΛQ T is possible because it is symmetric.
+b) For B :
+B is not invertible.
+det B = 0.
+BB T �= I.
+B is not orthogonal.
+2
+B is a projection.
+B = B.
+B does not have one 1 in each row and each B is not a permutation.
+column, with 0’s elsewhere.
+B = B T so B is symmetric.
+B is diagonalizable.
+Each column of B sums to one.
+B is Markov.
+B = LU is possible but U only contains one nonzero pivot. QR is im­
+possible because B has dependent columns, SΛS−1 is possible because
+it is diagonalizable, and QΛQ T is possible because it is symmetric.
+Problem 24.3: (8.3 #11.) Complete A to a Markov matrix and ﬁnd the
+steady state eigenvector. When A is a symmetric Markov matrix, why is
+x1 = (1, . . . , 1) its steady state?
+⎡
+⎤
+.7 .1 .2
+A = ⎣ .1 .6 .3 ⎦ .
+
+Solution: Matrix A becomes:
+⎡
+
+⎤
+.7 .1 .2
+A = ⎣ .1 .6 .3 ⎦ ,
+.2 .3 .5
+2
+
+with steady state vector (1,1,1). When A is a symmetric Markov matrix, the
+elements of each row sum to one. The elements of each row of A − I then
+sum to zero. Since the steady state vector x is the eigenvector associated
+with eigenvalue λ = 1, we solve ( A − λI )x = ( A − I )x = 0 to get x =
+(1, . . . , 1).
+
+3
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+

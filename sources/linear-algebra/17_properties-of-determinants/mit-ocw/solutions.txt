@@ -1,0 +1,106 @@
+Exercises on properties of determinants
+
+Problem 18.1: (5.1 #10. Introduction to Linear Algebra: Strang) If the en­
+tries in every row of a square matrix A add to zero, solve Ax = 0 to prove
+that det A = 0. If those entries add to one, show that det( A − I ) = 0. Does
+this mean that det A = 1?
+Solution:
+If the entries of every row of A sum to zero, then Ax = 0
+when x = (1, . . . , 1) since each component of Ax is the sum of the entries
+in a row of A. Since A has a non-zero nullspace, it is not invertible and
+det A = 0.
+If the entries of every row of A sum to one, then the entries in every
+row of A − I sum to zero. Hence A − I has a non-zero nullspace and
+det( A − I ) = 0.
+If det( A − I ) �
+= 0 it is� not necessarily true that det A = 1. For example,
+the rows of A =
+
+0 1
+1 0
+
+sum to one but det A = −1.
+
+Problem 18.2: (5.1 #18.) Use row operations and the properties of the
+determinant to calculate the three by three “Vandermonde determinant”:
+⎡
+⎤
+1 a a2
+det ⎣ 1 b b2 ⎦ = (b − a)(c − a)(c − b).
+1 c c2
+Solution:
+have:
+
+Using row operations and properties of the determinant, we
+
+1
+
+⎤
+⎡
+⎤
+1 a a2
+1
+a
+a2
+det ⎣ 1 b b2 ⎦ = det ⎣ 0 b − a b2 − a2 ⎦
+1 c c2
+1
+c
+c2
+⎡
+
+⎤
+1
+a
+a2
+= det ⎣ 0 b − a b2 − a2 ⎦
+0 c − a c2 − a2
+⎡
+
+⎤
+1
+a
+a2
+1
+b+a ⎦
+= (b − a) det ⎣ 0
+1 c − a c2 − a2
+⎡
+
+⎤
+1 a
+a2
+⎦
+= (b − a) det ⎣ 0 1
+b+a
+0 0 (c − a)(c − b)
+⎡
+
+⎤
+1 a
+a2
+= (b − a)(c − a)(c − b) det ⎣ 0 1 b + a ⎦
+0 0
+1
+⎡
+
+⎡
+
+⎤
+1 0 0
+= (b − a)(c − a)(c − b) det ⎣ 0 1 0 ⎦
+0 0 1
+
+= (b − a)(c − a)(c − b).�
+
+2
+
+MIT OpenCourseWare
+http://ocw.mit.edu
+
+18.06SC Linear Algebra
+Fall 2011
+
+For information about citing these materials or our Terms of Use, visit: http://ocw.mit.edu/terms.
+
+
