@@ -397,53 +397,40 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t9">9. The column space</h3>
 
-    <p>So far subspaces have been described by hand. In practice they arrive <b>out of matrices</b>, and here is the first and most important way.</p>
-
-    <h4>Why the columns are the natural thing to take</h4>
-
-    <p>From Lesson 1: multiplying \(A\) by a vector produces a <b>combination of the columns of \(A\)</b>. So the set of all vectors \(Ax\) — everything the matrix can possibly produce — is exactly the set of all combinations of its columns. That set is worth a name.</p>
+    <p>Subspaces usually arrive <b>out of a matrix</b>. Here is the main way.</p>
 
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} $$
 
-    <p>The two columns are \((1,2,4)\) and \((3,3,1)\), vectors in \(\mathbb{R}^3\).</p>
+    <p>Its columns are \((1,2,4)\) and \((3,3,1)\) — two vectors in \(\mathbb{R}^3\).</p>
 
-    <h4>Why two columns are not yet a subspace</h4>
+    <p>Two vectors are not a subspace yet. Multiplying escapes: \(2(1,2,4) = (2,4,8)\), which is neither column. Adding escapes: \((1,2,4) + (3,3,1) = (4,5,5)\), also neither.</p>
 
-    <p>A collection of just those two arrows fails both tests immediately. Scaling takes you off it — \(2 \times (1,2,4) = (2,4,8)\) is not one of the two. Adding takes you off it — \((1,2,4) + (3,3,1) = (4,5,5)\) is not either. So we must throw those results in; and then their results; and so on.</p>
-
-    <p>The way to stop chasing is to <b>include everything in one go</b>: every vector of the form \(x(1,2,4) + y(3,3,1)\), for all numbers \(x\) and \(y\). Now nothing can escape, because any sum or multiple of such vectors is another vector of exactly that form.</p>
+    <p>So throw in <b>everything</b> you can build — every \(x(1,2,4) + y(3,3,1)\). Now nothing escapes, because any sum or multiple of those is another one of those.</p>
 
     <div class="box definition"><span class="label">The column space ★</span>
-      <p>$$ \boxed{C(A) = \text{all linear combinations of the columns of } A} $$</p>
-      <p>Equivalently: everything the matrix can produce, every possible \(Ax\). It is always a subspace.</p>
+      <p>$$ \boxed{C(A) = \text{all combinations of the columns of } A} $$</p>
+      <p>Same thing: every vector \(Ax\) the matrix can produce (Lesson 1).</p>
     </div>
 
-    <h4>Why it comes out as a plane</h4>
+    <h4>What shape is it?</h4>
 
-    <p>Build it up in stages, and watch it grow:</p>
+    <ul>
+      <li>Column 1 alone gives a <b>line</b>.</li>
+      <li>Column 2 alone gives another <b>line</b>.</li>
+      <li>Some of each fills everything between them — a <b>plane</b>.</li>
+    </ul>
 
-    <ol class="index-list">
-      <li><b>Use only the first column.</b><span>All its multiples give a line through the origin.</span></li>
-      <li><b>Use only the second.</b><span>Another line through the origin, pointing a different way.</span></li>
-      <li><b>Use some of each.</b><span>Now you can step along the first line and then along the second, which reaches points off both lines — and doing that in every possible amount fills in the entire flat sheet between them.</span></li>
-    </ol>
-
-    <p>It cannot grow further than that sheet, because every vector you can make is built from only two directions. So:</p>
+    <p>It stops there, because only two directions went in:</p>
 
     $$ \boxed{C(A) \text{ is a plane through the origin}} $$
-
-    <div class="box intuition"><span class="label">When it would come out differently</span>
-      <p>The answer depended on the two columns <b>pointing different ways</b>. Had the second column been a multiple of the first, every combination would have stayed on one line and \(C(A)\) would be a line. With three columns pointing in three genuinely different directions, it would be all of \(\mathbb{R}^3\). The same three outcomes as the list in section 8 — which is no coincidence.</p>
-    </div>
 
     <figure class="fig" style="max-width:640px;margin:22px auto">
       <div id="fig3d-colspace" style="width:100%;height:440px"></div>
       <figcaption><b>The column space is a plane — drag to rotate.</b> The two solid arrows are the columns of \(A\). The shaded sheet is \(C(A)\): every vector you can build as \(x(1,2,4) + y(3,3,1)\). Rotate until the sheet is edge-on and you can see it really is flat, and that it passes exactly through the origin — as every subspace must. The dashed arrow is the column sum \((4,5,5)\), which of course lands on the sheet. Nothing outside this plane is reachable from these two columns; had they pointed the same way, the column space would have collapsed to a single line.</figcaption>
     </figure>
 
-    <div class="box intuition"><span class="label">The same thing in ten dimensions</span>
-      <p>Learn the picture here, because it repeats where you cannot draw it. Take five vectors with ten components each and form every combination. You do <b>not</b> get \(\mathbb{R}^5\) — your vectors have ten components, not five. You get a flat five-dimensional piece of \(\mathbb{R}^{10}\), passing through the origin.</p>
-      <p>Unless the vectors overlap. If all five sat on one line, you would get only that line — just as two columns on one line would give a line instead of a plane.</p>
+    <div class="box intuition"><span class="label">It depends on the columns</span>
+      <p>If column 2 had been a multiple of column 1, everything would stay on one line and \(C(A)\) would be a <b>line</b>. With three columns pointing three different ways, it would be <b>all of \(\mathbb{R}^3\)</b> — the same three answers as the list in section 8.</p>
     </div>
 
     <!-- ====================================================== -->
