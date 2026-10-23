@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solving Ax = 0: Pivot Variables, Special Solutions · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Linear Algebra, Lesson 7: the shortcut for computing a nullspace — eliminate to R, spot the free columns, and read the special solutions straight off.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="la-07">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Solving Ax = 0</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 7</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 7 (MIT 18.06, Lecture 7)</p>
+  <h1>Solving Ax = 0: Pivot Variables, Special Solutions</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+
+    <!-- ===================== HEAD CARD ===================== -->
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Compute the nullspace } N(A) \text{ — not just define it.}} $$</p>
+      <p>Lesson 6 found a nullspace <b>by eye</b>, which only works on tiny examples. This lecture gives the method that always works, and the method is short: <b>eliminate all the way to \(R\), look at which columns have no pivot, and read the answers off</b>. No back-substitution, no guessing.</p>
+    </div>
+
+    <!-- ===================== THE SHORTCUT, UP FRONT ===================== -->
+    <div class="box method"><span class="label">Method · the nullspace in four steps ★</span>
+      <ol>
+        <li><b>Eliminate \(A\) to \(U\).</b> Ordinary elimination. No augmented column — the right-hand side is \(0\) and stays \(0\).</li>
+        <li><b>Mark the columns.</b> A column with a pivot is a <b>pivot column</b>; a column without one is a <b>free column</b>. The number of pivots is the <b>rank \(r\)</b>.</li>
+        <li><b>Keep going to \(R\).</b> Clear upwards as well, and scale each pivot to \(1\). That is the <b>reduced row echelon form</b>.</li>
+        <li><b>Read off the special solutions.</b> One per free column: set that free variable to \(1\), the other free variables to \(0\), and the pivot variables are then sitting in \(R\) with a minus sign.</li>
+      </ol>
+      <p>The nullspace is all combinations of those special solutions.</p>
+    </div>
+
+    <!-- ===================== INDEX ===================== -->
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Step 1 — eliminate to U</a></li>
+        <li><a href="#t2">Step 2 — pivot and free columns</a></li>
+        <li><a href="#t3">Step 3 — go all the way to R</a></li>
+        <li><a href="#t4">Step 4 — read off the solutions</a></li>
+        <li><a href="#t5">The even shorter version</a></li>
+        <li><a href="#t6">How many solutions?</a></li>
+        <li><a href="#t7">Why it works</a></li>
+        <li><a href="#t8">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <p>The method, step by step, on one example. Click a step to jump to it.</p>
+
+    <ol class="index-list">
+      <li><a href="#t1">Step 1 — eliminate to U</a><span>Elimination still works when the matrix is not invertible; rows of zeros are allowed.</span></li>
+      <li><a href="#t2">Step 2 — pivot and free columns</a><span>Which columns got pivots, which did not, and what the rank is.</span></li>
+      <li><a href="#t3">Step 3 — go all the way to R</a><span>Clear above the pivots too and scale them to 1.</span></li>
+      <li><a href="#t4">Step 4 — read off the solutions</a><span>One special solution per free column, taken straight from \(R\).</span></li>
+      <li><a href="#t5">The even shorter version</a><span>\(R = [\,I \ F\,]\) gives \(N = \begin{bmatrix} -F \\ I\end{bmatrix}\) — no arithmetic at all.</span></li>
+      <li><a href="#t6">How many solutions?</a><span>\(n - r\) free columns means \(n - r\) special solutions.</span></li>
+      <li><a href="#t7">Why it works</a><span>Elimination never changes the nullspace, and \(R\) makes the answer visible.</span></li>
+      <li><a href="#t8">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The method, on one example</h2>
+
+    <p>The matrix for the whole lecture — chosen so its columns are <b>not</b> independent:</p>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 2 & 2 \\ 2 & 4 & 6 & 8 \\ 3 & 6 & 8 & 10 \end{bmatrix} $$
+
+    <p>Three rows, four columns. Note before starting: <b>column two is exactly twice column one</b>, so trouble is coming — and that is the point.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Step 1 — eliminate to U</h3>
+
+    <p>Run elimination exactly as in Lesson 2. Two things are different from before, and neither stops us:</p>
+
+    <ul>
+      <li><b>No augmented column.</b> The right-hand side is \(0\), and whatever you do to a row of zeros it stays zeros. So carry nothing.</li>
+      <li><b>\(A\) is not invertible.</b> Elimination does not care. It will simply run out of pivots.</li>
+    </ul>
+
+    <p><b>First pivot is the \(1\)</b> in the corner. Clear the column below it — multipliers \(2\) and \(3\):</p>
+
+    $$ \begin{aligned}
+      \text{row}_2 - 2\,\text{row}_1 &= \begin{bmatrix} 2 & 4 & 6 & 8 \end{bmatrix} - 2\begin{bmatrix} 1 & 2 & 2 & 2 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix} \\[4pt]
+      \text{row}_3 - 3\,\text{row}_1 &= \begin{bmatrix} 3 & 6 & 8 & 10 \end{bmatrix} - 3\begin{bmatrix} 1 & 2 & 2 & 2 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix}
+    \end{aligned} $$
+
+    $$ \begin{bmatrix} \boxed{1} & 2 & 2 & 2 \\ 0 & 0 & 2 & 4 \\ 0 & 0 & 2 & 4 \end{bmatrix} $$
+
+    <p><b>Now look at column two.</b> The entry in the pivot position is \(0\), and so is everything below it. There is nothing to exchange with — so <b>column two gets no pivot</b>. Move right and take the next available one.</p>
+
+    <p><b>Second pivot is the \(2\)</b> in row two, column three. Clear below it — multiplier \(1\):</p>
+
+    $$ \text{row}_3 - \text{row}_2 = \begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix} - \begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 0 & 0 \end{bmatrix} $$
+
+    $$ U = \begin{bmatrix} \boxed{1} & 2 & 2 & 2 \\ 0 & 0 & \boxed{2} & 4 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+
+    <div class="box intuition"><span class="label">The row of zeros is information</span>
+      <p>Row three vanished because it was a <b>combination of rows one and two</b> — it never carried anything new. Elimination found that out for us. This shape, with the pivots stepping down and right, is called <b>echelon</b> (staircase) form.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Step 2 — pivot and free columns</h3>
+
+    <p>Everything now depends on one easy observation: <b>which columns of \(U\) contain a pivot?</b></p>
+
+    <table class="sl-table">
+      <tr><th>Column</th><th>Pivot?</th><th>Name</th><th>Its variable</th></tr>
+      <tr><td>1</td><td>yes — the \(1\)</td><td><b>pivot column</b></td><td>\(x_1\) is a <b>pivot variable</b></td></tr>
+      <tr><td>2</td><td>no</td><td><b>free column</b></td><td>\(x_2\) is a <b>free variable</b></td></tr>
+      <tr><td>3</td><td>yes — the \(2\)</td><td><b>pivot column</b></td><td>\(x_3\) is a <b>pivot variable</b></td></tr>
+      <tr><td>4</td><td>no</td><td><b>free column</b></td><td>\(x_4\) is a <b>free variable</b></td></tr>
+    </table>
+
+    <div class="box definition"><span class="label">Rank</span>
+      <p>$$ \boxed{r = \text{the number of pivots}} $$</p>
+      <p>Here \(r = 2\). Two pivots, so two pivot columns and <b>two free columns</b>.</p>
+    </div>
+
+    <p><b>Free means free.</b> You may assign \(x_2\) and \(x_4\) absolutely any values you like; the equations will then force \(x_1\) and \(x_3\). That is the whole reason the nullspace is bigger than just the zero vector.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Step 3 — go all the way to R</h3>
+
+    <p>Stopping at \(U\) would mean back-substituting by hand. Push on instead — this is the step that makes the answer readable. Two more moves, both familiar from Gauss–Jordan in Lesson 3:</p>
+
+    <p><b>Clear above the pivots.</b> The \(2\) in row one, column three sits above the second pivot. Subtract row two from row one:</p>
+
+    $$ \text{row}_1 - \text{row}_2 = \begin{bmatrix} 1 & 2 & 2 & 2 \end{bmatrix} - \begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix} = \begin{bmatrix} 1 & 2 & 0 & -2 \end{bmatrix} $$
+
+    <p><b>Scale every pivot to \(1\).</b> Divide row two by \(2\):</p>
+
+    $$ \tfrac12\begin{bmatrix} 0 & 0 & 2 & 4 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 1 & 2 \end{bmatrix} $$
+
+    $$ R = \begin{bmatrix} \boxed{1} & 2 & 0 & -2 \\ 0 & 0 & \boxed{1} & 2 \\ 0 & 0 & 0 & 0 \end{bmatrix} $$
+
+    <div class="box definition"><span class="label">Reduced row echelon form</span>
+      <p>\(R\) is the <b>rref</b> of \(A\): pivots equal to \(1\), and <b>zeros both above and below</b> every pivot. It is the simplest matrix with the same nullspace as \(A\), and everything we want is now visible in it.</p>
+    </div>
+
+    <figure class="fig" style="max-width:660px;margin:22px auto">
+      <svg viewBox="0 0 660 250" role="img" aria-label="The march from A to U to R, with pivot columns and free columns marked">
+        <g class="tick" font-size="12.5"><text x="20" y="22">A</text><text x="246" y="22">U — pivots found</text><text x="492" y="22">R — pivots are 1, clear above and below</text></g>
+        <g font-family="ui-monospace, Menlo, Consolas, monospace" font-size="15" fill="currentColor">
+          <text x="34" y="70" text-anchor="middle">1</text><text x="74" y="70" text-anchor="middle">2</text><text x="114" y="70" text-anchor="middle">2</text><text x="154" y="70" text-anchor="middle">2</text>
+          <text x="34" y="102" text-anchor="middle">2</text><text x="74" y="102" text-anchor="middle">4</text><text x="114" y="102" text-anchor="middle">6</text><text x="154" y="102" text-anchor="middle">8</text>
+          <text x="34" y="134" text-anchor="middle">3</text><text x="74" y="134" text-anchor="middle">6</text><text x="114" y="134" text-anchor="middle">8</text><text x="154" y="134" text-anchor="middle">10</text>
+
+          <text x="262" y="70" text-anchor="middle">1</text><text x="302" y="70" text-anchor="middle">2</text><text x="342" y="70" text-anchor="middle">2</text><text x="382" y="70" text-anchor="middle">2</text>
+          <text x="262" y="102" text-anchor="middle">0</text><text x="302" y="102" text-anchor="middle">0</text><text x="342" y="102" text-anchor="middle">2</text><text x="382" y="102" text-anchor="middle">4</text>
+          <text x="262" y="134" text-anchor="middle">0</text><text x="302" y="134" text-anchor="middle">0</text><text x="342" y="134" text-anchor="middle">0</text><text x="382" y="134" text-anchor="middle">0</text>
+
+          <text x="498" y="70" text-anchor="middle">1</text><text x="538" y="70" text-anchor="middle">2</text><text x="578" y="70" text-anchor="middle">0</text><text x="624" y="70" text-anchor="middle">−2</text>
+          <text x="498" y="102" text-anchor="middle">0</text><text x="538" y="102" text-anchor="middle">0</text><text x="578" y="102" text-anchor="middle">1</text><text x="624" y="102" text-anchor="middle">2</text>
+          <text x="498" y="134" text-anchor="middle">0</text><text x="538" y="134" text-anchor="middle">0</text><text x="578" y="134" text-anchor="middle">0</text><text x="624" y="134" text-anchor="middle">0</text>
+        </g>
+        <!-- free column shading on U and R -->
+        <rect x="286" y="52" width="32" height="92" class="l3" fill="currentColor" fill-opacity=".12" stroke="none"/>
+        <rect x="366" y="52" width="32" height="92" class="l3" fill="currentColor" fill-opacity=".12" stroke="none"/>
+        <rect x="522" y="52" width="32" height="92" class="l3" fill="currentColor" fill-opacity=".12" stroke="none"/>
+        <rect x="606" y="52" width="36" height="92" class="l3" fill="currentColor" fill-opacity=".12" stroke="none"/>
+        <!-- pivots ringed -->
+        <circle cx="262" cy="65" r="13" class="l2" fill="none" stroke-width="2"/>
+        <circle cx="342" cy="97" r="13" class="l2" fill="none" stroke-width="2"/>
+        <circle cx="498" cy="65" r="13" class="l2" fill="none" stroke-width="2"/>
+        <circle cx="578" cy="97" r="13" class="l2" fill="none" stroke-width="2"/>
+        <!-- arrows -->
+        <line class="axis" x1="180" y1="100" x2="236" y2="100" stroke-width="2"/><polygon points="236,100 228,95 228,105" fill="currentColor"/>
+        <line class="axis" x1="412" y1="100" x2="470" y2="100" stroke-width="2"/><polygon points="470,100 462,95 462,105" fill="currentColor"/>
+        <text class="lbl c2" x="178" y="168">eliminate down</text>
+        <text class="lbl c2" x="414" y="168">clear up, scale pivots</text>
+        <text class="lbl c3" x="246" y="196">shaded = free columns (no pivot): x₂ and x₄</text>
+        <text class="lbl c2" x="246" y="218">ringed = pivots: rank r = 2</text>
+        <text class="tick" x="20" y="240">Row three became zeros because it was a combination of rows one and two.</text>
+      </svg>
+      <figcaption><b>Two eliminations and the answer is in plain sight.</b> Going left to right: ordinary elimination finds the pivots (ringed) and flattens the dependent third row to zeros; the second step clears above each pivot and scales it to \(1\). The shaded columns never received a pivot — those are the free columns, and each one will hand us a nullspace vector. Everything needed from here on is read off \(R\); no further arithmetic on \(A\) is required.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Step 4 — read off the solutions</h3>
+
+    <p>One <b>special solution</b> per free column. The recipe is always the same:</p>
+
+    <div class="box method"><span class="label">Method · one special solution</span>
+      <p>Pick a free variable. Set it to \(\mathbf{1}\). Set <b>all other free variables to \(0\)</b>. Then the pivot variables are forced — and with \(R\) in front of you, they are just the matching entries with the sign flipped.</p>
+    </div>
+
+    <h4>First special solution: \(x_2 = 1\), \(x_4 = 0\)</h4>
+    <p>Read the two non-zero rows of \(R\) as equations:</p>
+
+    $$ \begin{aligned}
+      \text{row 1:} \quad x_1 + 2x_2 + 0x_3 - 2x_4 &= 0 \;\Rightarrow\; x_1 + 2(1) - 2(0) = 0 \;\Rightarrow\; x_1 = -2 \\[4pt]
+      \text{row 2:} \quad x_3 + 2x_4 &= 0 \;\Rightarrow\; x_3 + 2(0) = 0 \;\Rightarrow\; x_3 = 0
+    \end{aligned} $$
+
+    $$ s_1 = \begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix} $$
+
+    <p>Sanity check against the original matrix — this says <b>column two is twice column one</b>, which we spotted at the start:</p>
+
+    $$ A s_1 = -2\begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} + 1\begin{bmatrix} 2 \\ 4 \\ 6 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} \quad ✓ $$
+
+    <h4>Second special solution: \(x_4 = 1\), \(x_2 = 0\)</h4>
+
+    $$ \begin{aligned}
+      \text{row 2:} \quad x_3 + 2x_4 &= 0 \;\Rightarrow\; x_3 + 2(1) = 0 \;\Rightarrow\; x_3 = -2 \\[4pt]
+      \text{row 1:} \quad x_1 + 2x_2 - 2x_4 &= 0 \;\Rightarrow\; x_1 + 0 - 2(1) = 0 \;\Rightarrow\; x_1 = 2
+    \end{aligned} $$
+
+    $$ s_2 = \begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix}, \qquad
+      A s_2 = 2\begin{bmatrix} 1 \\ 2 \\ 3 \end{bmatrix} - 2\begin{bmatrix} 2 \\ 6 \\ 8 \end{bmatrix} + 1\begin{bmatrix} 2 \\ 8 \\ 10 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} \quad ✓ $$
+
+    <div class="box theorem"><span class="label">The nullspace ★</span>
+      <p>$$ \boxed{N(A) = \left\{\, c\,s_1 + d\,s_2 \;:\; c, d \text{ any numbers} \right\}} $$</p>
+      <p>All combinations of the special solutions — because any choice of the free variables \((x_2, x_4) = (c, d)\) is \(c\) of the first special solution plus \(d\) of the second. Here that is a <b>two-dimensional subspace of \(\mathbb{R}^4\)</b>.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. The even shorter version</h3>
+
+    <p>Once you trust the recipe, you need not write the equations at all. Look at \(R\) with the pivot columns gathered on the left (reordering columns only relabels the variables):</p>
+
+    $$ R = \begin{bmatrix} I & F \\ 0 & 0 \end{bmatrix}
+      \qquad\text{with}\qquad
+      I = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}, \quad
+      F = \begin{bmatrix} 2 & -2 \\ 0 & 2 \end{bmatrix} $$
+
+    <p>\(F\) is simply <b>the free columns, in the pivot rows</b> — in our \(R\) those are columns two and four, read off the first two rows.</p>
+
+    <div class="box method"><span class="label">Method · the nullspace matrix ★</span>
+      <p>$$ \boxed{N = \begin{bmatrix} -F \\ I \end{bmatrix}} \qquad\text{then}\qquad RN = 0 $$</p>
+      <p>Write down \(-F\), stack an identity underneath it, and <b>its columns are the special solutions</b>. No equations, no substitution.</p>
+    </div>
+
+    <p>For our matrix:</p>
+
+    $$ -F = \begin{bmatrix} -2 & 2 \\ 0 & -2 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      N = \begin{bmatrix} -2 & \ \ 2 \\ 0 & -2 \\ \hline 1 & \ \ 0 \\ 0 & \ \ 1 \end{bmatrix} $$
+
+    <p>Those rows are in the order (pivot variables \(x_1, x_3\), then free variables \(x_2, x_4\)). Put them back in the natural order \(x_1, x_2, x_3, x_4\) and the two columns are</p>
+
+    $$ \begin{bmatrix} -2 \\ 1 \\ 0 \\ 0 \end{bmatrix} \quad\text{and}\quad \begin{bmatrix} 2 \\ 0 \\ -2 \\ 1 \end{bmatrix} $$
+
+    <p>— exactly the \(s_1\) and \(s_2\) we computed the long way. ✓</p>
+
+    <figure class="fig" style="max-width:620px;margin:22px auto">
+      <svg viewBox="0 0 620 260" role="img" aria-label="R splits into I and F, and the nullspace matrix is minus F stacked on I">
+        <text class="tick" x="30" y="24" font-size="13">R — pivot columns left, free columns right</text>
+        <text class="tick" x="400" y="24" font-size="13">N — the answer</text>
+        <!-- R blocks -->
+        <rect x="36" y="40" width="96" height="60" class="l2" fill="currentColor" fill-opacity=".12" stroke-width="1.5"/>
+        <rect x="136" y="40" width="96" height="60" class="l3" fill="currentColor" fill-opacity=".12" stroke-width="1.5"/>
+        <rect x="36" y="104" width="196" height="34" class="axis" fill="none" stroke-width="1.2" stroke-dasharray="4 3"/>
+        <text class="lbl c2" x="72" y="76" font-size="18">I</text>
+        <text class="lbl c3" x="178" y="76" font-size="18">F</text>
+        <text class="tick" x="96" y="126">0</text>
+        <text class="tick" x="36" y="162">I is r × r (here 2 × 2)</text>
+        <text class="tick" x="36" y="182">F is the free columns in the pivot rows</text>
+        <!-- arrow -->
+        <line class="axis" x1="258" y1="90" x2="330" y2="90" stroke-width="2"/><polygon points="330,90 322,85 322,95" fill="currentColor"/>
+        <text class="lbl c1" x="256" y="78">flip sign, stack</text>
+        <!-- N blocks -->
+        <rect x="406" y="40" width="96" height="56" class="l3" fill="currentColor" fill-opacity=".12" stroke-width="1.5"/>
+        <rect x="406" y="100" width="96" height="56" class="l2" fill="currentColor" fill-opacity=".12" stroke-width="1.5"/>
+        <text class="lbl c3" x="434" y="76" font-size="18">−F</text>
+        <text class="lbl c2" x="446" y="136" font-size="18">I</text>
+        <text class="tick" x="406" y="182">each column of N is one special solution</text>
+        <text class="tick" x="406" y="202">the I below picks one free variable at a time</text>
+        <text class="tick" x="30" y="236">Why the identity: setting one free variable to 1 and the rest to 0 is exactly a column of I.</text>
+        <text class="tick" x="30" y="252">Why minus F: the pivot rows then read  pivot variable + (that F entry) = 0.</text>
+      </svg>
+      <figcaption><b>The whole method as two blocks.</b> Split \(R\) into the identity sitting on the pivot columns and \(F\) sitting on the free columns. The nullspace matrix is \(F\) with its sign flipped, stacked on top of an identity. The bottom identity is doing the "set one free variable to \(1\), the others to \(0\)" step for every free variable at once, and the \(-F\) on top is what the pivot rows then force. Multiply and you get \(RN = 0\) — the columns of \(N\) are precisely the special solutions.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. How many solutions?</h3>
+
+    <p>The count falls out of the method, with no extra work:</p>
+
+    $$ \boxed{\text{number of free columns} = n - r} $$
+
+    <p>\(n\) is the number of columns (the number of variables), \(r\) is the number of pivots. Every free column gives exactly one special solution, so</p>
+
+    <table class="sl-table">
+      <tr><th>Quantity</th><th>Our example</th></tr>
+      <tr><td>columns \(n\)</td><td>4</td></tr>
+      <tr><td>rank \(r\) (pivots)</td><td>2</td></tr>
+      <tr><td>free columns \(n - r\)</td><td>2</td></tr>
+      <tr><td>special solutions</td><td>2</td></tr>
+      <tr><td>dimension of \(N(A)\)</td><td>2</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">The extreme case</span>
+      <p>If every column has a pivot then \(r = n\), there are <b>no</b> free columns, no special solutions, and the nullspace is only the zero vector. That is exactly the case where the columns are independent — and, for a square matrix, where \(A\) is invertible.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Why it works</h3>
+
+    <p>Two facts hold the whole method up, and both are short.</p>
+
+    <div class="box theorem"><span class="label">Elimination does not change the nullspace</span>
+      <p>Every row operation is "take a combination of equations". If \(x\) satisfies the old equations it satisfies the new ones, and every step is reversible (Lesson 2), so nothing is gained or lost:</p>
+      $$ \boxed{N(A) = N(U) = N(R)} $$
+      <p>That is the licence to throw \(A\) away and work with \(R\) instead.</p>
+    </div>
+
+    <div class="box pitfall"><span class="label">But it does change the column space</span>
+      <p>Row operations mix the rows, which moves the columns around. \(C(A)\) and \(C(R)\) are generally <b>different</b> — so never read a column space off \(R\) without care. Nullspace: safe. Column space: not.</p>
+    </div>
+
+    <p>And the second fact — why \(R\) makes the answer readable: with pivots equal to \(1\) and zeros above and below, each non-zero row of \(R\) says</p>
+
+    $$ (\text{one pivot variable}) + (\text{some free variables}) = 0 $$
+
+    <p>so each pivot variable is <b>already solved for</b> in terms of the free ones. There is nothing left to substitute. That is the entire reason we push past \(U\).</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t8"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Goal</b></td><td>Compute \(N(A)\) — all \(x\) with \(Ax = 0\) — for a matrix of any size and shape.</td></tr>
+      <tr><td><b>Step 1</b></td><td>Eliminate to \(U\). No augmented column; zero rows are fine.</td></tr>
+      <tr><td><b>Step 2</b></td><td>Pivot columns have pivots, free columns do not. \(r\) = number of pivots = <b>rank</b>.</td></tr>
+      <tr><td><b>Step 3</b></td><td>Continue to \(R\): pivots \(= 1\), zeros above and below.</td></tr>
+      <tr><td><b>Step 4</b></td><td>One special solution per free column: that free variable \(= 1\), other free variables \(= 0\).</td></tr>
+      <tr><td><b>Shortcut ★</b></td><td>\(R = \begin{bmatrix} I & F \\ 0 & 0\end{bmatrix} \Rightarrow N = \begin{bmatrix} -F \\ I\end{bmatrix}\); the columns of \(N\) are the special solutions.</td></tr>
+      <tr><td><b>Count</b></td><td>\(n - r\) free columns, so \(n - r\) special solutions, so \(\dim N(A) = n - r\).</td></tr>
+      <tr><td><b>Our example</b></td><td>\(r = 2\), \(n = 4\), two specials: \((-2,1,0,0)\) and \((2,0,-2,1)\).</td></tr>
+      <tr><td><b>Safe / unsafe</b></td><td>Elimination preserves \(N(A)\); it does <b>not</b> preserve \(C(A)\).</td></tr>
+      <tr><td><b>No free columns</b></td><td>\(r = n\) means \(N(A) = \{0\}\) — independent columns.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Elimination still works when the matrix is not invertible ★</b>
+        <span>It simply runs out of pivots and leaves rows of zeros, which is itself the information you wanted.</span></li>
+      <li><b>Free columns are where the nullspace comes from</b>
+        <span>A column with no pivot means a variable nobody constrains — pick its value freely and the pivots follow.</span></li>
+      <li><b>Push past \(U\) to \(R\) ★</b>
+        <span>At \(U\) you still have to back-substitute; at \(R\) the answer is already written down.</span></li>
+      <li><b>Rank counts the pivots, and \(n - r\) counts the freedom</b>
+        <span>Two numbers that will organise the rest of the course.</span></li>
+      <li><b>Row operations preserve the nullspace, not the column space</b>
+        <span>Keep that straight and you can always work with the simplest matrix available.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We can now solve \(Ax = 0\) completely. The next lesson keeps \(R\) and changes the right-hand side: <b>\(Ax = b\)</b>. The answer turns out to be one particular solution plus the whole nullspace — so this lesson is already half of the next one.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
