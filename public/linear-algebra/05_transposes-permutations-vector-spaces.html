@@ -55,11 +55,10 @@
         <li><a href="#t4">Symmetric matrices</a></li>
         <li><a href="#t5">RᵀR is always symmetric</a></li>
         <li><a href="#t6">What a vector space is</a></li>
-        <li><a href="#t7">Closure: an example that fails</a></li>
-        <li><a href="#t8">Subspaces</a></li>
-        <li><a href="#t9">All subspaces of R² and R³</a></li>
-        <li><a href="#t10">The column space</a></li>
-        <li><a href="#t11">Summary</a></li>
+        <li><a href="#t7">Subspaces</a></li>
+        <li><a href="#t8">All subspaces of R² and R³</a></li>
+        <li><a href="#t9">The column space</a></li>
+        <li><a href="#t10">Summary</a></li>
       </ol>
     </nav>
 
@@ -73,11 +72,10 @@
       <li><a href="#t4">Symmetric matrices</a><span>The matrices transposing cannot change — the best ones.</span></li>
       <li><a href="#t5">RᵀR is always symmetric</a><span>Where symmetric matrices come from in practice, proved in two lines.</span></li>
       <li><a href="#t6">What a vector space is</a><span>A set of vectors you can add and scale without ever leaving it.</span></li>
-      <li><a href="#t7">Closure: an example that fails</a><span>The quarter plane survives addition and dies on multiplication.</span></li>
-      <li><a href="#t8">Subspaces</a><span>A vector space living inside a bigger one — and why it must contain zero.</span></li>
-      <li><a href="#t9">All subspaces of R² and R³</a><span>The complete lists, from the whole space down to the single zero vector.</span></li>
-      <li><a href="#t10">The column space</a><span>Take the columns of a matrix, take every combination, and a subspace appears.</span></li>
-      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+      <li><a href="#t7">Subspaces</a><span>A vector space living inside a bigger one — and why it must contain zero.</span></li>
+      <li><a href="#t8">All subspaces of R² and R³</a><span>The complete lists, from the whole space down to the single zero vector.</span></li>
+      <li><a href="#t9">The column space</a><span>Take the columns of a matrix, take every combination, and a subspace appears.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
     </ol>
 
     <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
@@ -210,7 +208,13 @@
 
     <div class="box theorem"><span class="label">Where symmetric matrices come from</span>
       <p>$$ \boxed{R^{T}R \text{ is symmetric for every matrix } R} $$</p>
-      <p>And this is exactly how they arise in practical applications — covariance matrices, least squares, and much else later in the course are all of this form.</p>
+      <p>And this is exactly how they arise in practice. Keep this one — it is the most reused construction in the whole course:</p>
+      <ul>
+        <li><b>Least squares</b> — the normal equations are literally \(A^{T}A\,\hat x = A^{T}b\).</li>
+        <li><b>Projections</b> — the projection matrix is \(A(A^{T}A)^{-1}A^{T}\).</li>
+        <li><b>Positive definite matrices</b> — \(A^{T}A\) is the standard example.</li>
+        <li><b>In markets</b> — a covariance matrix is \(R^{T}R\) on demeaned returns, which is why covariance matrices are always symmetric.</li>
+      </ul>
     </div>
 
     <!-- ====================================================== -->
@@ -239,9 +243,9 @@
       <p>Is \(\begin{bmatrix} 3 \\ 2 \\ 0\end{bmatrix}\) in \(\mathbb{R}^2\) or \(\mathbb{R}^3\)? Definitely \(\mathbb{R}^3\) — it has three components. One of them happens to be zero, but zero is a perfectly good number.</p>
     </div>
 
-    <!-- ====================================================== -->
-    <h3 class="topic" id="t7">7. Closure: an example that fails</h3>
 
+
+    <h4>What failure looks like</h4>
     <p>To see what the requirement really demands, watch a collection fail it. Take just the <b>first quarter</b> of the plane — all vectors whose two components are both non-negative.</p>
 
     <p><b>Adding is fine.</b> Add \((3,2)\) to \((5,6)\) and you get \((8,8)\), still in the quarter. No amount of adding will ever take you out.</p>
@@ -280,7 +284,7 @@
     </figure>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t8">8. Subspaces</h3>
+    <h3 class="topic" id="t7">7. Subspaces</h3>
 
     <p>The quarter plane was a bad way to take part of \(\mathbb{R}^2\). Here is a good one. A vector space sitting <b>inside</b> another vector space is called a <b>subspace</b>.</p>
 
@@ -328,7 +332,7 @@
     </figure>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t9">9. All subspaces of R² and R³</h3>
+    <h3 class="topic" id="t8">8. All subspaces of R² and R³</h3>
 
     <p>\(\mathbb{R}^2\) is small enough that we can list every subspace it has:</p>
 
@@ -356,7 +360,7 @@
     </table>
 
     <!-- ====================================================== -->
-    <h3 class="topic" id="t10">10. The column space</h3>
+    <h3 class="topic" id="t9">9. The column space</h3>
 
     <p>Now the question that matters: <b>where do subspaces come from?</b> They come out of matrices. Take</p>
 
@@ -393,7 +397,7 @@
     </div>
 
     <!-- ====================================================== -->
-    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
 
     <h4>Everything on one screen</h4>
     <table class="sl-table">
