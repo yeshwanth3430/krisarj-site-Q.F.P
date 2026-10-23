@@ -222,22 +222,31 @@
 
     <p>Now the second half of the lecture, and the real beginning of linear algebra: not just vectors, but <b>spaces</b> of vectors.</p>
 
-    <h4>You only ever do two things to a vector</h4>
+    <h4>Why only two operations matter</h4>
+
+    <p>Ask what you actually <i>do</i> with vectors and the list is remarkably short:</p>
 
     <ol class="index-list">
-      <li><b>Add two of them.</b><span>\(v + w\)</span></li>
+      <li><b>Add two of them.</b><span>\(v + w\), done a component at a time.</span></li>
       <li><b>Multiply one by a number.</b><span>\(3v\) stretches it, \(\tfrac12 v\) shrinks it, \(-v\) flips it round. Those numbers are called <b>scalars</b>.</span></li>
     </ol>
 
-    <p>That is the whole toolkit. Do both at once and you have a <b>linear combination</b>, \(cv + dw\) — the operation this entire course is built on.</p>
+    <p>There is no "multiply two vectors" on that list, and no "divide". <b>Those two moves are the entire toolkit</b> — and that is what the word <i>linear</i> means. Use both at once and you get a <b>linear combination</b>, \(cv + dw\), which is the operation this whole course is built on.</p>
+
+    <h4>Why "space" demands more than "collection"</h4>
+
+    <p>Suppose someone hands you a collection of vectors and calls it a space. The name is only earned if <b>you can do the two operations and still be looking at something in the collection</b>.</p>
+
+    <p>Think about why that matters. If adding two members could throw you outside, then addition would not really be an operation <i>on the collection</i> at all — you could ask a question inside it and get an answer that lives somewhere else. Nothing could be built, because every step risks falling out. A space has to be <b>self-contained</b>.</p>
 
     <div class="box definition"><span class="label">A vector space, in one sentence</span>
       <p>$$ \boxed{\text{A collection of vectors that those two moves can never take you out of.}} $$</p>
-      <p>Pick any vectors in it, add them or scale them however you like — the answer is <b>still in the collection</b>. A collection like that is called <b>closed</b>, and a closed collection is a vector space.</p>
+      <p>A collection with that property is called <b>closed</b>, and closed is exactly what makes it a vector space.</p>
     </div>
 
-    <h4>The test</h4>
-    <p>Handed a collection of vectors, ask two questions:</p>
+    <h4>The test, and why there are two parts to it</h4>
+
+    <p>Handed a collection, ask two questions:</p>
 
     <table class="sl-table">
       <tr><th>Question</th><th>If the answer is ever "no"</th></tr>
@@ -245,38 +254,44 @@
       <tr><td>Take any vector in it and multiply by any number — \(7\), \(-3\), \(0\), \(\tfrac12\) — is the result still in it?</td><td>Not a vector space.</td></tr>
     </table>
 
-    <p><b>One escape is enough to fail.</b> If neither move can ever get you out, it is a space.</p>
+    <p><b>Both questions have to be asked</b>, because one can pass while the other fails — we are about to see a collection that does exactly that. And notice how little is needed to fail: <b>one escape is enough</b>. A single pair of vectors whose sum falls outside, or a single multiple that lands outside, and the collection is disqualified. To pass, <i>no</i> choice at all may escape.</p>
 
     <div class="box intuition"><span class="label">A note on the fine print</span>
-      <p>Addition and multiplication also have to behave sensibly — you cannot declare that \((3,2) + (\pi, e)\) is \((0,0)\). The textbook lists eight such rules. In practice they are never the problem; <b>the question is always whether you stay inside</b>.</p>
+      <p>Addition and multiplication also have to behave sensibly — you cannot declare that \((3,2) + (\pi, e)\) is \((0,0)\) and call it addition. The textbook lists eight such rules. In practice they are never what goes wrong; <b>the question is always whether you stay inside</b>.</p>
     </div>
 
-    <h4>The basic examples</h4>
+    <h4>The basic examples, and why they pass</h4>
+
     <p>\(\mathbb{R}^2\) is all vectors with exactly two real components:</p>
 
     $$ \begin{bmatrix} 3 \\ 2 \end{bmatrix}, \quad \begin{bmatrix} 0 \\ 0 \end{bmatrix}, \quad \begin{bmatrix} \pi \\ e \end{bmatrix}, \quad \dots $$
 
-    <p>Adding is done a component at a time, \(\begin{bmatrix} 3 \\ 2\end{bmatrix} + \begin{bmatrix} \pi \\ e\end{bmatrix} = \begin{bmatrix} 3+\pi \\ 2+e\end{bmatrix}\), and the picture is the familiar one: \((a,b)\) is an arrow from the origin to the point \(a\) across and \(b\) up.</p>
+    <p>Adding works a component at a time, \(\begin{bmatrix} 3 \\ 2\end{bmatrix} + \begin{bmatrix} \pi \\ e\end{bmatrix} = \begin{bmatrix} 3+\pi \\ 2+e\end{bmatrix}\), and the picture is the familiar one: \((a,b)\) is an arrow from the origin to the point \(a\) across and \(b\) up.</p>
 
-    <p>Does it pass the test? Add any two pairs of numbers and you get a pair of numbers. Multiply a pair by anything and you get a pair. <b>You cannot get out</b> — so \(\mathbb{R}^2\) is a vector space, and it is the whole \(xy\) plane.</p>
+    <p>Now run the test, and notice that it passes for a reason so simple it is easy to miss. <b>Add two pairs of real numbers and you get a pair of real numbers. Multiply a pair of real numbers by a number and you get a pair of real numbers.</b> There is nothing else for the answer to <i>be</i> — so you cannot get out, and \(\mathbb{R}^2\) is a vector space. It is the whole \(xy\) plane.</p>
 
-    <p>The same reasoning works one dimension up, and in general:</p>
+    <p>The identical argument works with three components, or \(n\) of them:</p>
 
     $$ \mathbb{R}^n = \text{all column vectors with } n \text{ real components} $$
 
     <div class="box pitfall"><span class="label">Keep the spaces straight</span>
-      <p>Is \(\begin{bmatrix} 3 \\ 2 \\ 0\end{bmatrix}\) in \(\mathbb{R}^2\) or \(\mathbb{R}^3\)? Definitely \(\mathbb{R}^3\) — it has three components. One of them happens to be zero, but zero is a perfectly good number.</p>
+      <p>Is \(\begin{bmatrix} 3 \\ 2 \\ 0\end{bmatrix}\) in \(\mathbb{R}^2\) or \(\mathbb{R}^3\)? Definitely \(\mathbb{R}^3\) — it has three components. One of them happens to be zero, but zero is a perfectly good number, and a vector is counted by how many slots it has, not how many are interesting.</p>
     </div>
 
     <h4>What failure looks like</h4>
-    <p>To see what the requirement really demands, watch a collection fail it. Take just the <b>first quarter</b> of the plane — all vectors whose two components are both non-negative.</p>
 
-    <p><b>Adding is fine.</b> Add \((3,2)\) to \((5,6)\) and you get \((8,8)\), still in the quarter. No amount of adding will ever take you out.</p>
+    <p>The definition only bites once you see something break it. Take just the <b>first quarter</b> of the plane: all vectors whose two components are both non-negative.</p>
 
-    <p><b>Multiplying breaks it.</b> Multiply \((3,2)\) by \(-5\) and you land at \((-15,-10)\), far outside the quarter.</p>
+    <p><b>Adding never causes trouble.</b> Add \((3,2)\) to \((5,6)\) and you get \((8,8)\), still in the quarter. And that is not a lucky example — adding two non-negative numbers always gives a non-negative number, so <b>no</b> pair of vectors in the quarter can ever escape by addition. The first test passes completely.</p>
 
-    <div class="box definition"><span class="label">Closed</span>
-      <p>The quarter plane is <b>closed under addition</b> but <b>not closed under multiplication</b> by all real numbers — so it is <b>not a vector space</b>. A vector space must be closed under both, which is to say closed under all <b>linear combinations</b>.</p>
+    <p><b>Multiplying destroys it.</b> Multiply \((3,2)\) by \(-5\):</p>
+
+    $$ -5 \times (3,2) = (-15,-10) $$
+
+    <p>Both components are now negative, so the result is in the <i>opposite</i> quarter — far outside the collection. The second test fails at the first attempt.</p>
+
+    <div class="box pitfall"><span class="label">Why this example is the one to remember</span>
+      <p>The quarter plane is <b>closed under addition but not under multiplication</b>. That is precisely why the definition has two parts: passing one test tells you nothing about the other. A collection can look perfectly well-behaved under adding and still be ruined by a single negative number.</p>
     </div>
 
     <figure class="fig" style="max-width:520px;margin:22px auto">
@@ -305,7 +320,6 @@
       </svg>
       <figcaption><b>Closed under addition, not under multiplication.</b> Every sum of two arrows from the shaded quarter stays in the shaded quarter — addition alone never causes trouble. But scaling is also required, by <i>any</i> real number, and multiplying \((3,2)\) by \(-5\) throws you into the opposite quarter. One escape is enough: the collection is not a vector space.</figcaption>
     </figure>
-
     <!-- ====================================================== -->
     <h3 class="topic" id="t7">7. Subspaces</h3>
 
