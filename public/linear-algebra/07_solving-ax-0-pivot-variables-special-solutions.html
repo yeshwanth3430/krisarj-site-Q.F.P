@@ -329,10 +329,15 @@
 
     <p>And you can answer it by looking at the matrix, before solving anything.</p>
 
+    <div class="box pitfall"><span class="label">Careful with the words</span>
+      <p><b>Every matrix has a nullspace.</b> It is never empty — \(A \cdot 0 = 0\) always, so the zero vector is always in it.</p>
+      <p>So never say "this matrix has no nullspace". Say <b>\(N(A) = \{0\}\)</b> — the nullspace is <i>only</i> the zero vector. That is still a genuine subspace: the smallest one there is.</p>
+    </div>
+
     <table class="sl-table">
       <tr><th>Look at the matrix</th><th>Answer</th></tr>
-      <tr><td><b>Every column has a pivot</b> (\(r = n\), no free columns)</td><td>Only \(x = 0\). \(N(A) = \{0\}\).</td></tr>
-      <tr><td><b>Some column has no pivot</b> (\(r < n\), free columns exist)</td><td>Infinitely many solutions — one special solution per free column, and all their combinations.</td></tr>
+      <tr><td><b>Every column has a pivot</b> (\(r = n\), no free columns)</td><td>Only \(x = 0\). \(N(A) = \{0\}\), and the columns are <b>independent</b>.</td></tr>
+      <tr><td><b>Some column has no pivot</b> (\(r < n\), free columns exist)</td><td>Infinitely many solutions — one special solution per free column, and all their combinations. The columns are <b>dependent</b>.</td></tr>
     </table>
 
     <p>The reason is the whole method: <b>a free column is a variable nobody constrains</b>. Set it to anything non-zero and the pivots follow — giving a non-zero \(x\) with \(Ax = 0\).</p>
