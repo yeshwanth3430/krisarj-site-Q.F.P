@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Complex Matrices; Fast Fourier Transform · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Complex vectors need the conjugate transpose: length is z Hermitian z, symmetric becomes Hermitian and orthogonal becomes unitary; then the Fourier matrix built from the nth root of unity, its orthogonal columns, and the FFT that cuts n squared to n log n.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="25_complex-matrices-fast-fourier-transform">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Complex Matrices; Fast Fourier Transform</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 25</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 25 (MIT 18.06, Lecture 25)</p>
+  <h1>Complex Matrices; Fast Fourier Transform</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Real matrices have complex eigenvalues. So the tools must go complex too.}} $$</p>
+      <p>Every definition from the real case — length, dot product, symmetric, orthogonal — needs one change to survive: a <b>complex conjugate</b>. Then the most important complex matrix of all, the <b>Fourier matrix</b>, and the algorithm that made it practical.</p>
+    </div>
+
+    <div class="box method"><span class="label">The one change ★</span>
+      <table class="sl-table">
+        <tr><th>Real</th><th>Complex</th><th>Name</th></tr>
+        <tr><td>\(\|x\|^2 = x^Tx\)</td><td>\(\|z\|^2 = \bar{z}^Tz = z^Hz\)</td><td>Hermitian length</td></tr>
+        <tr><td>\(y^Tx\)</td><td>\(y^Hx\)</td><td>inner product</td></tr>
+        <tr><td>symmetric: \(A^T = A\)</td><td>Hermitian: \(A^H = A\)</td><td>Hermitian matrix</td></tr>
+        <tr><td>orthogonal: \(Q^TQ = I\)</td><td>unitary: \(Q^HQ = I\)</td><td>unitary matrix</td></tr>
+      </table>
+      <p>Everywhere a transpose appeared, use <b>conjugate transpose</b> \(A^H = \bar{A}^T\) instead. Nothing else changes.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Why complex numbers are unavoidable</a></li>
+        <li><a href="#t2">The length of a complex vector</a></li>
+        <li><a href="#t3">The inner product</a></li>
+        <li><a href="#t4">Hermitian matrices</a></li>
+        <li><a href="#t5">Unitary matrices</a></li>
+        <li><a href="#t6">The Fourier matrix</a></li>
+        <li><a href="#t7">F four, written out</a></li>
+        <li><a href="#t8">The columns are orthogonal</a></li>
+        <li><a href="#t9">The fast Fourier transform</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Why complex numbers are unavoidable</a><span>A real rotation matrix already has \(\lambda = \pm i\).</span></li>
+      <li><a href="#t2">The length of a complex vector ★</a><span>\(z^Tz\) can be zero. \(z^Hz\) cannot.</span></li>
+      <li><a href="#t3">The inner product</a><span>Conjugate the first factor, and perpendicular means something again.</span></li>
+      <li><a href="#t4">Hermitian matrices</a><span>\(A^H = A\). Real diagonal, real eigenvalues, perpendicular eigenvectors.</span></li>
+      <li><a href="#t5">Unitary matrices</a><span>\(Q^HQ = I\) — the complex version of orthogonal.</span></li>
+      <li><a href="#t6">The Fourier matrix ★</a><span>\((F_n)_{jk} = w^{jk}\) with \(w = e^{2\pi i/n}\), the \(n\)th root of 1.</span></li>
+      <li><a href="#t7">F four, written out</a><span>Every entry computed, with \(w = i\).</span></li>
+      <li><a href="#t8">The columns are orthogonal</a><span>Checked directly: \(F^HF = 4I\).</span></li>
+      <li><a href="#t9">The fast Fourier transform ★</a><span>\(n^2\) down to \(n\log_2 n\), by splitting even and odd.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Why complex numbers are unavoidable</h3>
+
+    <p>This is not a detour into a different subject. Lesson 20 already forced it: the rotation</p>
+
+    $$ Q = \begin{bmatrix} 0 & -1 \\ 1 & 0 \end{bmatrix} $$
+
+    <p>has entirely real entries and eigenvalues \(\lambda = \pm i\). So a real matrix can send you into the complex numbers whether you want to go or not — and the eigenvectors that come with those eigenvalues are complex too.</p>
+
+    <p>Which means we need to know what the <b>length</b> of a complex vector is, and what <b>perpendicular</b> means for one.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The length of a complex vector</h3>
+
+    <p>The real formula was \(\|x\|^2 = x^Tx = x_1^2 + \dots + x_n^2\). Try it on a complex vector:</p>
+
+    $$ z = \begin{bmatrix} 1 \\ i \end{bmatrix}, \qquad z^Tz = (1)(1) + (i)(i) = 1 + i^2 = 1 - 1 = 0 $$
+
+    <div class="box pitfall"><span class="label">A non-zero vector with "length" zero ★</span>
+      <p>\(z \ne 0\) but \(z^Tz = 0\). The old formula is simply wrong here, and every proof that used "\(\|x\|^2 = 0 \Rightarrow x = 0\)" would collapse.</p>
+    </div>
+
+    <p>The fix comes from complex numbers themselves. For \(z = a + bi\), the magnitude is recovered by multiplying by the conjugate:</p>
+
+    $$ \bar{z}z = (a - bi)(a + bi) = a^2 + b^2 = |z|^2 $$
+
+    <p>Do the same componentwise:</p>
+
+    $$ \bar{z}^Tz = \bar{z}_1z_1 + \bar{z}_2z_2 + \dots + \bar{z}_nz_n = |z_1|^2 + |z_2|^2 + \dots + |z_n|^2 $$
+
+    <div class="box definition"><span class="label">Definition · conjugate transpose and length ★</span>
+      $$ \boxed{z^H = \bar{z}^T} \qquad\text{and}\qquad \boxed{\|z\|^2 = z^Hz} $$
+      <p>The \(H\) is for <b>Hermite</b>; \(z^Hz\) is read "z Hermitian z". It is a sum of squared magnitudes, so it is real, non-negative, and zero only when \(z = 0\).</p>
+    </div>
+
+    <p>Try the example again:</p>
+
+    $$ z^Hz = \begin{bmatrix} 1 & -i \end{bmatrix}\begin{bmatrix} 1 \\ i \end{bmatrix} = 1 + (-i)(i) = 1 - i^2 = 1 + 1 = 2 $$
+
+    <p>Length \(\sqrt2\) ✓ — which is right, since the entries have magnitudes 1 and 1.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The inner product</h3>
+
+    <p>Same change:</p>
+
+    $$ \boxed{y^Hx = \bar{y}_1x_1 + \bar{y}_2x_2 + \dots + \bar{y}_nx_n} $$
+
+    <p>And \(x \perp y\) still means \(y^Hx = 0\).</p>
+
+    <div class="box pitfall"><span class="label">Order now matters</span>
+      <p>\(y^Hx\) and \(x^Hy\) are not equal — they are <b>conjugates</b> of each other. In the real case the conjugate does nothing, which is why order never mattered before.</p>
+      <p>One consequence survives intact: \(y^Hx = 0\) if and only if \(x^Hy = 0\), because the conjugate of 0 is 0. So "perpendicular" is still symmetric.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Hermitian matrices</h3>
+
+    <div class="box definition"><span class="label">Definition · Hermitian</span>
+      $$ \boxed{A^H = A, \qquad\text{that is}\qquad \bar{a}_{ji} = a_{ij}} $$
+      <p>The complex replacement for symmetric. Flip across the diagonal <b>and</b> conjugate, and nothing changes.</p>
+    </div>
+
+    $$ A = \begin{bmatrix} 2 & 3+i \\ 3-i & 5 \end{bmatrix} $$
+
+    <p>Check: the \((1,2)\) entry is \(3+i\), and the \((2,1)\) entry conjugated is \(\overline{3-i} = 3+i\) ✓</p>
+
+    <div class="box theorem"><span class="label">The diagonal must be real ★</span>
+      <p>The definition applied to \(i = j\) says \(\bar{a}_{ii} = a_{ii}\), and a number equal to its own conjugate is real. In the example: 2 and 5 ✓</p>
+    </div>
+
+    <p>Everything from Lesson 24 carries over, with the same proofs and \(H\) in place of \(T\):</p>
+
+    <table class="sl-table">
+      <tr><th>Property</th><th>Symmetric (real)</th><th>Hermitian (complex)</th></tr>
+      <tr><td>eigenvalues</td><td>real</td><td><b>real</b></td></tr>
+      <tr><td>eigenvectors</td><td>perpendicular</td><td><b>perpendicular</b>, using \(y^Hx\)</td></tr>
+      <tr><td>diagonalization</td><td>\(Q\Lambda Q^T\)</td><td>\(Q\Lambda Q^H\)</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Unitary matrices</h3>
+
+    <p>Orthonormal columns, complex version:</p>
+
+    $$ q_j^Hq_k = \begin{cases} 0 & j \ne k \\ 1 & j = k \end{cases}
+       \qquad\Longleftrightarrow\qquad \boxed{Q^HQ = I} $$
+
+    <div class="box definition"><span class="label">Definition · unitary</span>
+      <p>A square matrix with \(Q^HQ = I\) is called <b>unitary</b>. For a square \(Q\) this also gives</p>
+      $$ \boxed{Q^{-1} = Q^H} $$
+      <p>"Unitary" is to "orthogonal" exactly as "Hermitian" is to "symmetric".</p>
+    </div>
+
+    <p>Every real orthogonal matrix is unitary — conjugating does nothing to real numbers. The word only earns its keep when the entries are complex, which is the case we are heading for.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The Fourier matrix</h3>
+
+    <p>Lesson 23 wrote a <i>function</i> in a basis of sines and cosines. With a finite list of data instead of a function, the same job is done by one matrix.</p>
+
+    <div class="box definition"><span class="label">Definition · the Fourier matrix ★</span>
+      <p>Index rows and columns from <b>0</b> to \(n-1\) (the engineering convention). Then</p>
+      $$ \boxed{(F_n)_{jk} = w^{jk}, \qquad w = e^{2\pi i/n}} $$
+      $$ F_n = \begin{bmatrix}
+        1 & 1 & 1 & \cdots & 1 \\
+        1 & w & w^2 & \cdots & w^{n-1} \\
+        1 & w^2 & w^4 & \cdots & w^{2(n-1)} \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        1 & w^{n-1} & w^{2(n-1)} & \cdots & w^{(n-1)^2}
+      \end{bmatrix} $$
+    </div>
+
+    <p>The number \(w\) is the key.</p>
+
+    <table class="sl-table">
+      <tr><th>Fact</th><th>Why</th></tr>
+      <tr><td>\(w^n = 1\)</td><td>\(\left(e^{2\pi i/n}\right)^n = e^{2\pi i} = 1\) — so \(w\) is an \(n\)th root of unity</td></tr>
+      <tr><td>\(|w| = 1\)</td><td>it sits on the unit circle in the complex plane</td></tr>
+      <tr><td>powers of \(w\) cycle</td><td>\(w^n = 1\) means \(w^{n+1} = w\), so only \(n\) distinct powers exist</td></tr>
+      <tr><td>\(F_n = F_n^T\)</td><td>entry \((j,k)\) is \(w^{jk} = w^{kj}\) — symmetric, though <b>not</b> Hermitian</td></tr>
+    </table>
+
+    <p>Geometrically, the \(n\) powers \(1, w, w^2, \dots, w^{n-1}\) are \(n\) points spaced evenly around the unit circle, starting at 1.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. F four, written out</h3>
+
+    <p>Take \(n = 4\):</p>
+
+    $$ w = e^{2\pi i/4} = e^{i\pi/2} = \cos\tfrac\pi2 + i\sin\tfrac\pi2 = i $$
+
+    <p>The powers cycle with period 4:</p>
+
+    $$ w^0 = 1, \qquad w^1 = i, \qquad w^2 = -1, \qquad w^3 = -i, \qquad w^4 = 1 $$
+
+    <p>Fill in \(w^{jk}\), reducing every exponent mod 4:</p>
+
+    <table class="sl-table">
+      <tr><th>\(j \backslash k\)</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+      <tr><td><b>0</b></td><td>\(w^0=1\)</td><td>\(w^0=1\)</td><td>\(w^0=1\)</td><td>\(w^0=1\)</td></tr>
+      <tr><td><b>1</b></td><td>\(w^0=1\)</td><td>\(w^1=i\)</td><td>\(w^2=-1\)</td><td>\(w^3=-i\)</td></tr>
+      <tr><td><b>2</b></td><td>\(w^0=1\)</td><td>\(w^2=-1\)</td><td>\(w^4=1\)</td><td>\(w^6=w^2=-1\)</td></tr>
+      <tr><td><b>3</b></td><td>\(w^0=1\)</td><td>\(w^3=-i\)</td><td>\(w^6=w^2=-1\)</td><td>\(w^9=w^1=i\)</td></tr>
+    </table>
+
+    $$ F_4 = \begin{bmatrix}
+      1 & 1 & 1 & 1 \\
+      1 & i & -1 & -i \\
+      1 & -1 & 1 & -1 \\
+      1 & -i & -1 & i
+    \end{bmatrix} $$
+
+    <p>Symmetric ✓ — compare the entry at \((1,3)\), which is \(-i\), with \((3,1)\), also \(-i\).</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The columns are orthogonal</h3>
+
+    <p>Check columns 0 and 1. Column 0 is \((1,1,1,1)\); column 1 is \((1, i, -1, -i)\). Using \(q_0^Hq_1\) — conjugate the first, which does nothing here since it is all ones:</p>
+
+    $$ (1)(1) + (1)(i) + (1)(-1) + (1)(-i) = 1 + i - 1 - i = 0 \qquad\checkmark $$
+
+    <p>Now columns 1 and 2. Conjugate column 1 to get \((1, -i, -1, i)\), and dot with column 2 \(= (1,-1,1,-1)\):</p>
+
+    $$ (1)(1) + (-i)(-1) + (-1)(1) + (i)(-1) = 1 + i - 1 - i = 0 \qquad\checkmark $$
+
+    <p>And a column with itself — all four entries have magnitude 1:</p>
+
+    $$ q_1^Hq_1 = |1|^2 + |i|^2 + |{-}1|^2 + |{-}i|^2 = 1+1+1+1 = 4 $$
+
+    $$ \boxed{F_4^HF_4 = 4I} $$
+
+    <div class="box theorem"><span class="label">Orthogonal, not orthonormal ★</span>
+      <p>Each column has length \(\sqrt{n}\), not 1. Divide by it and</p>
+      $$ \boxed{\frac{1}{\sqrt n}F_n \text{ is unitary, so its inverse is its conjugate transpose}} $$
+      <p>Which is the whole point: inverting the Fourier transform costs nothing but a conjugate. The inverse transform is the forward transform run backwards.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. The fast Fourier transform</h3>
+
+    <p>Multiplying a vector by \(F_n\) looks like \(n^2\) multiplications — \(n\) entries in the answer, each a dot product of length \(n\). For \(n = 2^{20}\) that is \(10^{12}\) operations, which is not practical.</p>
+
+    <div class="box theorem"><span class="label">The FFT ★</span>
+      $$ \boxed{n^2 \;\longrightarrow\; \tfrac12 n\log_2 n} $$
+      <p>By exploiting the structure of the powers of \(w\), the work collapses. The algorithm is the <b>fast Fourier transform</b>.</p>
+    </div>
+
+    <h4>Where the saving comes from</h4>
+
+    <p>The key observation is a relation between \(w\) at size \(n\) and at size \(n/2\):</p>
+
+    $$ w_n = e^{2\pi i/n}, \qquad w_n^2 = e^{4\pi i/n} = e^{2\pi i/(n/2)} = w_{n/2} $$
+
+    <p>So squaring the root of unity for size \(n\) gives the root for size \(n/2\). That lets you split the transform into the <b>even-indexed</b> entries and the <b>odd-indexed</b> ones, each of which is a half-size Fourier transform, then recombine them with \(n/2\) extra multiplications.</p>
+
+    <table class="sl-table">
+      <tr><th>Size</th><th>Work \(T(n)\)</th></tr>
+      <tr><td>\(n\)</td><td>two problems of size \(n/2\), plus \(n/2\) to recombine</td></tr>
+      <tr><td>\(n/2\)</td><td>two of size \(n/4\), plus \(n/4\) each</td></tr>
+      <tr><td>\(\vdots\)</td><td>halving \(\log_2 n\) times until size 1</td></tr>
+    </table>
+
+    <p>Each of the \(\log_2 n\) levels costs about \(n/2\), giving \(\tfrac12 n\log_2 n\) in total.</p>
+
+    <h4>What that actually means</h4>
+
+    <table class="sl-table">
+      <tr><th>\(n\)</th><th>\(n^2\)</th><th>\(\tfrac12 n\log_2 n\)</th><th>Speed-up</th></tr>
+      <tr><td>\(2^{10} = 1024\)</td><td>\(\approx 10^6\)</td><td>\(5{,}120\)</td><td>\(\approx 200\times\)</td></tr>
+      <tr><td>\(2^{20} \approx 10^6\)</td><td>\(\approx 10^{12}\)</td><td>\(\approx 10^7\)</td><td>\(\approx 10^5\times\)</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">Why this is one of the most important algorithms there is</span>
+      <p>A hundred-thousand-fold speed-up is not a convenience, it is the difference between impossible and routine. Digital audio, image compression, mobile phone signals, MRI reconstruction and large-number multiplication all run on the FFT. The algorithm is linear algebra — factoring \(F_n\) into sparse pieces — and nothing else.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The dictionary</h4>
+    <table class="sl-table">
+      <tr><th>Real</th><th>Complex</th></tr>
+      <tr><td>transpose \(A^T\)</td><td>conjugate transpose \(A^H = \bar{A}^T\)</td></tr>
+      <tr><td>\(\|x\|^2 = x^Tx\)</td><td>\(\|z\|^2 = z^Hz = \sum|z_i|^2\)</td></tr>
+      <tr><td>inner product \(y^Tx\)</td><td>\(y^Hx\)</td></tr>
+      <tr><td>symmetric \(A^T = A\)</td><td>Hermitian \(A^H = A\)</td></tr>
+      <tr><td>orthogonal \(Q^TQ = I\)</td><td>unitary \(Q^HQ = I\)</td></tr>
+    </table>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Unavoidable ★</b></td><td>A real rotation has \(\lambda = \pm i\). Complex numbers arrive whether invited or not.</td></tr>
+      <tr><td><b>The one change ★</b></td><td>Conjugate before transposing. Everything else is word for word the same.</td></tr>
+      <tr><td><b>Why</b></td><td>\(z^Tz = 0\) for \(z = (1,i)\); \(z^Hz = 2\). Only \(z^Hz\) deserves to be called a length.</td></tr>
+      <tr><td><b>Hermitian</b></td><td>\(A^H = A\), forcing a real diagonal; real eigenvalues, perpendicular eigenvectors.</td></tr>
+      <tr><td><b>Unitary</b></td><td>\(Q^HQ = I\), so \(Q^{-1} = Q^H\).</td></tr>
+      <tr><td><b>Fourier matrix ★</b></td><td>\((F_n)_{jk} = w^{jk}\), \(w = e^{2\pi i/n}\), rows and columns numbered from 0.</td></tr>
+      <tr><td><b>\(w\)</b></td><td>\(w^n = 1\), \(|w| = 1\); powers cycle, spaced evenly round the unit circle.</td></tr>
+      <tr><td><b>\(F_4\)</b></td><td>\(w = i\), giving rows \((1,1,1,1)\), \((1,i,-1,-i)\), \((1,-1,1,-1)\), \((1,-i,-1,i)\).</td></tr>
+      <tr><td><b>Orthogonality</b></td><td>\(F_n^HF_n = nI\), so \(\tfrac{1}{\sqrt n}F_n\) is unitary and the inverse transform is nearly free.</td></tr>
+      <tr><td><b>FFT ★</b></td><td>\(n^2 \to \tfrac12 n\log_2 n\), from \(w_n^2 = w_{n/2}\) and splitting even from odd.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>One substitution carries the whole theory across ★</b><span>Replace \(T\) with \(H\) and every real result becomes a complex one, proofs included.</span></li>
+      <li><b>The conjugate is not decoration</b><span>Without it a non-zero vector can have length zero and the theory falls apart.</span></li>
+      <li><b>\(w^n = 1\) is the structure</b><span>Every saving in the FFT comes from powers of \(w\) repeating.</span></li>
+      <li><b>Orthogonal columns make the inverse free</b><span>The same reason \(Q^{-1} = Q^T\) mattered in Lesson 16, now with a conjugate.</span></li>
+      <li><b>Algorithms matter ★</b><span>\(n^2\) and \(n\log n\) are the same mathematics. One is usable and the other is not.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Back to real matrices and the loose end from Lesson 24. Positive definiteness has three tests so far — eigenvalues, pivots and determinants. The next lesson adds the fourth, \(x^TAx > 0\), which is usually taken as the <i>definition</i>, and shows it is the matrix statement of "this function has a minimum".</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Similar Matrices and Jordan Form · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="A transpose A is positive definite by moving brackets; then similar matrices B = M inverse A M, which share eigenvalues trace determinant and eigenvector count, with diagonalization as a special case and the Jordan form for defective matrices.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="27_similar-matrices-and-jordan-form">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Similar Matrices and Jordan Form</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 27</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 27 (MIT 18.06, Lecture 27)</p>
+  <h1>Similar Matrices and Jordan Form</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{B = M^{-1}AM \text{ — when do two matrices describe the same thing?}} $$</p>
+      <p>First a short debt from Lesson 26: \(A^TA\) is positive definite, in one line. Then the main idea — <b>similarity</b>, which sorts all matrices into families sharing the same eigenvalues, and shows what the best representative of each family looks like.</p>
+    </div>
+
+    <div class="box method"><span class="label">Similar matrices ★</span>
+      <table class="sl-table">
+        <tr><th>Shared</th><th>Not shared</th></tr>
+        <tr><td>eigenvalues</td><td>eigenvectors</td></tr>
+        <tr><td>trace and determinant</td><td>the entries</td></tr>
+        <tr><td>rank</td><td>symmetry</td></tr>
+        <tr><td>number of independent eigenvectors</td><td>pivots</td></tr>
+      </table>
+      <p>Each family has a simplest member: \(\Lambda\) if the matrix is diagonalizable, and otherwise the <b>Jordan form</b>.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">A transpose A is positive definite</a></li>
+        <li><a href="#t2">Two more facts</a></li>
+        <li><a href="#t3">Similar matrices</a></li>
+        <li><a href="#t4">Diagonalization is similarity</a></li>
+        <li><a href="#t5">A worked family</a></li>
+        <li><a href="#t6">Why the eigenvalues match</a></li>
+        <li><a href="#t7">Repeated eigenvalues break the family in two</a></li>
+        <li><a href="#t8">Jordan form</a></li>
+        <li><a href="#t9">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">A transpose A is positive definite ★</a><span>Move the brackets and it falls out.</span></li>
+      <li><a href="#t2">Two more facts</a><span>Inverses and sums of positive definite matrices.</span></li>
+      <li><a href="#t3">Similar matrices ★</a><span>\(B = M^{-1}AM\) for some invertible \(M\).</span></li>
+      <li><a href="#t4">Diagonalization is similarity</a><span>\(S^{-1}AS = \Lambda\) was a similarity all along.</span></li>
+      <li><a href="#t5">A worked family</a><span>Three matrices that look nothing alike and share everything.</span></li>
+      <li><a href="#t6">Why the eigenvalues match</a><span>Three lines, with \(M^{-1}x\) the new eigenvector.</span></li>
+      <li><a href="#t7">Repeated eigenvalues break the family in two</a><span>The same \(\lambda\) twice can mean two genuinely different matrices.</span></li>
+      <li><a href="#t8">Jordan form ★</a><span>Blocks on the diagonal, one per eigenvector — the best you can do when diagonal is impossible.</span></li>
+      <li><a href="#t9">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. A transpose A is positive definite</h3>
+
+    <p>\(A^TA\) has run through this course since Lesson 13 — least squares, projections, the normal equations. We know it is square and symmetric. Is it positive definite?</p>
+
+    <p>Finding its eigenvalues or pivots would be work. Test 4 is immediate. Compute \(x^T(A^TA)x\) and move the brackets:</p>
+
+    $$ x^T(A^TA)x = (x^TA^T)(Ax) = (Ax)^T(Ax) = \|Ax\|^2 \ge 0 $$
+
+    <p>A squared length, so never negative. The only question left is whether it can be zero.</p>
+
+    <div class="box theorem"><span class="label">The result ★</span>
+      <p>\(\|Ax\|^2 = 0\) forces \(Ax = 0\). If the columns of \(A\) are <b>independent</b>, the only such \(x\) is \(x = 0\). Hence</p>
+      $$ \boxed{A \text{ has rank } n \;\Longrightarrow\; A^TA \text{ is positive definite}} $$
+      <p>Without independent columns it is still positive <b>semi</b>definite — never negative, but zero on the nullspace of \(A\).</p>
+    </div>
+
+    <p>This closes a loop running through three lessons. Lesson 13 proved \(A^TA\) invertible when the columns are independent; now the same hypothesis gives the stronger statement.</p>
+
+    <div class="box intuition"><span class="label">A practical bonus</span>
+      <p>Positive definite matrices never need row exchanges during elimination — a pivot position can never contain a zero or a dangerously small number. So solving \(A^TA\hat{x} = A^Tb\) is numerically well-behaved, which is why least squares works in practice.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Two more facts</h3>
+
+    <h4>The inverse</h4>
+
+    <p>If \(A\) is symmetric positive definite, so is \(A^{-1}\). Lesson 17 gave \(\det(A^{-1}) = 1/\det A\), and the same relation holds eigenvalue by eigenvalue: the eigenvalues of \(A^{-1}\) are \(1/\lambda_i\). Every \(\lambda_i > 0\), so every \(1/\lambda_i > 0\) ✓</p>
+
+    <h4>The sum</h4>
+
+    <p>If \(A\) and \(B\) are both positive definite, is \(A + B\)? The eigenvalues of a sum are unpredictable (Lesson 20), so that route is closed. Test 4 goes straight through:</p>
+
+    $$ x^T(A+B)x = \underbrace{x^TAx}_{>\,0} + \underbrace{x^TBx}_{>\,0} > 0 \qquad\checkmark $$
+
+    <div class="box intuition"><span class="label">Why test 4 keeps winning</span>
+      <p>Eigenvalues do not add, pivots do not add, determinants do not add — but \(x^TAx\) does. That is the whole reason test 4 is the definition rather than a test.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Similar matrices</h3>
+
+    <div class="box definition"><span class="label">Definition · similar ★</span>
+      <p>Square matrices \(A\) and \(B\) are <b>similar</b> when</p>
+      $$ \boxed{B = M^{-1}AM \quad\text{for some invertible } M} $$
+    </div>
+
+    <p>Note the shape: \(M^{-1}\) on the left and \(M\) on the right, with the <b>same</b> \(M\). Compare \(A^TA\), which sandwiches a different pair.</p>
+
+    <div class="box intuition"><span class="label">What it means</span>
+      <p>\(A\) and \(B\) are the <b>same linear transformation seen in two different bases</b>, with \(M\) the translation between them. The entries differ because the coordinates differ; the underlying action does not.</p>
+      <p>So similarity sorts every square matrix into families. Everything that is really about the transformation — eigenvalues, rank, trace, determinant — is constant across a family. Everything that is about the chosen coordinates varies.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Diagonalization is similarity</h3>
+
+    <p>Lesson 21 wrote \(S^{-1}AS = \Lambda\). That is this definition with \(M = S\):</p>
+
+    $$ \boxed{A \text{ is similar to } \Lambda} $$
+
+    <p>So diagonalizing is not a separate technique. It is <b>finding the simplest member of \(A\)'s family</b> — and \(\Lambda\) is as simple as a matrix gets.</p>
+
+    <p>Which gives a clean way to say when two matrices are similar:</p>
+
+    <div class="box theorem"><span class="label">Distinct eigenvalues ★</span>
+      <p>If two matrices have the same \(n\) <b>distinct</b> eigenvalues, both are similar to the same \(\Lambda\), and therefore to each other.</p>
+      <p>So for distinct eigenvalues, "same eigenvalues" and "similar" mean exactly the same thing. §7 shows that repeated eigenvalues spoil this.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. A worked family</h3>
+
+    $$ A = \begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} $$
+
+    <p>Trace 4, determinant 3, so \(\lambda^2 - 4\lambda + 3 = (\lambda-3)(\lambda-1) = 0\) and</p>
+
+    $$ \lambda_1 = 3, \qquad \lambda_2 = 1, \qquad \Lambda = \begin{bmatrix} 3&0 \\ 0&1 \end{bmatrix} $$
+
+    <p>Now pick a completely arbitrary invertible \(M\):</p>
+
+    $$ M = \begin{bmatrix} 1 & 4 \\ 0 & 1 \end{bmatrix}, \qquad M^{-1} = \begin{bmatrix} 1 & -4 \\ 0 & 1 \end{bmatrix} $$
+
+    <p>Check: \(MM^{-1} = \begin{bmatrix} 1-0 & -4+4 \\ 0 & 1 \end{bmatrix} = I\) ✓</p>
+
+    <h4>Compute \(B = M^{-1}AM\)</h4>
+
+    <p>First \(AM\):</p>
+
+    $$ \begin{bmatrix} 2&1 \\ 1&2 \end{bmatrix}\begin{bmatrix} 1&4 \\ 0&1 \end{bmatrix}
+      = \begin{bmatrix} 2 & 8+1 \\ 1 & 4+2 \end{bmatrix} = \begin{bmatrix} 2 & 9 \\ 1 & 6 \end{bmatrix} $$
+
+    <p>Then \(M^{-1}(AM)\):</p>
+
+    $$ \begin{bmatrix} 1&-4 \\ 0&1 \end{bmatrix}\begin{bmatrix} 2&9 \\ 1&6 \end{bmatrix}
+      = \begin{bmatrix} 2-4 & 9-24 \\ 1 & 6 \end{bmatrix} = \begin{bmatrix} -2 & -15 \\ 1 & 6 \end{bmatrix} $$
+
+    <h4>Check it is in the family</h4>
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>Trace</th><th>Determinant</th><th>Eigenvalues</th></tr>
+      <tr><td>\(A = \begin{bmatrix} 2&1 \\ 1&2 \end{bmatrix}\)</td><td>\(2+2 = 4\)</td><td>\(4-1 = 3\)</td><td>3, 1</td></tr>
+      <tr><td>\(\Lambda = \begin{bmatrix} 3&0 \\ 0&1 \end{bmatrix}\)</td><td>\(3+1 = 4\)</td><td>\(3\)</td><td>3, 1</td></tr>
+      <tr><td>\(B = \begin{bmatrix} -2&-15 \\ 1&6 \end{bmatrix}\)</td><td>\(-2+6 = 4\)</td><td>\(-12+15 = 3\)</td><td>3, 1</td></tr>
+    </table>
+
+    <p>All three ✓ — despite \(B\) having negative entries and no symmetry at all, while \(A\) is symmetric.</p>
+
+    <p>More members, found by just writing down matrices with trace 4 and determinant 3:</p>
+
+    $$ \begin{bmatrix} 3&7 \\ 0&1 \end{bmatrix}, \qquad \begin{bmatrix} 1&0 \\ 7&3 \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">The whole family</span>
+      <p>The matrices similar to \(A\) are <b>all</b> the \(2\times2\) matrices with eigenvalues 3 and 1. An infinite family, one for each choice of \(M\), all describing the same transformation in different coordinates.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Why the eigenvalues match</h3>
+
+    <p>Start with \(Ax = \lambda x\) and manufacture \(B\) out of it.</p>
+
+    <table class="sl-table">
+      <tr><th>Step</th><th>Line</th><th>Reason</th></tr>
+      <tr><td>1</td><td>\(Ax = \lambda x\)</td><td>the assumption</td></tr>
+      <tr><td>2</td><td>\(AMM^{-1}x = \lambda x\)</td><td>insert \(MM^{-1} = I\) — legal, and the whole trick</td></tr>
+      <tr><td>3</td><td>\(M^{-1}AM\,M^{-1}x = \lambda M^{-1}x\)</td><td>multiply both sides on the left by \(M^{-1}\)</td></tr>
+      <tr><td>4</td><td>\(B\,(M^{-1}x) = \lambda\,(M^{-1}x)\)</td><td>recognise \(B = M^{-1}AM\)</td></tr>
+    </table>
+
+    <div class="box theorem"><span class="label">The conclusion ★</span>
+      $$ \boxed{\text{similar matrices have the same eigenvalues}} $$
+      <p>And the new eigenvector is \(M^{-1}x\) — same \(\lambda\), translated vector. Which is exactly what "same transformation, different coordinates" should produce.</p>
+    </div>
+
+    <p>Two more things are shared, and the same argument gives both:</p>
+
+    <ul>
+      <li><b>The number of independent eigenvectors.</b> \(M^{-1}\) is invertible, so it maps independent vectors to independent vectors — the count cannot change.</li>
+      <li><b>Trace and determinant</b>, being the sum and product of the eigenvalues.</li>
+    </ul>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Repeated eigenvalues break the family in two</h3>
+
+    <p>Section 4 said that distinct eigenvalues make "similar" and "same eigenvalues" equivalent. Repeated eigenvalues do not.</p>
+
+    <p>Take \(\lambda = 4\) twice. Two candidates:</p>
+
+    $$ A_1 = \begin{bmatrix} 4&0 \\ 0&4 \end{bmatrix} = 4I, \qquad A_2 = \begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix} $$
+
+    <p>Both are triangular with 4 on the diagonal, so both have eigenvalues 4, 4. Both have trace 8 and determinant 16. <b>Are they similar?</b></p>
+
+    <div class="box theorem"><span class="label">No — and the reason is decisive ★</span>
+      <p>Compute \(M^{-1}A_1M\) for <b>any</b> \(M\):</p>
+      $$ M^{-1}(4I)M = 4M^{-1}M = 4I = A_1 $$
+      <p>\(4I\) is similar only to itself. Its family has exactly one member, so \(A_2\) cannot be in it.</p>
+    </div>
+
+    <p>The structural difference is the eigenvector count:</p>
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>\(A - 4I\)</th><th>Nullspace</th><th>Independent eigenvectors</th></tr>
+      <tr><td>\(4I\)</td><td>\(\begin{bmatrix} 0&0 \\ 0&0 \end{bmatrix}\)</td><td>all of \(\mathbb{R}^2\)</td><td><b>2</b> — diagonalizable</td></tr>
+      <tr><td>\(\begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix}\)</td><td>\(\begin{bmatrix} 0&1 \\ 0&0 \end{bmatrix}\)</td><td>the line through \((1,0)\)</td><td><b>1</b> — defective</td></tr>
+    </table>
+
+    <p>§6 proved the eigenvector count is preserved by similarity. One has two, the other has one, so they are in different families ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Jordan form</h3>
+
+    <p>So a defective matrix cannot be made diagonal. How close can you get?</p>
+
+    <div class="box definition"><span class="label">Definition · Jordan block</span>
+      <p>A <b>Jordan block</b> has one eigenvalue repeated down the diagonal and <b>1</b>s on the superdiagonal:</p>
+      $$ J_2 = \begin{bmatrix} \lambda & 1 \\ 0 & \lambda \end{bmatrix}, \qquad
+         J_3 = \begin{bmatrix} \lambda & 1 & 0 \\ 0 & \lambda & 1 \\ 0 & 0 & \lambda \end{bmatrix} $$
+      <p>A block of size \(k\) contributes <b>one</b> eigenvector, however large \(k\) is.</p>
+    </div>
+
+    <div class="box theorem"><span class="label">Jordan's theorem ★</span>
+      <p>Every square matrix is similar to a <b>Jordan matrix</b> — blocks along the diagonal, zeros elsewhere:</p>
+      $$ J = \begin{bmatrix} J_1 & & \\ & J_2 & \\ & & \ddots \end{bmatrix} $$
+      <p>The <b>number of blocks is the number of independent eigenvectors</b>. If there are \(n\) of them, every block is \(1\times1\), \(J = \Lambda\), and the matrix is diagonalizable.</p>
+      <p>Two matrices are similar exactly when they have the same Jordan form, up to the order of the blocks.</p>
+    </div>
+
+    <p>So \(\Lambda\) is the special case of \(J\) in which nothing went wrong.</p>
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>Eigenvalues</th><th>Eigenvectors</th><th>Jordan form</th></tr>
+      <tr><td>\(4I\)</td><td>4, 4</td><td>2</td><td>two \(1\times1\) blocks: \(\begin{bmatrix} 4&0 \\ 0&4 \end{bmatrix}\)</td></tr>
+      <tr><td>\(\begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix}\)</td><td>4, 4</td><td>1</td><td>one \(2\times2\) block: \(\begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix}\)</td></tr>
+      <tr><td>\(\begin{bmatrix} 2&1 \\ 1&2 \end{bmatrix}\)</td><td>3, 1</td><td>2</td><td>\(\begin{bmatrix} 3&0 \\ 0&1 \end{bmatrix}\)</td></tr>
+    </table>
+
+    <div class="box pitfall"><span class="label">Beautiful theory, unusable in practice</span>
+      <p>The Jordan form is unstable: perturb \(\begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix}\) to \(\begin{bmatrix} 4&1 \\ \varepsilon&4 \end{bmatrix}\) and the eigenvalues split to \(4 \pm \sqrt\varepsilon\), which are distinct, so the matrix becomes diagonalizable and \(J\) jumps discontinuously.</p>
+      <p>With rounding error in real data you can never be sure a repeated eigenvalue is genuinely repeated. So numerical work avoids \(J\) entirely and uses the <b>singular value decomposition</b> instead — which exists for every matrix, square or not, and is perfectly stable. That is the next lesson.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t9"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>\(A^TA\) ★</b></td><td>\(x^T(A^TA)x = \|Ax\|^2 \ge 0\). Positive definite when the columns of \(A\) are independent.</td></tr>
+      <tr><td><b>Inverses</b></td><td>Positive definite \(\Rightarrow\) \(A^{-1}\) is too, because the eigenvalues invert to \(1/\lambda_i > 0\).</td></tr>
+      <tr><td><b>Sums</b></td><td>\(x^T(A+B)x = x^TAx + x^TBx > 0\). Test 4 adds; nothing else does.</td></tr>
+      <tr><td><b>Similar ★</b></td><td>\(B = M^{-1}AM\). The same transformation in different coordinates.</td></tr>
+      <tr><td><b>Shared</b></td><td>Eigenvalues, trace, determinant, rank, number of independent eigenvectors.</td></tr>
+      <tr><td><b>Not shared</b></td><td>Eigenvectors, entries, symmetry, pivots.</td></tr>
+      <tr><td><b>The proof ★</b></td><td>Insert \(MM^{-1}\) into \(Ax = \lambda x\); the new eigenvector is \(M^{-1}x\).</td></tr>
+      <tr><td><b>Diagonalizing</b></td><td>\(S^{-1}AS = \Lambda\) is a similarity — finding the simplest member of the family.</td></tr>
+      <tr><td><b>Distinct eigenvalues</b></td><td>Then "same eigenvalues" = "similar", both reducing to the same \(\Lambda\).</td></tr>
+      <tr><td><b>Repeated ★</b></td><td>\(4I\) and \(\begin{bmatrix} 4&1 \\ 0&4 \end{bmatrix}\) share every eigenvalue and are <b>not</b> similar — 2 eigenvectors against 1. \(4I\) is similar only to itself.</td></tr>
+      <tr><td><b>Jordan form</b></td><td>Blocks with \(\lambda\) on the diagonal and 1s above. Number of blocks = number of eigenvectors. \(J = \Lambda\) when diagonalizable.</td></tr>
+      <tr><td><b>The catch</b></td><td>Unstable under perturbation, so it is theory rather than computation.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Moving brackets is a proof technique ★</b><span>\(x^TA^TAx = (Ax)^T(Ax)\) is the entire argument, and the same move appeared in Lessons 13 and 15.</span></li>
+      <li><b>Similarity is change of basis</b><span>The family is the transformation; the members are its descriptions in different coordinates.</span></li>
+      <li><b>Insert \(MM^{-1}\)</b><span>The one trick behind the eigenvalue proof, and worth recognising when it appears again.</span></li>
+      <li><b>Count eigenvectors, not eigenvalues ★</b><span>It is the count that distinguishes \(4I\) from the Jordan block, and the count that similarity preserves.</span></li>
+      <li><b>Jordan is the limit of what diagonalization can do</b><span>And its instability is exactly why the SVD takes over next.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Every tool so far has needed a square matrix, and the good ones needed enough eigenvectors. The next lesson lifts both restrictions. The <b>singular value decomposition</b> \(A = U\Sigma V^T\) works for <i>every</i> matrix of every shape, using orthonormal bases for the row space and the column space at once. It is the climax of the course.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

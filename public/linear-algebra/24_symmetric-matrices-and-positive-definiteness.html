@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Symmetric Matrices and Positive Definiteness · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Symmetric matrices have real eigenvalues and perpendicular eigenvectors, giving the spectral theorem A = Q Lambda Q transpose and a decomposition into projections; then positive definiteness tested by pivots, eigenvalues and leading determinants.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="24_symmetric-matrices-and-positive-definiteness">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Symmetric Matrices and Positive Definiteness</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 24</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 24 (MIT 18.06, Lecture 24)</p>
+  <h1>Symmetric Matrices and Positive Definiteness</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Symmetric matrices are the best-behaved ones. Here is exactly how.}} $$</p>
+      <p>If \(A^T = A\) then two things happen, and neither is obvious: <b>every eigenvalue is real</b>, and <b>the eigenvectors can be chosen perpendicular</b>. Diagonalization then needs no inverse at all, and the whole thing becomes \(A = Q\Lambda Q^T\).</p>
+    </div>
+
+    <div class="box method"><span class="label">What symmetry buys ★</span>
+      <table class="sl-table">
+        <tr><th></th><th>General \(A\)</th><th>Symmetric \(A\)</th></tr>
+        <tr><td>eigenvalues</td><td>may be complex</td><td><b>always real</b></td></tr>
+        <tr><td>eigenvectors</td><td>independent at best</td><td><b>orthonormal</b></td></tr>
+        <tr><td>diagonalization</td><td>\(A = S\Lambda S^{-1}\)</td><td>\(A = Q\Lambda Q^T\) — no inverse needed</td></tr>
+        <tr><td>signs of \(\lambda\)</td><td>hard to find</td><td>same as the signs of the <b>pivots</b></td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The spectral theorem</a></li>
+        <li><a href="#t2">Why the eigenvalues are real</a></li>
+        <li><a href="#t3">Why the eigenvectors are perpendicular</a></li>
+        <li><a href="#t4">A sum of projections</a></li>
+        <li><a href="#t5">Signs of the pivots</a></li>
+        <li><a href="#t6">Positive definite matrices</a></li>
+        <li><a href="#t7">A worked example</a></li>
+        <li><a href="#t8">The subdeterminant test</a></li>
+        <li><a href="#t9">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The spectral theorem ★</a><span>\(A = Q\Lambda Q^T\), and every such product is symmetric.</span></li>
+      <li><a href="#t2">Why the eigenvalues are real</a><span>Conjugate, transpose, compare. Four lines.</span></li>
+      <li><a href="#t3">Why the eigenvectors are perpendicular</a><span>Two eigenvalues force a dot product to vanish.</span></li>
+      <li><a href="#t4">A sum of projections</a><span>Every symmetric matrix is \(\sum \lambda_k q_kq_k^T\).</span></li>
+      <li><a href="#t5">Signs of the pivots ★</a><span>Count positive pivots and you have counted positive eigenvalues.</span></li>
+      <li><a href="#t6">Positive definite matrices</a><span>Symmetric with every eigenvalue positive.</span></li>
+      <li><a href="#t7">A worked example</a><span>Pivots, eigenvalues and determinant, all agreeing.</span></li>
+      <li><a href="#t8">The subdeterminant test</a><span>All upper-left determinants positive — and why the determinant alone is not enough.</span></li>
+      <li><a href="#t9">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The spectral theorem</h3>
+
+    <p>Lesson 21 gave \(A = S\Lambda S^{-1}\) whenever there are \(n\) independent eigenvectors. For a symmetric matrix the eigenvectors are not merely independent — they are <b>perpendicular</b>, and can be scaled to length 1. So \(S\) can be taken orthonormal, and Lesson 16 says its inverse is its transpose.</p>
+
+    <div class="box theorem"><span class="label">The spectral theorem ★</span>
+      $$ \boxed{A = A^T \qquad\Longrightarrow\qquad A = Q\Lambda Q^{-1} = Q\Lambda Q^T} $$
+      <p>with \(Q\) orthogonal and \(\Lambda\) real and diagonal. The converse holds too: <b>any</b> matrix of the form \(Q\Lambda Q^T\) is symmetric.</p>
+    </div>
+
+    <p>The converse is a one-line check — transpose it, reversing the order of the product:</p>
+
+    $$ (Q\Lambda Q^T)^T = (Q^T)^T\Lambda^TQ^T = Q\Lambda Q^T \qquad\checkmark $$
+
+    <p>using \(\Lambda^T = \Lambda\) because a diagonal matrix is its own transpose.</p>
+
+    <div class="box intuition"><span class="label">Two names for it</span>
+      <p>Mathematicians call it the <b>spectral theorem</b> and the set of eigenvalues the <i>spectrum</i>. Engineers call it the <b>principal axis theorem</b>, because the \(q_i\) are the natural axes of the object the matrix describes. Same theorem.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Why the eigenvalues are real</h3>
+
+    <p>Start with \(Ax = \lambda x\) and allow \(\lambda\) and \(x\) to be complex until proven otherwise.</p>
+
+    <table class="sl-table">
+      <tr><th>Step</th><th>Line</th><th>Reason</th></tr>
+      <tr><td>1</td><td>\(Ax = \lambda x\)</td><td>the assumption</td></tr>
+      <tr><td>2</td><td>\(A\bar{x} = \bar\lambda\bar{x}\)</td><td>conjugate everything; \(\bar{A} = A\) because the entries are real</td></tr>
+      <tr><td>3</td><td>\(\bar{x}^TA^T = \bar{x}^T\bar\lambda\)</td><td>transpose line 2</td></tr>
+      <tr><td>4</td><td>\(\bar{x}^TA = \bar{x}^T\bar\lambda\)</td><td>and \(A^T = A\) — <b>this is where symmetry is used</b></td></tr>
+    </table>
+
+    <p>Now make two expressions for the same quantity \(\bar{x}^TAx\):</p>
+
+    <ul>
+      <li>Multiply line 1 on the left by \(\bar{x}^T\): &nbsp; \(\bar{x}^TAx = \lambda\,\bar{x}^Tx\)</li>
+      <li>Multiply line 4 on the right by \(x\): &nbsp; \(\bar{x}^TAx = \bar\lambda\,\bar{x}^Tx\)</li>
+    </ul>
+
+    $$ \lambda\,\bar{x}^Tx = \bar\lambda\,\bar{x}^Tx \qquad\Longrightarrow\qquad (\lambda - \bar\lambda)\,\bar{x}^Tx = 0 $$
+
+    <h4>And \(\bar{x}^Tx\) is not zero</h4>
+
+    <p>Write it out. For a complex number, \(\bar{z}z = |z|^2\), so</p>
+
+    $$ \bar{x}^Tx = \bar{x}_1x_1 + \bar{x}_2x_2 + \dots + \bar{x}_nx_n = |x_1|^2 + |x_2|^2 + \dots + |x_n|^2 $$
+
+    <p>A sum of squared magnitudes. If \(x \ne 0\) that is strictly positive, so we may divide:</p>
+
+    $$ \lambda = \bar\lambda \qquad\Longrightarrow\qquad \boxed{\lambda \text{ is real}} $$
+
+    <div class="box intuition"><span class="label">The conjugate is what makes it work</span>
+      <p>\(x^Tx\) could be zero for a complex vector — \((1,i)\) gives \(1 + i^2 = 0\). Using \(\bar{x}^Tx\) instead gives \(1 + 1 = 2\). Lesson 25 makes this the official definition of length for complex vectors.</p>
+      <p>Line 2 also proves a fact from Lesson 20 in passing: for a real matrix, complex eigenvalues come in conjugate pairs.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Why the eigenvectors are perpendicular</h3>
+
+    <p>Take two eigenvectors with <b>different</b> eigenvalues:</p>
+
+    $$ Ax = \lambda x, \qquad Ay = \mu y, \qquad \lambda \ne \mu $$
+
+    <p>Compute \(x^TAy\) two ways.</p>
+
+    <table class="sl-table">
+      <tr><th>Way</th><th>Computation</th><th>Result</th></tr>
+      <tr><td>group to the right</td><td>\(x^T(Ay) = x^T(\mu y)\)</td><td>\(\mu\,x^Ty\)</td></tr>
+      <tr><td>group to the left</td><td>\((x^TA)y = (A^Tx)^Ty = (Ax)^Ty = (\lambda x)^Ty\)</td><td>\(\lambda\,x^Ty\)</td></tr>
+    </table>
+
+    <p>The middle step is where \(A^T = A\) is spent. Setting the two equal:</p>
+
+    $$ (\lambda - \mu)\,x^Ty = 0 $$
+
+    <p>And \(\lambda \ne \mu\), so the other factor must vanish:</p>
+
+    $$ \boxed{x^Ty = 0 \quad\text{— the eigenvectors are perpendicular}} $$
+
+    <p>When an eigenvalue repeats, you get a whole subspace of eigenvectors and can pick a perpendicular basis inside it by Gram-Schmidt. So a full orthonormal set always exists.</p>
+
+    <h4>Check it</h4>
+
+    <p>\(B = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix}\) is symmetric, with eigenvectors \((1,1)\) for \(\lambda = 1\) and \((1,-1)\) for \(\lambda = -1\). Dot product: \(1 - 1 = 0\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. A sum of projections</h3>
+
+    <p>Expand \(A = Q\Lambda Q^T\) by columns. \(Q\Lambda\) scales column \(k\) by \(\lambda_k\), and multiplying by \(Q^T\) pairs each scaled column with the matching row:</p>
+
+    $$ A = \begin{bmatrix} q_1 & \cdots & q_n \end{bmatrix}
+         \begin{bmatrix} \lambda_1 & & \\ & \ddots & \\ & & \lambda_n \end{bmatrix}
+         \begin{bmatrix} q_1^T \\ \vdots \\ q_n^T \end{bmatrix}
+      = \lambda_1q_1q_1^T + \lambda_2q_2q_2^T + \dots + \lambda_nq_nq_n^T $$
+
+    <div class="box theorem"><span class="label">Every symmetric matrix is a combination of projections ★</span>
+      <p>Each \(q_kq_k^T\) is the projection matrix onto the line through \(q_k\) — the Lesson 14 formula \(aa^T/a^Ta\), with \(a^Ta = 1\) because \(q_k\) is a unit vector.</p>
+      $$ \boxed{A = \sum_k \lambda_k \,(\text{projection onto } q_k)} $$
+    </div>
+
+    <h4>Check on \(B = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix}\)</h4>
+
+    <p>\(q_1 = \tfrac{1}{\sqrt2}(1,1)\) and \(q_2 = \tfrac{1}{\sqrt2}(1,-1)\), so</p>
+
+    $$ q_1q_1^T = \frac12\begin{bmatrix} 1&1 \\ 1&1 \end{bmatrix}, \qquad
+       q_2q_2^T = \frac12\begin{bmatrix} 1&-1 \\ -1&1 \end{bmatrix} $$
+
+    $$ (1)q_1q_1^T + (-1)q_2q_2^T = \frac12\begin{bmatrix} 1-1 & 1+1 \\ 1+1 & 1-1 \end{bmatrix}
+      = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix} = B \qquad\checkmark $$
+
+    <p>Each piece is a genuine projection: \((q_1q_1^T)^2 = q_1(q_1^Tq_1)q_1^T = q_1q_1^T\) since \(q_1^Tq_1 = 1\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Signs of the pivots</h3>
+
+    <p>Knowing the eigenvalues are real, the next question is whether they are positive or negative — which decides stability in Lesson 22. But solving \(\det(A - \lambda I) = 0\) for a large matrix is hopeless.</p>
+
+    <div class="box theorem"><span class="label">A remarkable shortcut ★</span>
+      <p>For a symmetric matrix,</p>
+      $$ \boxed{\text{number of positive pivots} = \text{number of positive eigenvalues}} $$
+      <p>And the pivots come from ordinary elimination, which is cheap.</p>
+    </div>
+
+    <p>The pivots are <b>not</b> the eigenvalues — only their signs agree. Combine this with the shift rule from Lesson 20 and you can locate eigenvalues without computing any:</p>
+
+    <div class="box method"><span class="label">Method · counting eigenvalues above a number</span>
+      <p>To ask how many eigenvalues of \(A\) exceed \(b\): eliminate on \(A - bI\) and count its positive pivots. Because \(A - bI\) has eigenvalues \(\lambda_i - b\), that count is exactly the number of \(\lambda_i > b\).</p>
+      <p>Repeat for a few values of \(b\) and you have bracketed every eigenvalue, using only elimination.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Positive definite matrices</h3>
+
+    <div class="box definition"><span class="label">Definition · positive definite</span>
+      <p>A <b>positive definite</b> matrix is a symmetric matrix whose eigenvalues are <b>all positive</b>.</p>
+      <p>By §5, that is the same as saying all the pivots are positive — and pivots are far easier to get.</p>
+    </div>
+
+    <p>Three equivalent tests, with a fourth coming in Lesson 26:</p>
+
+    <table class="sl-table">
+      <tr><th>Test</th><th>Condition</th><th>Cost</th></tr>
+      <tr><td>eigenvalues</td><td>every \(\lambda_i > 0\)</td><td>expensive</td></tr>
+      <tr><td><b>pivots</b></td><td>every pivot \(> 0\)</td><td>one elimination — the practical one</td></tr>
+      <tr><td>subdeterminants</td><td>every upper-left determinant \(> 0\)</td><td>\(n\) determinants</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. A worked example</h3>
+
+    $$ A = \begin{bmatrix} 5 & 2 \\ 2 & 3 \end{bmatrix} $$
+
+    <p>Symmetric ✓</p>
+
+    <h4>The pivots</h4>
+
+    <p>First pivot: 5. Eliminate with multiplier \(2/5\):</p>
+
+    $$ \text{row 2} \leftarrow \text{row 2} - \tfrac25\text{row 1} = \left(2 - 2,\ 3 - \tfrac45\right) = \left(0, \tfrac{11}{5}\right) $$
+
+    $$ \text{pivots: } 5 \text{ and } \tfrac{11}{5} $$
+
+    <p>Both positive, so \(A\) is <b>positive definite</b> ✓ — and that conclusion cost one subtraction.</p>
+
+    <p>Check against the determinant: the product of the pivots is \(5 \times \tfrac{11}{5} = 11\), and \(\det A = 15 - 4 = 11\) ✓</p>
+
+    <h4>The eigenvalues, the hard way</h4>
+
+    $$ \det(A - \lambda I) = (5-\lambda)(3-\lambda) - 4 = \lambda^2 - 8\lambda + 11 = 0 $$
+
+    <p>Coefficients check: trace \(5 + 3 = 8\) ✓, determinant 11 ✓.</p>
+
+    $$ \lambda = \frac{8 \pm \sqrt{64 - 44}}{2} = \frac{8 \pm \sqrt{20}}{2} = 4 \pm \sqrt5 $$
+
+    $$ \lambda_1 \approx 6.236, \qquad \lambda_2 \approx 1.764 $$
+
+    <p>Both positive ✓, matching the pivot test. And note how different the numbers are: pivots \(5, 2.2\) against eigenvalues \(6.236, 1.764\). Only the <b>signs</b> had to agree — and they did.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The subdeterminant test</h3>
+
+    <div class="box pitfall"><span class="label">A positive determinant is not enough ★</span>
+      $$ A = \begin{bmatrix} -1 & 0 \\ 0 & -3 \end{bmatrix} $$
+      <p>\(\det A = 3 > 0\), yet it is diagonal with eigenvalues \(-1\) and \(-3\) — both <b>negative</b>. Not positive definite at all.</p>
+      <p>The determinant is the <i>product</i> of the eigenvalues, and two negatives multiply to a positive. One number cannot distinguish "all positive" from "all negative".</p>
+    </div>
+
+    <p>The repair is to test every nested upper-left block.</p>
+
+    <div class="box theorem"><span class="label">The subdeterminant test ★</span>
+      <p>\(A\) is positive definite exactly when all \(n\) <b>leading</b> determinants are positive — the \(1\times1\), the \(2\times2\), up to \(A\) itself.</p>
+    </div>
+
+    <p>On the counterexample: the \(1\times1\) determinant is \(-1 < 0\), so it fails at the first step ✓</p>
+
+    <p>On our example \(\begin{bmatrix} 5&2 \\ 2&3 \end{bmatrix}\): the \(1\times1\) is \(5 > 0\) ✓ and the \(2\times2\) is \(11 > 0\) ✓ — positive definite.</p>
+
+    <div class="box intuition"><span class="label">Why the three tests are really one</span>
+      <p>The \(k\)th pivot equals \(\dfrac{\text{(the } k\times k \text{ determinant)}}{\text{(the } (k-1)\times(k-1) \text{ determinant)}}\).</p>
+      <p>Here: first pivot \(= 5/1 = 5\), second pivot \(= 11/5\) ✓ — exactly what elimination gave. So "all leading determinants positive" and "all pivots positive" are the same statement, and §5 ties both to the eigenvalues.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t9"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Spectral theorem ★</b></td><td>\(A = A^T \Rightarrow A = Q\Lambda Q^T\), real \(\Lambda\), orthogonal \(Q\). And every \(Q\Lambda Q^T\) is symmetric.</td></tr>
+      <tr><td><b>Real eigenvalues ★</b></td><td>Conjugate, transpose, use \(A^T = A\), and compare: \((\lambda - \bar\lambda)\bar{x}^Tx = 0\) with \(\bar{x}^Tx > 0\).</td></tr>
+      <tr><td><b>Why the conjugate</b></td><td>\(x^Tx\) can vanish for complex \(x\); \(\bar{x}^Tx = \sum|x_i|^2\) cannot.</td></tr>
+      <tr><td><b>Perpendicular eigenvectors ★</b></td><td>Compute \(x^TAy\) both ways: \((\lambda - \mu)x^Ty = 0\).</td></tr>
+      <tr><td><b>Sum of projections</b></td><td>\(A = \sum \lambda_kq_kq_k^T\), each \(q_kq_k^T\) a projection onto one eigenvector.</td></tr>
+      <tr><td><b>Pivot signs ★</b></td><td>Number of positive pivots = number of positive eigenvalues. Values differ; signs match.</td></tr>
+      <tr><td><b>Locating eigenvalues</b></td><td>Count the positive pivots of \(A - bI\) to count the \(\lambda_i > b\).</td></tr>
+      <tr><td><b>Positive definite</b></td><td>Symmetric with every \(\lambda > 0\) ⟺ every pivot \(> 0\) ⟺ every leading determinant \(> 0\).</td></tr>
+      <tr><td><b>The trap</b></td><td>\(\det > 0\) alone fails: \(\mathrm{diag}(-1,-3)\) has determinant 3.</td></tr>
+      <tr><td><b>Pivots from determinants</b></td><td>\(k\)th pivot = (\(k\times k\) determinant) / (\((k{-}1)\times(k{-}1)\) determinant).</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Special matrices have special eigenvalues ★</b><span>Symmetry gives real \(\lambda\) and perpendicular \(x\). Markov gave \(\lambda = 1\). The structure always shows up in the spectrum.</span></li>
+      <li><b>\(Q^{-1} = Q^T\) is the payoff</b><span>It turns \(S\Lambda S^{-1}\) into \(Q\Lambda Q^T\), with no inverse to compute and no numerical risk.</span></li>
+      <li><b>Pivots are cheap, eigenvalues are not</b><span>One elimination settles the signs of all \(n\) eigenvalues.</span></li>
+      <li><b>Both proofs are the same move</b><span>Compute one quantity two ways, and use \(A^T = A\) to make the two agree.</span></li>
+      <li><b>One determinant is not enough</b><span>Check all the leading ones, or you cannot tell all-positive from all-negative.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Positive definiteness has been defined by eigenvalues and tested by pivots. The next two lessons go further: Lesson 25 handles complex matrices properly (where symmetric becomes <b>Hermitian</b>), and Lesson 26 adds the fourth and deepest test — \(x^TAx > 0\) — which turns positive definiteness into a statement about <b>minima</b> and connects the whole course to calculus.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

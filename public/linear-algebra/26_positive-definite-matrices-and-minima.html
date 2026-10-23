@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Positive Definite Matrices and Minima · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="The fourth test for positive definiteness, x transpose A x greater than zero, shown to be completing the square with the pivots as coefficients; bowls, troughs and saddles; the second derivative matrix and minima; and the eigenvectors as the axes of the level ellipses.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="26_positive-definite-matrices-and-minima">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Positive Definite Matrices and Minima</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 26</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 26 (MIT 18.06, Lecture 26)</p>
+  <h1>Positive Definite Matrices and Minima</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{x^TAx > 0 \text{ — the test that turns a matrix into a minimum.}} $$</p>
+      <p>Lesson 24 tested positive definiteness with eigenvalues, pivots and determinants. This lesson adds the fourth test, which is usually taken as the definition, and shows it is calculus: \(x^TAx > 0\) says a surface curves <b>upward in every direction</b>, so the origin is a genuine minimum rather than a saddle.</p>
+    </div>
+
+    <div class="box method"><span class="label">Four tests, one conclusion ★</span>
+      <p>For a symmetric \(\begin{bmatrix} a&b \\ b&c \end{bmatrix}\), these all say the same thing:</p>
+      <table class="sl-table">
+        <tr><th>#</th><th>Test</th><th>Condition</th></tr>
+        <tr><td>1</td><td>eigenvalues</td><td>\(\lambda_1 > 0\) and \(\lambda_2 > 0\)</td></tr>
+        <tr><td>2</td><td>determinants</td><td>\(a > 0\) and \(ac - b^2 > 0\)</td></tr>
+        <tr><td>3</td><td>pivots</td><td>\(a > 0\) and \(\dfrac{ac-b^2}{a} > 0\)</td></tr>
+        <tr><td>4</td><td><b>the quadratic form</b></td><td>\(x^TAx > 0\) for every \(x \ne 0\)</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">The four tests</a></li>
+        <li><a href="#t2">The borderline</a></li>
+        <li><a href="#t3">The quadratic form</a></li>
+        <li><a href="#t4">Positive semidefinite</a></li>
+        <li><a href="#t5">Three surfaces</a></li>
+        <li><a href="#t6">Completing the square</a></li>
+        <li><a href="#t7">The squares are the pivots</a></li>
+        <li><a href="#t8">Minima in calculus</a></li>
+        <li><a href="#t9">The geometry: ellipses</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">The four tests</a><span>Eigenvalues, determinants, pivots, and the new one.</span></li>
+      <li><a href="#t2">The borderline</a><span>One family of matrices, watched as it crosses the line.</span></li>
+      <li><a href="#t3">The quadratic form ★</a><span>\(x^TAx\) multiplied out: \(ax^2 + 2bxy + cy^2\).</span></li>
+      <li><a href="#t4">Positive semidefinite</a><span>Zero allowed. Singular, with a direction where the form vanishes.</span></li>
+      <li><a href="#t5">Three surfaces</a><span>Bowl, trough and saddle, from three nearly identical matrices.</span></li>
+      <li><a href="#t6">Completing the square ★</a><span>Rewrite the form as a sum of squares and read off the answer.</span></li>
+      <li><a href="#t7">The squares are the pivots ★</a><span>Elimination and completing the square are the same calculation.</span></li>
+      <li><a href="#t8">Minima in calculus</a><span>First derivatives zero is not enough; the second derivative matrix decides.</span></li>
+      <li><a href="#t9">The geometry: ellipses</a><span>Level curves, axes, and the eigenvectors.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. The four tests</h3>
+
+    <p>Three are from Lesson 24. The fourth is new, and it is the one that explains what positive definiteness <i>means</i>.</p>
+
+    <div class="box definition"><span class="label">Test 4 — the real definition ★</span>
+      $$ \boxed{A \text{ is positive definite} \iff x^TAx > 0 \text{ for every } x \ne 0} $$
+      <p>\(x^TAx\) is a single number — row vector times matrix times column vector. The condition says that number is strictly positive no matter which direction \(x\) points.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">Why this one is the definition</span>
+      <p>The other three are <i>tests</i> — computations you perform. This one is a <i>property</i>, and it makes sense for any size without computing anything. It is also the version that generalises, and the version that connects to calculus in §8.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The borderline</h3>
+
+    <p>Take a family with one dial:</p>
+
+    $$ A = \begin{bmatrix} 2 & 6 \\ 6 & y \end{bmatrix} $$
+
+    <p>Use test 2. The first condition is \(a = 2 > 0\) ✓ always. The second:</p>
+
+    $$ \det A = 2y - 36 > 0 \qquad\Longrightarrow\qquad \boxed{y > 18} $$
+
+    <table class="sl-table">
+      <tr><th>\(y\)</th><th>\(\det\)</th><th>Eigenvalues</th><th>Pivots</th><th>Verdict</th></tr>
+      <tr><td>7</td><td>\(-22\)</td><td>\(11\) and \(-2\)</td><td>\(2\) and \(-11\)</td><td><b>indefinite</b> — a saddle</td></tr>
+      <tr><td>18</td><td>\(0\)</td><td>\(20\) and \(0\)</td><td>\(2\) and \(0\)</td><td><b>semidefinite</b> — the borderline</td></tr>
+      <tr><td>20</td><td>\(4\)</td><td>\(\approx 21.82\) and \(\approx 0.18\)</td><td>\(2\) and \(2\)</td><td><b>positive definite</b></td></tr>
+    </table>
+
+    <p>Every column of that table agrees with every other. Count the negative signs: one for \(y = 7\), none for \(y = 20\), and a zero at exactly \(y = 18\).</p>
+
+    <p>Check the \(y=18\) eigenvalues against the rules: sum \(20 + 0 = 20 = \text{trace}\) ✓, product \(0 = \det\) ✓.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The quadratic form</h3>
+
+    <p>Multiply \(x^TAx\) out for the general symmetric \(2 \times 2\). First \(Ax\):</p>
+
+    $$ \begin{bmatrix} a & b \\ b & c \end{bmatrix}\begin{bmatrix} x_1 \\ x_2 \end{bmatrix}
+      = \begin{bmatrix} ax_1 + bx_2 \\ bx_1 + cx_2 \end{bmatrix} $$
+
+    <p>Then \(x^T\) times that:</p>
+
+    $$ \begin{bmatrix} x_1 & x_2 \end{bmatrix}\begin{bmatrix} ax_1 + bx_2 \\ bx_1 + cx_2 \end{bmatrix}
+      = ax_1^2 + bx_1x_2 + bx_1x_2 + cx_2^2 $$
+
+    $$ \boxed{x^TAx = ax_1^2 + 2bx_1x_2 + cx_2^2} $$
+
+    <p>This is a <b>quadratic form</b>: every term has total degree 2, so there are no linear or constant parts. Note where the 2 comes from — the off-diagonal \(b\) is used twice, once from each side of the diagonal.</p>
+
+    <h4>For \(\begin{bmatrix} 2&6 \\ 6&18 \end{bmatrix}\)</h4>
+
+    $$ x^TAx = 2x_1^2 + 12x_1x_2 + 18x_2^2 $$
+
+    <p>Is that always positive? The \(x_1^2\) and \(x_2^2\) terms are, but the cross term \(12x_1x_2\) is negative whenever \(x_1\) and \(x_2\) have opposite signs — and the question is whether it can ever win.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Positive semidefinite</h3>
+
+    <p>Try the form above at \(x = (3, -1)\):</p>
+
+    $$ 2(9) + 12(3)(-1) + 18(1) = 18 - 36 + 18 = 0 $$
+
+    <p>Zero — at a non-zero vector. So \(x^TAx \ge 0\) always, but it is not always \(> 0\).</p>
+
+    <div class="box definition"><span class="label">Definition · positive semidefinite</span>
+      <p>\(x^TAx \ge 0\) for all \(x\), with equality possible at some \(x \ne 0\). Equivalently: all eigenvalues \(\ge 0\), with at least one equal to zero.</p>
+      <p>Such a matrix is <b>singular</b> — a zero eigenvalue means \(\det = 0\) — and it has one fewer pivot than its size.</p>
+    </div>
+
+    <p>Everything lines up for \(\begin{bmatrix} 2&6 \\ 6&18 \end{bmatrix}\): eigenvalues \(20\) and \(\boxed{0}\), determinant 0, pivots \(2\) and \(\boxed{0}\) — only one real pivot. And the vector \((3,-1)\) where the form vanishes is exactly the eigenvector for \(\lambda = 0\), i.e. the nullspace.</p>
+
+    <p>Check: \(\begin{bmatrix} 2&6 \\ 6&18 \end{bmatrix}\begin{bmatrix} 3 \\ -1 \end{bmatrix} = \begin{bmatrix} 6-6 \\ 18-18 \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Three surfaces</h3>
+
+    <p>Treat \(f(x,y) = x^TAx\) as a surface over the plane. Three matrices, three shapes.</p>
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>\(f(x,y)\)</th><th>Shape</th><th>At the origin</th></tr>
+      <tr><td>\(\begin{bmatrix} 2&6 \\ 6&20 \end{bmatrix}\)</td><td>\(2x^2 + 12xy + 20y^2\)</td><td>a <b>bowl</b></td><td>a true minimum</td></tr>
+      <tr><td>\(\begin{bmatrix} 2&6 \\ 6&18 \end{bmatrix}\)</td><td>\(2x^2 + 12xy + 18y^2\)</td><td>a <b>trough</b></td><td>minimum, but flat along one line</td></tr>
+      <tr><td>\(\begin{bmatrix} 2&6 \\ 6&7 \end{bmatrix}\)</td><td>\(2x^2 + 12xy + 7y^2\)</td><td>a <b>saddle</b></td><td>neither — up one way, down another</td></tr>
+    </table>
+
+    <p>The saddle is easy to confirm. At \((x,y) = (1,0)\): \(f = 2 > 0\). At \((-3,1)\):</p>
+
+    $$ 2(9) + 12(-3)(1) + 7(1) = 18 - 36 + 7 = -11 < 0 $$
+
+    <p>Positive in one direction, negative in another — a saddle ✓</p>
+
+    <p>Compare the bowl at the same point \((-3,1)\):</p>
+
+    $$ 2(9) + 12(-3)(1) + 20(1) = 18 - 36 + 20 = 2 > 0 \qquad\checkmark $$
+
+    <figure class="fig" style="max-width:540px;margin:22px auto">
+      <svg viewBox="0 0 540 200" role="img" aria-label="A bowl, a trough and a saddle">
+        <text class="tick" x="42" y="22" font-size="12.5">bowl — positive definite</text>
+        <path class="l1" d="M30,150 Q85,40 140,150" fill="none"/>
+        <path class="l1 dash" d="M30,150 Q85,70 140,150" fill="none"/>
+        <ellipse cx="85" cy="150" rx="55" ry="12" class="axis" fill="none" stroke-dasharray="4 3"/>
+        <circle class="hit" cx="85" cy="150" r="4"/>
+        <text class="tick" x="194" y="22" font-size="12.5">trough — semidefinite</text>
+        <path class="l2" d="M200,150 Q255,40 310,150" fill="none"/>
+        <line class="l2 dash" x1="212" y1="150" x2="300" y2="150"/>
+        <ellipse cx="255" cy="150" rx="55" ry="12" class="axis" fill="none" stroke-dasharray="4 3"/>
+        <circle class="hit" cx="255" cy="150" r="4"/>
+        <text class="tick" x="368" y="22" font-size="12.5">saddle — indefinite</text>
+        <path class="l3" d="M370,110 Q425,36 480,110" fill="none"/>
+        <path class="l3 dash" d="M370,110 Q425,170 480,110" fill="none"/>
+        <ellipse cx="425" cy="110" rx="55" ry="12" class="axis" fill="none" stroke-dasharray="4 3"/>
+        <circle class="hit" cx="425" cy="110" r="4"/>
+        <text class="tick" x="36" y="186">every direction up</text>
+        <text class="tick" x="202" y="186">flat along one line</text>
+        <text class="tick" x="374" y="186">up one way, down another</text>
+      </svg>
+      <figcaption>Three surfaces over the same origin. The bowl rises in every direction (\(\lambda_1, \lambda_2 > 0\)); the trough is flat along one line (\(\lambda_2 = 0\)); the saddle falls in one direction (\(\lambda_2 < 0\)). Changing a single entry from 20 to 18 to 7 moves between them.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Completing the square</h3>
+
+    <p>Staring at \(2x^2 + 12xy + 20y^2\) does not settle anything. Rewriting it does.</p>
+
+    <div class="box method"><span class="label">Method · completing the square ★</span>
+      <p>Group all the \(x\) terms into one perfect square, then collect what is left.</p>
+    </div>
+
+    <p><b>The bowl.</b> Pull 2 out of the first two terms and complete:</p>
+
+    $$ 2x^2 + 12xy = 2(x^2 + 6xy) = 2\left[(x + 3y)^2 - 9y^2\right] = 2(x+3y)^2 - 18y^2 $$
+
+    <p>Add back the \(20y^2\):</p>
+
+    $$ \boxed{2x^2 + 12xy + 20y^2 = 2(x+3y)^2 + 2y^2} $$
+
+    <p>Check at \((-3,1)\): \(2(0)^2 + 2(1) = 2\) ✓ — matching §5.</p>
+
+    <p>Now read it. <b>Both coefficients are positive</b>, so the expression is a sum of two non-negative things. It can only be zero if \(x + 3y = 0\) <i>and</i> \(y = 0\), which forces \(x = y = 0\). <b>Positive definite</b> ✓</p>
+
+    <p><b>The saddle.</b> Same first step, then add back \(7y^2\) instead of \(20y^2\):</p>
+
+    $$ \boxed{2x^2 + 12xy + 7y^2 = 2(x+3y)^2 - 11y^2} $$
+
+    <p>A <b>minus</b>. Kill the first square by choosing \(x = -3y\) and the whole thing is \(-11y^2 < 0\). With \(y = 1\), \(x = -3\): \(-11\) ✓ — exactly the value computed in §5.</p>
+
+    <p><b>The borderline.</b> \(18y^2\) is precisely what the completion produced, so the leftover is zero:</p>
+
+    $$ 2x^2 + 12xy + 18y^2 = 2(x+3y)^2 $$
+
+    <p>Never negative, but zero whenever \(x = -3y\) — at \((3,-1)\), for instance ✓ That is §4, explained.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. The squares are the pivots</h3>
+
+    <p>Now the connection that ties this lesson to Lesson 2.</p>
+
+    <p>Eliminate on the bowl's matrix. The multiplier is \(6/2 = 3\):</p>
+
+    $$ \begin{bmatrix} 2 & 6 \\ 6 & 20 \end{bmatrix}
+       \xrightarrow{\ \text{row 2} - 3\,\text{row 1}\ }
+       \begin{bmatrix} 2 & 6 \\ 0 & 2 \end{bmatrix} $$
+
+    <p>Pivots \(2\) and \(2\). Now look back at the completed square:</p>
+
+    $$ 2x^2 + 12xy + 20y^2 = \underbrace{2}_{\text{pivot 1}}(x + \underbrace{3}_{\text{multiplier}}y)^2 + \underbrace{2}_{\text{pivot 2}}y^2 $$
+
+    <div class="box theorem"><span class="label">Elimination <i>is</i> completing the square ★</span>
+      <table class="sl-table">
+        <tr><th>In the squares</th><th>In elimination</th></tr>
+        <tr><td>the coefficient in front of each square</td><td>the <b>pivot</b></td></tr>
+        <tr><td>the number inside, \((x + \ell y)^2\)</td><td>the <b>multiplier</b> \(\ell\)</td></tr>
+      </table>
+      <p>So "all pivots positive" and "a sum of positive multiples of squares" are the same statement — which is why test 3 and test 4 agree.</p>
+    </div>
+
+    <p>Check the saddle the same way. Multiplier still 3:</p>
+
+    $$ \begin{bmatrix} 2 & 6 \\ 6 & 7 \end{bmatrix} \longrightarrow \begin{bmatrix} 2 & 6 \\ 0 & -11 \end{bmatrix} $$
+
+    <p>Pivots \(2\) and \(-11\) — and the completed form was \(2(x+3y)^2 - 11y^2\) ✓ The negative pivot and the negative square are the same number.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Minima in calculus</h3>
+
+    <p>In one variable, a minimum needs \(f' = 0\) and \(f'' > 0\). Zero slope alone is not enough — a maximum has it too.</p>
+
+    <p>In several variables, all the first derivatives vanish at the origin for every quadratic form:</p>
+
+    $$ f = 2x^2 + 12xy + cy^2 \qquad\Longrightarrow\qquad f_x = 4x + 12y, \quad f_y = 12x + 2cy $$
+
+    <p>Both are zero at \((0,0)\) — for the bowl <b>and</b> for the saddle. So first derivatives cannot tell them apart, and the second derivatives must.</p>
+
+    <div class="box theorem"><span class="label">The second derivative matrix ★</span>
+      <p>Collect the second derivatives into a symmetric matrix:</p>
+      $$ H = \begin{bmatrix} f_{xx} & f_{xy} \\ f_{yx} & f_{yy} \end{bmatrix} $$
+      <p>It is symmetric because \(f_{xy} = f_{yx}\). And then</p>
+      $$ \boxed{\text{a minimum at a critical point} \iff H \text{ is positive definite there}} $$
+      <p>This is the multivariable \(f'' > 0\). In one dimension \(H\) is the single number \(f''\), and "positive definite" means "positive".</p>
+    </div>
+
+    <p>For \(f = 2x^2 + 12xy + 20y^2\): \(f_{xx} = 4\), \(f_{xy} = 12\), \(f_{yy} = 40\), so</p>
+
+    $$ H = \begin{bmatrix} 4 & 12 \\ 12 & 40 \end{bmatrix} = 2A $$
+
+    <p>Exactly twice the original matrix — the 2 coming from differentiating a square twice. Scaling by a positive number changes nothing, so \(H\) is positive definite exactly when \(A\) is ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. The geometry: ellipses</h3>
+
+    <p>Slice the bowl at a fixed height. The level curve \(x^TAx = k\) is an <b>ellipse</b> when \(A\) is positive definite — a closed curve, because the surface climbs away in every direction.</p>
+
+    <table class="sl-table">
+      <tr><th>Matrix type</th><th>Level curves \(x^TAx = k > 0\)</th></tr>
+      <tr><td>positive definite</td><td>ellipses, closed around the origin</td></tr>
+      <tr><td>positive semidefinite</td><td>a pair of parallel lines — the trough never closes</td></tr>
+      <tr><td>indefinite</td><td>hyperbolas, opening away in two directions</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">Where the eigenvectors are ★</span>
+      <p>Use the spectral theorem, \(A = Q\Lambda Q^T\), and substitute \(y = Q^Tx\):</p>
+      $$ x^TAx = x^TQ\Lambda Q^Tx = y^T\Lambda y = \lambda_1y_1^2 + \lambda_2y_2^2 $$
+      <p>In the eigenvector coordinates the cross term has <b>vanished</b>, and the ellipse is in standard position. So:</p>
+      <ul>
+        <li>the <b>eigenvectors</b> point along the axes of the ellipse;</li>
+        <li>the <b>eigenvalues</b> set how sharply it curves along each axis — large \(\lambda\) means a short, steep axis.</li>
+      </ul>
+      <p>This is the principal axis theorem of Lesson 24, now visible. For our bowl, \(\lambda \approx 21.8\) and \(0.18\), so the ellipse is very long and thin.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>Test 4 ★</b></td><td>\(x^TAx > 0\) for all \(x \ne 0\). The definition, not a computation.</td></tr>
+      <tr><td><b>The form</b></td><td>\(x^TAx = ax^2 + 2bxy + cy^2\). The 2 appears because \(b\) is used from both sides.</td></tr>
+      <tr><td><b>Semidefinite</b></td><td>\(\ge 0\) with equality somewhere. Singular, one pivot short, \(\lambda = 0\).</td></tr>
+      <tr><td><b>The family</b></td><td>\(\begin{bmatrix} 2&6 \\ 6&y \end{bmatrix}\): saddle below \(y = 18\), borderline at 18, bowl above.</td></tr>
+      <tr><td><b>Completing the square ★</b></td><td>\(2x^2+12xy+20y^2 = 2(x+3y)^2 + 2y^2\); with 7 instead of 20 the last term is \(-11y^2\).</td></tr>
+      <tr><td><b>The connection ★</b></td><td>Coefficients of the squares = <b>pivots</b>; numbers inside = <b>multipliers</b>. Elimination is completing the square.</td></tr>
+      <tr><td><b>Calculus</b></td><td>First derivatives vanish at every critical point; the second derivative matrix \(H\) decides, and a minimum means \(H\) positive definite.</td></tr>
+      <tr><td><b>Geometry</b></td><td>Level curves are ellipses (definite), parallel lines (semidefinite) or hyperbolas (indefinite).</td></tr>
+      <tr><td><b>The axes</b></td><td>Eigenvectors give the directions, eigenvalues the curvature. \(x^TAx = \lambda_1y_1^2 + \lambda_2y_2^2\) with no cross term.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>\(x^TAx\) is the quantity to watch ★</b><span>One number per direction, and its sign carries everything — minimum, saddle, stability.</span></li>
+      <li><b>Completing the square and elimination are one calculation</b><span>Pivots in front, multipliers inside. Two subjects, one piece of arithmetic.</span></li>
+      <li><b>Positive definiteness is the multivariable second derivative test</b><span>It is what \(f'' > 0\) becomes when there is more than one direction to fall in.</span></li>
+      <li><b>Watch the borderline</b><span>At \(y = 18\) the determinant, an eigenvalue, a pivot and a square all hit zero together.</span></li>
+      <li><b>The eigenvectors are the axes ★</b><span>Change to that basis and the cross term disappears, leaving \(\lambda_1y_1^2 + \lambda_2y_2^2\).</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>\(x^TAx > 0\) is also the cleanest route to the fact that \(A^TA\) is positive definite — which the next lesson proves in one line, before moving on to <b>similar matrices</b>: when do two different matrices really describe the same thing? And what happens to diagonalization when a matrix is defective?</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
