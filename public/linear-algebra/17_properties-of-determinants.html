@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Properties of Determinants · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="The determinant from three rules: det I = 1, row exchange flips the sign, and linearity in each row; then seven consequences including elimination leaving it unchanged, triangular matrices giving the product of the pivots, and det A = 0 exactly when A is singular.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="17_properties-of-determinants">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Properties of Determinants</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 17</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 17 (MIT 18.06, Lecture 17)</p>
+  <h1>Properties of Determinants</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{One number per square matrix. It is zero exactly when the matrix is singular.}} $$</p>
+      <p>Halfway through the course we leave rectangular matrices behind. The <b>determinant</b> packs an enormous amount about a square matrix into a single number — invertibility, volume, and eventually the eigenvalues. This lesson does not start with a formula. It starts with <b>three rules</b>, and derives seven more from them.</p>
+    </div>
+
+    <div class="box method"><span class="label">The ten properties ★</span>
+      <table class="sl-table">
+        <tr><th>#</th><th>Property</th><th>Status</th></tr>
+        <tr><td>1</td><td>\(\det I = 1\)</td><td>assumed</td></tr>
+        <tr><td>2</td><td>exchanging two rows flips the sign</td><td>assumed</td></tr>
+        <tr><td>3</td><td>linear in each row separately</td><td>assumed</td></tr>
+        <tr><td>4</td><td>two equal rows \(\Rightarrow\) \(\det = 0\)</td><td>from 2</td></tr>
+        <tr><td>5</td><td>row elimination does not change it</td><td>from 3, 4</td></tr>
+        <tr><td>6</td><td>a zero row \(\Rightarrow\) \(\det = 0\)</td><td>from 3</td></tr>
+        <tr><td>7</td><td>triangular \(\Rightarrow\) product of the diagonal</td><td>from 5, 3, 1</td></tr>
+        <tr><td>8</td><td>\(\det A = 0 \iff A\) singular</td><td>from 6, 7</td></tr>
+        <tr><td>9</td><td>\(\det(AB) = (\det A)(\det B)\)</td><td>stated</td></tr>
+        <tr><td>10</td><td>\(\det A^T = \det A\)</td><td>from 9</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">What the determinant is for</a></li>
+        <li><a href="#t2">Rule 1: det I = 1</a></li>
+        <li><a href="#t3">Rule 2: exchanging rows flips the sign</a></li>
+        <li><a href="#t4">Rule 3: linear in each row</a></li>
+        <li><a href="#t5">Rule 4: equal rows give zero</a></li>
+        <li><a href="#t6">Rule 5: elimination changes nothing</a></li>
+        <li><a href="#t7">Rules 6 and 7: zero rows and triangular matrices</a></li>
+        <li><a href="#t8">Rule 8: zero determinant means singular</a></li>
+        <li><a href="#t9">How it is actually computed</a></li>
+        <li><a href="#t10">Rule 9: determinants multiply</a></li>
+        <li><a href="#t11">Rule 10: transposing changes nothing</a></li>
+        <li><a href="#t12">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">What the determinant is for</a><span>One number, written \(\det A\) or \(|A|\), carrying a lot of information.</span></li>
+      <li><a href="#t2">Rule 1: det I = 1</a><span>The anchor. Everything else is measured against it.</span></li>
+      <li><a href="#t3">Rule 2: exchanging rows flips the sign</a><span>And therefore permutation matrices have determinant \(\pm1\).</span></li>
+      <li><a href="#t4">Rule 3: linear in each row ★</a><span>One row at a time, with the others held fixed. The subtle one.</span></li>
+      <li><a href="#t5">Rule 4: equal rows give zero</a><span>A two-line argument from rule 2.</span></li>
+      <li><a href="#t6">Rule 5: elimination changes nothing ★</a><span>The property that makes determinants computable.</span></li>
+      <li><a href="#t7">Rules 6 and 7: zero rows and triangular matrices</a><span>Triangular means just multiply the diagonal.</span></li>
+      <li><a href="#t8">Rule 8: zero determinant means singular ★</a><span>The headline. Invertibility becomes one arithmetic test.</span></li>
+      <li><a href="#t9">How it is actually computed</a><span>Eliminate, count the exchanges, multiply the pivots. Worked in full.</span></li>
+      <li><a href="#t10">Rule 9: determinants multiply</a><span>\(\det(AB) = \det A \det B\), and the consequences for inverses and scaling.</span></li>
+      <li><a href="#t11">Rule 10: transposing changes nothing</a><span>So every row property is also a column property.</span></li>
+      <li><a href="#t12">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. What the determinant is for</h3>
+
+    <p>The determinant is <b>one number</b> computed from a square matrix. Two notations, both standard:</p>
+
+    $$ \det A \qquad\text{or}\qquad |A| $$
+
+    <p>You already know the \(2 \times 2\) case:</p>
+
+    $$ \begin{vmatrix} a & b \\ c & d \end{vmatrix} = ad - bc $$
+
+    <p>The headline is rule 8: <b>the matrix is invertible exactly when the determinant is not zero</b>. Later it will also tell us about volume (Lesson 19) and lead straight to eigenvalues (Lesson 20).</p>
+
+    <div class="box intuition"><span class="label">Why rules before a formula</span>
+      <p>The \(n \times n\) formula has \(n!\) terms — 24 for a \(4\times4\), over three million for a \(10\times10\). Nobody learns anything from staring at it.</p>
+      <p>So we go the other way: write down three properties the determinant must have, and <b>derive</b> everything else, formula included (that is Lesson 18). The three rules turn out to pin the determinant down completely — there is exactly one function of a square matrix that satisfies them.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. Rule 1: det I = 1</h3>
+
+    $$ \boxed{\det I = 1} $$
+
+    <p>For \(2 \times 2\): \(\begin{vmatrix} 1&0 \\ 0&1 \end{vmatrix} = (1)(1) - (0)(0) = 1\) ✓</p>
+
+    <p>This is the normalisation. Without it you could multiply every determinant by 7 and all the other rules would still hold. Rule 1 fixes the scale.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Rule 2: exchanging rows flips the sign</h3>
+
+    $$ \boxed{\text{swap two rows} \;\Longrightarrow\; \det \text{ changes sign}} $$
+
+    <p>Swap the rows of \(I\):</p>
+
+    $$ \begin{vmatrix} 0&1 \\ 1&0 \end{vmatrix} = (0)(0) - (1)(1) = -1 $$
+
+    <p>One swap, one sign change ✓</p>
+
+    <h4>Consequence: permutation matrices</h4>
+
+    <p>A permutation matrix is \(I\) with its rows reordered. So its determinant is \(1\) followed by a sign flip for every swap used:</p>
+
+    $$ \boxed{\det P = \begin{cases} +1 & \text{an even number of row exchanges} \\ -1 & \text{an odd number} \end{cases}} $$
+
+    <p>This is where the \(\pm\) in the big formula of the next lesson comes from.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Rule 3: linear in each row</h3>
+
+    <p>The third rule has two halves. Both are about <b>one row at a time</b> — the others stay exactly where they are.</p>
+
+    <h4>3(a) — scaling a single row</h4>
+
+    $$ \boxed{\begin{vmatrix} ta & tb \\ c & d \end{vmatrix} = t\begin{vmatrix} a & b \\ c & d \end{vmatrix}} $$
+
+    <p>Check: \((ta)d - (tb)c = t(ad - bc)\) ✓</p>
+
+    <h4>3(b) — splitting a single row</h4>
+
+    $$ \boxed{\begin{vmatrix} a + a' & b + b' \\ c & d \end{vmatrix} = \begin{vmatrix} a & b \\ c & d \end{vmatrix} + \begin{vmatrix} a' & b' \\ c & d \end{vmatrix}} $$
+
+    <p>Check: \((a+a')d - (b+b')c = (ad - bc) + (a'd - b'c)\) ✓</p>
+
+    <div class="box pitfall"><span class="label">"Linear" does NOT mean \(\det(A+B) = \det A + \det B\) ★</span>
+      <p>Rule 3 changes <b>one row</b> and holds all the others fixed. Adding two whole matrices changes every row at once, and that is a different thing entirely.</p>
+      <p>Counterexample: \(\det I + \det I = 1 + 1 = 2\), but \(\det(I + I) = \det\begin{bmatrix} 2&0 \\ 0&2 \end{bmatrix} = 4\).</p>
+      <p>Similarly \(\det(tA) = t^n\det A\), not \(t\det A\) — rule 3(a) is applied once per row, and there are \(n\) of them.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Rule 4: equal rows give zero</h3>
+
+    $$ \boxed{\text{two identical rows} \;\Longrightarrow\; \det = 0} $$
+
+    <p>The argument is two sentences and uses nothing but rule 2.</p>
+
+    <ul>
+      <li>Swap the two identical rows. By rule 2, the determinant must change sign: \(d \to -d\).</li>
+      <li>But the matrix has not changed at all — the rows were identical — so the determinant must still be \(d\).</li>
+    </ul>
+
+    <p>Therefore \(d = -d\), so \(2d = 0\), so \(d = 0\) ✓</p>
+
+    <p>Check: \(\begin{vmatrix} 1&2 \\ 1&2 \end{vmatrix} = 2 - 2 = 0\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Rule 5: elimination changes nothing</h3>
+
+    <div class="box theorem"><span class="label">Rule 5 ★</span>
+      $$ \boxed{\text{subtracting } t \times (\text{row } i) \text{ from row } j \text{ leaves } \det \text{ unchanged}} $$
+      <p>This is the one that makes determinants computable, because it means you can run elimination freely.</p>
+    </div>
+
+    <h4>The proof, in \(2 \times 2\)</h4>
+
+    <p>Split the modified row using rule 3(b):</p>
+
+    $$ \begin{vmatrix} a & b \\ c - ta & d - tb \end{vmatrix}
+       = \begin{vmatrix} a & b \\ c & d \end{vmatrix} - \begin{vmatrix} a & b \\ ta & tb \end{vmatrix} $$
+
+    <p>Pull the \(t\) out of the second determinant's bottom row using rule 3(a):</p>
+
+    $$ = \begin{vmatrix} a & b \\ c & d \end{vmatrix} - t\begin{vmatrix} a & b \\ a & b \end{vmatrix} $$
+
+    <p>And that last determinant has two equal rows, so it is zero by rule 4:</p>
+
+    $$ = \begin{vmatrix} a & b \\ c & d \end{vmatrix} \qquad\checkmark $$
+
+    <p>Larger matrices work identically — only the number of untouched rows changes.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Rules 6 and 7: zero rows and triangular matrices</h3>
+
+    <h4>Rule 6 — a zero row</h4>
+
+    $$ \boxed{\text{a row of all zeros} \;\Longrightarrow\; \det = 0} $$
+
+    <p>Take rule 3(a) with \(t = 0\). Scaling a row by 0 produces the zero row, and multiplies the determinant by 0 ✓</p>
+
+    <h4>Rule 7 — triangular matrices</h4>
+
+    $$ \boxed{\det \begin{bmatrix} d_1 & * & * \\ 0 & d_2 & * \\ 0 & 0 & d_3 \end{bmatrix} = d_1d_2d_3} $$
+
+    <p>Three steps, each a rule we already have:</p>
+
+    <ol class="index-list">
+      <li><b>Clear the entries above the diagonal</b><span>Rule 5 says elimination does not change the determinant, so the triangular matrix and the diagonal matrix \(\mathrm{diag}(d_1,d_2,d_3)\) have the same one.</span></li>
+      <li><b>Pull each \(d_i\) out of its row</b><span>Rule 3(a), applied once per row, gives \(d_1d_2d_3 \cdot \det I\).</span></li>
+      <li><b>Finish with rule 1</b><span>\(\det I = 1\), so the answer is \(d_1d_2d_3\).</span></li>
+    </ol>
+
+    <p>Check: \(\det\begin{bmatrix} 1&2&3 \\ 0&4&5 \\ 0&0&6 \end{bmatrix} = (1)(4)(6) = 24\).</p>
+
+    <div class="box pitfall"><span class="label">If one \(d_i\) is zero</span>
+      <p>Step 1 breaks down — you cannot clear a column using a zero pivot. But then elimination gives a <b>zero row</b>, and rule 6 says the determinant is 0. Which is also what \(d_1d_2d_3\) gives. The formula survives.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Rule 8: zero determinant means singular</h3>
+
+    <div class="box theorem"><span class="label">The headline ★</span>
+      $$ \boxed{\det A = 0 \iff A \text{ is singular}} $$
+    </div>
+
+    <p>Both directions, and both go through elimination.</p>
+
+    <table class="sl-table">
+      <tr><th>If \(A\) is …</th><th>Elimination gives …</th><th>So the determinant is …</th></tr>
+      <tr><td><b>singular</b></td><td>a row of zeros (fewer than \(n\) pivots)</td><td>0, by rule 6</td></tr>
+      <tr><td><b>invertible</b></td><td>a full set of \(n\) non-zero pivots \(d_1, \dots, d_n\)</td><td>\(\pm d_1d_2\cdots d_n \ne 0\), by rules 5 and 7</td></tr>
+    </table>
+
+    <p>The \(\pm\) comes from counting row exchanges along the way, via rule 2.</p>
+
+    <p>Check against the \(2 \times 2\) you already knew: \(ad - bc = 0\) is exactly the condition for \(\begin{bmatrix} a&b \\ c&d \end{bmatrix}\) to be singular — it means the two rows are proportional.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. How it is actually computed</h3>
+
+    <p>Rules 5, 7 and 2 together give the method that every computer uses.</p>
+
+    <div class="box method"><span class="label">Method · determinant by elimination ★</span>
+      <ol>
+        <li>Run elimination on \(A\), using row exchanges when a pivot is zero.</li>
+        <li><b>Count the exchanges.</b> Each one contributes a factor of \(-1\).</li>
+        <li>Multiply the pivots on the diagonal of \(U\).</li>
+      </ol>
+      $$ \det A = (-1)^{\#\text{exchanges}} \times d_1 d_2 \cdots d_n $$
+    </div>
+
+    <h4>Worked in full</h4>
+
+    $$ A = \begin{bmatrix} 2 & 1 & 1 \\ 4 & -6 & 0 \\ -2 & 7 & 2 \end{bmatrix} $$
+
+    <p><b>Step 1 — pivot 2 in row 1.</b> Multiplier for row 2 is \(4/2 = 2\); for row 3 it is \(-2/2 = -1\).</p>
+
+    <ul>
+      <li>row 2 \(\leftarrow\) row 2 \(- 2\)row 1 \(= (4-4,\ -6-2,\ 0-2) = (0, -8, -2)\)</li>
+      <li>row 3 \(\leftarrow\) row 3 \(+ \)row 1 \(= (-2+2,\ 7+1,\ 2+1) = (0, 8, 3)\)</li>
+    </ul>
+
+    $$ \begin{bmatrix} 2 & 1 & 1 \\ 0 & -8 & -2 \\ 0 & 8 & 3 \end{bmatrix} $$
+
+    <p><b>Step 2 — pivot \(-8\) in row 2.</b> Multiplier for row 3 is \(8/(-8) = -1\), so add row 2.</p>
+
+    <ul>
+      <li>row 3 \(\leftarrow\) row 3 \(+\) row 2 \(= (0,\ 8-8,\ 3-2) = (0, 0, 1)\)</li>
+    </ul>
+
+    $$ U = \begin{bmatrix} 2 & 1 & 1 \\ 0 & -8 & -2 \\ 0 & 0 & 1 \end{bmatrix} $$
+
+    <p><b>Step 3 — multiply the pivots.</b> No exchanges were needed, so no sign change:</p>
+
+    $$ \det A = (2)(-8)(1) = \boxed{-16} $$
+
+    <p>Three pivots, all non-zero, so \(A\) is invertible ✓</p>
+
+    <h4>Where \(ad - bc\) comes from</h4>
+
+    <p>Run the same method on a general \(2\times2\). One elimination step with multiplier \(c/a\):</p>
+
+    $$ \begin{bmatrix} a & b \\ c & d \end{bmatrix} \longrightarrow \begin{bmatrix} a & b \\ 0 & d - \tfrac{c}{a}b \end{bmatrix} $$
+
+    $$ \det = a\left(d - \frac{c}{a}b\right) = ad - cb \qquad\checkmark $$
+
+    <p>The familiar formula is just "multiply the pivots" with the fractions cleared.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Rule 9: determinants multiply</h3>
+
+    $$ \boxed{\det(AB) = (\det A)(\det B)} $$
+
+    <p>Check it: \(A = \begin{bmatrix} 1&2 \\ 3&4 \end{bmatrix}\) with \(\det A = 4 - 6 = -2\), and \(B = \begin{bmatrix} 0&1 \\ 1&0 \end{bmatrix}\) with \(\det B = -1\).</p>
+
+    $$ AB = \begin{bmatrix} 2&1 \\ 4&3 \end{bmatrix}, \qquad \det(AB) = 6 - 4 = 2 = (-2)(-1) \qquad\checkmark $$
+
+    <div class="box pitfall"><span class="label">Products yes, sums no</span>
+      <p>\(\det(AB) = \det A\det B\) is true. \(\det(A+B) = \det A + \det B\) is false, as §4 showed. Determinants get on with multiplication and not with addition.</p>
+    </div>
+
+    <h4>Three consequences</h4>
+
+    <table class="sl-table">
+      <tr><th>Result</th><th>Derivation</th><th>Check</th></tr>
+      <tr><td>\(\det(A^{-1}) = \dfrac{1}{\det A}\)</td><td>\(A^{-1}A = I\), so \(\det(A^{-1})\det A = 1\)</td><td>needs \(\det A \ne 0\) — if \(A\) is singular there is no \(A^{-1}\)</td></tr>
+      <tr><td>\(\det(A^2) = (\det A)^2\)</td><td>rule 9 with \(B = A\)</td><td>and \(\det(A^k) = (\det A)^k\)</td></tr>
+      <tr><td>\(\det(tA) = t^n\det A\)</td><td>rule 3(a) once per row</td><td>for our \(3\times3\): \(\det(2A) = 8(-16) = -128\) ✓</td></tr>
+    </table>
+
+    <div class="box intuition"><span class="label">The last one is about volume</span>
+      <p>Double every side of a three-dimensional box and the volume goes up by \(2^3 = 8\), not by 2. The determinant behaves the same way, which is the first hint that \(|\det A|\) <b>is</b> a volume. Lesson 19 makes it exact.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t11">11. Rule 10: transposing changes nothing</h3>
+
+    $$ \boxed{\det A^T = \det A} $$
+
+    <p>For \(2 \times 2\): \(\begin{vmatrix} a&c \\ b&d \end{vmatrix} = ad - cb\), the same as \(ad - bc\) ✓</p>
+
+    <h4>The general argument</h4>
+
+    <p>Factor \(A = LU\) from Lesson 4. Then \(A^T = U^TL^T\), and rule 9 turns the claim into</p>
+
+    $$ |U^T||L^T| = |L||U| $$
+
+    <ul>
+      <li>\(L\) is lower triangular with <b>1</b>s on the diagonal, so by rule 7 \(|L| = 1\). And \(L^T\) is upper triangular with the same diagonal, so \(|L^T| = 1\) too.</li>
+      <li>\(U\) is upper triangular; \(U^T\) is lower triangular with the <b>same diagonal entries</b>. Rule 7 says both determinants are the product of that diagonal, so \(|U^T| = |U|\).</li>
+    </ul>
+
+    <p>Both sides come to \(|U|\) ✓</p>
+
+    <div class="box theorem"><span class="label">Why rule 10 doubles everything you know ★</span>
+      <p>Every row property becomes a column property, for free:</p>
+      <table class="sl-table">
+        <tr><th>Known for rows</th><th>Therefore true for columns</th></tr>
+        <tr><td>exchange flips the sign</td><td>exchanging two columns flips the sign</td></tr>
+        <tr><td>two equal rows give 0</td><td>two equal columns give 0</td></tr>
+        <tr><td>a zero row gives 0</td><td>a zero column gives 0</td></tr>
+        <tr><td>linear in each row</td><td>linear in each column</td></tr>
+        <tr><td>column elimination is legal too</td><td>subtracting a multiple of one column from another changes nothing</td></tr>
+      </table>
+    </div>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t12"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>The ten properties</h4>
+    <table class="sl-table">
+      <tr><th>#</th><th>Statement</th><th>Where it comes from</th></tr>
+      <tr><td>1</td><td>\(\det I = 1\)</td><td>assumed — fixes the scale</td></tr>
+      <tr><td>2</td><td>row exchange flips the sign</td><td>assumed — gives \(\det P = \pm1\)</td></tr>
+      <tr><td>3a</td><td>\(\det\) is multiplied by \(t\) if one row is</td><td>assumed</td></tr>
+      <tr><td>3b</td><td>\(\det\) splits if one row splits</td><td>assumed</td></tr>
+      <tr><td>4</td><td>equal rows \(\Rightarrow 0\)</td><td>swap them: \(d = -d\)</td></tr>
+      <tr><td>5</td><td>elimination changes nothing</td><td>split the row (3b), factor out \(t\) (3a), kill it (4)</td></tr>
+      <tr><td>6</td><td>a zero row \(\Rightarrow 0\)</td><td>3(a) with \(t = 0\)</td></tr>
+      <tr><td>7</td><td>triangular \(\Rightarrow\) product of the diagonal</td><td>5, then 3(a) per row, then 1</td></tr>
+      <tr><td>8</td><td>\(\det A = 0 \iff\) singular</td><td>elimination gives a zero row, or \(n\) pivots</td></tr>
+      <tr><td>9</td><td>\(\det(AB) = \det A\det B\)</td><td>stated; gives \(\det A^{-1} = 1/\det A\)</td></tr>
+      <tr><td>10</td><td>\(\det A^T = \det A\)</td><td>\(A = LU\) and rule 9</td></tr>
+    </table>
+
+    <h4>Traps</h4>
+    <table class="sl-table">
+      <tr><th>Wrong</th><th>Right</th></tr>
+      <tr><td>\(\det(A+B) = \det A + \det B\)</td><td>no such rule — rule 3 changes <i>one row</i></td></tr>
+      <tr><td>\(\det(tA) = t\det A\)</td><td>\(\det(tA) = t^n\det A\)</td></tr>
+      <tr><td>"linear" means linear in the matrix</td><td>linear in each row, others held fixed</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>Three rules generate everything ★</b><span>Rules 4 to 8 were all derived, not assumed. That is why the three can define the determinant.</span></li>
+      <li><b>Rule 5 is the workhorse</b><span>Because elimination leaves the determinant alone, computing it costs the same as solving a system.</span></li>
+      <li><b>Rule 8 is the point</b><span>Invertibility, which used to need a full elimination to settle, becomes "is this number zero?".</span></li>
+      <li><b>Linear in each row — count the rows ★</b><span>Every mistake with \(\det(tA)\) comes from forgetting the rule applies \(n\) separate times.</span></li>
+      <li><b>Rule 10 is a two-for-one</b><span>Prove something about rows and you have proved it about columns.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>We have properties but still no formula. The next lesson pushes rule 3 to its limit — splitting every row into its individual entries — and out falls the <b>big formula</b> with its \(n!\) terms, then the much more usable <b>cofactor</b> version that computes an \(n \times n\) determinant from \((n-1) \times (n-1)\) ones.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

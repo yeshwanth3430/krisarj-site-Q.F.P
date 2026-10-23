@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Determinant Formulas and Cofactors · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Deriving the determinant by splitting every row into single entries: only permutation patterns survive, giving the big formula with n factorial terms, then the cofactor formula that reduces an n by n determinant to smaller ones.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="18_determinant-formulas-and-cofactors">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Determinant Formulas and Cofactors</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 18</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 18 (MIT 18.06, Lecture 18)</p>
+  <h1>Determinant Formulas and Cofactors</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Push rule 3 to its limit and a formula falls out. Then make it usable.}} $$</p>
+      <p>Lesson 17 gave ten properties and no formula. This lesson gets two. The <b>big formula</b> has \(n!\) terms and explains where the determinant comes from. The <b>cofactor formula</b> reduces an \(n \times n\) determinant to \(n\) smaller ones, and is what you would actually compute by hand.</p>
+    </div>
+
+    <div class="box method"><span class="label">Three ways to get a determinant ★</span>
+      <table class="sl-table">
+        <tr><th>Method</th><th>Cost</th><th>Use it when</th></tr>
+        <tr><td><b>Elimination</b> — multiply the pivots</td><td>about \(n^3/3\) operations</td><td>always, for anything large; this is what computers do</td></tr>
+        <tr><td><b>Big formula</b> — \(\sum \pm a_{1\alpha}a_{2\beta}\cdots\)</td><td>\(n!\) terms</td><td>understanding, and matrices with many zeros</td></tr>
+        <tr><td><b>Cofactors</b> — expand along a row</td><td>\(n\) smaller determinants</td><td>small matrices, or a row with mostly zeros</td></tr>
+      </table>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Splitting the rows</a></li>
+        <li><a href="#t2">The 2 by 2 case, in full</a></li>
+        <li><a href="#t3">The 3 by 3 case</a></li>
+        <li><a href="#t4">Which pieces survive</a></li>
+        <li><a href="#t5">Counting the terms</a></li>
+        <li><a href="#t6">The big formula</a></li>
+        <li><a href="#t7">A worked big-formula example</a></li>
+        <li><a href="#t8">Cofactors</a></li>
+        <li><a href="#t9">The cofactor formula, worked</a></li>
+        <li><a href="#t10">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Splitting the rows</a><span>Rule 3(b) used over and over, one entry at a time.</span></li>
+      <li><a href="#t2">The 2 by 2 case, in full</a><span>Four pieces, two survive, and \(ad - bc\) appears.</span></li>
+      <li><a href="#t3">The 3 by 3 case</a><span>27 pieces, 6 survive, giving the six-term formula.</span></li>
+      <li><a href="#t4">Which pieces survive ★</a><span>Only one entry per row <i>and</i> per column — a permutation.</span></li>
+      <li><a href="#t5">Counting the terms</a><span>\(n\) choices, then \(n-1\), then \(n-2\): \(n!\) in all.</span></li>
+      <li><a href="#t6">The big formula ★</a><span>A sum over permutations, with a sign from row exchanges.</span></li>
+      <li><a href="#t7">A worked big-formula example</a><span>A 4 by 4 with only two surviving terms — and they cancel.</span></li>
+      <li><a href="#t8">Cofactors ★</a><span>Group the terms by the entry they use from row 1.</span></li>
+      <li><a href="#t9">The cofactor formula, worked</a><span>Along a row, then along a column, same answer.</span></li>
+      <li><a href="#t10">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Splitting the rows</h3>
+
+    <p>Rule 3(b) says a determinant splits when one row splits. Nothing stops us from splitting a row all the way down to its individual entries:</p>
+
+    $$ \begin{bmatrix} a & b \end{bmatrix} = \begin{bmatrix} a & 0 \end{bmatrix} + \begin{bmatrix} 0 & b \end{bmatrix} $$
+
+    <p>Do that to every row, and the determinant becomes a sum of determinants of very sparse matrices — each with at most one non-zero entry per row. Those are easy. That is the whole derivation.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The 2 by 2 case, in full</h3>
+
+    <p>Split row 1:</p>
+
+    $$ \begin{vmatrix} a & b \\ c & d \end{vmatrix} = \begin{vmatrix} a & 0 \\ c & d \end{vmatrix} + \begin{vmatrix} 0 & b \\ c & d \end{vmatrix} $$
+
+    <p>Now split row 2 in each of those — \(2 \times 2 = 4\) pieces:</p>
+
+    $$ = \begin{vmatrix} a & 0 \\ c & 0 \end{vmatrix} + \begin{vmatrix} a & 0 \\ 0 & d \end{vmatrix}
+       + \begin{vmatrix} 0 & b \\ c & 0 \end{vmatrix} + \begin{vmatrix} 0 & b \\ 0 & d \end{vmatrix} $$
+
+    <p>Evaluate each with the rules from Lesson 17:</p>
+
+    <table class="sl-table">
+      <tr><th>Piece</th><th>Value</th><th>Reason</th></tr>
+      <tr><td>\(\begin{vmatrix} a&0 \\ c&0 \end{vmatrix}\)</td><td>0</td><td>column 2 is all zeros (rule 6, via rule 10)</td></tr>
+      <tr><td>\(\begin{vmatrix} a&0 \\ 0&d \end{vmatrix}\)</td><td>\(ad\)</td><td>diagonal — product of the diagonal (rule 7)</td></tr>
+      <tr><td>\(\begin{vmatrix} 0&b \\ c&0 \end{vmatrix}\)</td><td>\(-cb\)</td><td>swap the rows to get \(\begin{vmatrix} c&0 \\ 0&b \end{vmatrix} = cb\), then flip the sign (rule 2)</td></tr>
+      <tr><td>\(\begin{vmatrix} 0&b \\ 0&d \end{vmatrix}\)</td><td>0</td><td>column 1 is all zeros</td></tr>
+    </table>
+
+    $$ 0 + ad - cb + 0 = \boxed{ad - bc} \qquad\checkmark $$
+
+    <p>The formula you have used since Lesson 1, derived from the three rules.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. The 3 by 3 case</h3>
+
+    <p>Three rows, three ways to split each: \(3 \times 3 \times 3 = 27\) pieces. Most are zero. Only <b>six</b> survive, and here they are:</p>
+
+    $$ \begin{vmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{vmatrix}
+       = \begin{aligned}[t] &+ a_{11}a_{22}a_{33} - a_{11}a_{23}a_{32} \\ &- a_{12}a_{21}a_{33} + a_{12}a_{23}a_{31} \\ &+ a_{13}a_{21}a_{32} - a_{13}a_{22}a_{31} \end{aligned} $$
+
+    <p>Six terms, three positive and three negative. Each uses one entry from each row, with the column indices \((1,2,3)\) shuffled a different way every time.</p>
+
+    <div class="box intuition"><span class="label">A memory aid — and its limit</span>
+      <p>Write the first two columns again to the right of the matrix. The three diagonals running <b>down-right</b> give the positive terms; the three running <b>down-left</b> give the negative ones.</p>
+      <p><b>This only works for \(3 \times 3\).</b> For \(4 \times 4\) it produces 6 of the 24 terms and gets the signs wrong. Do not carry it upward.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. Which pieces survive</h3>
+
+    <p>Why only 6 out of 27? Because of a single rule.</p>
+
+    <div class="box theorem"><span class="label">The survival condition ★</span>
+      <p>A piece has one non-zero entry per <b>row</b> by construction. If two of those entries sit in the same <b>column</b>, then some other column is entirely zero, and rule 6 kills it.</p>
+      $$ \boxed{\text{a piece survives} \iff \text{one entry in each row \textbf{and} each column}} $$
+      <p>A pattern with one entry in every row and every column is exactly a <b>permutation matrix</b> pattern. And Lesson 17 told us a permutation matrix has determinant \(\pm1\) — which is where the signs come from.</p>
+    </div>
+
+    <p>So each surviving piece is (product of the chosen entries) × (\(\pm1\) from its permutation), and the sign is \(+\) for an even number of row exchanges and \(-\) for an odd number.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Counting the terms</h3>
+
+    <p>Build a surviving pattern by choosing a column for each row in turn:</p>
+
+    <table class="sl-table">
+      <tr><th>Row</th><th>Columns still available</th></tr>
+      <tr><td>1</td><td>\(n\)</td></tr>
+      <tr><td>2</td><td>\(n-1\) — the first row's column is taken</td></tr>
+      <tr><td>3</td><td>\(n-2\)</td></tr>
+      <tr><td>\(\vdots\)</td><td>\(\vdots\)</td></tr>
+      <tr><td>\(n\)</td><td>1</td></tr>
+    </table>
+
+    $$ \boxed{n \times (n-1) \times (n-2) \times \cdots \times 1 = n!} $$
+
+    <table class="sl-table">
+      <tr><th>\(n\)</th><th>pieces split into</th><th>terms that survive</th></tr>
+      <tr><td>2</td><td>\(2^2 = 4\)</td><td>\(2! = 2\)</td></tr>
+      <tr><td>3</td><td>\(3^3 = 27\)</td><td>\(3! = 6\)</td></tr>
+      <tr><td>4</td><td>\(4^4 = 256\)</td><td>\(4! = 24\)</td></tr>
+      <tr><td>10</td><td>\(10^{10}\)</td><td>\(10! = 3{,}628{,}800\)</td></tr>
+    </table>
+
+    <p>Which is precisely why nobody computes determinants this way. Elimination costs about \(n^3/3\) operations — for \(n = 10\) that is roughly 300, against three and a half million.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. The big formula</h3>
+
+    <div class="box theorem"><span class="label">The big formula ★</span>
+      $$ \boxed{\det A = \sum_{n! \text{ terms}} \pm\, a_{1\alpha}a_{2\beta}a_{3\gamma}\cdots a_{n\omega}} $$
+      <p>where \((\alpha, \beta, \gamma, \dots, \omega)\) runs over every permutation of \((1, 2, \dots, n)\), and the sign is \(+\) if that permutation can be sorted back to \((1,2,\dots,n)\) with an <b>even</b> number of exchanges, \(-\) if odd.</p>
+    </div>
+
+    <h4>Test it on the identity</h4>
+
+    <p>For \(I\), \(a_{ij} = 0\) unless \(i = j\). So a term survives only if \(\alpha = 1, \beta = 2, \dots, \omega = n\) — the identity permutation, needing zero exchanges, so sign \(+\). Its product is \(1 \times 1 \times \cdots \times 1 = 1\).</p>
+
+    $$ \det I = 1 \qquad\checkmark $$
+
+    <p>Rule 1 falls out of the formula, as it must.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. A worked big-formula example</h3>
+
+    <p>The formula earns its keep on sparse matrices, where nearly every term is zero.</p>
+
+    $$ A = \begin{bmatrix} 0&0&1&1 \\ 0&1&1&0 \\ 1&1&0&0 \\ 1&0&0&1 \end{bmatrix} $$
+
+    <p>24 terms in principle. Hunt for the ones that are not zero — a choice of one non-zero entry from each row, no two in the same column.</p>
+
+    <h4>Term 1 — the anti-diagonal</h4>
+
+    <p>Take \(a_{14}, a_{23}, a_{32}, a_{41}\): all equal 1 ✓ and the columns \((4,3,2,1)\) are all different ✓.</p>
+
+    <table class="sl-table">
+      <tr><th>Step</th><th>Permutation</th></tr>
+      <tr><td>start</td><td>\((4,3,2,1)\)</td></tr>
+      <tr><td>exchange positions 1 and 4</td><td>\((1,3,2,4)\)</td></tr>
+      <tr><td>exchange positions 2 and 3</td><td>\((1,2,3,4)\)</td></tr>
+    </table>
+
+    <p><b>Two</b> exchanges — even — so the sign is \(+\). Contribution: \(+1 \times 1 \times 1 \times 1 = +1\).</p>
+
+    <h4>Term 2 — the permutation (3,2,1,4)</h4>
+
+    <p>Take \(a_{13}, a_{22}, a_{31}, a_{44}\): all 1 ✓, columns \((3,2,1,4)\) all different ✓.</p>
+
+    <p>Sorting \((3,2,1,4)\) needs a single exchange of the 1st and 3rd entries. <b>One</b> exchange — odd — so the sign is \(-\). Contribution: \(-1\).</p>
+
+    <h4>Nothing else survives</h4>
+
+    <p>Row 1 can only use column 3 or 4. Row 4 can only use column 1 or 4. Working through the four combinations, only the two above leave rows 2 and 3 with legal choices.</p>
+
+    $$ \det A = (+1) + (-1) = \boxed{0} $$
+
+    <h4>Confirm it another way</h4>
+
+    <p>A zero determinant means the rows are dependent. They are:</p>
+
+    $$ \text{row 1} - \text{row 2} + \text{row 3} - \text{row 4} $$
+
+    <p>Column by column: \(0-0+1-1 = 0\) ✓, \(\;0-1+1-0 = 0\) ✓, \(\;1-1+0-0 = 0\) ✓, \(\;1-0+0-1 = 0\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. Cofactors</h3>
+
+    <p>The big formula is unusable as written. Cofactors organise it.</p>
+
+    <p>Go back to the six \(3 \times 3\) terms and group them by which entry of row 1 they use:</p>
+
+    $$ \det A = a_{11}\underbrace{(a_{22}a_{33} - a_{23}a_{32})}_{\text{a } 2\times2 \text{ determinant}}
+      + a_{12}\underbrace{(-a_{21}a_{33} + a_{23}a_{31})}_{\text{another one}}
+      + a_{13}\underbrace{(a_{21}a_{32} - a_{22}a_{31})}_{\text{and another}} $$
+
+    <p>Each bracket is the determinant of what is left after deleting row 1 and the relevant column — with a sign attached.</p>
+
+    <div class="box definition"><span class="label">Definition · minor and cofactor ★</span>
+      <p>The <b>minor</b> \(M_{ij}\) is the determinant of the \((n-1) \times (n-1)\) matrix you get by <b>deleting row \(i\) and column \(j\)</b>.</p>
+      <p>The <b>cofactor</b> attaches a sign:</p>
+      $$ \boxed{C_{ij} = (-1)^{i+j} M_{ij}} $$
+    </div>
+
+    <p>The signs form a checkerboard — \(+\) wherever \(i+j\) is even:</p>
+
+    $$ \begin{bmatrix} + & - & + \\ - & + & - \\ + & - & + \end{bmatrix} $$
+
+    <div class="box theorem"><span class="label">The cofactor formula ★</span>
+      <p>Expand along <b>any</b> row \(i\):</p>
+      $$ \boxed{\det A = a_{i1}C_{i1} + a_{i2}C_{i2} + \dots + a_{in}C_{in}} $$
+      <p>Or down any column \(j\), which works equally well because \(\det A^T = \det A\):</p>
+      $$ \det A = a_{1j}C_{1j} + a_{2j}C_{2j} + \dots + a_{nj}C_{nj} $$
+    </div>
+
+    <div class="box intuition"><span class="label">Choose the emptiest line</span>
+      <p>Every zero entry kills a whole term. Expanding along a row with three zeros out of four leaves one determinant to compute instead of four. Always scan for the row or column with the most zeros before starting.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. The cofactor formula, worked</h3>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{bmatrix} $$
+
+    <h4>Along row 1</h4>
+
+    <table class="sl-table">
+      <tr><th>\(j\)</th><th>\(a_{1j}\)</th><th>Delete row 1, column \(j\)</th><th>Minor \(M_{1j}\)</th><th>Sign</th><th>\(a_{1j}C_{1j}\)</th></tr>
+      <tr><td>1</td><td>1</td><td>\(\begin{bmatrix} 1&4 \\ 6&0 \end{bmatrix}\)</td><td>\(0 - 24 = -24\)</td><td>\(+\)</td><td>\(-24\)</td></tr>
+      <tr><td>2</td><td>2</td><td>\(\begin{bmatrix} 0&4 \\ 5&0 \end{bmatrix}\)</td><td>\(0 - 20 = -20\)</td><td>\(-\)</td><td>\(2 \times 20 = 40\)</td></tr>
+      <tr><td>3</td><td>3</td><td>\(\begin{bmatrix} 0&1 \\ 5&6 \end{bmatrix}\)</td><td>\(0 - 5 = -5\)</td><td>\(+\)</td><td>\(3 \times (-5) = -15\)</td></tr>
+    </table>
+
+    $$ \det A = -24 + 40 - 15 = \boxed{1} $$
+
+    <h4>Down column 1 — same answer, less work</h4>
+
+    <p>Column 1 is \((1, 0, 5)\), and the middle zero removes a whole term.</p>
+
+    <table class="sl-table">
+      <tr><th>\(i\)</th><th>\(a_{i1}\)</th><th>Minor \(M_{i1}\)</th><th>Sign</th><th>\(a_{i1}C_{i1}\)</th></tr>
+      <tr><td>1</td><td>1</td><td>\(\begin{vmatrix} 1&4 \\ 6&0 \end{vmatrix} = -24\)</td><td>\(+\)</td><td>\(-24\)</td></tr>
+      <tr><td>2</td><td>0</td><td>—</td><td>\(-\)</td><td>\(0\)</td></tr>
+      <tr><td>3</td><td>5</td><td>\(\begin{vmatrix} 2&3 \\ 1&4 \end{vmatrix} = 8 - 3 = 5\)</td><td>\(+\)</td><td>\(25\)</td></tr>
+    </table>
+
+    $$ \det A = -24 + 0 + 25 = \boxed{1} \qquad\checkmark $$
+
+    <h4>Cross-check with the big formula</h4>
+
+    <p>Six terms, of which three are zero because \(a_{21} = 0\) or \(a_{33} = 0\):</p>
+
+    <table class="sl-table">
+      <tr><th>Permutation</th><th>Sign</th><th>Product</th><th>Value</th></tr>
+      <tr><td>\((1,2,3)\)</td><td>\(+\)</td><td>\(a_{11}a_{22}a_{33} = (1)(1)(0)\)</td><td>0</td></tr>
+      <tr><td>\((1,3,2)\)</td><td>\(-\)</td><td>\(a_{11}a_{23}a_{32} = (1)(4)(6)\)</td><td>\(-24\)</td></tr>
+      <tr><td>\((2,1,3)\)</td><td>\(-\)</td><td>\(a_{12}a_{21}a_{33} = (2)(0)(0)\)</td><td>0</td></tr>
+      <tr><td>\((2,3,1)\)</td><td>\(+\)</td><td>\(a_{12}a_{23}a_{31} = (2)(4)(5)\)</td><td>\(+40\)</td></tr>
+      <tr><td>\((3,1,2)\)</td><td>\(+\)</td><td>\(a_{13}a_{21}a_{32} = (3)(0)(6)\)</td><td>0</td></tr>
+      <tr><td>\((3,2,1)\)</td><td>\(-\)</td><td>\(a_{13}a_{22}a_{31} = (3)(1)(5)\)</td><td>\(-15\)</td></tr>
+    </table>
+
+    <p>Total: \(-24 + 40 - 15 = 1\) ✓ — and notice the three non-zero terms are exactly the three products in the row-1 cofactor expansion. The two formulas are the same sum, grouped differently.</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t10"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The derivation ★</b></td><td>Split every row into single entries. Pieces with two entries in one column die; the rest are permutations.</td></tr>
+      <tr><td><b>Survival rule</b></td><td>One entry per row <b>and</b> per column. That is a permutation matrix pattern, so the sign is \(\pm1\).</td></tr>
+      <tr><td><b>How many terms</b></td><td>\(n!\). \(n\) choices, then \(n-1\), then \(n-2\), …</td></tr>
+      <tr><td><b>The big formula ★</b></td><td>\(\det A = \sum \pm a_{1\alpha}a_{2\beta}\cdots a_{n\omega}\) over all permutations.</td></tr>
+      <tr><td><b>The sign</b></td><td>\(+\) for an even number of exchanges to sort the permutation, \(-\) for odd.</td></tr>
+      <tr><td><b>3 by 3</b></td><td>Six terms: \(a_{11}a_{22}a_{33} - a_{11}a_{23}a_{32} - a_{12}a_{21}a_{33} + a_{12}a_{23}a_{31} + a_{13}a_{21}a_{32} - a_{13}a_{22}a_{31}\).</td></tr>
+      <tr><td><b>The diagonal trick</b></td><td>Down-right positive, down-left negative — <b>3 by 3 only</b>.</td></tr>
+      <tr><td><b>Minor</b></td><td>\(M_{ij}\): delete row \(i\) and column \(j\), take the determinant of what is left.</td></tr>
+      <tr><td><b>Cofactor ★</b></td><td>\(C_{ij} = (-1)^{i+j}M_{ij}\). The signs are a checkerboard starting \(+\) at the top left.</td></tr>
+      <tr><td><b>Cofactor formula ★</b></td><td>\(\det A = a_{i1}C_{i1} + \dots + a_{in}C_{in}\), along any row or any column.</td></tr>
+      <tr><td><b>In practice</b></td><td>Expand along whichever row or column has the most zeros — or just eliminate and multiply the pivots.</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>The formula was not invented, it was forced ★</b><span>Splitting rows is the only thing rule 3 lets you do, and the permutation structure is the only thing that survives.</span></li>
+      <li><b>\(n!\) is a warning, not a method</b><span>It explains the determinant; it does not compute it. Elimination is \(n^3/3\).</span></li>
+      <li><b>Cofactors are the big formula, regrouped</b><span>Collect the terms by their row-1 entry and each group is a smaller determinant.</span></li>
+      <li><b>The checkerboard is \((-1)^{i+j}\)</b><span>Not a convention someone chose — it comes from counting the exchanges needed to move that entry onto the diagonal.</span></li>
+      <li><b>Zeros are free</b><span>Every zero removes a whole branch, which is why sparse matrices are so much cheaper.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Two formulas in hand, the next lesson spends them. Cofactors give an explicit formula for \(A^{-1}\); that gives <b>Cramer's rule</b>, a determinant formula for every component of the solution to \(Ax = b\); and then the geometric meaning arrives — \(|\det A|\) is the <b>volume</b> of the box built from the columns of \(A\).</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>

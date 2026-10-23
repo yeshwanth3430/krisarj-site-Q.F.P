@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cramer's Rule, Inverse Matrix and Volume · Linear Algebra · Quant from First Principles</title>
+<meta name="description" content="Three uses of the determinant: the inverse as the transposed cofactor matrix over det A, proved from A C-transpose equals det A times I; Cramer's rule for each component of x; and the determinant as the volume of the box built on the columns.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="../assets/notebook.css?v=10">
+<link rel="stylesheet" href="../assets/site.css?v=5">
+<script src="../assets/notebook.js?v=4"></script>
+<style>
+.tabs .backto { display: block; font: 600 11px/1 var(--mono); letter-spacing: .06em; color: var(--ink-soft);
+  text-decoration: none; padding: 6px 12px 12px; }
+.tabs .backto:hover { color: var(--accent); }
+@media (min-width: 861px) { main.page.tabbed { min-height: calc(100vh - 150px); } }
+</style>
+</head>
+<body data-lesson="19_cramers-rule-inverse-matrix-and-volume">
+<header class="topbar">
+  <div class="crumbs"><a href="../index.html">Quant from First Principles</a> / <a href="index.html">Linear Algebra</a> / <b>Cramer's Rule, Inverse Matrix, Volume</b></div>
+  <button class="theme-btn" onclick="toggleTheme()" aria-label="Toggle dark mode">◐</button>
+</header>
+<main class="page tabbed">
+  <nav class="tabs" role="tablist" aria-label="Lesson sections">
+    <a class="backto" href="index.html">← All lessons</a>
+    <span class="tabs-title">Lesson 19</span>
+    <button role="tab" data-tab="notes" aria-selected="true">Notes</button>
+  </nav>
+  <div class="tab-body">
+  <p class="meta">Linear Algebra · Lesson 19 (MIT 18.06, Lecture 19)</p>
+  <h1>Cramer's Rule, Inverse Matrix and Volume</h1>
+
+  <section class="tab-panel" data-panel="notes">
+  <div class="notes">
+    <div class="box definition"><span class="label">What we are solving</span>
+      <p>$$ \boxed{\text{Three uses for the determinant: an inverse, a solution, and a volume.}} $$</p>
+      <p>Lessons 17 and 18 built the determinant. This lesson spends it. Cofactors give an explicit formula for \(A^{-1}\); that formula gives <b>Cramer's rule</b> for every component of \(x\); and then the geometry arrives — \(|\det A|\) is the <b>volume</b> of the box whose edges are the columns of \(A\).</p>
+    </div>
+
+    <div class="box method"><span class="label">The three results ★</span>
+      <table class="sl-table">
+        <tr><th>Result</th><th>Formula</th><th>Good for</th></tr>
+        <tr><td>the inverse</td><td>\(A^{-1} = \dfrac{1}{\det A}C^T\)</td><td>seeing <i>how</i> the inverse depends on the entries</td></tr>
+        <tr><td>Cramer's rule</td><td>\(x_j = \dfrac{\det B_j}{\det A}\)</td><td>one component without computing the rest</td></tr>
+        <tr><td>volume</td><td>\(\text{volume} = |\det A|\)</td><td>everything geometric that follows</td></tr>
+      </table>
+      <p>All three are <b>slower than elimination</b> for actually computing numbers. They are here for what they explain.</p>
+    </div>
+
+    <nav class="contents"><span class="label">Contents</span>
+      <ol>
+        <li><a href="#t1">Guessing the formula from 2 by 2</a></li>
+        <li><a href="#t2">The cofactor matrix</a></li>
+        <li><a href="#t3">Why the formula works</a></li>
+        <li><a href="#t4">A worked 3 by 3 inverse</a></li>
+        <li><a href="#t5">Cramer's rule</a></li>
+        <li><a href="#t6">Cramer worked, 2 by 2 and 3 by 3</a></li>
+        <li><a href="#t7">Is Cramer's rule any good?</a></li>
+        <li><a href="#t8">The determinant is a volume</a></li>
+        <li><a href="#t9">Checking volume against the three rules</a></li>
+        <li><a href="#t10">Area of a triangle</a></li>
+        <li><a href="#t11">Summary</a></li>
+      </ol>
+    </nav>
+
+    <h2 class="part" id="index"><span class="part-n">Part 1</span> What this lecture covers</h2>
+    <ol class="index-list">
+      <li><a href="#t1">Guessing the formula from 2 by 2</a><span>The familiar inverse already shows cofactors and a transpose.</span></li>
+      <li><a href="#t2">The cofactor matrix</a><span>\(C\), and why \(A^{-1}\) uses \(C^T\) rather than \(C\).</span></li>
+      <li><a href="#t3">Why the formula works ★</a><span>\(AC^T = (\det A)I\): the diagonal is a cofactor expansion, the rest is a matrix with two equal rows.</span></li>
+      <li><a href="#t4">A worked 3 by 3 inverse</a><span>Nine cofactors, the transpose, and the check.</span></li>
+      <li><a href="#t5">Cramer's rule ★</a><span>Replace a column by \(b\), take the determinant, divide.</span></li>
+      <li><a href="#t6">Cramer worked, 2 by 2 and 3 by 3</a><span>Every determinant computed, every answer checked.</span></li>
+      <li><a href="#t7">Is Cramer's rule any good?</a><span>Honest answer: not for computing. Useful for seeing.</span></li>
+      <li><a href="#t8">The determinant is a volume ★</a><span>\(|\det A|\) is the volume of the box built on the columns.</span></li>
+      <li><a href="#t9">Checking volume against the three rules</a><span>If volume obeys rules 1, 2 and 3, it <i>is</i> the determinant.</span></li>
+      <li><a href="#t10">Area of a triangle</a><span>Half the determinant, and the version with no origin.</span></li>
+      <li><a href="#t11">Summary</a><span>Everything on one screen, what he emphasised, and what comes next.</span></li>
+    </ol>
+
+    <h2 class="part" id="body"><span class="part-n">Part 2</span> The lecture</h2>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t1">1. Guessing the formula from 2 by 2</h3>
+
+    <p>You already know this one:</p>
+
+    $$ \begin{bmatrix} a & b \\ c & d \end{bmatrix}^{-1} = \frac{1}{ad - bc}\begin{bmatrix} d & -b \\ -c & a \end{bmatrix} $$
+
+    <p>Look at what is in it:</p>
+
+    <ul>
+      <li><b>\(\dfrac{1}{\det A}\) out front</b> — so a determinant divides.</li>
+      <li><b>The entries \(d, -b, -c, a\)</b> — each of these is a \(1 \times 1\) minor with a checkerboard sign. They are the <b>cofactors</b> of \(A\).</li>
+    </ul>
+
+    <p>So the guess is: \(A^{-1}\) is the cofactor matrix divided by \(\det A\). That is nearly right — one thing is missing, and §2 finds it.</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t2">2. The cofactor matrix</h3>
+
+    <p>Build \(C\) by putting the cofactor \(C_{ij} = (-1)^{i+j}M_{ij}\) in position \((i,j)\). For a \(2 \times 2\):</p>
+
+    <table class="sl-table">
+      <tr><th>Position</th><th>Delete</th><th>Minor</th><th>Sign</th><th>Cofactor</th></tr>
+      <tr><td>\((1,1)\)</td><td>row 1, col 1</td><td>\(d\)</td><td>\(+\)</td><td>\(d\)</td></tr>
+      <tr><td>\((1,2)\)</td><td>row 1, col 2</td><td>\(c\)</td><td>\(-\)</td><td>\(-c\)</td></tr>
+      <tr><td>\((2,1)\)</td><td>row 2, col 1</td><td>\(b\)</td><td>\(-\)</td><td>\(-b\)</td></tr>
+      <tr><td>\((2,2)\)</td><td>row 2, col 2</td><td>\(a\)</td><td>\(+\)</td><td>\(a\)</td></tr>
+    </table>
+
+    $$ C = \begin{bmatrix} d & -c \\ -b & a \end{bmatrix} $$
+
+    <p>Compare with the known inverse, which had \(\begin{bmatrix} d & -b \\ -c & a \end{bmatrix}\). The off-diagonal entries are swapped — so the formula needs \(C^T\), not \(C\).</p>
+
+    <div class="box theorem"><span class="label">The inverse formula ★</span>
+      $$ \boxed{A^{-1} = \frac{1}{\det A}\,C^T} $$
+      <p><b>Mind the transpose.</b> The cofactors of row 1 of \(A\) go into <b>column</b> 1 of \(A^{-1}\). (\(C^T\) is sometimes called the <i>adjugate</i> of \(A\).)</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t3">3. Why the formula works</h3>
+
+    <p>To prove the formula it is enough to show</p>
+
+    $$ \boxed{AC^T = (\det A)\,I} $$
+
+    <p>because dividing both sides by \(\det A\) then gives \(A \cdot \tfrac{1}{\det A}C^T = I\). Two things to check: the diagonal and the off-diagonal.</p>
+
+    <h4>The diagonal entries are all \(\det A\)</h4>
+
+    <p>Entry \((1,1)\) of \(AC^T\) is row 1 of \(A\) dotted with column 1 of \(C^T\) — which is row 1 of \(C\):</p>
+
+    $$ \sum_{j=1}^{n} a_{1j}C_{1j} = \det A $$
+
+    <p>That is exactly the cofactor expansion along row 1 from Lesson 18. The same happens in every diagonal position, using row \(i\) each time ✓</p>
+
+    <h4>The off-diagonal entries are all zero</h4>
+
+    <p>Entry \((1,2)\) is row 1 of \(A\) dotted with row <b>2</b> of \(C\) — the entries of one row against the cofactors of a different one. Check it on the \(2 \times 2\):</p>
+
+    $$ a(-b) + b(a) = 0 \qquad\checkmark $$
+
+    <div class="box intuition"><span class="label">What that zero really is ★</span>
+      <p>\(a(-b) + b(a)\) is the cofactor expansion of</p>
+      $$ \begin{vmatrix} a & b \\ a & b \end{vmatrix} $$
+      <p>— a matrix with <b>two equal rows</b>, whose determinant is 0 by rule 4.</p>
+      <p>That is the general pattern: mixing row \(i\) of \(A\) with the cofactors of row \(k\) computes the determinant of \(A\) with row \(k\) <i>replaced by a copy of row \(i\)</i>. Two equal rows, so zero, every time.</p>
+    </div>
+
+    <p>Diagonal \(\det A\), off-diagonal 0 — that is \((\det A)I\) ✓</p>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t4">4. A worked 3 by 3 inverse</h3>
+
+    $$ A = \begin{bmatrix} 1 & 2 & 3 \\ 0 & 1 & 4 \\ 5 & 6 & 0 \end{bmatrix}, \qquad \det A = 1 \ \text{(from Lesson 18)} $$
+
+    <p>Nine cofactors. Each is a \(2 \times 2\) determinant with a checkerboard sign.</p>
+
+    <table class="sl-table">
+      <tr><th>\(C_{ij}\)</th><th>Minor matrix</th><th>Minor</th><th>Sign</th><th>Cofactor</th></tr>
+      <tr><td>\(C_{11}\)</td><td>\(\begin{bmatrix} 1&4 \\ 6&0 \end{bmatrix}\)</td><td>\(0-24 = -24\)</td><td>\(+\)</td><td>\(-24\)</td></tr>
+      <tr><td>\(C_{12}\)</td><td>\(\begin{bmatrix} 0&4 \\ 5&0 \end{bmatrix}\)</td><td>\(0-20 = -20\)</td><td>\(-\)</td><td>\(20\)</td></tr>
+      <tr><td>\(C_{13}\)</td><td>\(\begin{bmatrix} 0&1 \\ 5&6 \end{bmatrix}\)</td><td>\(0-5 = -5\)</td><td>\(+\)</td><td>\(-5\)</td></tr>
+      <tr><td>\(C_{21}\)</td><td>\(\begin{bmatrix} 2&3 \\ 6&0 \end{bmatrix}\)</td><td>\(0-18 = -18\)</td><td>\(-\)</td><td>\(18\)</td></tr>
+      <tr><td>\(C_{22}\)</td><td>\(\begin{bmatrix} 1&3 \\ 5&0 \end{bmatrix}\)</td><td>\(0-15 = -15\)</td><td>\(+\)</td><td>\(-15\)</td></tr>
+      <tr><td>\(C_{23}\)</td><td>\(\begin{bmatrix} 1&2 \\ 5&6 \end{bmatrix}\)</td><td>\(6-10 = -4\)</td><td>\(-\)</td><td>\(4\)</td></tr>
+      <tr><td>\(C_{31}\)</td><td>\(\begin{bmatrix} 2&3 \\ 1&4 \end{bmatrix}\)</td><td>\(8-3 = 5\)</td><td>\(+\)</td><td>\(5\)</td></tr>
+      <tr><td>\(C_{32}\)</td><td>\(\begin{bmatrix} 1&3 \\ 0&4 \end{bmatrix}\)</td><td>\(4-0 = 4\)</td><td>\(-\)</td><td>\(-4\)</td></tr>
+      <tr><td>\(C_{33}\)</td><td>\(\begin{bmatrix} 1&2 \\ 0&1 \end{bmatrix}\)</td><td>\(1-0 = 1\)</td><td>\(+\)</td><td>\(1\)</td></tr>
+    </table>
+
+    $$ C = \begin{bmatrix} -24 & 20 & -5 \\ 18 & -15 & 4 \\ 5 & -4 & 1 \end{bmatrix}
+      \qquad\Longrightarrow\qquad
+      C^T = \begin{bmatrix} -24 & 18 & 5 \\ 20 & -15 & -4 \\ -5 & 4 & 1 \end{bmatrix} $$
+
+    <p>Divide by \(\det A = 1\):</p>
+
+    $$ A^{-1} = \begin{bmatrix} -24 & 18 & 5 \\ 20 & -15 & -4 \\ -5 & 4 & 1 \end{bmatrix} $$
+
+    <h4>Check</h4>
+
+    <p>Row 1 of \(A\) times column 1 of \(A^{-1}\): \((1)(-24) + (2)(20) + (3)(-5) = -24 + 40 - 15 = 1\) ✓</p>
+
+    <p>Row 1 of \(A\) times column 2 of \(A^{-1}\): \((1)(18) + (2)(-15) + (3)(4) = 18 - 30 + 12 = 0\) ✓</p>
+
+    <p>Row 2 of \(A\) times column 2: \((0)(18) + (1)(-15) + (4)(4) = -15 + 16 = 1\) ✓</p>
+
+    <p>The full product is \(I\).</p>
+
+    <div class="box intuition"><span class="label">What the formula tells you that elimination does not</span>
+      <p>\(\det A\) is a sum of products of \(n\) entries; each cofactor is a sum of products of \(n-1\). So \(A^{-1} = C^T/\det A\) shows the inverse as an explicit <b>rational function of the entries of \(A\)</b> — the top of degree \(n-1\), the bottom of degree \(n\).</p>
+      <p>That makes questions like "if I nudge one entry of \(A\), how does \(A^{-1}\) move?" answerable. Gauss–Jordan gives you the numbers but hides the dependence.</p>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t5">5. Cramer's rule</h3>
+
+    <p>If \(A\) is invertible, \(x = A^{-1}b\). Substitute the formula:</p>
+
+    $$ x = \frac{1}{\det A}C^Tb $$
+
+    <p>Look at one component. The \(j\)th entry of \(C^Tb\) is a sum of cofactors times entries of \(b\) — and that pattern is itself a cofactor expansion of <i>some</i> determinant. Which one?</p>
+
+    <div class="box theorem"><span class="label">Cramer's rule ★</span>
+      $$ \boxed{x_j = \frac{\det B_j}{\det A}} $$
+      <p>where \(B_j\) is \(A\) with its <b>\(j\)th column replaced by \(b\)</b>.</p>
+    </div>
+
+    <p>Why that matrix: expanding \(\det B_j\) along its \(j\)th column gives \(b_1C_{1j} + b_2C_{2j} + \dots\) — and the cofactors of \(B_j\) along that column are the same as the cofactors of \(A\), because deleting column \(j\) removes the only column that was changed.</p>
+
+    <p>So for a \(3\times3\) system:</p>
+
+    $$ B_1 = \begin{bmatrix} b & a_2 & a_3 \end{bmatrix}, \qquad
+       B_2 = \begin{bmatrix} a_1 & b & a_3 \end{bmatrix}, \qquad
+       B_3 = \begin{bmatrix} a_1 & a_2 & b \end{bmatrix} $$
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t6">6. Cramer worked, 2 by 2 and 3 by 3</h3>
+
+    <h4>Two by two</h4>
+
+    $$ \begin{aligned} 2x + \ y &= 5 \\ \ x + 3y &= 10 \end{aligned}
+       \qquad\Longleftrightarrow\qquad
+       \begin{bmatrix} 2&1 \\ 1&3 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix} = \begin{bmatrix} 5 \\ 10 \end{bmatrix} $$
+
+    <table class="sl-table">
+      <tr><th>Matrix</th><th>Determinant</th><th>Result</th></tr>
+      <tr><td>\(A = \begin{bmatrix} 2&1 \\ 1&3 \end{bmatrix}\)</td><td>\(6 - 1 = 5\)</td><td>non-zero, so there is a unique solution</td></tr>
+      <tr><td>\(B_1 = \begin{bmatrix} 5&1 \\ 10&3 \end{bmatrix}\)</td><td>\(15 - 10 = 5\)</td><td>\(x = \tfrac55 = 1\)</td></tr>
+      <tr><td>\(B_2 = \begin{bmatrix} 2&5 \\ 1&10 \end{bmatrix}\)</td><td>\(20 - 5 = 15\)</td><td>\(y = \tfrac{15}{5} = 3\)</td></tr>
+    </table>
+
+    <p>Check: \(2(1) + 3 = 5\) ✓ and \(1 + 3(3) = 10\) ✓</p>
+
+    <h4>Three by three</h4>
+
+    $$ \begin{aligned} x + \ y + \ z &= 6 \\ \quad\ \ 2y + 5z &= -4 \\ 2x + 5y - \ z &= 27 \end{aligned}
+       \qquad A = \begin{bmatrix} 1&1&1 \\ 0&2&5 \\ 2&5&-1 \end{bmatrix}, \quad b = \begin{bmatrix} 6 \\ -4 \\ 27 \end{bmatrix} $$
+
+    <p><b>\(\det A\)</b>, expanding down column 1 (it has a zero):</p>
+
+    $$ 1\begin{vmatrix} 2&5 \\ 5&-1 \end{vmatrix} - 0 + 2\begin{vmatrix} 1&1 \\ 2&5 \end{vmatrix}
+       = 1(-2 - 25) + 2(5 - 2) = -27 + 6 = -21 $$
+
+    <table class="sl-table">
+      <tr><th>\(j\)</th><th>\(B_j\) — column \(j\) replaced by \(b\)</th><th>\(\det B_j\)</th><th>\(x_j = \det B_j / (-21)\)</th></tr>
+      <tr><td>1</td><td>\(\begin{bmatrix} 6&1&1 \\ -4&2&5 \\ 27&5&-1 \end{bmatrix}\)</td><td>\(-105\)</td><td>\(x = 5\)</td></tr>
+      <tr><td>2</td><td>\(\begin{bmatrix} 1&6&1 \\ 0&-4&5 \\ 2&27&-1 \end{bmatrix}\)</td><td>\(-63\)</td><td>\(y = 3\)</td></tr>
+      <tr><td>3</td><td>\(\begin{bmatrix} 1&1&6 \\ 0&2&-4 \\ 2&5&27 \end{bmatrix}\)</td><td>\(42\)</td><td>\(z = -2\)</td></tr>
+    </table>
+
+    <p><b>Check all three equations</b> with \((x,y,z) = (5,3,-2)\):</p>
+
+    <table class="sl-table">
+      <tr><th>Equation</th><th>Substitute</th><th></th></tr>
+      <tr><td>\(x+y+z = 6\)</td><td>\(5 + 3 - 2 = 6\)</td><td>✓</td></tr>
+      <tr><td>\(2y + 5z = -4\)</td><td>\(6 - 10 = -4\)</td><td>✓</td></tr>
+      <tr><td>\(2x + 5y - z = 27\)</td><td>\(10 + 15 + 2 = 27\)</td><td>✓</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t7">7. Is Cramer's rule any good?</h3>
+
+    <div class="box pitfall"><span class="label">For computing — no ★</span>
+      <p>Cramer's rule needs \(n+1\) determinants of size \(n\). Even using elimination for each, that is \(n+1\) times the cost of just solving the system once. Elimination wins at every size above 2.</p>
+      <p>It is also numerically fragile: when \(\det A\) is small, you are dividing two nearly-cancelling numbers and losing precision.</p>
+    </div>
+
+    <div class="box intuition"><span class="label">For understanding — yes</span>
+      <ul>
+        <li>It gives <b>one component</b> without the others. If you only want \(x_3\), compute two determinants rather than solving everything.</li>
+        <li>It shows each \(x_j\) as an explicit <b>formula in the data</b>, so you can differentiate it and ask how the answer responds to a change in \(b\) or in \(A\).</li>
+        <li>It makes rule 8 visible: when \(\det A = 0\) every component has a zero denominator, and the system has no unique solution.</li>
+      </ul>
+    </div>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t8">8. The determinant is a volume</h3>
+
+    <div class="box theorem"><span class="label">The claim ★</span>
+      $$ \boxed{|\det A| = \text{volume of the box whose edges are the columns of } A} $$
+      <p>In 2D "box" means parallelogram and "volume" means area. In \(n\) dimensions the shape is called a <b>parallelepiped</b>. Because \(\det A^T = \det A\), you may use the rows instead — a different box, the same volume.</p>
+    </div>
+
+    <h4>The easiest case</h4>
+
+    <p>A diagonal matrix gives a rectangular box with sides along the axes:</p>
+
+    $$ A = \begin{bmatrix} 3&0&0 \\ 0&2&0 \\ 0&0&4 \end{bmatrix}, \qquad \det A = 24 $$
+
+    <p>A \(3 \times 2 \times 4\) box has volume 24 ✓</p>
+
+    <h4>A slanted one</h4>
+
+    $$ A = \begin{bmatrix} 3&1 \\ 1&2 \end{bmatrix}, \qquad \det A = 6 - 1 = 5 $$
+
+    <p>The parallelogram with edges \((3,1)\) and \((1,2)\) has area 5. Check it by subtraction: the bounding \(4 \times 3\) rectangle has area 12, and you remove two triangles of area \(\tfrac12(3)(1) = 1.5\), two of area \(\tfrac12(1)(2) = 1\), and two corner rectangles of area \(1 \times 1\)… which comes to \(12 - 3 - 2 - 2 = 5\) ✓</p>
+
+    <figure class="fig" style="max-width:420px;margin:22px auto">
+      <svg viewBox="0 0 420 240" role="img" aria-label="The parallelogram spanned by two column vectors, with area equal to the determinant">
+        <defs>
+          <marker id="va1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="va2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c2" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <line class="grid" x1="60" y1="200" x2="380" y2="200"/>
+        <line class="grid" x1="60" y1="200" x2="60" y2="40"/>
+        <polygon points="60,200 240,160 300,80 120,120" class="l3" fill="currentColor" fill-opacity=".15" stroke-width="1.6"/>
+        <line class="l1" x1="60" y1="200" x2="240" y2="160" marker-end="url(#va1)"/>
+        <line class="l2" x1="60" y1="200" x2="120" y2="120" marker-end="url(#va2)"/>
+        <text class="lbl c1" x="166" y="194">column 1 = (3,1)</text>
+        <text class="lbl c2" x="26" y="112">column 2</text>
+        <text class="tick" x="26" y="130">= (1,2)</text>
+        <text class="lbl c3" x="176" y="140">area = 5</text>
+        <text class="tick" x="196" y="158">= |det A|</text>
+        <circle class="pt" cx="60" cy="200" r="4"/>
+        <text class="tick" x="40" y="216">0</text>
+      </svg>
+      <figcaption>The two columns are two edges of a parallelogram leaving the origin. Its area is \(|\det A|\). In three dimensions the three columns make a slanted box and \(|\det A|\) is its volume; the same statement holds in every dimension.</figcaption>
+    </figure>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t9">9. Checking volume against the three rules</h3>
+
+    <p>Here is the clean way to see that volume and determinant are the same thing. Lesson 17 said the three rules pin the determinant down completely. So if <b>volume obeys those three rules</b>, volume must <i>be</i> the determinant (up to the sign, which volume cannot see).</p>
+
+    <table class="sl-table">
+      <tr><th>Rule</th><th>Does volume obey it?</th></tr>
+      <tr><td><b>1.</b> \(\det I = 1\)</td><td>The columns of \(I\) are the unit axes, so the box is the unit cube, volume 1 ✓</td></tr>
+      <tr><td><b>2.</b> exchange flips the sign</td><td>Swapping two edges gives the same box, so the volume is unchanged — and \(|{-}d| = |d|\) ✓. The sign records orientation, which volume discards.</td></tr>
+      <tr><td><b>3(a).</b> scale one row by \(t\)</td><td>Double one edge and the box doubles in volume ✓ — exactly \(t\) times, with the other edges fixed.</td></tr>
+      <tr><td><b>3(b).</b> one row splits</td><td>An edge split into two pieces splits the box into two boxes whose volumes add ✓</td></tr>
+    </table>
+
+    <p>All three ✓, so \(|\det A|\) is the volume.</p>
+
+    <h4>Two consequences worth noticing</h4>
+
+    <table class="sl-table">
+      <tr><th>Fact</th><th>Geometric meaning</th></tr>
+      <tr><td>\(\det A = 0 \iff A\) singular</td><td>The box is <b>flat</b> — the columns are dependent, so they lie in a lower-dimensional space and enclose no volume.</td></tr>
+      <tr><td>\(\det(tA) = t^n\det A\)</td><td>Scale every edge by \(t\) and an \(n\)-dimensional volume scales by \(t^n\). Doubling a 3D box multiplies its volume by 8.</td></tr>
+      <tr><td>\(|\det Q| = 1\) for orthogonal \(Q\)</td><td>The box is still a unit cube, just rotated. From \(Q^TQ = I\): \((\det Q)^2 = 1\), so \(\det Q = \pm1\).</td></tr>
+      <tr><td>\(\det(AB) = \det A\det B\)</td><td>Applying one transformation then another multiplies the volume factors.</td></tr>
+    </table>
+
+    <!-- ====================================================== -->
+    <h3 class="topic" id="t10">10. Area of a triangle</h3>
+
+    <p>A triangle is half a parallelogram. With one corner at the origin and the other two at \((x_1,y_1)\) and \((x_2,y_2)\):</p>
+
+    $$ \boxed{\text{area} = \tfrac12\left|\begin{matrix} x_1 & y_1 \\ x_2 & y_2 \end{matrix}\right| = \tfrac12|x_1y_2 - x_2y_1|} $$
+
+    <p>If no corner is at the origin, use a \(3 \times 3\) with a column of ones:</p>
+
+    $$ \text{area} = \frac12\left|\begin{matrix} x_1 & y_1 & 1 \\ x_2 & y_2 & 1 \\ x_3 & y_3 & 1 \end{matrix}\right| $$
+
+    <p>Try it on the triangle \((0,0), (3,1), (1,2)\) — the one from §8. The column of ones should give the same answer as the \(2\times2\):</p>
+
+    $$ \frac12\begin{vmatrix} 0&0&1 \\ 3&1&1 \\ 1&2&1 \end{vmatrix}
+      = \frac12\left(1 \cdot \begin{vmatrix} 3&1 \\ 1&2 \end{vmatrix}\right) = \frac12(6-1) = \frac52 $$
+
+    <p>Expanding along row 1, only the third entry survives, and its sign is \((-1)^{1+3} = +\). Half of 5 ✓ — half the parallelogram, as promised.</p>
+
+    <!-- ====================================================== -->
+    <h2 class="part" id="t11"><span class="part-n">Part 3</span> Summary</h2>
+
+    <h4>Everything on one screen</h4>
+    <table class="sl-table">
+      <tr><th>Idea</th><th>The line to remember</th></tr>
+      <tr><td><b>The inverse ★</b></td><td>\(A^{-1} = \dfrac{1}{\det A}C^T\). Mind the transpose — row \(i\) cofactors go into column \(i\).</td></tr>
+      <tr><td><b>Why it works ★</b></td><td>\(AC^T = (\det A)I\). Diagonal: a cofactor expansion. Off-diagonal: a determinant with two equal rows, so 0.</td></tr>
+      <tr><td><b>What it buys</b></td><td>The inverse as an explicit rational function of the entries — degree \(n-1\) over degree \(n\).</td></tr>
+      <tr><td><b>Cramer's rule ★</b></td><td>\(x_j = \dfrac{\det B_j}{\det A}\), with \(B_j\) = \(A\) with column \(j\) replaced by \(b\).</td></tr>
+      <tr><td><b>Cramer's cost</b></td><td>\(n+1\) determinants. Slower than elimination and less stable. Use it to see, not to compute.</td></tr>
+      <tr><td><b>Volume ★</b></td><td>\(|\det A|\) = volume of the box on the columns. Rows give a different box with the same volume.</td></tr>
+      <tr><td><b>Why</b></td><td>Volume obeys rules 1, 2 and 3, and those three rules determine the determinant uniquely.</td></tr>
+      <tr><td><b>Singular = flat</b></td><td>\(\det A = 0\) means dependent columns, so the box collapses and encloses nothing.</td></tr>
+      <tr><td><b>Orthogonal</b></td><td>\(|\det Q| = 1\) — a rotated unit cube.</td></tr>
+      <tr><td><b>Triangle</b></td><td>\(\tfrac12|x_1y_2 - x_2y_1|\) from the origin; add a column of ones if no corner is at the origin.</td></tr>
+    </table>
+
+    <h4>The worked answers</h4>
+    <table class="sl-table">
+      <tr><th>Problem</th><th>Answer</th><th>Checked by</th></tr>
+      <tr><td>inverse of \(\begin{bmatrix} 1&2&3 \\ 0&1&4 \\ 5&6&0 \end{bmatrix}\)</td><td>\(\begin{bmatrix} -24&18&5 \\ 20&-15&-4 \\ -5&4&1 \end{bmatrix}\)</td><td>\(AA^{-1} = I\), three entries shown</td></tr>
+      <tr><td>\(2x+y=5,\ x+3y=10\)</td><td>\((1, 3)\)</td><td>both equations</td></tr>
+      <tr><td>the \(3\times3\) system</td><td>\((5, 3, -2)\)</td><td>all three equations</td></tr>
+      <tr><td>area on \((3,1)\) and \((1,2)\)</td><td>5</td><td>subtracting triangles from the bounding rectangle</td></tr>
+    </table>
+
+    <h4>What he emphasised</h4>
+    <ol class="index-list">
+      <li><b>The transpose in \(C^T\) ★</b><span>The single most common slip. The \(2\times2\) case shows it immediately.</span></li>
+      <li><b>The off-diagonal zeros are not a coincidence</b><span>Each is the determinant of a matrix with two equal rows. That is the whole proof.</span></li>
+      <li><b>Cramer's rule is for insight, not arithmetic</b><span>Elimination is faster and steadier. Cramer shows you the <i>formula</i>.</span></li>
+      <li><b>Volume is the real meaning ★</b><span>And it is proved by checking the three defining rules, not by any geometry.</span></li>
+      <li><b>Zero determinant means a flat box</b><span>Singular, dependent columns, and no enclosed volume are three descriptions of one situation.</span></li>
+    </ol>
+
+    <h4>What comes next</h4>
+    <p>Determinants are done — and their real purpose arrives now. For a square \(A\), the equation \(\det(A - \lambda I) = 0\) picks out the special numbers \(\lambda\) for which \(A - \lambda I\) is singular. Those are the <b>eigenvalues</b>, the directions in which \(A\) does nothing but stretch. That is Lesson 20, and it is the subject the second half of the course is built on.</p>
+    <p><a href="index.html">← All lessons</a></p>
+
+  </div>
+  </section>
+  </div>
+</main>
+<script src="../assets/tracker.js?v=14"></script>
+</body>
+</html>
