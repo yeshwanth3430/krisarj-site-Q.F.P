@@ -309,32 +309,38 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t7">7. Subspaces</h3>
 
-    <p>A vector space sitting <b>inside</b> another vector space is called a <b>subspace</b>.</p>
+    <p>A <b>subspace</b> is a vector space that lives inside a bigger one.</p>
 
-    <p>The quarter plane was a bad way to take part of \(\mathbb{R}^2\) — it failed the test. Here is a good way. Start with one arrow and ask what must come with it.</p>
+    <p>Here is how to build one. Put in a single arrow — say \(v = (1,2)\) — and then ask what is <b>forced</b> to come with it.</p>
 
-    <h4>Put in one vector, and see what you are forced to add</h4>
+    <table class="sl-table">
+      <tr><th>You must be allowed to…</th><th>So this must be in too</th></tr>
+      <tr><td>double it</td><td>\((2, 4)\)</td></tr>
+      <tr><td>halve it</td><td>\((\tfrac12, 1)\)</td></tr>
+      <tr><td>flip it</td><td>\((-1, -2)\)</td></tr>
+      <tr><td>multiply by \(0\)</td><td>\((0, 0)\)</td></tr>
+    </table>
 
-    <ol class="index-list">
-      <li><b>You must be allowed to scale it.</b>
-        <span>By \(2\), by \(\tfrac12\), by \(-1\), by anything. Every one of those multiples has to be in — so the <b>whole line</b> through the arrow comes with it, running both ways forever.</span></li>
-      <li><b>And that is already enough.</b>
-        <span>Add two arrows on the line and you land on the line. Nothing more needs adding, so the line passes both tests.</span></li>
-    </ol>
+    <p>Keep going and you have <b>the whole line through \((1,2)\)</b>, running both ways forever.</p>
 
-    <p>A line through the origin is a subspace of \(\mathbb{R}^2\). One arrow forced the whole thing.</p>
+    <p>Is that enough? Check the other move: add two arrows on the line, and you land on the line. Yes — enough.</p>
 
-    <h4>Every subspace contains zero</h4>
-
-    <div class="box theorem"><span class="label">The quickest test there is ★</span>
-      <p>You are allowed to multiply by \(0\), and \(0\,v\) is the zero vector. So:</p>
-      $$ \boxed{\text{the zero vector is in every subspace — no exceptions}} $$
-      <p>Which gives you a free first check: <b>if a collection misses the origin, stop — it is not a subspace.</b></p>
+    <div class="box theorem"><span class="label">So a line through the origin is a subspace</span>
+      <p>One arrow forced an entire line. That line passes both tests, so it is a genuine vector space sitting inside \(\mathbb{R}^2\).</p>
     </div>
 
-    <p>That is exactly why a line that <b>misses</b> the origin fails. Take any arrow on it and multiply by \(0\): you land at the origin, which is not on that line. One escape, and it is finished.</p>
+    <h4>Zero is always in</h4>
 
-    <p>The same reasoning applies to the whole plane. Remove the single point \((0,0)\) from \(\mathbb{R}^2\) and it stops being a space — because \(0 \times (3,2)\) has to land somewhere, and because \((3,2) + (-3,-2)\) is the origin too.</p>
+    <p>Look at the last row of that table. You can <b>always</b> multiply by \(0\), and the answer is always the zero vector.</p>
+
+    <div class="box method"><span class="label">The fastest check there is ★</span>
+      <p>$$ \boxed{\text{No origin} \;\Rightarrow\; \text{not a subspace.}} $$</p>
+      <p>Before testing anything else, look for \((0,0)\). If it is missing, you are done.</p>
+    </div>
+
+    <p>So a line that <b>misses</b> the origin fails immediately. Take any arrow on it, multiply by \(0\), and you land at the origin — which is not on that line.</p>
+
+    <p>Same for the plane with a hole in it. Remove just the point \((0,0)\) from \(\mathbb{R}^2\) and it is no longer a space: \(0 \times (3,2)\) has nowhere to land, and \((3,2) + (-3,-2)\) does not either.</p>
 
     <figure class="fig" style="max-width:520px;margin:22px auto">
       <svg viewBox="0 0 420 300" role="img" aria-label="A line through the origin is a subspace; a parallel line that misses the origin is not">
@@ -366,70 +372,82 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t8">8. All subspaces of R² and R³</h3>
 
-    <p>\(\mathbb{R}^2\) is small enough to list <b>every</b> subspace it has. There are only three kinds.</p>
+    <p>\(\mathbb{R}^2\) is small enough to list every subspace. There are <b>three kinds, and that is all</b>:</p>
 
     <table class="sl-table">
-      <tr><th>Subspace of \(\mathbb{R}^2\)</th><th>What it is</th></tr>
-      <tr><td><b>The whole plane</b></td><td>All of \(\mathbb{R}^2\). A space always counts as a subspace of itself.</td></tr>
-      <tr><td><b>A line through \((0,0)\)</b></td><td>Any such line, going both ways forever.</td></tr>
-      <tr><td><b>Just the origin</b></td><td>The single vector \((0,0)\), written \(Z\).</td></tr>
+      <tr><th>Subspace of \(\mathbb{R}^2\)</th><th>Size</th></tr>
+      <tr><td>The whole plane</td><td>biggest</td></tr>
+      <tr><td>A line through \((0,0)\)</td><td>in between</td></tr>
+      <tr><td>Just the point \((0,0)\), written \(Z\)</td><td>smallest</td></tr>
     </table>
 
-    <p>Why does <b>just the origin</b> count? Run the test on it, dully: add it to itself and you are still there; multiply it by \(17\) and you are still there. Neither move escapes, so it passes. It is the <b>smallest</b> subspace, just as the whole plane is the largest.</p>
+    <p>Why does <b>just the origin</b> count? Run the two tests on it:</p>
+
+    $$ (0,0) + (0,0) = (0,0) \ ✓ \qquad\qquad 17 \times (0,0) = (0,0) \ ✓ $$
+
+    <p>Neither move escapes, so it passes. Dull, but genuine.</p>
 
     <div class="box pitfall"><span class="label">A line in \(\mathbb{R}^2\) is not \(\mathbb{R}^1\)</span>
-      <p>It looks like \(\mathbb{R}^1\) and behaves like it — but the vectors on that line have <b>two components</b>, while vectors in \(\mathbb{R}^1\) have one. Very close, not the same thing.</p>
+      <p>The vectors on that line have <b>two</b> components, like \((1,2)\). Vectors in \(\mathbb{R}^1\) have one, like \((1)\). They behave alike, but they are not the same thing.</p>
     </div>
 
-    <p>Go up one dimension and the pattern continues — the same list, plus planes:</p>
+    <p>In \(\mathbb{R}^3\) the same list appears, with <b>planes</b> added in the middle:</p>
 
     <table class="sl-table">
-      <tr><th>Subspace of \(\mathbb{R}^3\)</th><th>What it is</th></tr>
-      <tr><td><b>The whole space</b></td><td>All of \(\mathbb{R}^3\).</td></tr>
-      <tr><td><b>A plane through the origin</b></td><td>Flat, infinite, containing \((0,0,0)\).</td></tr>
-      <tr><td><b>A line through the origin</b></td><td>Going both ways forever.</td></tr>
-      <tr><td><b>Just the origin</b></td><td>\(Z = \{(0,0,0)\}\).</td></tr>
+      <tr><th>Subspace of \(\mathbb{R}^3\)</th><th>Size</th></tr>
+      <tr><td>The whole space</td><td>biggest</td></tr>
+      <tr><td>A plane through the origin</td><td>↓</td></tr>
+      <tr><td>A line through the origin</td><td>↓</td></tr>
+      <tr><td>Just the origin, \(Z\)</td><td>smallest</td></tr>
     </table>
 
-    <p>Notice what every entry on both lists has in common: <b>they all pass through the origin</b>, exactly as the rule above demands.</p>
+    <p>One thing is true of every entry on both lists: <b>they all pass through the origin</b>.</p>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t9">9. The column space</h3>
 
-    <p>Where do subspaces actually come from? <b>From matrices.</b> Here is the first and most important way.</p>
+    <p>Where do subspaces come from in practice? <b>From matrices.</b> Take one:</p>
 
     $$ A = \begin{bmatrix} 1 & 3 \\ 2 & 3 \\ 4 & 1 \end{bmatrix} $$
 
-    <p>Its two columns, \((1,2,4)\) and \((3,3,1)\), are vectors in \(\mathbb{R}^3\). Two vectors are <b>not</b> a subspace — so what has to be thrown in to make one?</p>
+    <p>Its two columns are \((1,2,4)\) and \((3,3,1)\). Both are vectors in \(\mathbb{R}^3\).</p>
 
-    <ol class="index-list">
-      <li><b>The zero vector</b><span>because we must be allowed to multiply by \(0\).</span></li>
-      <li><b>Their sum</b><span>\((1,2,4) + (3,3,1) = (4,5,5)\), because we must be allowed to add.</span></li>
-      <li><b>Every other combination</b><span>one of this plus three of that, minus half of this, and so on — all of them.</span></li>
-    </ol>
+    <p>Two vectors are <b>not</b> a subspace. So what is missing? Exactly what the two rules force:</p>
 
-    <p>Throw in <b>all</b> of those and the job is done. Nothing can escape, because every result you can produce was already included by construction.</p>
+    <table class="sl-table">
+      <tr><th>Rule</th><th>What it forces in</th></tr>
+      <tr><td>multiply by \(0\)</td><td>\((0,0,0)\)</td></tr>
+      <tr><td>add them</td><td>\((1,2,4) + (3,3,1) = (4,5,5)\)</td></tr>
+      <tr><td>scale and add, any amounts</td><td>\(2(1,2,4) + 5(3,3,1)\), and every other mix</td></tr>
+    </table>
+
+    <p>Throw <b>all</b> of those in and you are finished. Nothing can escape, because every result was already included.</p>
 
     <div class="box definition"><span class="label">The column space ★</span>
-      <p>$$ \boxed{C(A) = \text{all linear combinations of the columns of } A} $$</p>
-      <p>It is a subspace, and it is the first important one to come out of a matrix.</p>
+      <p>$$ \boxed{C(A) = \text{everything you can build from the columns of } A} $$</p>
+      <p>Build it by taking all linear combinations of them. It is always a subspace.</p>
     </div>
 
-    <h4>What shape is it?</h4>
-    <p>Follow the arrows. Every multiple of the first column fills one line. Every multiple of the second fills another line. And because we may take <b>something from each line and add</b>, all the space between the two lines fills in as well.</p>
+    <h4>What shape is it here?</h4>
 
-    <p>More than a line, less than all of space — so:</p>
+    <ol class="index-list">
+      <li><b>Column 1 alone gives a line.</b><span>All its multiples, through the origin.</span></li>
+      <li><b>Column 2 alone gives another line.</b><span>Pointing a different way.</span></li>
+      <li><b>Taking some of each fills everything between them.</b><span>And that is a flat sheet.</span></li>
+    </ol>
 
-    $$ \boxed{C(A) \text{ is a plane through the origin, containing both columns}} $$
+    <p>More than a line, less than all of space:</p>
+
+    $$ \boxed{C(A) \text{ is a plane through the origin}} $$
 
     <figure class="fig" style="max-width:640px;margin:22px auto">
       <div id="fig3d-colspace" style="width:100%;height:440px"></div>
       <figcaption><b>The column space is a plane — drag to rotate.</b> The two solid arrows are the columns of \(A\). The shaded sheet is \(C(A)\): every vector you can build as \(x(1,2,4) + y(3,3,1)\). Rotate until the sheet is edge-on and you can see it really is flat, and that it passes exactly through the origin — as every subspace must. The dashed arrow is the column sum \((4,5,5)\), which of course lands on the sheet. Nothing outside this plane is reachable from these two columns; had they pointed the same way, the column space would have collapsed to a single line.</figcaption>
     </figure>
 
-    <div class="box intuition"><span class="label">And in ten dimensions</span>
-      <p>Learn the picture here in \(\mathbb{R}^3\), because the same thing happens where you cannot draw it. Take five vectors with ten components each and form every combination. You do <b>not</b> get \(\mathbb{R}^5\) — the vectors have ten components, not five. You get some flat five-dimensional thing through the origin, sitting inside \(\mathbb{R}^{10}\).</p>
-      <p>Unless the vectors overlap, of course. If all five lay on one line, the combinations would only be that line — exactly as two columns on one line would give a line instead of a plane.</p>
+    <div class="box intuition"><span class="label">The same thing in ten dimensions</span>
+      <p>Learn the picture here, because it repeats where you cannot draw. Five vectors with ten components each, all combinations taken: you do <b>not</b> get \(\mathbb{R}^5\) — your vectors have ten components, not five. You get a flat five-dimensional piece of \(\mathbb{R}^{10}\), through the origin.</p>
+      <p>Unless the vectors overlap. If all five sat on one line, you would get only that line — just as two columns on one line would give a line instead of a plane.</p>
     </div>
 
     <!-- ====================================================== -->
