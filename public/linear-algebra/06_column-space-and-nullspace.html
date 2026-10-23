@@ -153,34 +153,85 @@
     <!-- ====================================================== -->
     <h3 class="topic" id="t3">3. The column space</h3>
 
-    <p>The matrix for the whole lecture:</p>
+    <p>Start with a simple question: <b>what can this matrix produce?</b></p>
+
+    <p>Feed it a vector \(x\) and out comes \(Ax\). From Lesson 1, that output is always the same shape:</p>
+
+    $$ Ax = x_1(\text{column 1}) + x_2(\text{column 2}) + x_3(\text{column 3}) $$
+
+    <p>So as \(x\) ranges over every possible input, the outputs sweep out <b>every possible combination of the columns</b>. That collection of outputs has a name.</p>
+
+    <div class="box definition"><span class="label">The column space ★</span>
+      <p>$$ \boxed{C(A) = \text{everything the matrix can output}} $$</p>
+      <p>Equivalently: all combinations of the columns. It is a subspace.</p>
+    </div>
+
+    <h4>Our matrix</h4>
 
     $$ A = \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix} $$
 
-    <p>Four rows, three columns. The columns have <b>four</b> components, so they live in \(\mathbb{R}^4\):</p>
+    <p>Four rows, three columns. Each column has <b>four</b> components, so every output has four components:</p>
 
     $$ \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix}, \qquad \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}, \qquad \begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix} $$
 
-    <p>Take all their combinations and you have \(C(A)\), a subspace of \(\mathbb{R}^4\).</p>
-
     <div class="box method"><span class="label">Where it lives</span>
-      <p>For an \(m \times n\) matrix, columns have \(m\) components, so \(C(A)\) sits in \(\mathbb{R}^m\). Here \(m = 4\).</p>
+      <p>\(C(A)\) sits in \(\mathbb{R}^m\) — one component per <b>row</b>. Here \(m = 4\), so \(C(A)\) is inside \(\mathbb{R}^4\).</p>
     </div>
+
+    <figure class="fig" style="max-width:600px;margin:22px auto">
+      <svg viewBox="0 0 600 260" role="img" aria-label="Inputs x go into the matrix and outputs Ax land inside the column space">
+        <defs>
+          <marker id="ca1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c1" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="ca3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="c3" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <text class="tick" x="24" y="24" font-size="12.5">every input x</text>
+        <text class="tick" x="356" y="24" font-size="12.5">R⁴ — all possible b</text>
+        <!-- inputs -->
+        <circle class="pt" cx="56" cy="80" r="4"/><text class="tick" x="16" y="74">(1,0,0)</text>
+        <circle class="pt" cx="56" cy="120" r="4"/><text class="tick" x="16" y="114">(0,1,0)</text>
+        <circle class="pt" cx="56" cy="160" r="4"/><text class="tick" x="16" y="154">(2,5,1)</text>
+        <circle class="pt" cx="56" cy="200" r="4"/><text class="tick" x="26" y="194">…</text>
+        <!-- matrix box -->
+        <rect x="140" y="92" width="76" height="76" rx="10" class="l1" fill="currentColor" fill-opacity=".10" stroke-width="2"/>
+        <text class="lbl c1" x="168" y="138" font-size="20">A</text>
+        <line class="l1" x1="76" y1="110" x2="132" y2="124" marker-end="url(#ca1)"/>
+        <line class="l1" x1="76" y1="160" x2="132" y2="138" marker-end="url(#ca1)"/>
+        <!-- output region -->
+        <rect x="330" y="46" width="250" height="180" rx="10" class="axis" fill="none" stroke-width="1.2" stroke-dasharray="5 4"/>
+        <ellipse cx="430" cy="130" rx="86" ry="52" class="l2" fill="currentColor" fill-opacity=".16" stroke-width="2"/>
+        <text class="lbl c2" x="392" y="128">C(A)</text>
+        <text class="tick" x="368" y="148">everything reachable</text>
+        <line class="l1" x1="224" y1="130" x2="336" y2="130" marker-end="url(#ca1)"/>
+        <text class="tick" x="248" y="120">Ax</text>
+        <circle class="pt" cx="420" cy="104" r="4"/>
+        <circle class="pt" cx="452" cy="150" r="4"/>
+        <circle class="hit" cx="548" cy="72" r="5"/>
+        <text class="lbl c3" x="500" y="62">b out here:</text>
+        <text class="lbl c3" x="500" y="208">no solution</text>
+        <line class="l3 dash" x1="540" y1="86" x2="520" y2="196" marker-end="url(#ca3)"/>
+        <text class="tick" x="24" y="246">Solving Ax = b asks one thing: is b inside the shaded blob?</text>
+      </svg>
+      <figcaption><b>The column space is the set of outputs.</b> Push every possible \(x\) through the matrix and the results land inside the shaded region — that region <i>is</i> \(C(A)\). It never fills the whole of \(\mathbb{R}^4\) here, because only three columns are feeding it. A target \(b\) sitting outside the region simply cannot be produced, no matter which \(x\) you try.</figcaption>
+    </figure>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t4">4. Can we solve Ax = b?</h3>
+
+    <p>With that picture, the question changes shape. <b>\(Ax = b\) asks whether \(b\) is one of the outputs.</b></p>
 
     $$ \begin{bmatrix} 1 & 1 & 2 \\ 2 & 1 & 3 \\ 3 & 1 & 4 \\ 4 & 1 & 5 \end{bmatrix}
       \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix}
       = \begin{bmatrix} b_1 \\ b_2 \\ b_3 \\ b_4 \end{bmatrix} $$
 
-    <p><b>Four equations, three unknowns.</b> So not for every \(b\). But for some — and the trick is to <b>pick \(x\) first and see what \(b\) comes out</b>:</p>
+    <p><b>Four equations, three unknowns</b> — so no, not every \(b\) works. Three columns cannot fill four-dimensional space.</p>
+
+    <p>But some do. And the easy way to find them is to <b>stop solving and start producing</b>: pick an \(x\), and whatever comes out is a \(b\) that works.</p>
 
     <table class="sl-table">
-      <tr><th>Take \(x =\)</th><th>and \(b = Ax\) is</th><th>why</th></tr>
-      <tr><td>\((0,0,0)\)</td><td>\((0,0,0,0)\)</td><td>always works</td></tr>
-      <tr><td>\((1,0,0)\)</td><td>\((1,2,3,4)\)</td><td>that is column 1</td></tr>
-      <tr><td>\((0,1,0)\)</td><td>\((1,1,1,1)\)</td><td>that is column 2</td></tr>
+      <tr><th>Feed in \(x =\)</th><th>Out comes \(b =\)</th><th>why</th></tr>
+      <tr><td>\((0,0,0)\)</td><td>\((0,0,0,0)\)</td><td>none of anything</td></tr>
+      <tr><td>\((1,0,0)\)</td><td>\((1,2,3,4)\)</td><td>one of column 1</td></tr>
+      <tr><td>\((0,1,0)\)</td><td>\((1,1,1,1)\)</td><td>one of column 2</td></tr>
     </table>
 
     <!-- ====================================================== -->
@@ -190,27 +241,31 @@
       <p>$$ \boxed{Ax = b \text{ is solvable exactly when } b \text{ is in } C(A)} $$</p>
     </div>
 
-    <p>Because \(C(A)\) is all the combinations of the columns — which is all the vectors \(Ax\).</p>
+    <p>Which is almost a restatement, once \(C(A)\) is read as <b>the set of outputs</b>:</p>
 
     <ul>
-      <li>\(b\) <b>is</b> a combination → that combination <b>is</b> your \(x\).</li>
-      <li>\(b\) is <b>not</b> → there is no \(x\) at all.</li>
+      <li>\(b\) <b>is</b> an output → something produced it, and that something is your \(x\).</li>
+      <li>\(b\) is <b>not</b> an output → nothing produces it. No \(x\) exists.</li>
     </ul>
+
+    <p>That is why the column space is the central object of the lecture: it is exactly the list of right-hand sides you are allowed to ask for.</p>
 
     <!-- ====================================================== -->
     <h3 class="topic" id="t6">6. How big is this column space?</h3>
 
-    <p>Can a column be thrown away? Add the first two:</p>
+    <p>We know \(C(A)\) is not all of \(\mathbb{R}^4\). How much of it is there? Ask whether any column is <b>pulling its weight</b> — add the first two:</p>
 
     $$ \begin{bmatrix} 1 \\ 2 \\ 3 \\ 4 \end{bmatrix} + \begin{bmatrix} 1 \\ 1 \\ 1 \\ 1 \end{bmatrix}
       = \begin{bmatrix} 2 \\ 3 \\ 4 \\ 5 \end{bmatrix} = \text{column 3} $$
 
-    <p>Column 3 is already a combination of the others, so it adds <b>nothing</b>. Two directions went in, not three:</p>
+    <p>Column 3 was already reachable from the first two. Including it adds <b>no new outputs at all</b> — the set of outputs is the same with or without it.</p>
 
-    $$ \boxed{C(A) \text{ is a plane in } \mathbb{R}^4} $$
+    <p>So three columns, but only <b>two genuine directions</b>:</p>
+
+    $$ \boxed{C(A) \text{ is a plane through the origin, inside } \mathbb{R}^4} $$
 
     <div class="box definition"><span class="label">Words for this</span>
-      <p>Columns 1 and 2 will be called <b>pivot columns</b>. Column 3 is <b>dependent</b> on them.</p>
+      <p>Columns 1 and 2 are <b>pivot columns</b> — the ones doing the work. Column 3 is <b>dependent</b> on them.</p>
     </div>
 
     <!-- ====================================================== -->
