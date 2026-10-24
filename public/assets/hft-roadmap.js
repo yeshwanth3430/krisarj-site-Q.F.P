@@ -44,6 +44,7 @@
           ["Stochastic processes & pricing basics", "random walks to option prices", "soon"] ] }
       ] },
     { id: "ml", n: "04", name: "Machine Learning", short: "Machine Learning", tag: "Signal in very noisy data", col: "--thm-b",
+      href: "machine-learning/", openLabel: "open the resources →",
       about: "The models, and above all the discipline: features from market data, honest validation, and how not to fool yourself with a backtest.",
       groups: [
         { name: "Foundations", topics: [
